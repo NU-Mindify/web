@@ -157,7 +157,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-direction: row;
 
   background: lightgreen;
 }
@@ -173,7 +172,7 @@
 }
 
 .fname-div{
-  width: 33.33%;
+  width: auto;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -182,7 +181,7 @@
 }
 
 .lname-div{
-  width: 33.33%;
+  width: auto;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -191,7 +190,7 @@
 }
 
 .email-div{
-  width: 33.33%;
+  width: auto;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -203,7 +202,7 @@
   border: 1px solid black;
   border-radius: 10px;
   height: 60px;
-  width: 420px;
+  width: auto;
   color: black;
   font-family: Poppins;
 }
