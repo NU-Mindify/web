@@ -1,4 +1,6 @@
 import { useRef, } from "react";
+import './glossary.css'
+
 import terms from '../../data/GlossaryTerms.json'
 import edit from '../../assets/edit.svg'
 import dropdown from '../../assets/dropdown.svg'

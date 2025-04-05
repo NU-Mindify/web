@@ -1,0 +1,282 @@
+.main-cont-prof-settings{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  /* background: gray; */
+}
+
+.header-cont-prof-settings {
+  height: 30%;
+
+  /* background: purple; */
+}
+
+.header-text-prof-settings {
+  margin: 0 0 0 var(--spacing);
+  padding : var(--spacing) 0 0 0;
+  font-size: 35px;
+  font-family: Poppins;
+  font-weight: bold;
+  color: #FFD41C;
+}
+
+.content-cont {
+  width: 100%;
+  height: 70%;
+
+  border-radius: 10px;
+
+  background: white;
+}
+
+.prof-pic-cont {
+  position: absolute;
+  top: 140px;
+  left: 130px;
+  width: 305px;
+  height: 310px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid yellow;
+  border-radius: 100%;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
+
+  background: white;
+}
+
+.prof-pic {
+  border-radius: 100%;
+  width: 260px;
+  height: 260px;
+}
+
+.notdisplayed {
+  display: none;
+}
+
+.displayed {
+  top: 25px;
+  left: 22px;
+  position: absolute;
+  border-radius: 100%;
+  width: 260px;
+  height: 260px;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.edit-icon {
+  width: 50px;
+  height: 50px;
+}
+
+.edit-btn-cont-prof-settings {
+  width: 290px;
+  height: 45x;
+  position: absolute;
+  margin: 225px 0 0 140px;
+
+  overflow: hidden;
+  /* background: purple; */
+}
+
+.edit-btn-prof-settings {
+  width: 290px;
+  height: 45px;
+  border-radius: 33px;
+  border: 1px solid black;
+  background: white;
+  color: black;
+  font-family: Poppins;
+  font-weight: bold;
+  cursor: pointer;
+} 
+
+.user-name-cont {
+  width: 74%;
+  height: 48%;
+  float: right;
+  padding: 30px 0 0 80px;
+
+  /* background: purple */
+}
+
+.user-name-prof-settings {
+  color: black;
+  font-family: Poppins;
+  font-weight: bold;
+  font-size: 50px;
+}
+
+.position-prof-settings {
+  color: black;
+  font-family: Poppins;
+  font-weight: normal;
+  font-size: 25px;
+}
+
+.forms-cont-prof-settings {
+  display: flex;
+  flex-direction: row;
+  width: 88%;
+  height: 45%;
+  
+  margin: 0 0 0 96px;
+
+  /* background: gray; */
+}
+
+.fname-empno-cont {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+
+   /* background: purple; */
+}
+
+.lname-nubranch-cont {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  /* background: pink; */
+}
+
+.email-position-cont {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  /* background: cyan; */
+}
+
+
+.first-forms-cont {
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+  height: 20%;
+  overflow: hidden;
+  /* background: red; */
+}
+
+.fname-cont {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:flex-start;
+
+  /* background: pink; */
+}
+
+.lname-cont {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:flex-start;
+
+  /* background: cyan; */
+}
+
+.email-cont {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:flex-start;
+
+  /* background: purple; */
+}
+
+.second-forms-cont {
+  width: 95%;
+  height: 50%;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  /* background: black; */
+}
+
+.empno-cont {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:flex-start;
+
+  /* background: red; */
+}
+
+.nubranch-cont{
+
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:flex-start;
+
+  /* background: green; */
+}
+
+.pos-cont {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:flex-start;
+
+  /* background: blue; */
+
+}
+
+.empno-text {
+  color: black;
+  font-family: Poppins;
+  margin: 0 0 15px -345px;
+}
+
+.pos-text{
+  color: black;
+  font-family: Poppins;
+  margin: 0 0 15px -385px;
+}
+
+.form-text {
+  color: black;
+  font-family: Poppins;
+  margin: 0 0 15px 0;
+}
+
+.email-text {
+  color: black;
+  font-family: Poppins;
+  margin: 0 0 15px -410px;
+}
+
+.form-fields {
+  border: 1px solid black;
+  border-radius: 10px;
+  height: 60px;
+  width: 350px;
+  color: black;
+  font-family: Poppins;
+}

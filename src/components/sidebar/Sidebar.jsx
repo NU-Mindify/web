@@ -1,5 +1,8 @@
 import { useContext } from "react"
 import { ActiveContext } from "../../contexts/Contexts"
+import './sidebar.css'
+
+
 import MenuBtn from "./MenuBtn"
 import hamburger from '../../assets/hamburger.png'
 import halfburger from '../../assets/halfburger.png'

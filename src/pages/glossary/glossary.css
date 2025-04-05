@@ -1,0 +1,172 @@
+
+/* ------------------------------------------- FOR MANAGE GLOSSARY AND QUESTION ONLY ---------------------------- */
+
+/*----- GLOSSARY AND QUESTIONS HEADER AND BODY -----*/
+
+.glossary-header{
+  width: 100%;
+  height: var(--glossary-header-height);
+  background-color: white;
+  border-radius: 15px;
+  margin: 0 0 var(--spacing) 0;
+}
+
+.glossary-body{
+  width: 100%;
+  height: var(--glossary-body-height);
+  background-color: white;
+  border-radius: 15px;
+  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+  padding: calc(var(--spacing) * 2);
+}
+
+/********************************/
+
+
+/*----- TITLE, SEARCH BAR AND BTN LETTERS -----*/
+
+.glossary-title-container{
+  width: 100%;
+  height: calc((var(--glossary-header-height) - (var(--mini-spacing)) * 2) / 3);
+  background-color: transparent;
+  margin: 0 0 var(--mini-spacing) 0;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 30px;
+}
+
+.glossary-title{
+  font-size: 30px;
+  color: #FFC100;
+  margin: 0 0 0 var(--spacing);
+}
+
+
+.glossary-search-container {
+  width: 100%;
+  height: calc((var(--glossary-header-height) - (var(--mini-spacing)) * 2) / 3);
+  margin: 0 0 var(--mini-spacing) 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.glossary-search-holder {
+  width: 80%;
+  height: 40px;
+  background-color: white;
+  border-radius: 30px;
+  display: flex;         
+  align-items: center;       
+  padding: 0 var(--spacing);        
+  box-shadow: 2px 2px 5px rgb(99, 97, 97);
+
+}
+
+.search-btn {
+  width: 40px;
+  height: 100%;
+  border: none;           
+  cursor: pointer;    
+  margin: 0 var(--mini-spacing) 0 0;       
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-input {
+  flex-grow: 1;             
+  height: 100%;              
+  border: none;              
+  outline: none;             
+  padding: 0 var(--mini-spacing) 0;           
+  color: black;              
+}
+
+
+.glossary-letters-btn-container{
+  width: 100%;
+  height: calc((var(--glossary-header-height) - (var(--mini-spacing) * 2)) / 3);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.letter-title{
+  font-size: 40px;
+  color: black;
+}
+
+
+
+.word-main-container{
+  width: 100%;
+  height: auto;
+  /* background-color: red; */
+  margin: 0 0 calc(var(--spacing) * 2) 0;
+  padding: 0 var(--spacing) var(--spacing) var(--spacing);
+}
+
+.all-word-def-container{
+  width: 100%;
+  height: 100%;
+  /* background-color: blue; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.per-word-container{
+  width: var(--per-word-width);
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 var(--mini-spacing) 0 var(--mini-spacing);
+  align-items: center;
+  margin: var(--mini-spacing) 0 var(--mini-spacing) 0;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.word-container{
+  width: calc(var(--per-word-width) / 5);
+  color: black;
+}
+
+.meaning-container{
+  width: calc(var(--per-word-width) / 2 * 1.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: black;
+}
+
+.gege{
+  width: calc(var(--per-word-width) / 5);
+  /* background-color: pink; */
+  display: flex;
+  justify-content: space-around;
+}
+
+.dropdown{
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #97a2b8d7;
+  border-radius: 5px;
+}
+
+/********************************/
+
+/* *********************************************************************************************************** */
+
+
+
