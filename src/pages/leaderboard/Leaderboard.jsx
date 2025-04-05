@@ -63,7 +63,7 @@ export default function Leaderboard(){
                         <div>
                             {mockleaders.map((leaders, element) => (
                                 <div key={element}>
-                                    <h1>{leaders.rank} {leaders.world} {leaders.score}</h1>
+                                    <h1>{leaders.rank} {leaders.name} {leaders.world} {leaders.score}</h1>
                                 </div>
                             ))}
                         </div>
