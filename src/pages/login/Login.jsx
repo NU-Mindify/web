@@ -60,7 +60,7 @@ export default function Login(){
                                 title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" 
                             />
                             <label className="fieldset-label remember">
-                                <input type="checkbox" defaultChecked className="checkbox" />
+                                <input type="checkbox"checked={false} className="checkbox" />
                                 Remember me
                             </label>
                             <p className="validator-hint">
