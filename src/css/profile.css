@@ -128,10 +128,10 @@
 
 .user-name-cont{ 
   width: 100%;
-  height: auto;
+  height: 20%;
   padding: 30px 0 0 125px;
 
-  /* background: gray; */
+  background: gray;
 }
 
 .user-name-prof-settings{
@@ -153,7 +153,7 @@
 
 .first-three-forms-cont{
   width: 85%;
-  height: auto;
+  height: 50%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -163,7 +163,7 @@
 
 .second-three-forms-cont{
   width: 85%;
-  height: auto;
+  height: 50%;
   display: flex;
   align-items: center;
   justify-content: space-between;

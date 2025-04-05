@@ -50,7 +50,7 @@ export default function Profile(){
                     </div>
 
                     <div class="user-name-cont">
-                        <h1 class="user-name-prof-settings">Mary Ruth Cabales</h1>
+                        <h1 class="user-name-prof-settings">Suosuo Frieren</h1>
                     </div>
 
                     <div class="forms-cont-prof-settings">
