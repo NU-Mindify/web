@@ -31,7 +31,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    transform: translateX(50%);
+    transform: translateX(55%);
     animation: containerFadeOut 1s ease-in-out forwards;
     animation-delay: 2.6s;
     margin: 20px 0 0 0;
@@ -93,11 +93,11 @@
 @keyframes loginFormFadeUp {
     0% {
       opacity: 0;
-      transform: translateY(40px); /* start from below */
+      transform: translateY(40px); 
     }
     100% {
       opacity: 1;
-      transform: translateY(0); /* end at original position */
+      transform: translateY(0);
     }
   }
   
