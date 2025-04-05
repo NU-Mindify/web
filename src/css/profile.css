@@ -1,3 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+@import "tailwindcss";
+@plugin "daisyui";
+
 * {
     box-sizing: border-box; 
     margin: 0;
@@ -26,9 +30,6 @@
     --per-word-width: 1300px;
   }
 
-
-/* ------------------------------------------- START OF PROFILE SETTINGS CSS ---------------------------- */
-
 /*margin / padding: top right bottom left*/
 
 .main-cont-prof-settings{
@@ -38,125 +39,199 @@
     border-radius: 10px;
   
     overflow: hidden;
-  
     /* background: gray; */
   }
   
-  .header-cont-prof-settings {
-    height: 30%;
+.header-cont-prof-settings {
+  height: 30%;
   
-    /* background: purple; */
-  }
+  /* background: purple; */
+}
   
-  .header-text-prof-settings {
-    margin: 0 0 0 var(--spacing);
-    padding : var(--spacing) 0 0 0;
-    font-size: 35px;
-    font-family: Poppins;
-    font-weight: bold;
-    color: #FFD41C;
-  }
+.header-text-prof-settings {
+  margin: 0 0 0 var(--spacing);
+  padding : var(--spacing) 0 0 0;
+  font-size: 35px;
+  font-family: Poppins;
+  font-weight: bold;
+  color: #FFD41C;
+}
   
-  .content-cont {
-    width: 100%;
-    height: 70%;
+.content-cont {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
   
-    border-radius: 10px;
   
-    background: white;
-  }
+  background: white;
+}
+
+.prof-pic-name-edit-btn-cont{
+  width: 100%;
+  height: 30%;
+  display:flex;
+  flex-direction: flex-start;
+
+  /* background: cyan; */
+}
+
+.prof-pic-cont{
+  width: 305px;
+  height: 310px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid yellow;
+  border-radius: 100%;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
+  margin: -120px 0 0 130px;
+
+  background: white;
+}
+
+.prof-pic {
+  border-radius: 100%;
+  width: 260px;
+  height: 260px;
+}
   
-  .prof-pic-cont {
-    position: absolute;
-    top: 140px;
-    left: 130px;
-    width: 305px;
-    height: 310px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid yellow;
-    border-radius: 100%;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
+.edit-btn-cont{
+  width: 390px;
+  height: 150px;
+  display:flex;
+  justify-content: center;
+  align-items:center;
   
-    background: white;
-  }
+  /* background: gray; */
+}
+
+.edit-btn-prof-settings {
+  width: 290px;
+  height: 50px;
+  border-radius: 33px;
+  border: 1px solid black;
+  background: white;
+  color: black;
+  font-family: Poppins;
+  font-weight: bold;
+  cursor: pointer;
+} 
+
+.user-name-prof-settings{
+  color: black;
+  font-family: Poppins;
+  font-weight: bold;
+  font-size: 50px;
+}
+
+.user-name-cont{ 
+  width: 100%;
+  height: auto;
+  padding: 30px 0 0 125px;
+
+  /* background: gray; */
+}
+
+.user-name-prof-settings{
+  color: black;
+  font-family: Poppins;
+  font-weight: bold;
+  font-size: 35px;
+}
+
+.forms-cont-prof-settings{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  background: pink;
+}
+
+.first-three-forms-cont{
+  width: 85%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+
+  background: lightgreen;
+}
+
+.second-three-forms-cont{
+  width: 85%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: orange;
+}
+
+.fname-div{
+  width: 33.33%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+
+  background: yellow;
+}
+
+.lname-div{
+  width: 33.33%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+
+  background: cyan;
+}
+
+.email-div{
+  width: 33.33%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+
+  background: lightblue;
+}
+
+.forms-design {
+  border: 1px solid black;
+  border-radius: 10px;
+  height: 60px;
+  width: 420px;
+  color: black;
+  font-family: Poppins;
+}
+
+.form-label{
+  color: black;
+  font-family: Poppins;
+}
+
+/* CUT */
   
-  .prof-pic {
-    border-radius: 100%;
-    width: 260px;
-    height: 260px;
-  }
-  
-  .notdisplayed {
-    display: none;
-  }
-  
-  .displayed {
-    top: 25px;
-    left: 22px;
-    position: absolute;
-    border-radius: 100%;
-    width: 260px;
-    height: 260px;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  .edit-icon {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .edit-btn-cont-prof-settings {
-    width: 290px;
-    height: 45x;
-    position: absolute;
-    margin: 225px 0 0 140px;
-  
-    overflow: hidden;
-    /* background: purple; */
-  }
-  
-  .edit-btn-prof-settings {
-    width: 290px;
-    height: 45px;
-    border-radius: 33px;
-    border: 1px solid black;
-    background: white;
-    color: black;
-    font-family: Poppins;
-    font-weight: bold;
-    cursor: pointer;
-  } 
-  
-  .user-name-cont {
+  /* .user-name-cont {
     width: 74%;
     height: 48%;
     float: right;
     padding: 30px 0 0 80px;
   
-    /* background: purple */
-  }
+    background: purple
+  } */
   
-  .user-name-prof-settings {
+  /* .user-name-prof-settings {
     color: black;
     font-family: Poppins;
     font-weight: bold;
     font-size: 50px;
-  }
+  } */
   
-  .position-prof-settings {
-    color: black;
-    font-family: Poppins;
-    font-weight: normal;
-    font-size: 25px;
-  }
-  
-  .forms-cont-prof-settings {
+  /* .forms-cont-prof-settings {
     display: flex;
     flex-direction: row;
     width: 88%;
@@ -164,7 +239,7 @@
     
     margin: 0 0 0 96px;
   
-    /* background: gray; */
+    background: gray;
   }
   
   .fname-empno-cont {
@@ -173,7 +248,7 @@
      display: flex;
      flex-direction: column;
   
-     /* background: purple; */
+     background: purple;
   }
   
   .lname-nubranch-cont {
@@ -182,7 +257,7 @@
     display: flex;
     flex-direction: column;
   
-    /* background: pink; */
+    background: pink;
   }
   
   .email-position-cont {
@@ -191,7 +266,7 @@
     display: flex;
     flex-direction: column;
   
-    /* background: cyan; */
+    background: cyan;
   }
   
   
@@ -201,7 +276,7 @@
     width: 95%;
     height: 20%;
     overflow: hidden;
-    /* background: red; */
+    background: red;
   }
   
   .fname-cont {
@@ -212,7 +287,7 @@
     justify-content: center;
     align-items:flex-start;
   
-    /* background: pink; */
+    background: pink;
   }
   
   .lname-cont {
@@ -223,7 +298,7 @@
     justify-content: center;
     align-items:flex-start;
   
-    /* background: cyan; */
+    background: cyan;
   }
   
   .email-cont {
@@ -234,7 +309,7 @@
     justify-content: center;
     align-items:flex-start;
   
-    /* background: purple; */
+    background: purple;
   }
   
   .second-forms-cont {
@@ -243,7 +318,7 @@
     display: flex;
     flex-direction: row;
     overflow: hidden;
-    /* background: black; */
+    background: black;
   }
   
   .empno-cont {
@@ -254,7 +329,7 @@
     justify-content: center;
     align-items:flex-start;
   
-    /* background: red; */
+    background: red;
   }
   
   .nubranch-cont{
@@ -266,7 +341,7 @@
     justify-content: center;
     align-items:flex-start;
   
-    /* background: green; */
+    background: green;
   }
   
   .pos-cont {
@@ -277,7 +352,7 @@
     justify-content: center;
     align-items:flex-start;
   
-    /* background: blue; */
+    background: blue;
   
   }
   
@@ -312,8 +387,4 @@
     width: 350px;
     color: black;
     font-family: Poppins;
-  }
-  
-  
-  /* ------------------------------------------- END OF PROFILE SETTINGS CSS ---------------------------- */
-  
+  } */
