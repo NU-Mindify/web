@@ -27,16 +27,16 @@ export default function ManageGlossary() {
 
     return (
         <>
-            <div className="glossary-header">
-                <h1 className="glossary-title">Manage Glossary</h1>
+            <div className="header">
+                <div className="glossary-title-container">
+                    <h1 className="glossary-title">Manage Glossary</h1>
+                </div>
 
                 <div className="glossary-search-container">
-                    <div className="glossary-search-holder">
-                        <button className="search-btn">
-                            <img src={search}></img>
-                        </button>
-                        <input type="text" placeholder="Search" className="search-input" />
-                    </div>
+                    <label className="input glossary-search-holder">
+                        <svg className="search-btn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></g></svg>
+                        <input type="search" className="grow" placeholder="Search" />
+                    </label>
                 </div>
 
                 <div className="glossary-letters-btn-container">
@@ -50,11 +50,12 @@ export default function ManageGlossary() {
                         </button>
                     ))}
                 </div>
+                
             </div>
 
             <div className="glossary-body">
                 {letters.map((letter) => (
-                    <div key={letter} ref={(el) => (termRefs.current[letter] = el)} className="word-main-container">
+                    <div key={letter} ref={(el) => (termRefs.current[letter] = el)} className="per-letter-main-container">
                         <h2 className="letter-title">{letter}</h2>
                         {groupedTerms[letter]?.length > 0 ? (
                             <div className="all-word-def-container">
@@ -69,7 +70,6 @@ export default function ManageGlossary() {
                                             <img src={dropdown} className="mainIcon"></img>
                                             </div>
                                         </div>
-
                                     </div>
                                 ))}
                             </div>

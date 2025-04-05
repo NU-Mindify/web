@@ -1,0 +1,170 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+.login-main-container{
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../assets/pattern.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: local;
+    overflow: hidden;
+    padding: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+@keyframes containerFadeOut{
+    100%{
+        transform: translateX(15%) ;
+    }
+}
+
+.logo-container{
+    width: calc(50vw - 50px);
+    height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    transform: translateX(50%);
+    animation: containerFadeOut 1s ease-in-out forwards;
+    animation-delay: 2.6s;
+    margin: 20px 0 0 0;
+}
+
+.logo{
+    width: 700px;
+}
+
+@keyframes imageFadeInOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    40% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    80%{
+        transform: scale(.8) translateY(-5%);
+    }
+    100% {  
+        opacity: 1;
+        transform: scale(0.6) translateY(-10%) translateX(0);
+    }
+    
+}
+  
+.logo {
+    height: 400px;
+    animation: imageFadeInOut 4s ease-in-out forwards;
+}
+  
+
+@keyframes infoFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(-50%);
+    }
+}
+  
+.info {
+    width: 80%;
+    height: 20vh;
+    font-size: 20px;
+    animation: infoFadeUp 2s ease-in forwards;
+    animation-delay: 2.5s;
+    opacity: 0;
+}
+
+@keyframes loginFormFadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(40px); /* start from below */
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0); /* end at original position */
+    }
+  }
+  
+
+.login-form{
+    width: calc(40%);
+    height: calc(100vh - 40px);
+    background-color: white;
+    animation: loginFormFadeUp 2s ease-in forwards;
+    animation-delay: 2.5s;
+    opacity: 0;
+    margin: 0 40px 0 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 20px;
+}
+
+
+.nuLogo-container{
+    width: 100%;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+}
+
+.nuLogo{
+    height: 100%;
+}
+
+.input-container{
+    width: 70%;
+    height: calc(100vh - 190px);
+    display: flex;
+    flex-direction: column;
+}
+
+.inputs{
+    width: 100%;
+    background-color: white;
+    color: black;
+    margin: 20px 0 10px 0;
+    border: 2px solid black;
+}
+
+.spanner{
+    background-color: white;
+    color: black;
+    margin: 20px 0 10px 0;
+    font-size: 18px;
+}
+
+.remember{
+    width: 100%;
+    color: black;
+}
+
+.checkbox{
+    border: 2px solid black;
+    color: black;
+    font-size: 8px;
+    height: 25px;
+    width: 25px;
+}
+
+.btn{
+    border-radius: 15px;
+    margin: 10px 0 0 0;
+    height: 40px;
+}

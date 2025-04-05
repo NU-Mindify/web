@@ -337,36 +337,60 @@ export default function ManageGlossary() {
       ]
       
 
-    return (
-        <>
-            <div className="glossary-header">
-                <div className="glossary-title-container">
-                    <h1 className="glossary-title">Manage Glossary</h1>
-                </div>
-
-                <div className="glossary-search-container">
-                    <div className="glossary-search-holder">
-                        <button className="search-btn">
-
-                        </button>
-                        <input type="text" placeholder="Search" className="search-input">
-
-                        </input>
-                    </div>
-                </div>
-
-                <div className="glossary-letters-btn-container">
-                    {letters.map((elem, index) => 
-                        <div style={{width: 40, height: 40, backgroundColor: 'green'}} key={index}>
-                            <h1>{elem}</h1>
-                        </div>
-                        
-                    )}
-                </div>
-            </div>
-            <div className="glossary-body">
-
-            </div>
-        </>
-    );
+   return (
+           <>
+               <div className="glossary-header">
+                   <h1 className="glossary-title">Manage Glossary</h1>
+   
+                   <div className="glossary-search-container">
+                       <div className="glossary-search-holder">
+                           <button className="search-btn">
+                               <img src={search}></img>
+                           </button>
+                           <input type="text" placeholder="Search" className="search-input" />
+                       </div>
+                   </div>
+   
+                   <div className="glossary-letters-btn-container">
+                       {letters.map((letter, index) => (
+                           <button
+                               key={index}
+                               onClick={() => scrollToLetter(letter)}
+                               className="w-[30px] h-[30px] ml-[6px] mr-[6px] cursor-pointer hover:underline text-black font-bold"
+                           >
+                               {letter}
+                           </button>
+                       ))}
+                   </div>
+              </div>
+   
+               <div className="glossary-body">
+                   {letters.map((letter) => (
+                       <div key={letter} ref={(el) => (termRefs.current[letter] = el)} className="word-main-container">
+                           <h2 className="letter-title">{letter}</h2>
+                           {groupedTerms[letter]?.length > 0 ? (
+                               <div className="all-word-def-container">
+                                   {groupedTerms[letter].map((term, idx) => (
+                                       <div key={idx} className="per-word-container">
+                                           <h3 className="word-container">{term.word}</h3>
+                                           <p className="meaning-container">{term.meaning}</p>
+                                           
+                                           <div className="gege">
+                                               <img src={edit} className="mainIcon"></img>
+                                               <div className="dropdown">
+                                               <img src={dropdown} className="mainIcon"></img>
+                                               </div>
+                                           </div>
+   
+                                       </div>
+                                   ))}
+                               </div>
+                           ) : (
+                               <p className="text-gray-400 italic">No terms available</p>
+                           )}
+                       </div>
+                   ))}
+               </div>
+           </>
+       );
 }

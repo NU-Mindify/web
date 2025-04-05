@@ -1,7 +1,13 @@
+import { useState } from "react"
+import '../../css/account.css'
+
 export default function AccountManagement(){
+
     return(
         <>
-            <h1>Account Management</h1>
+            <div className="acc-main-container">
+                <h1>mama mo</h1>
+            </div>
         </>
     )
 }

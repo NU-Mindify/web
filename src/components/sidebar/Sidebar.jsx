@@ -4,8 +4,6 @@ import MenuBtn from "./MenuBtn"
 import hamburger from '../../assets/hamburger.png'
 import halfburger from '../../assets/halfburger.png'
 
-
-
 import dashboard from '../../assets/dashboard.svg'
 import analytics from '../../assets/analytic.svg'
 import reports from '../../assets/report.svg'
@@ -15,14 +13,15 @@ import glossary from '../../assets/glossary.svg'
 import student from '../../assets/student.svg'
 import profile from '../../assets/profile.svg'
 import account from '../../assets/account.svg'
-
+import '../../index.css'
 
 
 export default function Sidebar() {
     const { isActive, setActive, selected, setSelected } = useContext(ActiveContext)
 
     const paths = {
-        dashboard: '/',
+        login: '/',
+        dashboard: '/dashboard',
         analytics: '/analytics',
         reports: '/reports',
         leaderboard: '/leaderboard',
@@ -57,10 +56,8 @@ export default function Sidebar() {
                 </div>
             </>
                 
-
-                
             }
-            
+
 
             <MenuBtn 
                 icons={dashboard}

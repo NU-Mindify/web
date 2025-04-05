@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Sidebar from './components/sidebar/Sidebar'
 import { ActiveContext } from './contexts/Contexts'
-
-
 import Dashboard from './pages/dashboard/Dashboard'
 import Analytics from './pages/analytics/Analytics'
 import Reports from './pages/reports/Reports'
@@ -13,22 +11,33 @@ import ManageStudents from './pages/students/ManageStudents'
 import ManageGlossary from './pages/glossary/ManageGlossary'
 import Profile from './pages/profile/Profile'
 import AccountManagement from './pages/accounts/AccountManagement'
-
+import './index.css'
+import Login from './pages/login/Login'
 
 
 function App() {
   const [isActive, setActive] = useState(false)
-  const [selected, setSelected] = useState('dashboard')
+  const [selected, setSelected] = useState('login')
 
   return (
     <ActiveContext.Provider value={{ isActive, setActive, selected, setSelected }}>
+     
+        
+    {selected === 'login' 
+      ? 
       <BrowserRouter>
-        <div className='main-container'>
+        <Routes>
+          <Route path='/' element={<Login />} />
+        </Routes>
+      </BrowserRouter>
+      : 
+      <div className='main-container'>
+        <BrowserRouter>
           <Sidebar />
-          
-          <div className='content-container'>
+      
+          <div className={isActive ? 'active-content-container' : 'content-container'}>
             <Routes>
-              <Route path='/' element={<Dashboard />} />
+              <Route path='/dashboard' element={<Dashboard />} />
               <Route path='/analytics' element={<Analytics />} />
               <Route path='/reports' element={<Reports />} />
               <Route path='/leaderboard' element={<Leaderboard />} />
@@ -40,9 +49,15 @@ function App() {
               <Route path='*' element={<Dashboard />} />
             </Routes>
           </div>
-        </div>
-      </BrowserRouter>
+        </BrowserRouter>
+      </div>
+    }
+        
+
+
+            
     </ActiveContext.Provider>
+    
   )
 }
 
