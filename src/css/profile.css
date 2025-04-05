@@ -172,7 +172,7 @@
 }
 
 .fname-div{
-  width: auto;
+  width: 100%;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -181,7 +181,7 @@
 }
 
 .lname-div{
-  width: auto;
+  width: 100%;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -190,7 +190,7 @@
 }
 
 .email-div{
-  width: auto;
+  width: 100%;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -202,7 +202,7 @@
   border: 1px solid black;
   border-radius: 10px;
   height: 60px;
-  width: auto;
+  width: 45vh;
   color: black;
   font-family: Poppins;
 }
