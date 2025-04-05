@@ -3,6 +3,7 @@ import terms from '../../data/GlossaryTerms.json'
 import edit from '../../assets/edit.svg'
 import dropdown from '../../assets/dropdown.svg'
 import search from '../../assets/search.svg'
+import '../../css/glossary.css'
 
 export default function ManageGlossary() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
