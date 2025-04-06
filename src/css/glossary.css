@@ -1,29 +1,4 @@
-:root {
-  --spacing: 12px;
-  --mini-spacing: 6px;
 
-  --main_height: 100vh;
-  --main_width: 100vw;
-
-  --menu_width: 44px;
-  --active_menu_width: 280px;
-  --btn_height: 35px;
-  --icon_size: 20px;
-  --menu-text: 16px;
-
-  --content_container_width: 1380px;
-  --active_content_container-width: 1200px;
-
-  --content-container-height: calc(var(--main_height) - (var(--spacing) * 2));
-  --glossary-header-height: 200px;
-  --glossary-body-height: calc(var(--content-container-height) - var(--glossary-header-height) - var(--spacing));
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
 /* GLOSSARY HEADER & BODY */
 .header {

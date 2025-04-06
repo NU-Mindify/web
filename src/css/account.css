@@ -2,33 +2,6 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-:root{
-    --spacing: 12px;
-    --mini-spacing: 6px;
-  
-    --main_height: 100vh;
-    --main_width: 100vw;
-  
-    --menu_width: 44px;
-    --active_menu_width: 280px;
-    --btn_height: 35px;
-    --icon_size: 20px;
-    --menu-text: 16px;
-
-    --content-container-height: calc(var(--main_height) - (var(--spacing) * 2));
-
-    --glossary-header-height: 200px;
-
-    --glossary-body-height: calc(var(--content-container-height) - var(--glossary-header-height) - var(--spacing));
-
-    --per-word-width: 1300px;
-  }
-  
-*{
-  box-sizing: border-box; 
-  margin: 0;
-  padding: 0;
-}
 
 .acc-main-container{
     width: 100%;
