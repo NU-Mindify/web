@@ -30,6 +30,17 @@
     --glossary-body-height: calc(var(--content-container-height) - var(--glossary-header-height) - var(--spacing));
 
     --per-word-width: 1300px;
+
+    
+    --profile-settings-header-height: 300px;
+
+    --profile-settings-body-height: calc(var(--content-container-height) - var(--profile-settings-header-height));
+
+    --profile-settings-avatar-edit-container-height: calc(var(--content-container-height) - var(--main-height));
+
+    --username-container-prof-settings-height: 80px;
+
+    --forms-container-prof-settings-height: calc(var(--content-container-height) - var(--main-height));
   }
   
 
