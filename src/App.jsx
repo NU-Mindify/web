@@ -13,7 +13,13 @@ import Profile from './pages/profile/Profile'
 import AccountManagement from './pages/accounts/AccountManagement'
 import './index.css'
 import Login from './pages/login/Login'
+import { onAuthStateChanged } from 'firebase/auth'
+import { firebaseAuth } from './Firebase'
 
+// Authentication Listener
+onAuthStateChanged(firebaseAuth, user => {
+  console.log(user);
+})
 
 function App() {
   const [isActive, setActive] = useState(false)
