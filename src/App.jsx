@@ -15,6 +15,8 @@ import './index.css'
 import Login from './pages/login/Login'
 import { onAuthStateChanged } from 'firebase/auth'
 import { firebaseAuth } from './Firebase'
+import JeromeProfile from './pages/profile/JeromeProfile'
+
 
 // Authentication Listener
 onAuthStateChanged(firebaseAuth, user => {
@@ -50,7 +52,7 @@ function App() {
               <Route path='/question' element={<ManageQuestion />} />
               <Route path='/glossary' element={<ManageGlossary />} />
               <Route path='/students' element={<ManageStudents />} />
-              <Route path='/profile' element={<Profile />} />
+              <Route path='/profile' element={<JeromeProfile />} />
               <Route path='/account' element={<AccountManagement />} />
               <Route path='*' element={<Dashboard />} />
             </Routes>

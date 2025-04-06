@@ -61,15 +61,19 @@ export default function ManageGlossary() {
                             <div className="all-word-def-container">
                                 {groupedTerms[letter].map((term, idx) => (
                                     <div key={idx} className="per-word-container">
-                                        <h3 className="word-container">{term.word}</h3>
-                                        <p className="meaning-container">{term.meaning}</p>
-                                        
-                                        <div className="gege">
-                                            <img src={edit} className="mainIcon"></img>
-                                            <div className="dropdown">
-                                            <img src={dropdown} className="mainIcon"></img>
-                                            </div>
-                                        </div>
+
+                                        <table>
+                                            <tr>
+                                                <td className="word-container">{term.word}</td>
+                                                <td className="meaning-container">{term.meaning}</td>
+                                                <td className="gege">
+                                                <img src={edit} className="mainIcon"></img>
+                                                    <div className="dropdown">
+                                                    <img src={dropdown} className="mainIcon"></img>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>    
                                     </div>
                                 ))}
                             </div>
