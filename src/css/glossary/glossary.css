@@ -1,0 +1,111 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+
+/* ------------------- MAIN HEADER ---------------- */
+.header {
+  @apply w-full bg-white h-[200px] rounded-xl flex flex-col items-center mb-3;
+}
+
+/* ------------------- HEADER CONTENTS ---------------- */
+
+.glossary-title-container {
+
+  @apply w-full h-1/3 flex items-center pl-[40px] ;
+}
+.glossary-title {
+  @apply text-[30px] text-[#FFC100];
+}
+
+
+
+.glossary-search-container {
+  @apply w-full h-1/3 flex justify-center items-center bg-red-400;
+}
+
+
+
+.glossary-letters-btn-container {
+  @apply w-[90%] h-1/3  flex justify-around items-center min-w-[500px];
+}
+
+.navigator-buttons{
+  @apply hover:underline font-semibold text-black cursor-pointer w-3.5 h-full;
+}
+
+.letter-title {
+  @apply text-[40px] text-black;
+}
+
+
+/* ***************************************************** */
+
+
+
+/* ------------------- MAIN BODY ---------------- */
+
+.glossary-body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  @apply w-full h-[calc(100%-212px)] overflow-y-auto px-2 pb-2 rounded-xl bg-white;
+}
+
+/* ***************************************************** */
+
+
+/* ------------------- BODY CONTENTS ---------------- */
+
+.header-details {
+  border-bottom: 2px solid black;
+  @apply w-full h-[50px] flex items-center pl-2.5 text-2xl font-medium text-black bg-white sticky top-0 z-[100];
+}
+
+.word-header {
+  @apply w-1/5;
+}
+
+.meaning-header {
+  @apply w-[60%];
+}
+
+.action-header {
+  @apply w-1/5 pl-[50px];
+}
+
+
+
+
+
+.per-letter-main-container {
+  @apply w-full px-1.5 mb-3 scroll-mt-[50px];
+}
+
+
+.all-word-def-container {
+  @apply w-full flex flex-col justify-center items-center;
+}
+
+.per-word-container {
+  border: 1px solid black;
+  @apply w-full min-h-[60px] flex flex-wrap justify-center items-center mb-2 rounded-xl max-h-[80px];
+}
+
+
+.word-container {
+  @apply w-1/5 text-black min-w-[100px];
+}
+
+.meaning-container {
+  text-overflow: ellipsis;
+  @apply w-3/5 text-black whitespace-nowrap  overflow-hidden;
+}
+
+.gege {
+  @apply w-1/5 h-full flex justify-around items-center;
+}
+
+.dropdown {
+  @apply w-[30px] h-[30px] flex justify-center items-center rounded-md bg-gray-300; 
+}
+
+/* ***************************************************** */

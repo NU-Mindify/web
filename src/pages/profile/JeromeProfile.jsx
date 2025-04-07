@@ -1,5 +1,5 @@
-import edit_icon from '../../assets/edit.svg'
-import '../../css/profile.css'
+
+import '../../css/profile/profile.css'
 import { useRef, useState } from 'react';
 
 export default function JeromeProfile(){

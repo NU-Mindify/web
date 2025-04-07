@@ -1,9 +1,8 @@
 import { useRef, } from "react";
 import terms from '../../data/GlossaryTerms.json'
-import edit from '../../assets/edit.svg'
-import dropdown from '../../assets/dropdown.svg'
-import search from '../../assets/search.svg'
-import '../../css/glossary.css'
+import edit from '../../assets/glossary/edit.svg'
+import dropdown from '../../assets/glossary/dropdown.svg'
+import '../../css/glossary/glossary.css'
 
 export default function ManageGlossary() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -33,10 +32,7 @@ export default function ManageGlossary() {
                 </div>
 
                 <div className="glossary-search-container">
-                    <label className="input glossary-search-holder">
-                        <svg className="search-btn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></g></svg>
-                        <input type="search" className="grow" placeholder="Search" />
-                    </label>
+                    
                 </div>
 
                 <div className="glossary-letters-btn-container">
@@ -44,16 +40,21 @@ export default function ManageGlossary() {
                         <button
                             key={index}
                             onClick={() => scrollToLetter(letter)}
-                            className="w-[30px] h-[30px] ml-[6px] mr-[6px] cursor-pointer hover:underline text-black font-bold"
+                            className="navigator-buttons"
                         >
                             {letter}
                         </button>
                     ))}
                 </div>
-                
             </div>
 
             <div className="glossary-body">
+                <div className="header-details">
+                    <div className="word-header">Terminology</div>
+                    <div className="meaning-header">Definition</div>
+                    <div className="action-header">Action</div>
+                </div>
+
                 {letters.map((letter) => (
                     <div key={letter} ref={(el) => (termRefs.current[letter] = el)} className="per-letter-main-container">
                         <h2 className="letter-title">{letter}</h2>
@@ -61,19 +62,14 @@ export default function ManageGlossary() {
                             <div className="all-word-def-container">
                                 {groupedTerms[letter].map((term, idx) => (
                                     <div key={idx} className="per-word-container">
-
-                                        <table>
-                                            <tr>
-                                                <td className="word-container">{term.word}</td>
-                                                <td className="meaning-container">{term.meaning}</td>
-                                                <td className="gege">
-                                                <img src={edit} className="mainIcon"></img>
-                                                    <div className="dropdown">
-                                                    <img src={dropdown} className="mainIcon"></img>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </table>    
+                                        <div className="word-container">{term.word}</div>
+                                        <div className="meaning-container">{term.meaning}</div>
+                                        <div className="gege">
+                                            <img src={edit} className="mainIcon"></img>
+                                            <div className="dropdown">
+                                                <img src={dropdown} className="mainIcon"></img>
+                                            </div>
+                                        </div>  
                                     </div>
                                 ))}
                             </div>
@@ -82,7 +78,12 @@ export default function ManageGlossary() {
                         )}
                     </div>
                 ))}
+
+
             </div>
+            
+
+
         </>
     );
 }

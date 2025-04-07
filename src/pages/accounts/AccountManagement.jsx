@@ -1,5 +1,5 @@
 import { useState } from "react"
-import '../../css/account.css'
+import '../../css/account//account.css'
 
 export default function AccountManagement(){
 

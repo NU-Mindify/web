@@ -1,18 +1,18 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { ActiveContext } from "../../contexts/Contexts"
 import MenuBtn from "./MenuBtn"
-import hamburger from '../../assets/hamburger.png'
-import halfburger from '../../assets/halfburger.png'
+import hamburger from '../../assets/sidebar/hamburger.svg'
+import halfburger from '../../assets/sidebar/halfburger.svg'
 
-import dashboard from '../../assets/dashboard.svg'
-import analytics from '../../assets/analytic.svg'
-import reports from '../../assets/report.svg'
-import leaderboard from '../../assets/leaderboard.svg'
-import question from '../../assets/question.svg'
-import glossary from '../../assets/glossary.svg'
-import student from '../../assets/student.svg'
-import profile from '../../assets/profile.svg'
-import account from '../../assets/account.svg'
+import dashboard from '../../assets/sidebar/dashboard.svg'
+import analytics from '../../assets/sidebar/analytic.svg'
+import reports from '../../assets/sidebar/report.svg'
+import leaderboard from '../../assets/sidebar/leaderboard.svg'
+import question from '../../assets/sidebar/question.svg'
+import glossary from '../../assets/sidebar/glossary.svg'
+import student from '../../assets/sidebar/student.svg'
+import profile from '../../assets/sidebar/profile.svg'
+import account from '../../assets/sidebar/account.svg'
 import '../../index.css'
 
 
@@ -57,7 +57,6 @@ export default function Sidebar() {
             </>
                 
             }
-
 
             <MenuBtn 
                 icons={dashboard}
@@ -140,6 +139,10 @@ export default function Sidebar() {
                 onPress={() => setSelected('account')}
                 goTo={paths.account}
             />
+
+            {isActive && 
+                <button className="btn btn-active btn-warning">Logout</button>
+            }
         </div>
     )
 }
