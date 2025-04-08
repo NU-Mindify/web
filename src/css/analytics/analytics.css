@@ -1,2 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
 @import "tailwindcss";
 @plugin "daisyui";
+
+.main-container-analytics{
+    @apply w-full h-full flex flex-col rounded-xl 
+}
+
+.header-container-analytics{
+    @apply w-full h-[100px] pl-10 pt-7 bg-white rounded-xl;
+}
+
+.header-text-properties-analytics{
+    @apply text-4xl font-[Poppins] font-bold text-[#FFD41C];
+}
+
+.content-container-analytics{
+    @apply w-full h-full overflow-y-auto mt-0.5
+}
+
+.analytics-container-properties{
+    @apply w-full h-[400px] pl-10 pt-7 bg-white rounded-xl mt-3;
+}
+
+.analytics-title-text-properties {
+    @apply text-4xl font-[Poppins] font-bold text-black;
+}

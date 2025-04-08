@@ -1,2 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
 @import "tailwindcss";
 @plugin "daisyui";
+
+.main-container-dashboard{
+    @apply w-full h-full flex flex-col rounded-xl
+}
+
+.searchbar-mindifylogo-container-dashboard{
+    @apply w-full h-[100px] pl-10 pt-7  flex flex-row;
+}
+
+.searchbar-container-dashboard{
+    @apply w-[80%] h-[50px] bg-white rounded-xl flex justify-center items-center
+}   
+
+.mindify-logo-container-dashboard{
+    @apply w-[10%] h-[50px] ml-22 flex justify-center items-center
+}
+
+.mindify-logo-dashboard{
+    @apply w-[150px] h-[100px]
+}
+
+.header-container-dashboard{
+    @apply  w-full h-[80px] pl-10 pt-5
+}
+
+.header-text-dashboard{
+    @apply text-white font-[Poppins] font-bold text-[25px]
+}
+
+.header-greeting-dashboard{
+    @apply text-white font-[Poppins] font-light italic text-[15px]
+    
+}
+
+.analytics-container-dashboard{
+    @apply  w-[100%] h-[200px] flex flex-row flex-wrap items-center justify-center mt-3;
+}
+
+.analytics-properties-dashboard{
+    @apply w-[300px] h-[180px] bg-white rounded-xl m-2;
+}
+
+.reports-title-container-dashboard{
+    @apply  w-full h-[80px] pl-10 pt-5
+}
+
+.reports-title-properties-dashboard{
+    @apply text-white font-[Poppins] font-bold text-[25px]
+}
+
+.reports-content-container-dashboard{
+    @apply  w-full h-[60%] flex flex-row pl-7
+}
+
+.total-students-container-dashboard{
+    @apply w-[25%] h-[450px] bg-white rounded-xl m-3
+}
+
+.badges-container-dashboard{
+    @apply w-[25%] h-[450px] bg-white rounded-xl m-3
+}
+
+.leaderboards-container-dashboard{
+    @apply w-[50%] h-[450px] bg-white rounded-xl m-3
+}

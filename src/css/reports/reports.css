@@ -1,2 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
 @import "tailwindcss";
 @plugin "daisyui";
+
+.main-container-reports{
+    @apply w-full h-full flex flex-col rounded-xl
+}
+
+.header-container-reports{
+    @apply w-full h-[100px] pl-10 pt-7 bg-white rounded-xl;
+}
+
+.header-text-properties-reports{
+    @apply text-4xl font-[Poppins] font-bold text-[#FFD41C];
+}
+
+.totalstudents-badges-container{
+    @apply w-full h-[390px] rounded-xl mt-3 flex flex-row items-center justify-center;
+}
+
+.totalstudents-badges-container-properties{
+    @apply w-[100%] h-[390px] bg-white rounded-xl m-2;
+}
+
+.world-reports-container{
+    @apply w-full h-[390px] rounded-xl mt-3 flex flex-row flex-wrap items-center justify-center;
+}
+
+.world-reports-container-properties{
+    @apply w-[310px] h-[180px] bg-white rounded-xl mr-2 ml-2;
+}
