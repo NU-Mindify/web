@@ -5,168 +5,85 @@
 /*margin / padding: top right bottom left*/
 
 .main-cont-prof-settings{
-    width: 100%;
-    height: var(--content-container-height);
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
+  @apply w-full h-full flex flex-col rounded-xl ;
+}
 
-    /* background: gray; */
-  }
+
+
   
 .header-container-prof-settings {
-  height: var(--profile-settings-header-height);
-  
-  /* background: purple; */
+  @apply w-full h-[200px] pl-6 pt-3;
 }
   
 .header-text-prof-settings {
-  margin: 0 0 0 var(--spacing);
-  padding : var(--spacing) 0 0 0;
-  font-size: 35px;
-  font-family: Poppins;
-  font-weight: bold;
-  color: #FFD41C;
+  @apply text-4xl font-[Poppins] font-bold text-[#FFD41C];
 }
+
+
+
+
+
   
 .content-container-prof-settings {
-  width: 100%;
-  height: var(--profile-settings-body-height);
-  display: flex;
-  flex-direction: column;
-  border-radius: 10px;
-  background: white;
+  @apply w-full h-[calc(100vh-200px)] rounded-xl flex flex-col bg-white;
 }
 
-.avatar-edit-container-prof-settings{
-  width: 100%;
-  height: var(--profile-settings-avatar-edit-container-height);
-  display: flex;
-  flex-direction: flex-start;
-
-  /* background: lightgreen; */
+.avatar-edit-container-prof-settings {
+  @apply w-full h-auto flex flex-col md:flex-row px-4 md:px-8 gap-0.5;
 }
 
-.avatar-container-prof-settings{
-  width: 305px;
-  height: 310px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid yellow;
-  border-radius: 100%;
-  box-shadow: rgba(0, 0, 0, 0.60) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
-  margin: -150px 0 0 80px;
-
-  background: white;
+.avatar-container-prof-settings {
+  @apply w-full md:w-auto h-auto flex flex-col items-center justify-center
+    mt-[-60px] sm:mt-[-80px] md:mt-[-100px] lg:mt-[-120px] px-4 py-4;
 }
 
 .avatar-dimensions {
-  border-radius: 100%;
-  width: 260px;
-  height: 260px;
+  border: 5px solid white;
+  @apply w-[180px] h-[180px] 
+    /* sm:w-[180px] sm:h-[180px]
+    md:w-[180px] md:h-[180px]
+    lg:w-[200px] lg:h-[200px] */
+    object-cover rounded-full;
 }
 
-.edit-btn-container-prof-settings{
-  width: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left: 50px;
-
-  /* background: orange; */
+.edit-btn-container-prof-settings {
+  @apply w-full md:w-[300px] flex justify-center items-center md:ml-8 mt-4 md:mt-0;
 }
 
-.edit-btn-properties{
-  width: 300px;
-  height: 50px;
+.edit-btn-properties {
   border: 1px solid black;
-  border-radius: 25px;
-  color: black;
-  font-family: Poppins;
-  font-weight: bold;
-  font-size: 15px;
-  cursor: pointer;
+  @apply w-3/4 md:w-full h-12 md:h-1/4 rounded-3xl text-black font-[Poppins] font-bold text-sm cursor-pointer;
 }
 
-.username-container-prof-settings{
-  width: 485px;
-  height: var(--username-container-prof-settings-height);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left: -10px;
-  padding-top: 20px;
-
-  /* background: pink */
+.username-properties {
+  @apply mt-4 text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-center text-gray-800;
 }
 
-.username-properties{
-  color: black;
-  font-family: Poppins;
-  font-weight: bold;
-  font-size: 40px;
+
+
+
+
+
+.forms-container{
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-4 w-full items-start overflow-y-auto;
 }
 
-.forms-container-1{
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
-  overflow-y: auto;
-  padding: 10px;
+.forms-properties {
+  @apply w-full flex flex-col;
 }
 
-.forms-properties{
-  width: 500px;
-  display: flex;
-  flex-direction: column;
-  margin: 10px 0 10px 0;
-  /* background: gray; */
-}
 
 .forms-label-properties{
-  color: black;
-  font-family: Poppins;
-  padding: 0 0 10px 0;
+  @apply text-black font-[Poppins];
 }
 
 .input-properties{
   border: 1px solid black;
-  border-radius : 10px;
-  width: 100%;
-  height: 70px;
-  color: black;
-  font-family: Poppins;
-  font-size: 18px;
-  padding: 0 0 0 10px;
-  background-color: white;
+  @apply rounded-xl w-full h-[60px] text-black font-[Poppins] text-[16px] bg-white pl-3;
 }
 
-
-
-
-
-
-/*--------------------- JEROME STYLES --------------------*/
-
-.formsforms{
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-.jerome-forms-properties{
-  width: 400px;
-  display: flex;
-  flex-direction: column;
-  margin: 10px 0 10px 0;
-  /* background: gray; */
+.forms-label-properties{
+  @apply text-black font-[Poppins] ;
 }

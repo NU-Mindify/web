@@ -23,7 +23,6 @@
 
 
 
-
 /*----- SIDE MENU CONTAINER -----*/
 
 .side-menu {
@@ -169,10 +168,12 @@
 /*----- CONTENTS CONTAINER -----*/
 
 .content-container{
-    @apply w-full h-full ml-3 bg-blue-400 rounded-xl overflow-hidden;
+    background-color: rgba(157, 200, 243, 0.3);
+    @apply w-full h-full ml-3  rounded-xl overflow-hidden;
 }
 
 .active-content-container{
-    @apply w-full h-full ml-3 bg-blue-400 rounded-xl overflow-hidden;
+    background-color: rgba(157, 200, 243, 0.3);
+    @apply w-full h-full ml-3  rounded-xl overflow-hidden;
 }
 /********************************/
