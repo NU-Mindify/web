@@ -50,9 +50,9 @@ export default function ManageGlossary() {
 
             <div className="glossary-body">
                 <div className="header-details">
-                    <div className="word-header">Terminology</div>
-                    <div className="meaning-header">Definition</div>
-                    <div className="action-header">Action</div>
+                    <div className="header-title">Terminology</div>
+                    <div className="header-title">Definition</div>
+                    <div className="header-title">Action</div>
                 </div>
 
                 {letters.map((letter) => (
@@ -65,7 +65,7 @@ export default function ManageGlossary() {
                                         <div className="word-container">{term.word}</div>
                                         <div className="meaning-container">{term.meaning}</div>
                                         <div className="gege">
-                                            <img src={edit} className="mainIcon"></img>
+                                            <img src={edit} className="editIcon"></img>
                                             <div className="dropdown">
                                                 <img src={dropdown} className="mainIcon"></img>
                                             </div>

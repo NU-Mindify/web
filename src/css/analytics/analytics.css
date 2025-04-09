@@ -3,11 +3,11 @@
 @plugin "daisyui";
 
 .main-container-analytics{
-    @apply w-full h-full flex flex-col rounded-xl p-2
+    @apply w-full h-full flex flex-col rounded-xl;
 }
 
 .header-container-analytics{
-    @apply w-full h-[100px] bg-white rounded-xl p-5 sticky top-0;
+    @apply w-full h-[200px] bg-white rounded-xl p-5 sticky top-0;
 }
 
 .header-text-properties-analytics{
@@ -20,7 +20,7 @@
 
 .content-container-analytics{
     scrollbar-width: none;
-    -ms-overflow-style: none;
+  -ms-overflow-style: none;
     @apply grid grid-cols-1 gap-4 overflow-y-auto mt-3;
 }
 
