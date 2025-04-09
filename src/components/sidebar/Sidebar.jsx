@@ -155,17 +155,13 @@ export default function Sidebar() {
             
 
             {!isActive ? (
-                <div className="btn-container">
-                    <button 
-                        className="btn-icon"
-                        tooltip
-                        tooltip-right
-                        data-tip='Logout'
-                        onClick={handleLogout}
-                    >
-                        <img src={logout} className="mainIcon" />
-                    </button>
-                </div>
+                <MenuBtn
+                    icons={logout}
+                    active={isActive}
+                    text='Logout'
+                    onPress={confirmLogout}
+                    goTo={paths.login}
+                />
             ) : (
                 <button className="btn btn-active btn-warning" onClick={handleLogout}>Logout</button>
             )}

@@ -1,10 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-*{
-    @apply overflow-hidden;
-}
-
 
 .logo-animated{
   animation: numindifyAnimation 3.5s ease-in-out forwards;
