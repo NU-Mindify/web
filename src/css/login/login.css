@@ -5,6 +5,17 @@
     @apply overflow-hidden;
 }
 
+
+.logo-animated{
+  animation: numindifyAnimation 3.5s ease-in-out forwards;
+  animation-fill-mode: both;
+  @apply w-screen h-screen  absolute top-0 left-0 z-50 flex justify-center items-center;
+}
+
+.mindifylogo{
+  @apply w-3/5;
+}
+
 .login-main-container{
     background-image: url('../../assets/background/pattern.png');
     background-repeat: no-repeat;
@@ -13,88 +24,83 @@
     @apply w-screen h-screen p-5 flex flex-row justify-center items-center;
 }
 
-/* @keyframes containerFadeOut{
-    100%{
-        transform: translateX(-40%) translateY(-10%);
-    }
-} */
+
+
 
 .logo-container {
-    animation: containerFadeOut 1s ease-in-out forwards;
+    animation: fadeUp 2s ease-in forwards;
     animation-delay: 2.6s;
     animation-fill-mode: both;
-    @apply w-[calc(50vw-20px)] h-full flex flex-col justify-center items-center bg-red-400;
+    @apply hidden opacity-0
+    sm:w-[calc(50vw-20px)] sm:h-full sm:flex sm:flex-col sm:justify-center sm:items-center 
+    lg:w-[calc(65vw-20px)] lg:h-full;
   }
 
 
 
-/* @keyframes imageFadeInOut {
+  @keyframes numindifyAnimation {
     0% {
       opacity: 0;
-      transform: scale(0.8);
+      transform: scale(0.6) translateY(20%);
     }
     30% {
       opacity: 1;
-      transform: scale(1);
+      transform: scale(1) translateY(0);
     }
-    50% {
-      transform: scale(.9);
-    }
-    90% {
-      transform: scale(.8) translateY(-5%);
+    80% {
+      transform: scale(1.05) translateY(-5%);
     }
     100% {
-      opacity: 1;
-      transform: scale(0.6) translateY(-10%);
+      opacity: 0;
+      transform: scale(0.4) translateY(-200%);
     }
-  } */
+  }
+  
   
   
 .logo {
-  animation: imageFadeInOut 3.6s ease-in-out forwards;
-  animation-fill-mode: both;
-  @apply w-[300px] max-w-[400px] min-w-[100px] h-auto bg-green-500;
-
+  @apply w-[300px] max-w-[300px] min-w-[100px] h-auto
+  lg:w-[500px] lg:max-w-[500px];
+  
 }
 
-/* @keyframes infoFadeUp {
-    0% {
-        opacity: 0;
-        transform: translateY(0);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(-50%);
-    }
-} */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px); 
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   
 .info {
-    animation: infoFadeUp 2s ease-in forwards;
-    animation-delay: 2.5s;
-    @apply w-4/5 h-auto text-xl opacity-100 text-justify;
+    @apply w-4/5 h-auto text-base opacity-100 text-justify
+    lg:text-2xl;
 }
 
-/* @keyframes loginFormFadeUp {
-    0% {
-      opacity: 0;
-      transform: translateY(40px); 
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  } */
-  
+
 
 .login-form{
-    animation: loginFormFadeUp 2s ease-in forwards;
+    animation: fadeUp 2s ease-in forwards;
     animation-delay: 2.5s;
-    @apply w-[calc(50vw-20px)] h-[calc(100vh-40px)] bg-white opacity-100 flex flex-col items-center rounded-xl;
+    @apply bg-white opacity-0 flex flex-col items-center rounded-xl w-full h-full
+    sm:w-[calc(50vw-20px)] sm:h-[calc(100vh-40px)] 
+    lg:w-[calc(35vw-20px)] lg:h-[calc(100vh-40px)];
+}
+
+.welcome-txt{
+  @apply text-blue-600 text-3xl font-semibold;
+}
+
+.mini-txt{
+  @apply text-black text-[14px] mb-3;
 }
 
 
 .nuLogo-container{
-    @apply w-full h-[150px] flex justify-center;
+    @apply w-full h-[150px] flex justify-center
 }
 
 .nuLogo{
@@ -102,16 +108,16 @@
 }
 
 .input-container{
-    @apply w-4/5 h-[calc(100vh-190px)] bg-red-300 flex flex-col overflow-y-auto;
+    @apply w-4/5 h-[calc(100vh-190px)] flex flex-col overflow-y-auto;
 }
 
 .inputs{
     border: 2px solid black;
-    @apply w-full bg-white text-black h-[40px];
+    @apply w-full bg-white text-black h-[40px] my-[10px] px-2;
 }
 
 .spanner{
-    @apply text-lg mt-[20px] bg-white text-black;
+    @apply text-lg mt-[10px] bg-white text-black;
 }
 
 .remember-container{

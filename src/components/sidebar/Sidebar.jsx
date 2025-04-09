@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import { ActiveContext } from "../../contexts/Contexts"
 import MenuBtn from "./MenuBtn"
 import hamburger from '../../assets/sidebar/hamburger.svg'
@@ -13,11 +13,16 @@ import glossary from '../../assets/sidebar/glossary.svg'
 import student from '../../assets/sidebar/student.svg'
 import profile from '../../assets/sidebar/profile.svg'
 import account from '../../assets/sidebar/account.svg'
+import logout from '../../assets/sidebar/logout.svg'
 import '../../index.css'
+import { useNavigate } from "react-router"
+
 
 
 export default function Sidebar() {
     const { isActive, setActive, selected, setSelected } = useContext(ActiveContext)
+
+    const navigate = useNavigate()
 
     const paths = {
         login: '/',
@@ -36,27 +41,35 @@ export default function Sidebar() {
         setActive((prev) => !prev)
     }
 
+    const handleLogout = () => {
+        document.getElementById('logout_modal')?.showModal()
+    }
+
+    const confirmLogout = () => {
+        navigate('/')
+        setSelected('login')
+        setActive(false)
+    }
+
     return (
         <div className={isActive ? 'active-side-menu' : 'side-menu'}>
-            <button className={'btn-icon'} onClick={handleSideMenu}>
+            <button className='btn-icon' onClick={handleSideMenu}>
                 <img src={isActive ? halfburger : hamburger} className="mainIcon" alt="menu" />
             </button>
 
-            {isActive && 
-            <>
-                <div className="avatar">
-                    <div className="avatar-container">
-                        <img src="https://avatarfiles.alphacoders.com/375/375159.jpeg" />
+            {isActive && (
+                <>
+                    <div className="avatar">
+                        <div className="avatar-container">
+                            <img src="https://avatarfiles.alphacoders.com/375/375159.jpeg" />
+                        </div>
                     </div>
-                </div>
-                
-                <div className="name-container">
-                    <h1 className="user-name">Suosuo Frieren</h1>
-                    <h5 className="user-email">virgojl@students.nu-moa.edu.ph</h5>
-                </div>
-            </>
-                
-            }
+                    <div className="name-container">
+                        <h1 className="user-name">Suosuo Frieren</h1>
+                        <h5 className="user-email">virgojl@students.nu-moa.edu.ph</h5>
+                    </div>
+                </>
+            )}
 
             <MenuBtn 
                 icons={dashboard}
@@ -139,10 +152,35 @@ export default function Sidebar() {
                 onPress={() => setSelected('account')}
                 goTo={paths.account}
             />
+            
 
-            {isActive && 
-                <button className="btn btn-active btn-warning">Logout</button>
-            }
+            {!isActive ? (
+                <div className="btn-container">
+                    <button 
+                        className="btn-icon"
+                        tooltip
+                        tooltip-right
+                        data-tip='Logout'
+                        onClick={handleLogout}
+                    >
+                        <img src={logout} className="mainIcon" />
+                    </button>
+                </div>
+            ) : (
+                <button className="btn btn-active btn-warning" onClick={handleLogout}>Logout</button>
+            )}
+
+            <dialog id="logout_modal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Are you sure you want to logout?</h3>
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn">Cancel</button>
+                        </form>
+                        <button className="btn btn-warning" onClick={confirmLogout}>Logout</button>
+                    </div>
+                </div>
+            </dialog>
         </div>
     )
 }

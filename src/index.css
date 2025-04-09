@@ -30,6 +30,7 @@
     overflow-y: auto;
     scrollbar-width: none; 
     -ms-overflow-style: none;
+    overflow: visible;
     @apply w-[50px] h-full bg-white overflow-visible transition-all 
     duration-300 ease-in-out pt-3;
     

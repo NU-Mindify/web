@@ -35,8 +35,8 @@ export default function Login(){
                     </div>
 
                     <div className='input-container'>
-                        <h1 className='text-blue-600 text-2xl font-semibold'>WELCOME!</h1>
-                        <h3 className='text-black text-[12px]'>Login to access your account</h3>
+                        <h1 className='welcome-txt'>WELCOME!</h1>
+                        <h3 className='mini-txt'>Login to access your account</h3>
 
 
                         <label className="floating-label">
@@ -85,15 +85,14 @@ export default function Login(){
                             Login with Microsoft
                         </button>
 
-
-
-
-
-                        
                     </div> 
                     
 
                 </div>
+            </div>
+
+            <div className='logo-animated'>
+                <img src={logo} className='mindifylogo'></img>
             </div>
         </>
     )
