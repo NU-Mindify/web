@@ -3,29 +3,45 @@
 @plugin "daisyui";
 
 .main-container-reports{
-    @apply w-full h-full flex flex-col rounded-xl
+    @apply w-full h-full flex flex-col rounded-xl;
 }
 
+
 .header-container-reports{
-    @apply w-full h-[100px] pl-10 pt-7 bg-white rounded-xl;
+    @apply w-full h-[100px] bg-white rounded-xl p-5 sticky top-0;
 }
 
 .header-text-properties-reports{
     @apply text-4xl font-[Poppins] font-bold text-[#FFD41C];
 }
 
+
+.data-main-container{
+    scrollbar-width: none;
+    @apply w-full h-[calc(100vh-132px)] mt-3 overflow-y-auto;
+}
+
+
+
 .totalstudents-badges-container{
-    @apply w-full h-[390px] rounded-xl mt-3 flex flex-row items-center justify-center;
+    @apply grid gap-4 grid-cols-1 place-items-center
+    lg:grid-cols-2;
 }
 
 .totalstudents-badges-container-properties{
-    @apply w-[100%] h-[390px] bg-white rounded-xl m-2;
+    @apply w-11/12 h-[350px] bg-white rounded-xl
+    lg:w-full;
 }
 
 .world-reports-container{
-    @apply w-full h-[390px] rounded-xl mt-3 flex flex-row flex-wrap items-center justify-center;
+    @apply grid grid-cols-1 gap-2 my-3
+    sm:grid-cols-2
+    md:grid-cols-3
+    lg:grid-cols-4
+    xl:grid-cols-5;
 }
 
 .world-reports-container-properties{
-    @apply w-[310px] h-[180px] bg-white rounded-xl mr-2 ml-2;
+    @apply w-11/12 h-[150px] bg-white rounded-xl place-items-center
+    sm:w-full;
 }

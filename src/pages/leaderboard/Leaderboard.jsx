@@ -29,15 +29,27 @@ export default function Leaderboard(){
                     </div>
 
                     <div className='leaderboard-contents-container'>
-                        <div>
+                        <div className='content-header'>
+                            <h1 className='title-header'>Rank</h1>
+                            <h1 className='title-header'>Name</h1>
+                            <h1 className='title-header'>World</h1>
+                            <h1 className='title-header'>Score</h1>
+                        </div>
+                        <div className='leaders-main-container'>
                             {mockleaders.map((leaders, element) => (
-                                <div key={element}>
-                                    <h1>{leaders.rank} {leaders.name} {leaders.world} {leaders.score}</h1>
+                                <div key={element} className='leaders-container'>
+                                    <h1 className='leader-info'>{leaders.rank}</h1>
+                                    <h1 className='leader-info'>{leaders.name}</h1>
+                                    <h1 className='leader-info'>{leaders.world}</h1>
+                                    <h1 className='leader-info'>{leaders.score}</h1>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
+
+
+
 
                 <div className='mastery-cont'>
                     <div className='leaderboard-titles-cont'>
@@ -60,10 +72,19 @@ export default function Leaderboard(){
                     </div>
 
                     <div className='leaderboard-contents-container'>
-                        <div>
+                        <div className='content-header'>
+                            <h1 className='title-header'>Rank</h1>
+                            <h1 className='title-header'>Name</h1>
+                            <h1 className='title-header'>World</h1>
+                            <h1 className='title-header'>Score</h1>
+                        </div>
+                        <div className='leaders-main-container'>
                             {mockleaders.map((leaders, element) => (
-                                <div key={element}>
-                                    <h1>{leaders.rank} {leaders.name} {leaders.world} {leaders.score}</h1>
+                                <div key={element} className='leaders-container'>
+                                    <h1 className='leader-info'>{leaders.rank}</h1>
+                                    <h1 className='leader-info'>{leaders.name}</h1>
+                                    <h1 className='leader-info'>{leaders.world}</h1>
+                                    <h1 className='leader-info'>{leaders.score}</h1>
                                 </div>
                             ))}
                         </div>

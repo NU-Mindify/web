@@ -9,6 +9,7 @@ export default function Analytics(){
                     <h1 className='header-text-properties-analytics'>Analytics</h1>
                 </div>
 
+
                 <div className='content-container-analytics'>
 
                     <div className='analytics-container-properties'>
