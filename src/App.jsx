@@ -15,7 +15,6 @@ import './index.css'
 import Login from './pages/login/Login'
 import { onAuthStateChanged } from 'firebase/auth'
 import { firebaseAuth } from './Firebase'
-import JeromeProfile from './pages/profile/JeromeProfile'
 
 
 
