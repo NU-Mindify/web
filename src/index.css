@@ -20,7 +20,8 @@ body{
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    @apply w-screen h-screen p-3 flex flex-row overflow-hidden;
+    @apply w-screen h-screen p-3 flex flex-col overflow-hidden
+    md:flex-row;
 }
   
 /********************************/
@@ -33,12 +34,16 @@ body{
     border-radius: 10px;
     overflow: visible;
     scrollbar-width: none;
-    @apply w-[50px] h-full bg-white transition-all duration-300 ease-in-out pt-3;
+    @apply w-10 h-10 bg-white transition-all duration-300 ease-in-out flex justify-center items-center mb-2
+    md:w-[50px] md:h-full md:pt-3 md:p-0 md:block;
+
 }
   
 .active-side-menu{
-    @apply w-[250px] min-w-[250px] h-full bg-white rounded-xl transition-all 
-    duration-300 ease-in-out overflow-hidden pt-3;
+    @apply absolute top-0 left-0 z-[999] bg-white pt-3 overflow-hidden transition-all duration-300 ease-in-out 
+    w-screen h-screen 
+    md:w-[250px] md:min-w-[250px] md:h-full md:rounded-xl md:flex md:flex-col md:static;
+
     overflow-y: auto;
     scrollbar-width: none; 
     -ms-overflow-style: none;
@@ -55,7 +60,8 @@ body{
 /*----- BUTTON MAIN CONTAINER -----*/
 
 .btn-container {        
-    @apply w-[50px] h-[50px] mt-1.5 flex items-center transition-all duration-300 ease-in-out ;
+    @apply hidden w-[50px] h-[50px] mt-0
+    md:flex md:mt-1.5 md:items-center md:transition-all md:duration-300 md:ease-in-out;
 }
     
 .btn-container:hover{
@@ -95,7 +101,8 @@ body{
 /*----- THE BUTTON -----*/
 
 .btn-icon {
-    @apply w-[30px] ml-[10px] flex justify-center items-center bg-transparent cursor-pointer;
+    @apply w-[30px] ml-0 flex justify-center items-center cursor-pointer
+    md:ml-[10px];
 }
 
 .btn-icon:hover .mainIcon{
@@ -113,6 +120,7 @@ body{
 .active-btn-icon:hover .active-btn-txt{
     filter: invert(66%) sepia(96%) saturate(350%) hue-rotate(1deg) brightness(105%) contrast(105%);
 }
+
 
 /********************************/
 
@@ -166,7 +174,8 @@ body{
 
 .content-container{
     background-color: rgba(157, 200, 243, 0.3);
-    @apply w-full h-full ml-3  rounded-xl overflow-hidden;
+    @apply w-full h-full rounded-xl overflow-hidden
+    md:w-full md:ml-3 ;
 }
 
 .active-content-container{

@@ -61,7 +61,7 @@ export default function Sidebar() {
                 <>
                     <div className="avatar">
                         <div className="avatar-container">
-                            <img src="https://avatarfiles.alphacoders.com/375/375159.jpeg" />
+                            <img src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="avatar" />
                         </div>
                     </div>
                     <div className="name-container">

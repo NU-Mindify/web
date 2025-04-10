@@ -16,7 +16,8 @@
   md:h-1/3;
 }
 .glossary-title {
-  @apply font-[Poppins] text-[#FFD41C] font-bold text-4xl;
+  @apply font-[Poppins] text-[#FFD41C] font-bold text-xl 
+  md:text-4xl;
 }
 
 
@@ -62,11 +63,11 @@
 
 .header-details {
   border-bottom: 2px solid black;
-  @apply grid grid-cols-3 text-2xl mt-2 font-medium text-black bg-white sticky top-0 z-[100];
+  @apply grid grid-cols-3 text-2xl mt-2 font-medium text-black bg-white sticky top-0 z-50;
 }
 
 .header-title {
-  @apply w-full text-sm
+  @apply w-full text-sm pl-2
   md:text-xl;
 }
 
@@ -86,32 +87,62 @@
 
 
 
+/* Non-active word container */
 .per-word-container {
   border: 1px solid black;
-  @apply w-full min-h-[50px] flex flex-wrap justify-center items-center mb-2 rounded-xl max-h-[80px] px-1;
+  @apply w-full flex justify-between items-center mb-2 rounded-xl px-1;
 }
+
+.active-per-word-container {
+  border: 1px solid black;
+  @apply w-full h-auto max-h-[2000px] flex justify-center items-center mb-2 rounded-xl px-1 bg-[#35408E] 
+  md:h-auto;
+}
+
+
 
 .word-container {
   text-overflow: ellipsis;
-  @apply w-4/12 text-black text-base
-  whitespace-nowrap overflow-hidden p-2;
+  @apply flex-1 h-full text-black text-base whitespace-nowrap overflow-hidden p-2;
 }
+
+.active-per-word-container .word-container {
+  @apply h-auto overflow-visible text-white;
+  white-space: normal; 
+}
+
+
 
 .meaning-container {
   text-overflow: ellipsis;
-  @apply w-4/12 text-black text-base
-  whitespace-nowrap overflow-hidden p-2;
+  @apply flex-1 h-full text-black text-base whitespace-nowrap overflow-hidden p-2;
 }
+
+
+.active-meaning-container {
+  @apply flex-1 max-h-[1000px] text-base overflow-hidden p-2 flex items-center text-white;
+}
+
 
 .gege {
   @apply w-4/12 h-full flex justify-around items-center p-2;
 }
 
-
-.editIcon{
-  @apply w-[20px] h-[20px]
-  md:w-[25px] md:h-[25px];
+.active-per-word-container .gege{
+  @apply h-auto text-white;
 }
+
+
+
+
+.editIcon {
+  @apply w-[20px] h-[20px] md:w-[25px] md:h-[25px];
+}
+
+.active-per-word-container .editIcon{
+  filter: invert(1); 
+}
+
 
 .dropdown {
   @apply w-[20px] h-[20px] flex justify-center items-center rounded-md bg-gray-300
