@@ -34,7 +34,7 @@
 }
 
 .world-reports-container{
-    @apply grid grid-cols-1 gap-2 my-3
+    @apply grid grid-cols-1 gap-2 my-3 place-items-center
     sm:grid-cols-2
     md:grid-cols-3
     lg:grid-cols-4

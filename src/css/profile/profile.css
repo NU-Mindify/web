@@ -5,7 +5,9 @@
 /*margin / padding: top right bottom left*/
 
 .main-cont-prof-settings{
-  @apply w-full h-full flex flex-col rounded-xl ;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  @apply w-full h-full flex flex-col rounded-xl overflow-y-auto overflow-hidden;
 }
 
 
@@ -25,7 +27,7 @@
 
   
 .content-container-prof-settings {
-  @apply w-full h-[calc(100vh-200px)] rounded-xl flex flex-col bg-white;
+  @apply w-full h-auto mt-[100px] rounded-xl flex flex-col bg-white;
 }
 
 .avatar-edit-container-prof-settings {
@@ -69,9 +71,7 @@
 
 
 .forms-container{
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  @apply grid grid-cols-1 gap-6 p-4 w-full items-start overflow-y-auto
+  @apply h-auto grid grid-cols-1 gap-6 p-4 w-full items-start overflow-hidden
   md:grid-cols-2 
   lg:grid-cols-3;
 }
