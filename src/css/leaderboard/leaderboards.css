@@ -10,8 +10,9 @@
 .classic-cont, .mastery-cont{
     scrollbar-width: none;
     -ms-overflow-style: none;
-    @apply w-full h-[calc(100vh-25px)] rounded-xl overflow-hidden 
-    overflow-y-auto flex flex-col bg-white px-2;
+    @apply w-full h-[calc(100vh-60px)]  rounded-xl overflow-hidden 
+    overflow-y-auto flex flex-col px-2 bg-green-400
+    md:h-[calc(100vh-25px)];
 }
 
 .leaderboard-titles-cont {
@@ -27,13 +28,7 @@
 }
 
 .search-bar-cont-leaderboards {
-  width: 100%;
-  height: 10%;
-  display:flex;
-  justify-content: center;
-  align-items:center;
-
-  /* background: orange; */
+  @apply w-full h-1/12 flex justify-center items-center;
 }
 
 .search-bar-leaderboards{
@@ -52,7 +47,7 @@
 }
 
 .leaderboard-contents-container {
-  @apply w-full h-auto pt-1 flex flex-col;
+  @apply w-full h-auto pt-1 flex flex-col py-3;
 }
 
 .content-header{
@@ -60,7 +55,10 @@
 }
 
 .title-header{
-  @apply w-full h-[30px] text-black text-center font-bold; 
+  @apply w-full h-[15px] text-black text-center font-bold text-[10px]
+  sm:text-base sm:h-[25px]
+  md:text-lg md:h-[30px]
+  lg:text-xl;
 }
 
 .leaders-main-container{
@@ -72,5 +70,8 @@
 }
 
 .leader-info{
-  @apply text-black text-center;
+  @apply text-black text-center text-xs
+  sm:text-base
+  md:text-lg
+  lg:text-xl;
 }
