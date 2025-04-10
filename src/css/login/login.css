@@ -27,7 +27,7 @@
     animation: fadeUp 2s ease-in forwards;
     animation-delay: 2.6s;
     animation-fill-mode: both;
-    @apply hidden opacity-0
+    @apply hidden
     sm:w-[calc(50vw-20px)] sm:h-full sm:flex sm:flex-col sm:justify-center sm:items-center 
     lg:w-[calc(65vw-20px)] lg:h-full;
   }
@@ -81,7 +81,7 @@
 .login-form{
     animation: fadeUp 2s ease-in forwards;
     animation-delay: 2.5s;
-    @apply bg-white opacity-0 flex flex-col items-center rounded-xl w-full h-full
+    @apply w-full h-full bg-white flex flex-col items-center rounded-xl 
     sm:w-[calc(50vw-20px)] sm:h-[calc(100vh-40px)] 
     lg:w-[calc(35vw-20px)] lg:h-[calc(100vh-40px)];
 }
