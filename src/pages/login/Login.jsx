@@ -91,9 +91,9 @@ export default function Login(){
                 </div>
             </div>
 
-            {/* <div className='logo-animated'>
+            <div className='logo-animated'>
                 <img src={logo} className='mindifylogo'></img>
-            </div> */}
+            </div>
         </>
     )
 }
