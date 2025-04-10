@@ -76,16 +76,23 @@ export default function Sidebar() {
                 active={isActive}
                 text='Dashboard'
                 isSelected={selected === 'dashboard'}
-                onPress={() => setSelected('dashboard')}
+                onPress={() => {
+                    setSelected('dashboard');
+                    setActive(false);
+                }}
                 goTo={paths.dashboard}
             />
+
             
             <MenuBtn
                 icons={analytics}
                 active={isActive}
                 text='Analytics'
                 isSelected={selected === 'analytics'}
-                onPress={() => setSelected('analytics')}
+                onPress={() => {
+                    setSelected('analytics');
+                    setActive(false);
+                }}
                 goTo={paths.analytics}
             />
 
@@ -94,7 +101,10 @@ export default function Sidebar() {
                 active={isActive}
                 text='Reports'
                 isSelected={selected === 'reports'}
-                onPress={() => setSelected('reports')}
+                onPress={() => {
+                    setSelected('reports');
+                    setActive(false);
+                }}
                 goTo={paths.reports}
             />
 
@@ -103,7 +113,10 @@ export default function Sidebar() {
                 active={isActive}
                 text='Leaderboard'
                 isSelected={selected === 'leaderboard'}
-                onPress={() => setSelected('leaderboard')}
+                onPress={() => {
+                    setSelected('leaderboard');
+                    setActive(false);
+                }}
                 goTo={paths.leaderboard}
             />
 
@@ -112,7 +125,10 @@ export default function Sidebar() {
                 active={isActive}
                 text='Manage Questions'
                 isSelected={selected === 'question'}
-                onPress={() => setSelected('question')}
+                onPress={() => {
+                    setSelected('question');
+                    setActive(false);
+                }}
                 goTo={paths.question}
             />
 
@@ -121,7 +137,10 @@ export default function Sidebar() {
                 active={isActive}
                 text='Manage Glossary'
                 isSelected={selected === 'glossary'}
-                onPress={() => setSelected('glossary')}
+                onPress={() => {
+                    setSelected('glossary');
+                    setActive(false);
+                }}
                 goTo={paths.glossary}
             />
             
@@ -130,7 +149,10 @@ export default function Sidebar() {
                 active={isActive}
                 text='Manage Students'
                 isSelected={selected === 'students'}
-                onPress={() => setSelected('students')}
+                onPress={() => {
+                    setSelected('students');
+                    setActive(false);
+                }}
                 goTo={paths.students}
             />
 
@@ -139,7 +161,10 @@ export default function Sidebar() {
                 active={isActive}
                 text='Profile Settings'
                 isSelected={selected === 'profile'}
-                onPress={() => setSelected('profile')}
+                onPress={() => {
+                    setSelected('profile');
+                    setActive(false);
+                }}
                 goTo={paths.profile}
             />
 
@@ -149,7 +174,10 @@ export default function Sidebar() {
                 active={isActive}
                 text='Account Management'
                 isSelected={selected === 'account'}
-                onPress={() => setSelected('account')}
+                onPress={() => {
+                    setSelected('account');
+                    setActive(false);
+                }}
                 goTo={paths.account}
             />
             

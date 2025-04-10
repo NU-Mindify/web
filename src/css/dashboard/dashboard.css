@@ -61,7 +61,7 @@
 
 
 .reports-title-container-dashboard{
-    @apply  w-full h-[80px] mt-2 pl-2;
+    @apply  w-full h-[80px] mt-4;
 }
 
 .reports-title-properties-dashboard{

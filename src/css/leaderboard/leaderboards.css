@@ -11,7 +11,7 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     @apply w-full h-[calc(100vh-60px)]  rounded-xl overflow-hidden 
-    overflow-y-auto flex flex-col px-2 bg-green-400
+    overflow-y-auto flex flex-col px-2 bg-white
     md:h-[calc(100vh-25px)];
 }
 
