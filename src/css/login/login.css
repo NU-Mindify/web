@@ -3,7 +3,7 @@
 @plugin "daisyui";
 
 html, body, #root {
-  height: 100%;
+  height: 100vh;
   margin: 0;
   padding: 0;
 }
@@ -33,7 +33,7 @@ html, body, #root {
 .logo-animated{
   animation: numindifyAnimation 3.5s ease-in-out forwards;
   animation-fill-mode: both;
-  @apply w-screen h-screen absolute top-0 left-0 z-50 flex justify-center items-center;
+  @apply w-screen h-screen max-h-[100svh] absolute top-0 left-0 z-50 flex justify-center items-center;
 }
 
 .mindifylogo{
@@ -52,7 +52,7 @@ html, body, #root {
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
-    @apply w-screen h-screen p-5 flex flex-row justify-center items-center;
+    @apply w-screen h-screen p-5 flex flex-row justify-center items-stretch;
 }
 /********************************* END *******************************/
 
@@ -106,9 +106,9 @@ html, body, #root {
     animation-delay: 2.5s;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    @apply opacity-0 w-full h-full bg-white flex flex-col items-center rounded-xl overflow-y-auto
-    sm:w-[calc(50vw-20px)] sm:h-full
-    lg:w-[calc(35vw-20px)] lg:h-full
+    @apply opacity-0 w-full max-h-[calc(100svh-40px)] bg-white flex flex-col items-center rounded-xl overflow-y-auto
+    sm:w-[calc(50vw-20px)]
+    lg:w-[calc(35vw-20px)];
     /* sm:w-[calc(50vw-20px)] sm:max-h-[calc(100vh-40px)]
     lg:w-[calc(35vw-20px)] lg:max-h-[calc(100vh-40px)]; */
 }
