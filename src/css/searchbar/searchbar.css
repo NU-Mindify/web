@@ -1,0 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+@import "tailwindcss";
+@plugin "daisyui";
+
+
+.searchbar-container{
+    @apply w-[900px] h-full flex justify-center items-center;
+}
+
+.search{
+    @apply w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 text-black;
+}
