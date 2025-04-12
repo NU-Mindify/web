@@ -38,6 +38,13 @@ export default function Profile(){
                         ) : (
                             <img className="avatar-dimensions" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />
                         )}
+                        <input 
+                        type='file' 
+                        ref={inputRef} 
+                        onChange={handleImageChange} 
+                        style={{display: "none"}}
+                        accept='image/*'
+                        />
                         <h1 className="username-properties">Suosuo Frieren</h1>
                     </div>
 
@@ -46,6 +53,22 @@ export default function Profile(){
                             <button class="edit-btn-properties" onClick={handleImageClick}>Edit Profile</button>
                         </div>
                     </div>
+
+
+                    {/* <div class="prof-pic-cont" onMouseEnter={(e) => showUploadImg(e)} onMouseLeave={(e) => hideUploadImg(e)}>
+                        <div class="prof-pic">
+                            {image ? <img class="prof-pic" src={URL.createObjectURL(image)} alt=""/> : <img class="prof-pic" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />}
+                        </div>
+                        <input 
+                        type='file' 
+                        ref={inputRef} 
+                        onChange={handleImageChange} 
+                        style={{display: "none"}}/>
+
+                        <button className={display} onClick={handleImageClick} >
+                            <img class="edit-icon" src={edit_icon}/>
+                        </button>
+                    </div> */}
                     
                     
                     <div className="forms-container">
