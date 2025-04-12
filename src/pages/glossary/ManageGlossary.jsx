@@ -21,8 +21,9 @@ export default function ManageGlossary() {
     }, {});
 
     const filteredTerms = terms.filter(term =>
-      term.word.toLowerCase().includes(searchTerm.toLowerCase())
+      term.word.toLowerCase().startsWith(searchTerm.toLowerCase())
     );
+    
     
     const scrollToLetter = (letter) => {
       if (termRefs.current[letter]) {
@@ -66,7 +67,6 @@ export default function ManageGlossary() {
           </div>
   
           {searchTerm === '' ? (
-            // Full glossary grouped by letter
             letters.map((letter) => (
               <div key={letter} ref={(el) => (termRefs.current[letter] = el)} className="per-letter-main-container">
                 <h2 className="letter-title">{letter}</h2>
@@ -96,7 +96,6 @@ export default function ManageGlossary() {
               </div>
             ))
             ) : (
-              // Filtered search results
               <div className="search-results-container">
                 <h4 className="letter-title">Search Results</h4>
                 {filteredTerms.length > 0 ? (

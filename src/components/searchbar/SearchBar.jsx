@@ -1,11 +1,13 @@
-import './searchbar.css'
+import '../../css/searchbar/searchbar.css'
 
 export default function SearchBar(props){
 
     return(
-       <input type="search" 
-       className="search" 
-       placeholder={props.placeholder} 
-       onChange={props.handleChange}/>
+        <div className='searchbar-container'>
+            <input type="search" 
+            className="search" 
+            placeholder={props.placeholder} 
+            onChange={props.handleChange}/>
+        </div>
     )
 }
