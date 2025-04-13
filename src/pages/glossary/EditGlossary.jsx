@@ -31,13 +31,13 @@ export default function EditGlossary() {
     return (
         <div className="edit-glossary-container">
             <div className='edit-header'>
+                <h1 className='edit-title'>Edit Term</h1>
                 <button 
                     className='back-btn' 
                     onClick={handleBack}
                 >
                     ?
                 </button>
-                <h1 className='edit-title'>Edit Term</h1>
             </div>
 
             <div className='edit-content'>
@@ -54,6 +54,7 @@ export default function EditGlossary() {
                 <div className='edit-term-container'>
                     <h1 className='edit-title-container'>Meaning</h1>
                     <textarea
+                        rows={10}
                         className='editable-container'
                         type="text"
                         value={editedMeaning}

@@ -4,7 +4,9 @@
 
 
 .searchbar-container{
-    @apply w-[900px] h-full flex justify-center items-center;
+    @apply w-9/12 min-w-[300px] max-w-[900px] h-full flex justify-center items-center
+        md:w-9/12
+        lg:w-9/12;
 }
 
 .search{

@@ -54,7 +54,11 @@ export default function ManageGlossary() {
           </div>
   
           <div className="glossary-search-container">
-            <SearchBar placeholder="Search here..." handleChange={(e) => setSearchTerm(e.target.value)}/>
+            <SearchBar 
+              placeholder="Search here..." 
+              handleChange={(e) => setSearchTerm(e.target.value)}
+              className='search-input'
+            />
           </div>
   
           <div className="glossary-letters-btn-container">

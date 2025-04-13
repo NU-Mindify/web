@@ -236,23 +236,6 @@ export default function Profile(props){
                                 <option value="eastortigas">NU East Ortigas</option>
                                 </select>
                             )}
-                            {/* <select
-                            className="input input-bordered input-disabled input-properties"
-                            value={getNUBranch}
-                            disabled={!isEditing}
-                            onChange={(e) => {changeNUBranch(e.target.value)}}
-                            >
-                            <option value="manila">NU Manila</option>
-                            <option value="moa">NU MOA</option>
-                            <option value="laguna">NU Laguna</option>
-                            <option value="fairview">NU Fairview</option>
-                            <option value="baliwag">NU Baliwag</option>
-                            <option value="dasma">NU Dasmarinas</option>
-                            <option value="lipa">NU Lipa</option>
-                            <option value="clark">NU Clark</option>
-                            <option value="bacolod">NU Bacolod</option>
-                            <option value="eastortigas">NU East Ortigas</option>
-                            </select> */}
                         </div>
 
 
@@ -263,7 +246,7 @@ export default function Profile(props){
                             placeholder="Email"
                             className="input input-properties-disabled"
                             value={getUserEmail}
-                            disabled={!isEditing}
+                            disabled
                             onChange={(e) => {changeUserEmail(e.target.value)}}
                             />
                         </div>
@@ -275,7 +258,7 @@ export default function Profile(props){
                             placeholder="Employee No."
                             className="input input-properties-disabled"
                             value={getEmployeeNum}
-                            disabled={!isEditing}
+                            disabled
                             onChange={(e) => {changeEmployeeNum(e.target.value)}}
                             />
                         </div>
@@ -290,7 +273,7 @@ export default function Profile(props){
                             placeholder="Position"
                             className="input input-properties-disabled"
                             value={getUserPosition}
-                            disabled={!isEditing}
+                            disabled
                             onChange={(e) => {changeUserPosition(e.target.value)}}
                             />
                         </div>
