@@ -84,25 +84,25 @@ export default function Profile(props){
 
                     <div className='avatar-edit-container-prof-settings'>
 
-                    <div className="avatar-container-prof-settings">
-                        {getUserAvatar ? (
-                            <img className="avatar-dimensions" src={URL.createObjectURL(getUserAvatar)} alt="" />
-                        ) : (
-                            <img className="avatar-dimensions" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />
-                        )}
-                        <input 
-                        type='file' 
-                        ref={inputRef} 
-                        onChange={handleImageChange} 
-                        style={{display: "none"}}
-                        accept='image/*'
-                        />
-                        {isEditing ? (
-                            <h1 className="username-properties">{getFirstName} {getLastName}</h1>
-                        ) : (
-                            <h1 className="username-properties">{getFirstName} {getLastName}</h1>
-                        )}
-                    </div>
+                        <div className="avatar-container-prof-settings">
+                            {getUserAvatar ? (
+                                <img className="avatar-dimensions" src={URL.createObjectURL(getUserAvatar)} alt="" />
+                            ) : (
+                                <img className="avatar-dimensions" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />
+                            )}
+                            <input 
+                            type='file' 
+                            ref={inputRef} 
+                            onChange={handleImageChange} 
+                            style={{display: "none"}}
+                            accept='image/*'
+                            />
+                            {isEditing ? (
+                                <h1 className="username-properties">{getFirstName} {getLastName}</h1>
+                            ) : (
+                                <h1 className="username-properties">{getFirstName} {getLastName}</h1>
+                            )}
+                        </div>
 
 
                         <div className='edit-btn-container-prof-settings'>
@@ -143,6 +143,31 @@ export default function Profile(props){
                             />
                         </div>
 
+
+
+                        <div className="forms-properties">
+                            <label className="forms-label-properties">NU Branch</label>
+                            <select
+                            className="input input-bordered input-disabled input-properties"
+                            value={getNUBranch}
+                            disabled={!isEditing}
+                            onChange={(e) => {changeNUBranch(e.target.value)}}
+                            >
+                            <option value="default">Select a Branch</option>
+                            <option value="manila">NU Manila</option>
+                            <option value="moa">NU MOA</option>
+                            <option value="laguna">NU Laguna</option>
+                            <option value="fairview">NU Fairview</option>
+                            <option value="baliwag">NU Baliwag</option>
+                            <option value="dasma">NU Dasmarinas</option>
+                            <option value="lipa">NU Lipa</option>
+                            <option value="clark">NU Clark</option>
+                            <option value="bacolod">NU Bacolod</option>
+                            <option value="eastortigas">NU East Ortigas</option>
+                            </select>
+                        </div>
+
+
                         <div className="forms-properties">
                             <label className="forms-label-properties">Email</label>
                             <input
@@ -167,27 +192,7 @@ export default function Profile(props){
                             />
                         </div>
 
-                        <div className="forms-properties">
-                            <label className="forms-label-properties">NU Branch</label>
-                            <select
-                            className="input input-bordered input-disabled input-properties"
-                            value={getNUBranch}
-                            disabled={!isEditing}
-                            onChange={(e) => {changeNUBranch(e.target.value)}}
-                            >
-                            <option value="default">Select a Branch</option>
-                            <option value="manila">NU Manila</option>
-                            <option value="moa">NU MOA</option>
-                            <option value="laguna">NU Laguna</option>
-                            <option value="fairview">NU Fairview</option>
-                            <option value="baliwag">NU Baliwag</option>
-                            <option value="dasma">NU Dasmarinas</option>
-                            <option value="lipa">NU Lipa</option>
-                            <option value="clark">NU Clark</option>
-                            <option value="bacolod">NU Bacolod</option>
-                            <option value="eastortigas">NU East Ortigas</option>
-                            </select>
-                        </div>
+                        
 
                         <div className="forms-properties">
                             <label className="forms-label-properties">Position</label>
