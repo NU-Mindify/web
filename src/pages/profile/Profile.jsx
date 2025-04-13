@@ -112,7 +112,7 @@ export default function Profile(props){
                             />
                             
                             {isEditing ? (
-                                <h1 className="username-properties">{getFirstName} {getLastName}</h1>
+                                <h1 className="username-properties" style={{display: "none"}}>{getFirstName} {getLastName}</h1>
                             ) : (
                                 <h1 className="username-properties">{getFirstName} {getLastName}</h1>
                             )}
