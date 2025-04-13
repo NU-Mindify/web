@@ -13,8 +13,10 @@ import Profile from './pages/profile/Profile'
 import AccountManagement from './pages/accounts/AccountManagement'
 import './index.css'
 import Login from './pages/login/Login'
+import EditProfile from './pages/profile/EditProfile'
 import { onAuthStateChanged } from 'firebase/auth'
 import { firebaseAuth } from './Firebase'
+
 
 
 
@@ -72,6 +74,7 @@ function App() {
                 <Route path='/students' element={<ManageStudents />} />
                 <Route path='/profile' element={<Profile />} />
                 <Route path='/account' element={<AccountManagement />} />
+                <Route path='/editprofile' element={<EditProfile />} />
                 <Route path='*' element={<Login />} />
               </Routes>
             </div>

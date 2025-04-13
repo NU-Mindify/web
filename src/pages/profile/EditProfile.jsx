@@ -1,29 +1,17 @@
-
 import '../../css/profile/profile.css'
-import { use, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 
-export default function Profile(props){
-
-    console.log(props);
-    // const { uFname, uLName, uEmail, uEmpnum, uNUBranch, uPosition } = props.userInfo
+export default function EditProfile(){
 
     const navigate = useNavigate()
 
-    const inputRef = useRef(null);
-
-    const [getUserAvatar, setUserAvatar] = useState("")
-    const [getFirstName, setFirstName] = useState("Suosuo")
-    const [getLastName, setLastName] = useState("Frieren")
-    const [getUserEmail, setUserEmail] = useState("virgojl@students.nu-moa.edu.ph")
-    const [getEmployeeNum, setEmployeeNo] = useState(100)
-    const [getNUBranch, setNUBranch] = useState("moa")
-    const [getUserPosition, setUserPosition] = useState("Accounts Admin")
-
-    const handleEditProfile = () => {
-        setIsEditing(true)
-        // navigate('/editprofile')
+    const handleSaveProfile = () => {
+        navigate('/profile')
     }
+
+    const inputRef = useRef(null);
+    const [image, setImage] = useState("")
 
     const handleImageClick = () => { 
         inputRef.current.click();
@@ -32,39 +20,12 @@ export default function Profile(props){
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         console.log(file);
-        setUserAvatar(event.target.files[0]);
+        setImage(event.target.files[0]);
     }
 
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(true);
 
-    const changeFname = (text) => {
-        setFirstName(text);
-    }
-
-    const changeLname = (text) => {
-        setLastName(text);
-    }
-
-    const changeUserEmail = (text) => {
-        setUserEmail(text);
-    }
-
-    const changeEmployeeNum = (text) => {
-        setEmployeeNo(text);
-    }
-
-    const changeNUBranch = (text) => {
-        setNUBranch(text);
-    }
-
-    const changeUserPosition = (text) => {
-        setUserPosition(text);
-    }
-
-    const handleUpdateProfile = () => {
-
-        setIsEditing(false)
-    }
+    
 
     return(
 
@@ -72,12 +33,7 @@ export default function Profile(props){
             <div className="main-cont-prof-settings">
 
                 <div className='header-container-prof-settings'>
-                    {/* <h1 className='header-text-prof-settings'>Profile Settings</h1> */}
-                    {isEditing ? (
-                        <h1 className='header-text-prof-settings'>Edit Profile</h1>
-                    ) : (
-                        <h1 className='header-text-prof-settings'>Profile Settings</h1>
-                    )}
+                    <h1 className='header-text-prof-settings'>Edit Profile</h1>
                 </div>        
 
                 <div className='content-container-prof-settings'>
@@ -85,8 +41,8 @@ export default function Profile(props){
                     <div className='avatar-edit-container-prof-settings'>
 
                     <div className="avatar-container-prof-settings">
-                        {getUserAvatar ? (
-                            <img className="avatar-dimensions" src={URL.createObjectURL(getUserAvatar)} alt="" />
+                        {image ? (
+                            <img className="avatar-dimensions" src={URL.createObjectURL(image)} alt="" />
                         ) : (
                             <img className="avatar-dimensions" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />
                         )}
@@ -97,25 +53,16 @@ export default function Profile(props){
                         style={{display: "none"}}
                         accept='image/*'
                         />
-                        {isEditing ? (
-                            <h1 className="username-properties">{getFirstName} {getLastName}</h1>
-                        ) : (
-                            <h1 className="username-properties">{getFirstName} {getLastName}</h1>
-                        )}
+                        <h1 className="username-properties">Suosuo Frieren</h1>
                     </div>
 
 
                         <div className='edit-btn-container-prof-settings'>
-                            {isEditing ? (
-                                <>
-                                    <button class="edit-btn-properties" onClick={handleImageClick}>Upload Photo</button>
-                                    <button class="edit-btn-properties" onClick={handleUpdateProfile}>Save Profile</button>
-                                </>
-                            ) : (
-                                <button class="edit-btn-properties" onClick={handleEditProfile}>Edit Profile</button>
-                            )}
+                            <button class="edit-btn-properties" onClick={handleSaveProfile}>Save Profile</button>
+                            <button class="edit-btn-properties" onClick={handleImageClick}>Upload Photo</button>
                         </div>
                     </div>
+                    
                     
                     <div className="forms-container">
 
@@ -125,9 +72,8 @@ export default function Profile(props){
                             type="text"
                             placeholder="First Name"
                             className="input input-properties"
-                            value={getFirstName}
-                            disabled={!isEditing}
-                            onChange={(e) => {changeFname(e.target.value)}}
+                            value={"Suosuo"}
+                            disabled
                             />
                         </div>
 
@@ -137,9 +83,8 @@ export default function Profile(props){
                             type="text"
                             placeholder="Last Name"
                             className="input input-properties"
-                            value={getLastName}
-                            disabled={!isEditing}
-                            onChange={(e) => {changeLname(e.target.value)}}
+                            value={"Frieren"}
+                            disabled
                             />
                         </div>
 
@@ -149,9 +94,8 @@ export default function Profile(props){
                             type="email"
                             placeholder="Email"
                             className="input input-properties"
-                            value={getUserEmail}
-                            disabled={!isEditing}
-                            onChange={(e) => {changeUserEmail(e.target.value)}}
+                            value={"virgojl@students.nu-moa.edu.ph"}
+                            disabled
                             />
                         </div>
 
@@ -161,19 +105,17 @@ export default function Profile(props){
                             type="text"
                             placeholder="Employee No."
                             className="input input-properties"
-                            value={getEmployeeNum}
-                            disabled={!isEditing}
-                            onChange={(e) => {changeEmployeeNum(e.target.value)}}
+                            value={"01"}
+                            disabled
                             />
                         </div>
 
                         <div className="forms-properties">
                             <label className="forms-label-properties">NU Branch</label>
                             <select
-                            className="input input-bordered input-disabled input-properties"
-                            value={getNUBranch}
-                            disabled={!isEditing}
-                            onChange={(e) => {changeNUBranch(e.target.value)}}
+                            className="input input-bordered input-disabled cursor-not-allowed input-properties"
+                            disabled
+                            value={"moa"}
                             >
                             <option value="default">Select a Branch</option>
                             <option value="manila">NU Manila</option>
@@ -195,9 +137,8 @@ export default function Profile(props){
                             type="text"
                             placeholder="Position"
                             className="input input-properties"
-                            value={getUserPosition}
-                            disabled={!isEditing}
-                            onChange={(e) => {changeUserPosition(e.target.value)}}
+                            value={"Account Admin"}
+                            disabled
                             />
                         </div>
                     </div>
