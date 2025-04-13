@@ -1,9 +1,128 @@
-export default function ManageQuestion(){
+import { useEffect, useState } from "react";
+import search from "../../assets/search/search.svg";
+import axios from "axios";
 
-    return(
+const categoriesObj = [
+  {
+    id: "abnormal",
+    name: "Abnormal Psychology",
+  },
+  {
+    id: "developmental",
+    name: "Developmental Psychology",
+  },
+  {
+    id: "psychological",
+    name: "Psychological Assessment",
+  },
+  {
+    id: "industrial",
+    name: "Industrial Psychology",
+  },
+  {
+    id: "general",
+    name: "General Psychology",
+  },
+];
 
-        <>
-            <h1>Manage Questions</h1>
-        </>
-    )
+export default function ManageQuestion() {
+  const [questions, setQuestions] = useState([]);
+  const [category, setCategory] = useState(null);
+  useEffect(() => {
+    console.log("category changed");
+
+    const getData = async () => {
+      try {
+        const { data } = await axios.get(
+          `https://nu-mindify-api.vercel.app/api/getQuestions?${
+            category ? `category=${category}` : ""
+          }`
+        );
+        setQuestions(data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    getData();
+  }, [category]);
+
+  return (
+    <div className="w-full md:w-[90%] max-w-[1250px] 2xl:max-w-[1300px] mx-auto flex-col flex gap-2">
+      <div className="bg-white p-5 flex flex-col gap-4  rounded-2xl">
+        <div className=" text-primary font-extrabold text-3xl">
+          Manage Questions
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="search-bar-leaderboards !w-[90%]">
+            <button className="search-btn-leaderboards">
+              <img src={search}></img>
+            </button>
+            <input
+              type="text"
+              placeholder="Search for question"
+              className="search-input-leaderboards"
+            />
+          </div>
+          <button className="btn">Add Question</button>
+        </div>
+        <div className="filter gap-1 items-center">
+          <div className="text-black">Select Category:</div>
+          <input
+            className="btn filter-reset"
+            type="radio"
+            name="category"
+            aria-label="All"
+            onClick={() => setCategory("")}
+          />
+          {categoriesObj.map((category) => (
+            <input
+              className="btn"
+              type="radio"
+              name="category"
+              aria-label={category.name}
+              value={category.id}
+              key={category.id}
+              onClick={() => {
+                setCategory(category.id);
+              }}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="p-4 bg-white rounded-2xl text-black gap-4 flex flex-col h-fit !overflow-y-auto">
+        {questions.map((question, index) => (
+          <QuestionCard data={question} key={question._id} index={index} />
+        ))}
+      </div>
+    </div>
+  );
 }
+const QuestionCard = ({ data, index }) => {
+  return (
+    <>
+      <div className="collapse collapse-arrow shadow-lg hover:bg-primary/40 bg-white rounded-md border cursor-pointer">
+        <input type="checkbox" name="question-accordion" />
+        <div className="collapse-title font-semibold">
+          {index + 1}. {data.question}
+        </div>
+        <div className="collapse-content text-sm">
+          {data.choices.map((choice) => (
+            <div className={choice.isCorrect ? "text-red-500" : ""}>
+              {choice.letter}. {choice.text}
+            </div>
+          ))}
+          <div className="mt-4">
+            <span className="font-bold">Rationale: </span>
+            {data.rationale}
+          </div>
+          <div className="mt-4">
+            <span className="font-bold">Category: </span>
+            {categoriesObj.find(categ => categ.id == data.category).name}
+            <span className="font-bold ms-8">Level: </span>
+            {data.level}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
