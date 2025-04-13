@@ -2,94 +2,92 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-/*margin / padding: top right bottom left*/
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
-.main-cont-prof-settings{
+.main-cont-prof-settings {
   scrollbar-width: none;
   -ms-overflow-style: none;
-  @apply w-full h-full flex flex-col rounded-xl overflow-y-auto overflow-hidden;
+  @apply w-full h-full flex flex-col overflow-y-auto;
 }
 
 
 
-  
+
 .header-container-prof-settings {
-  @apply w-full h-[200px] pl-6 pt-3;
+  @apply w-full h-[100px] pl-6 pt-3;
 }
-  
+
 .header-text-prof-settings {
-  @apply text-4xl font-[Poppins] font-bold text-[#FFD41C];
+  @apply text-2xl font-[Poppins] font-bold text-[#FFD41C]
+    md:text-4xl;
 }
 
 
 
 
-
-  
 .content-container-prof-settings {
-  @apply w-full h-auto mt-[100px] rounded-xl flex flex-col bg-white;
+  @apply w-full flex-1 rounded-xl flex flex-col bg-white mt-[100px]
+    md:mt-[100px];
 }
+
+
 
 .avatar-edit-container-prof-settings {
-  @apply w-full h-auto flex flex-col px-4 gap-0.5
-  md:flex-row md:px-8 ;
+  @apply w-full flex flex-col px-4 gap-0.5 mb-[50px]
+    lg:flex-row lg:px-8 lg:mb-0;
 }
 
 .avatar-container-prof-settings {
-  @apply w-full  h-auto flex flex-col items-center justify-center mt-[-60px] px-4 py-4
-    sm:mt-[-80px]
-    md:w-auto md:mt-[-100px]
-    lg:mt-[-100px] ;
+  @apply w-full flex flex-col items-center justify-center px-4 py-4 mt-[-80px] 
+    md:w-auto md:mt-[-100px];
 }
 
 .avatar-dimensions {
   border: 5px solid white;
   @apply w-[200px] h-[200px] 
-    md:w-[250px] md:h-[250px]
-    object-cover rounded-full;
+  lg:w-[250px] lg:h-[250px] object-cover rounded-full;
 }
 
 .edit-btn-container-prof-settings {
-  @apply w-full h-full flex justify-center items-center
-  md:w-[300px] md:ml-8 md:justify-start;
+  @apply w-full h-full flex justify-center items-center flex-col mt-5
+    lg:w-[300px] lg:ml-8 lg:justify-start;
 }
 
 .edit-btn-properties {
   border: 1px solid black;
-  @apply w-3/4 rounded-3xl text-black font-[Poppins] font-bold text-sm cursor-pointer 
-  md:w-10/12 h-8 md:h-1/6;
+  @apply w-3/4 h-8 rounded-3xl text-black font-[Poppins] font-bold text-sm cursor-pointer mt-3
+    md:w-7/12
+    lg:w-10/12 lg:h-1/6;
 }
 
 .username-properties {
   @apply mt-4 text-base font-semibold text-center text-gray-800
-  sm:text-lg 
-  md:text-xl 
-  lg:text-2xl;
+    sm:text-xl
+    md:text-2xl;
 }
 
 
 
-
-.forms-container{
-  @apply h-auto grid grid-cols-1 gap-6 p-4 w-full items-start overflow-hidden
-  md:grid-cols-2 
-  lg:grid-cols-3;
+.forms-container {
+  @apply w-full p-4 grid grid-cols-1 gap-6 items-start
+    md:grid-cols-2 
+    lg:grid-cols-3 ;
 }
+
 
 .forms-properties {
   @apply w-full flex flex-col;
 }
 
-
-.forms-label-properties{
+.forms-label-properties {
   @apply text-black font-[Poppins];
 }
 
-.input-properties{
+.input-properties {
   border: 1px solid black;
-  @apply rounded-xl w-full h-[60px] text-black font-[Poppins] text-[16px] bg-white pl-3;
-}
-
-.forms-label-properties{
-  @apply text-black font-[Poppins] ;
+  @apply w-full h-[60px] pl-3 rounded-xl text-black text-[16px] bg-white font-[Poppins];
 }

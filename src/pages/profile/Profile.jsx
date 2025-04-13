@@ -1,11 +1,29 @@
 
 import '../../css/profile/profile.css'
-import { useRef, useState } from 'react';
+import { use, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 
-export default function Profile(){
+export default function Profile(props){
+
+    console.log(props);
+    // const { uFname, uLName, uEmail, uEmpnum, uNUBranch, uPosition } = props.userInfo
+
+    const navigate = useNavigate()
 
     const inputRef = useRef(null);
-    const [image, setImage] = useState("")
+
+    const [getUserAvatar, setUserAvatar] = useState("")
+    const [getFirstName, setFirstName] = useState("Suosuo")
+    const [getLastName, setLastName] = useState("Frieren")
+    const [getUserEmail, setUserEmail] = useState("virgojl@students.nu-moa.edu.ph")
+    const [getEmployeeNum, setEmployeeNo] = useState(100)
+    const [getNUBranch, setNUBranch] = useState("moa")
+    const [getUserPosition, setUserPosition] = useState("Accounts Admin")
+
+    const handleEditProfile = () => {
+        setIsEditing(true)
+        // navigate('/editprofile')
+    }
 
     const handleImageClick = () => { 
         inputRef.current.click();
@@ -14,10 +32,39 @@ export default function Profile(){
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         console.log(file);
-        setImage(event.target.files[0]);
+        setUserAvatar(event.target.files[0]);
     }
 
-    const [editing, isEditing] = useState("notediting");
+    const [isEditing, setIsEditing] = useState(false);
+
+    const changeFname = (text) => {
+        setFirstName(text);
+    }
+
+    const changeLname = (text) => {
+        setLastName(text);
+    }
+
+    const changeUserEmail = (text) => {
+        setUserEmail(text);
+    }
+
+    const changeEmployeeNum = (text) => {
+        setEmployeeNo(text);
+    }
+
+    const changeNUBranch = (text) => {
+        setNUBranch(text);
+    }
+
+    const changeUserPosition = (text) => {
+        setUserPosition(text);
+    }
+
+    const handleUpdateProfile = () => {
+
+        setIsEditing(false)
+    }
 
     return(
 
@@ -25,51 +72,50 @@ export default function Profile(){
             <div className="main-cont-prof-settings">
 
                 <div className='header-container-prof-settings'>
-                    <h1 className='header-text-prof-settings'>Profile Settings</h1>
+                    {/* <h1 className='header-text-prof-settings'>Profile Settings</h1> */}
+                    {isEditing ? (
+                        <h1 className='header-text-prof-settings'>Edit Profile</h1>
+                    ) : (
+                        <h1 className='header-text-prof-settings'>Profile Settings</h1>
+                    )}
                 </div>        
 
                 <div className='content-container-prof-settings'>
 
                     <div className='avatar-edit-container-prof-settings'>
 
-                    <div className="avatar-container-prof-settings">
-                        {image ? (
-                            <img className="avatar-dimensions" src={URL.createObjectURL(image)} alt="" />
-                        ) : (
-                            <img className="avatar-dimensions" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />
-                        )}
-                        <input 
-                        type='file' 
-                        ref={inputRef} 
-                        onChange={handleImageChange} 
-                        style={{display: "none"}}
-                        accept='image/*'
-                        />
-                        <h1 className="username-properties">Suosuo Frieren</h1>
-                    </div>
+                        <div className="avatar-container-prof-settings">
+                            {getUserAvatar ? (
+                                <img className="avatar-dimensions" src={URL.createObjectURL(getUserAvatar)} alt="" />
+                            ) : (
+                                <img className="avatar-dimensions" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />
+                            )}
+                            <input 
+                            type='file' 
+                            ref={inputRef} 
+                            onChange={handleImageChange} 
+                            style={{display: "none"}}
+                            accept='image/*'
+                            />
+                            {isEditing ? (
+                                <h1 className="username-properties">{getFirstName} {getLastName}</h1>
+                            ) : (
+                                <h1 className="username-properties">{getFirstName} {getLastName}</h1>
+                            )}
+                        </div>
 
 
                         <div className='edit-btn-container-prof-settings'>
-                            <button class="edit-btn-properties" onClick={handleImageClick}>Edit Profile</button>
+                            {isEditing ? (
+                                <>
+                                    <button class="edit-btn-properties" onClick={handleImageClick}>Upload Photo</button>
+                                    <button class="edit-btn-properties" onClick={handleUpdateProfile}>Save Profile</button>
+                                </>
+                            ) : (
+                                <button class="edit-btn-properties" onClick={handleEditProfile}>Edit Profile</button>
+                            )}
                         </div>
                     </div>
-
-
-                    {/* <div class="prof-pic-cont" onMouseEnter={(e) => showUploadImg(e)} onMouseLeave={(e) => hideUploadImg(e)}>
-                        <div class="prof-pic">
-                            {image ? <img class="prof-pic" src={URL.createObjectURL(image)} alt=""/> : <img class="prof-pic" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />}
-                        </div>
-                        <input 
-                        type='file' 
-                        ref={inputRef} 
-                        onChange={handleImageChange} 
-                        style={{display: "none"}}/>
-
-                        <button className={display} onClick={handleImageClick} >
-                            <img class="edit-icon" src={edit_icon}/>
-                        </button>
-                    </div> */}
-                    
                     
                     <div className="forms-container">
 
@@ -79,8 +125,9 @@ export default function Profile(){
                             type="text"
                             placeholder="First Name"
                             className="input input-properties"
-                            value={"Suosuo"}
-                            disabled
+                            value={getFirstName}
+                            disabled={!isEditing}
+                            onChange={(e) => {changeFname(e.target.value)}}
                             />
                         </div>
 
@@ -90,39 +137,21 @@ export default function Profile(){
                             type="text"
                             placeholder="Last Name"
                             className="input input-properties"
-                            value={"Frieren"}
-                            disabled
+                            value={getLastName}
+                            disabled={!isEditing}
+                            onChange={(e) => {changeLname(e.target.value)}}
                             />
                         </div>
 
-                        <div className="forms-properties">
-                            <label className="forms-label-properties">Email</label>
-                            <input
-                            type="email"
-                            placeholder="Email"
-                            className="input input-properties"
-                            value={"virgojl@students.nu-moa.edu.ph"}
-                            disabled
-                            />
-                        </div>
 
-                        <div className="forms-properties">
-                            <label className="forms-label-properties">Employee No.</label>
-                            <input
-                            type="text"
-                            placeholder="Employee No."
-                            className="input input-properties"
-                            value={"01"}
-                            disabled
-                            />
-                        </div>
 
                         <div className="forms-properties">
                             <label className="forms-label-properties">NU Branch</label>
                             <select
-                            className="input input-bordered input-disabled cursor-not-allowed input-properties"
-                            disabled
-                            value={"moa"}
+                            className="input input-bordered input-disabled input-properties"
+                            value={getNUBranch}
+                            disabled={!isEditing}
+                            onChange={(e) => {changeNUBranch(e.target.value)}}
                             >
                             <option value="default">Select a Branch</option>
                             <option value="manila">NU Manila</option>
@@ -138,14 +167,42 @@ export default function Profile(){
                             </select>
                         </div>
 
+
+                        <div className="forms-properties">
+                            <label className="forms-label-properties">Email</label>
+                            <input
+                            type="email"
+                            placeholder="Email"
+                            className="input input-properties"
+                            value={getUserEmail}
+                            disabled={!isEditing}
+                            onChange={(e) => {changeUserEmail(e.target.value)}}
+                            />
+                        </div>
+
+                        <div className="forms-properties">
+                            <label className="forms-label-properties">Employee No.</label>
+                            <input
+                            type="text"
+                            placeholder="Employee No."
+                            className="input input-properties"
+                            value={getEmployeeNum}
+                            disabled={!isEditing}
+                            onChange={(e) => {changeEmployeeNum(e.target.value)}}
+                            />
+                        </div>
+
+                        
+
                         <div className="forms-properties">
                             <label className="forms-label-properties">Position</label>
                             <input
                             type="text"
                             placeholder="Position"
                             className="input input-properties"
-                            value={"Account Admin"}
-                            disabled
+                            value={getUserPosition}
+                            disabled={!isEditing}
+                            onChange={(e) => {changeUserPosition(e.target.value)}}
                             />
                         </div>
                     </div>
