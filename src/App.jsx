@@ -16,9 +16,12 @@ import Login from './pages/login/Login'
 import EditProfile from './pages/profile/EditProfile'
 import { onAuthStateChanged } from 'firebase/auth'
 import { firebaseAuth } from './Firebase'
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
-
-
+const queryClient = new QueryClient();
 
 onAuthStateChanged(firebaseAuth, user => {
   console.log(user);
@@ -53,36 +56,44 @@ function App() {
   }, [])
 
   return (
-    <ActiveContext.Provider value={{ isActive, setActive, selected, setSelected }}>
-      <BrowserRouter>
-        {selected === 'login' ? (
-          <Routes>
-            <Route path='/' element={<Login />} />
-            <Route path='*' element={<Login />} />
-          </Routes>
-        ) : (
-          <div className='main-container'>
-            <Sidebar />
-            <div className={isActive ? 'active-content-container' : 'content-container'}>
-              <Routes>
-                <Route path='/dashboard' element={<Dashboard />} />
-                <Route path='/analytics' element={<Analytics />} />
-                <Route path='/reports' element={<Reports />} />
-                <Route path='/leaderboard' element={<Leaderboard />} />
-                <Route path='/question' element={<ManageQuestion />} />
-                <Route path='/glossary' element={<ManageGlossary />} />
-                <Route path='/students' element={<ManageStudents />} />
-                <Route path='/profile' element={<Profile />} />
-                <Route path='/account' element={<AccountManagement />} />
-                <Route path='/editprofile' element={<EditProfile />} />
-                <Route path='*' element={<Login />} />
-              </Routes>
+    <ActiveContext.Provider
+      value={{ isActive, setActive, selected, setSelected }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          {selected === "login" ? (
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="*" element={<Login />} />
+            </Routes>
+          ) : (
+            <div className="main-container">
+              <Sidebar />
+              <div
+                className={
+                  isActive ? "active-content-container" : "content-container"
+                }
+              >
+                <Routes>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/reports" element={<Reports />} />
+                  <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="/question" element={<ManageQuestion />} />
+                  <Route path="/glossary" element={<ManageGlossary />} />
+                  <Route path="/students" element={<ManageStudents />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/account" element={<AccountManagement />} />
+                  <Route path="/editprofile" element={<EditProfile />} />
+                  <Route path="*" element={<Login />} />
+                </Routes>
+              </div>
             </div>
-          </div>
-        )}
-      </BrowserRouter>
+          )}
+        </BrowserRouter>
+      </QueryClientProvider>
     </ActiveContext.Provider>
-  )
+  );
 }
 
 export default App

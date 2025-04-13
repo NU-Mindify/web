@@ -3,9 +3,7 @@
 
 
 * {
-    box-sizing: border-box; 
-    margin: 0;
-    padding: 0;
+    box-sizing: border-box;
 }
 
 body{
@@ -173,13 +171,13 @@ body{
 /*----- CONTENTS CONTAINER -----*/
 
 .content-container{
-    background-color: rgba(157, 200, 243, 0.3);
-    @apply w-full h-full rounded-xl overflow-hidden
+    /* background-color: rgba(157, 200, 243, 0.3); */
+    @apply w-full h-full overflow-hidden
     md:w-full md:ml-3 ;
 }
 
 .active-content-container{
-    background-color: rgba(157, 200, 243, 0.3);
+    /* background-color: rgba(157, 200, 243, 0.3); */
     @apply w-full h-full ml-3  rounded-xl overflow-hidden;
 }
 /********************************/
