@@ -173,13 +173,13 @@ body{
 
 .content-container{
     background-color: rgba(157, 200, 243, 0.3);
-    @apply w-full h-full rounded-xl overflow-hidden ml-0
+    @apply w-full rounded-xl overflow-hidden ml-0
     lg:w-full lg:ml-3 ;
 }
 
 .active-content-container{
     background-color: rgba(157, 200, 243, 0.3);
-    @apply w-full h-full ml-0 rounded-xl overflow-hidden
+    @apply w-full ml-0 rounded-xl overflow-hidden
     lg:ml-3;
 }
 /********************************/

@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import search from "../../assets/search/search.svg";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
 
 const categoriesObj = [
   {
@@ -29,6 +30,8 @@ const categoriesObj = [
 export default function ManageQuestion() {
   // const [questions, setQuestions] = useState([]);
   const [category, setCategory] = useState(null);
+  const navigate = useNavigate();
+
   const getData = async () => {
     try {
       console.log("fetching again");
@@ -36,37 +39,33 @@ export default function ManageQuestion() {
         `https://nu-mindify-api.vercel.app/api/getQuestions?${
           category ? `category=${category}&level=1` : ""
         }`
-      )
-      return data
+      );
+      return data;
     } catch (error) {
       console.error(error);
     }
-  }
-  const { isPending, error, data:questions } = useQuery({
+  };
+  const {
+    isPending,
+    error,
+    data: questions,
+  } = useQuery({
     queryKey: ["questionsList"],
     initialData: [],
-    queryFn: getData
+    queryFn: getData,
   });
-  // useEffect(() => {
-  //   console.log("category changed");
 
-  //   const getData = async () => {
-  //     try {
-  //       const { data } = await ;
-  //       setQuestions(data);
-  //     } catch (error) {
-  //       console.error(error.message);
-  //     }
-  //   };
-  //   getData();
-  // }, [category]);
-  if(isPending) return (<div>Loading</div>)
+  const addQuestion = () => {
+    navigate("/question/add");
+  };
 
-  if(error) return (<div>Error: {error}</div>)
+  if (isPending) return <div>Loading</div>;
+
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="w-full md:w-[90%] max-w-[1250px] 2xl:max-w-[1300px] mx-auto flex-col flex gap-2">
-      <div className="bg-white p-5 flex flex-col gap-4  rounded-2xl">
+    <div className="w-full md:w-[90%] max-w-[1250px] 2xl:max-w-[1300px] mx-auto flex-col h-fit flex flex-1 gap-2">
+      <div className="bg-white p-5 flex flex-col h-[20svh] gap-4  rounded-2xl">
         <div className=" text-primary font-extrabold text-3xl">
           Manage Questions
         </div>
@@ -81,7 +80,9 @@ export default function ManageQuestion() {
               className="search-input-leaderboards"
             />
           </div>
-          <button className="btn">Add Question</button>
+          <button className="btn" onClick={addQuestion}>
+            Add Question
+          </button>
         </div>
         <div className="filter gap-1 items-center">
           <div className="text-black">Select Category:</div>
@@ -107,10 +108,12 @@ export default function ManageQuestion() {
           ))}
         </div>
       </div>
-      <div className="p-4 bg-white rounded-2xl text-black gap-4 flex flex-col h-fit !overflow-y-auto">
-        {questions.map((question, index) => (
-          <QuestionCard data={question} key={question._id} index={index} />
-        ))}
+      <div className="flex-grow overflow-auto !h-[76svh]">
+        <div className="p-4 bg-white rounded-2xl text-black gap-4 flex flex-grow flex-col ">
+          {questions.map((question, index) => (
+            <QuestionCard data={question} key={question._id} index={index} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -118,26 +121,37 @@ export default function ManageQuestion() {
 const QuestionCard = ({ data, index }) => {
   return (
     <>
-      <div className="collapse collapse-arrow shadow-lg hover:bg-primary/40 bg-white rounded-md border cursor-pointer">
+      <div className="collapse collapse-arrow shadow-lg hover:bg-base-300/10 bg-white rounded-md border cursor-pointer h-fit">
         <input type="checkbox" name="question-accordion" />
         <div className="collapse-title font-semibold">
           {index + 1}. {data.question}
         </div>
-        <div className="collapse-content text-sm">
-          {data.choices.map((choice) => (
-            <div className={choice.isCorrect ? "text-red-500" : ""}>
-              {choice.letter}. {choice.text}
+        <div className="collapse-content text-sm flex justify-between">
+          <div>
+            {data.choices.map((choice) => (
+              <div
+                className={choice.isCorrect ? "text-red-500" : ""}
+                key={choice.letter}
+              >
+                {choice.letter}. {choice.text}
+              </div>
+            ))}
+            <div className="mt-4">
+              <span className="font-bold">Rationale: </span>
+              {data.rationale}
             </div>
-          ))}
-          <div className="mt-4">
-            <span className="font-bold">Rationale: </span>
-            {data.rationale}
+            <div className="mt-4">
+              <span className="font-bold">Category: </span>
+              {categoriesObj.find((categ) => categ.id == data.category).name}
+              <span className="font-bold ms-8">Level: </span>
+              {data.level}
+            </div>
           </div>
-          <div className="mt-4">
-            <span className="font-bold">Category: </span>
-            {categoriesObj.find((categ) => categ.id == data.category).name}
-            <span className="font-bold ms-8">Level: </span>
-            {data.level}
+          <div className="flex flex-col gap-2">
+            <button className="btn btn-sm btn-outline btn-primary">Edit</button>
+            <button className="btn btn-sm btn-outline btn-error">
+              Archive
+            </button>
           </div>
         </div>
       </div>

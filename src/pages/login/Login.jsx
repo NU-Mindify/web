@@ -56,7 +56,7 @@ export default function Login(){
 
                         <label className="floating-label ">
                             <span className='spanner'>Password</span>
-                            <input type="password" className="input validator inputs" required placeholder="Password" minlength="8" 
+                            <input type="password" className="input validator inputs" required placeholder="Password" minLength="8" 
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
                                 title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" 
                             />   

@@ -1,3 +1,4 @@
+import './index.css'
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Sidebar from './components/sidebar/Sidebar'
@@ -11,7 +12,6 @@ import ManageStudents from './pages/students/ManageStudents'
 import ManageGlossary from './pages/glossary/ManageGlossary'
 import Profile from './pages/profile/Profile'
 import AccountManagement from './pages/accounts/AccountManagement'
-import './index.css'
 import Login from './pages/login/Login'
 import EditProfile from './pages/profile/EditProfile'
 import EditGlossary from './pages/glossary/EditGlossary'
@@ -21,6 +21,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import AddQuestion from './pages/questions/AddQuestion'
 
 
 const queryClient = new QueryClient();
@@ -82,6 +83,7 @@ function App() {
                   <Route path="/reports" element={<Reports />} />
                   <Route path="/leaderboard" element={<Leaderboard />} />
                   <Route path="/question" element={<ManageQuestion />} />
+                  <Route path="/question/add" element={<AddQuestion />} />
                   <Route path="/glossary" element={<ManageGlossary />} />
                   <Route path="/students" element={<ManageStudents />} />
                   <Route path="/profile" element={<Profile />} />
