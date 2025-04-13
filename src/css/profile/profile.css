@@ -80,7 +80,7 @@ html, body, #root {
 
 
 .forms-properties {
-  @apply w-full flex flex-col;
+  @apply w-full flex flex-col ;
 }
 
 .forms-label-properties {
@@ -90,4 +90,9 @@ html, body, #root {
 .input-properties {
   border: 1px solid black;
   @apply w-full h-[60px] pl-3 rounded-xl text-black text-[16px] bg-white font-[Poppins];
+}
+
+.input-properties-disabled {
+  border: 1px solid black;
+  @apply w-full h-[60px] pl-3 rounded-xl text-black text-[16px] bg-gray-300 font-[Poppins];
 }

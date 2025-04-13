@@ -2,6 +2,7 @@
 import '../../css/profile/profile.css'
 import { use, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
+import DotLoader from "react-spinners/DotLoader"
 
 export default function Profile(props){
 
@@ -20,9 +21,21 @@ export default function Profile(props){
     const [getNUBranch, setNUBranch] = useState("moa")
     const [getUserPosition, setUserPosition] = useState("Accounts Admin")
 
+    const [showLoader, setShowLoader] = useState(false)
+
+    async function myDisplay() {
+        let myPromise = new Promise(function(resolve) {
+          setTimeout(function() {resolve(setIsEditing(true),setShowLoader(false));}, 1500);
+        });
+
+    }
+
+    //npm install --save react-spinners
+
     const handleEditProfile = () => {
-        setIsEditing(true)
-        // navigate('/editprofile')
+        setShowLoader(true)
+        myDisplay()
+        
     }
 
     const handleImageClick = () => { 
@@ -80,10 +93,10 @@ export default function Profile(props){
                     )}
                 </div>        
 
-                <div className='content-container-prof-settings'>
-
+                <div className='content-container-prof-settings' >
                     <div className='avatar-edit-container-prof-settings'>
 
+                        
                         <div className="avatar-container-prof-settings">
                             {getUserAvatar ? (
                                 <img className="avatar-dimensions" src={URL.createObjectURL(getUserAvatar)} alt="" />
@@ -97,15 +110,32 @@ export default function Profile(props){
                             style={{display: "none"}}
                             accept='image/*'
                             />
+                            
                             {isEditing ? (
                                 <h1 className="username-properties">{getFirstName} {getLastName}</h1>
                             ) : (
                                 <h1 className="username-properties">{getFirstName} {getLastName}</h1>
                             )}
+                            
                         </div>
 
 
                         <div className='edit-btn-container-prof-settings'>
+                            {showLoader ? (
+                                <div id='dotloader-cont' style={{display: "block"}}>
+                                    <DotLoader 
+                                        loading
+                                    />
+                                </div>
+                            ) : (
+                                <div id='dotloader-cont' style={{display: "none"}}>
+                                    <DotLoader 
+                                        loading
+                                    />
+                                </div>
+                            )}
+                            
+                            
                             {isEditing ? (
                                 <>
                                     <button class="edit-btn-properties" onClick={handleImageClick}>Upload Photo</button>
@@ -121,39 +151,97 @@ export default function Profile(props){
 
                         <div className="forms-properties">
                             <label className="forms-label-properties">First Name</label>
-                            <input
-                            type="text"
-                            placeholder="First Name"
-                            className="input input-properties"
-                            value={getFirstName}
-                            disabled={!isEditing}
-                            onChange={(e) => {changeFname(e.target.value)}}
-                            />
+                            {isEditing ? (
+                                <input
+                                type="text"
+                                placeholder="First Name"
+                                className="input input-properties"
+                                value={getFirstName}
+                                disabled={!isEditing}
+                                onChange={(e) => {changeFname(e.target.value)}}
+                                />
+                            ) : (
+                                <input
+                                type="text"
+                                placeholder="First Name"
+                                className="input input-properties-disabled"
+                                value={getFirstName}
+                                disabled={!isEditing}
+                                onChange={(e) => {changeFname(e.target.value)}}
+                                />
+                            )}
                         </div>
 
                         <div className="forms-properties">
                             <label className="forms-label-properties">Last Name</label>
-                            <input
-                            type="text"
-                            placeholder="Last Name"
-                            className="input input-properties"
-                            value={getLastName}
-                            disabled={!isEditing}
-                            onChange={(e) => {changeLname(e.target.value)}}
-                            />
+                            {isEditing ? (
+                                <input
+                                type="text"
+                                placeholder="Last Name"
+                                className="input input-properties"
+                                value={getLastName}
+                                disabled={!isEditing}
+                                onChange={(e) => {changeLname(e.target.value)}}
+                                />
+                            ) : (
+                                <input
+                                type="text"
+                                placeholder="Last Name"
+                                className="input input-properties-disabled"
+                                value={getLastName}
+                                disabled={!isEditing}
+                                onChange={(e) => {changeLname(e.target.value)}}
+                                />
+                            )}
                         </div>
 
 
 
                         <div className="forms-properties">
                             <label className="forms-label-properties">NU Branch</label>
-                            <select
+                            {isEditing ? (
+                                <select
+                                className="input input-bordered input-disabled input-properties"
+                                value={getNUBranch}
+                                disabled={!isEditing}
+                                onChange={(e) => {changeNUBranch(e.target.value)}}
+                                >
+                                <option value="manila">NU Manila</option>
+                                <option value="moa">NU MOA</option>
+                                <option value="laguna">NU Laguna</option>
+                                <option value="fairview">NU Fairview</option>
+                                <option value="baliwag">NU Baliwag</option>
+                                <option value="dasma">NU Dasmarinas</option>
+                                <option value="lipa">NU Lipa</option>
+                                <option value="clark">NU Clark</option>
+                                <option value="bacolod">NU Bacolod</option>
+                                <option value="eastortigas">NU East Ortigas</option>
+                                </select>
+                            ) : (
+                                <select
+                                className="input input-bordered input-disabled input-properties-disabled"
+                                value={getNUBranch}
+                                disabled={!isEditing}
+                                onChange={(e) => {changeNUBranch(e.target.value)}}
+                                >
+                                <option value="manila">NU Manila</option>
+                                <option value="moa">NU MOA</option>
+                                <option value="laguna">NU Laguna</option>
+                                <option value="fairview">NU Fairview</option>
+                                <option value="baliwag">NU Baliwag</option>
+                                <option value="dasma">NU Dasmarinas</option>
+                                <option value="lipa">NU Lipa</option>
+                                <option value="clark">NU Clark</option>
+                                <option value="bacolod">NU Bacolod</option>
+                                <option value="eastortigas">NU East Ortigas</option>
+                                </select>
+                            )}
+                            {/* <select
                             className="input input-bordered input-disabled input-properties"
                             value={getNUBranch}
                             disabled={!isEditing}
                             onChange={(e) => {changeNUBranch(e.target.value)}}
                             >
-                            <option value="default">Select a Branch</option>
                             <option value="manila">NU Manila</option>
                             <option value="moa">NU MOA</option>
                             <option value="laguna">NU Laguna</option>
@@ -164,7 +252,7 @@ export default function Profile(props){
                             <option value="clark">NU Clark</option>
                             <option value="bacolod">NU Bacolod</option>
                             <option value="eastortigas">NU East Ortigas</option>
-                            </select>
+                            </select> */}
                         </div>
 
 
@@ -173,7 +261,7 @@ export default function Profile(props){
                             <input
                             type="email"
                             placeholder="Email"
-                            className="input input-properties"
+                            className="input input-properties-disabled"
                             value={getUserEmail}
                             disabled={!isEditing}
                             onChange={(e) => {changeUserEmail(e.target.value)}}
@@ -185,7 +273,7 @@ export default function Profile(props){
                             <input
                             type="text"
                             placeholder="Employee No."
-                            className="input input-properties"
+                            className="input input-properties-disabled"
                             value={getEmployeeNum}
                             disabled={!isEditing}
                             onChange={(e) => {changeEmployeeNum(e.target.value)}}
@@ -196,10 +284,11 @@ export default function Profile(props){
 
                         <div className="forms-properties">
                             <label className="forms-label-properties">Position</label>
+                            
                             <input
                             type="text"
                             placeholder="Position"
-                            className="input input-properties"
+                            className="input input-properties-disabled"
                             value={getUserPosition}
                             disabled={!isEditing}
                             onChange={(e) => {changeUserPosition(e.target.value)}}
