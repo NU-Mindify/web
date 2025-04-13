@@ -21,7 +21,7 @@ body{
     background-attachment: fixed;
     background-repeat: no-repeat;
     @apply w-[100svw] h-[100svh] p-3 flex flex-col overflow-hidden
-    md:flex-row;
+    lg:flex-row;
 }
   
 /********************************/
@@ -35,14 +35,14 @@ body{
     overflow: visible;
     scrollbar-width: none;
     @apply w-10 h-10 bg-white transition-all duration-300 ease-in-out flex justify-center items-center mb-2
-    md:w-[50px] md:h-full md:pt-3 md:p-0 md:block;
+    lg:w-[50px] lg:h-full lg:pt-3 lg:p-0 lg:block;
 
 }
   
 .active-side-menu{
     @apply absolute top-0 left-0 z-[999] bg-white pt-3 overflow-hidden transition-all duration-300 ease-in-out 
-    w-[calc(100svw-24px)] h-[calc(100svh-24px)] m-3
-    md:w-[250px] md:min-w-[250px] md:h-full md:rounded-xl md:flex md:flex-col md:static md:m-0;
+    w-[calc(100svw-24px)] h-[calc(100svh-24px)] m-3 rounded-xl
+    lg:w-[250px] lg:min-w-[250px] lg:h-full lg:flex lg:flex-col lg:static lg:m-0;
 
     overflow-y: auto;
     scrollbar-width: none; 
@@ -61,7 +61,7 @@ body{
 
 .btn-container {        
     @apply hidden w-[50px] h-[50px] mt-0
-    md:flex md:mt-1.5 md:items-center md:transition-all md:duration-300 md:ease-in-out;
+    lg:flex lg:mt-1.5 lg:items-center lg:transition-all lg:duration-300 lg:ease-in-out;
 }
     
 .btn-container:hover{
@@ -102,7 +102,7 @@ body{
 
 .btn-icon {
     @apply w-[30px] ml-0 flex justify-center items-center cursor-pointer
-    md:ml-[10px];
+    lg:ml-[10px];
 }
 
 .btn-icon:hover .mainIcon{
@@ -133,7 +133,8 @@ body{
 }
 
 .avatar-container{
-    @apply w-1/2 rounded-full shadow-[0_0_0_4px_red] outline-red-500 ;
+    @apply w-1/4 rounded-full shadow-[0_0_0_4px_red] outline-red-500 
+    lg:w-1/2;
 }
 
 .name-container{
@@ -174,12 +175,13 @@ body{
 
 .content-container{
     background-color: rgba(157, 200, 243, 0.3);
-    @apply w-full h-full rounded-xl overflow-hidden
-    md:w-full md:ml-3 ;
+    @apply w-full h-full rounded-xl overflow-hidden ml-0
+    lg:w-full lg:ml-3 ;
 }
 
 .active-content-container{
     background-color: rgba(157, 200, 243, 0.3);
-    @apply w-full h-full ml-3  rounded-xl overflow-hidden;
+    @apply w-full h-full ml-0 rounded-xl overflow-hidden
+    lg:ml-3;
 }
 /********************************/

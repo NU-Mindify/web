@@ -4,9 +4,13 @@ import edit from '../../assets/glossary/edit.svg'
 import dropdown from '../../assets/glossary/dropdown.svg'
 import '../../css/glossary/glossary.css'
 import SearchBar from "../../components/searchbar/SearchBar";
+import { useNavigate } from "react-router";
+
 
 export default function ManageGlossary() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+    const navigate = useNavigate();
     
     const termRefs = useRef({});
 
@@ -33,6 +37,13 @@ export default function ManageGlossary() {
     
     function handleDropdown(word) {
       setActiveTermWord(activeTermWord === word ? null : word);
+    }
+
+    function handlesEdit(word, meaning){
+      navigate('/glossary/edit', {
+        state: { word, meaning }
+      });
+      
     }
     
     return (
@@ -82,7 +93,7 @@ export default function ManageGlossary() {
                           {term.meaning}
                         </div>
                         <div className="gege">
-                          <img src={edit} className="editIcon" alt="edit icon" />
+                          <img src={edit} className="editIcon" alt="edit icon" onClickCapture={() => handlesEdit(term.word, term.meaning)} />
                           <div className="dropdown" onClick={() => handleDropdown(term.word)}>
                             <img src={dropdown} className="mainIcon" alt="dropdown icon" />
                           </div>
@@ -109,7 +120,7 @@ export default function ManageGlossary() {
                         {term.meaning}
                       </div>
                       <div className="gege">
-                        <img src={edit} className="editIcon" alt="edit icon" />
+                        <img src={edit} className="editIcon" alt="edit icon" onClick={handlesEdit} />
                         <div className="dropdown" onClick={() => handleDropdown(term.word)}>
                           <img src={dropdown} className="mainIcon" alt="dropdown icon" />
                         </div>

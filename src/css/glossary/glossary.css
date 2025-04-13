@@ -5,7 +5,7 @@
 /* ------------------- MAIN HEADER ---------------- */
 .header {
   @apply w-full bg-white h-[calc(200px-66px)] rounded-xl flex flex-col items-center mb-3
-  md:h-[200px];
+    md:h-[200px];
 }
 
 /* ------------------- HEADER CONTENTS ---------------- */
@@ -13,25 +13,25 @@
 .glossary-title-container {
 
   @apply w-full h-1/2 flex items-center pl-[40px] 
-  md:h-1/3;
+    md:h-1/3;
 }
 .glossary-title {
   @apply font-[Poppins] text-[#FFD41C] font-bold text-xl 
-  md:text-4xl;
+    md:text-4xl;
 }
 
 
 
 .glossary-search-container {
   @apply w-full h-1/2 flex justify-center items-center bg-red-400
-  md:h-1/3;
+    md:h-1/3;
 }
 
 
 
 .glossary-letters-btn-container {
   @apply hidden
-  md:w-[90%] md:h-1/3  md:flex md:justify-around md:items-center md:min-w-[500px];
+    md:w-[90%] md:h-1/3  md:flex md:justify-around md:items-center md:min-w-[500px];
 }
 
 .navigator-buttons{
@@ -53,7 +53,7 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   @apply w-full h-[calc(100%-146px)] overflow-y-auto px-2 pb-2 rounded-xl bg-white
-  md:h-[calc(100%-212px)];
+    md:h-[calc(100%-212px)];
 }
 
 /* ***************************************************** */
@@ -68,7 +68,7 @@
 
 .header-title {
   @apply w-full text-sm pl-2
-  md:text-xl;
+    md:text-xl;
 }
 
 
@@ -96,7 +96,7 @@
 .active-per-word-container {
   border: 1px solid black;
   @apply w-full h-auto max-h-[2000px] flex justify-center items-center mb-2 rounded-xl px-1 bg-[#35408E] 
-  md:h-auto;
+    md:h-auto;
 }
 
 
@@ -136,7 +136,8 @@
 
 
 .editIcon {
-  @apply w-[20px] h-[20px] md:w-[25px] md:h-[25px];
+  @apply w-[20px] h-[20px] cursor-pointer 
+    md:w-[25px] md:h-[25px];
 }
 
 .active-per-word-container .editIcon{
@@ -146,7 +147,7 @@
 
 .dropdown {
   @apply w-[20px] h-[20px] flex justify-center items-center rounded-md bg-gray-300
-  md:w-[30px] md:h-[30px]; 
+    md:w-[30px] md:h-[30px]; 
 }
 
 /* ***************************************************** */

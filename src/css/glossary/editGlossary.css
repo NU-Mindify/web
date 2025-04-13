@@ -1,0 +1,53 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+html, body{
+    @apply m-0 p-0;
+    box-sizing: border-box;
+}
+
+.edit-glossary-container{
+    @apply w-full h-full ;
+}
+
+
+
+.edit-header{
+    @apply w-full h-[100px] pl-[40px] flex flex-row items-center;
+}
+
+.back-btn{
+    @apply w-[50px] h-[50px] bg-red-500 cursor-pointer;
+}
+
+.edit-title {
+    @apply font-[Poppins] text-[#FFD41C] font-bold text-xl ml-3
+      md:text-4xl;
+}
+
+
+.edit-content{
+    @apply w-full flex-grow p-5  grid grid-cols-1 gap-6
+    md:grid-cols-2;
+}
+
+
+
+
+
+.edit-term-container{
+    @apply w-full max-h-[calc(100vh-124px)]  flex flex-col p-5 bg-white rounded-xl;
+}
+
+.edit-title-container{
+    @apply text-black mb-4;
+}
+
+.editable-container{
+    border: 2px solid black;
+    @apply bg-white rounded-md text-black min-h-[50px] p-2;
+}
+
+.save-btn{
+    @apply w-[100px] h-[50px] bg-violet-800 cursor-pointer;
+}

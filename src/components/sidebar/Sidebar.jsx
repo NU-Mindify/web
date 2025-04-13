@@ -3,7 +3,6 @@ import { ActiveContext } from "../../contexts/Contexts"
 import MenuBtn from "./MenuBtn"
 import hamburger from '../../assets/sidebar/hamburger.svg'
 import halfburger from '../../assets/sidebar/halfburger.svg'
-
 import dashboard from '../../assets/sidebar/dashboard.svg'
 import analytics from '../../assets/sidebar/analytic.svg'
 import reports from '../../assets/sidebar/report.svg'
