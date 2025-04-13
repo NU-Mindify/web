@@ -14,12 +14,14 @@ import AccountManagement from './pages/accounts/AccountManagement'
 import './index.css'
 import Login from './pages/login/Login'
 import EditProfile from './pages/profile/EditProfile'
+import EditGlossary from './pages/glossary/EditGlossary'
 import { onAuthStateChanged } from 'firebase/auth'
 import { firebaseAuth } from './Firebase'
 import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+
 
 const queryClient = new QueryClient();
 
@@ -85,6 +87,7 @@ function App() {
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/account" element={<AccountManagement />} />
                   <Route path="/editprofile" element={<EditProfile />} />
+                  <Route path="/glossary/edit" element={<EditGlossary />} />
                   <Route path="*" element={<Login />} />
                 </Routes>
               </div>

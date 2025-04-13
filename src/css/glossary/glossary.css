@@ -23,7 +23,7 @@
 
 
 .glossary-search-container {
-  @apply w-full h-1/2 flex justify-center items-center bg-red-400
+  @apply w-full h-1/2 flex justify-center items-center
     md:h-1/3;
 }
 
