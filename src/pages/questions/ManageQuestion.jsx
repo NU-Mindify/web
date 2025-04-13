@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import search from "../../assets/search/search.svg";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 const categoriesObj = [
   {
@@ -26,25 +27,42 @@ const categoriesObj = [
 ];
 
 export default function ManageQuestion() {
-  const [questions, setQuestions] = useState([]);
+  // const [questions, setQuestions] = useState([]);
   const [category, setCategory] = useState(null);
-  useEffect(() => {
-    console.log("category changed");
+  const getData = async () => {
+    try {
+      console.log("fetching again");
+      const { data } = await axios.get(
+        `https://nu-mindify-api.vercel.app/api/getQuestions?${
+          category ? `category=${category}&level=1` : ""
+        }`
+      )
+      return data
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  const { isPending, error, data:questions } = useQuery({
+    queryKey: ["questionsList"],
+    initialData: [],
+    queryFn: getData
+  });
+  // useEffect(() => {
+  //   console.log("category changed");
 
-    const getData = async () => {
-      try {
-        const { data } = await axios.get(
-          `https://nu-mindify-api.vercel.app/api/getQuestions?${
-            category ? `category=${category}` : ""
-          }`
-        );
-        setQuestions(data);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-    getData();
-  }, [category]);
+  //   const getData = async () => {
+  //     try {
+  //       const { data } = await ;
+  //       setQuestions(data);
+  //     } catch (error) {
+  //       console.error(error.message);
+  //     }
+  //   };
+  //   getData();
+  // }, [category]);
+  if(isPending) return (<div>Loading</div>)
+
+  if(error) return (<div>Error: {error}</div>)
 
   return (
     <div className="w-full md:w-[90%] max-w-[1250px] 2xl:max-w-[1300px] mx-auto flex-col flex gap-2">
@@ -117,7 +135,7 @@ const QuestionCard = ({ data, index }) => {
           </div>
           <div className="mt-4">
             <span className="font-bold">Category: </span>
-            {categoriesObj.find(categ => categ.id == data.category).name}
+            {categoriesObj.find((categ) => categ.id == data.category).name}
             <span className="font-bold ms-8">Level: </span>
             {data.level}
           </div>
