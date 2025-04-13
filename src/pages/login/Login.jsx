@@ -76,7 +76,7 @@ export default function Login(){
 
                         <div className="flex items-center w-full mt-5">
                             <div className="flex-grow h-px bg-black"></div>
-                            <span className="px-4 text-gray text-sm">OR LOGIN WITH</span>
+                            <span className="px-4 text-black text-xs">or log in with</span>
                             <div className="flex-grow h-px bg-black"></div>
                         </div>
 

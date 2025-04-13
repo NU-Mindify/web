@@ -7,13 +7,15 @@ html, body{
 }
 
 .edit-glossary-container{
-    @apply w-full h-full ;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    @apply w-full h-full overflow-hidden overflow-y-auto p-3 flex flex-col justify-center items-center;
 }
 
 
 
 .edit-header{
-    @apply w-full h-[100px] pl-[40px] flex flex-row items-center;
+    @apply w-full h-[100px] flex flex-row items-center justify-between;
 }
 
 .back-btn{
@@ -21,13 +23,13 @@ html, body{
 }
 
 .edit-title {
-    @apply font-[Poppins] text-[#FFD41C] font-bold text-xl ml-3
+    @apply font-[Poppins] text-[#FFD41C] font-bold text-xl
       md:text-4xl;
 }
 
 
 .edit-content{
-    @apply w-full flex-grow p-5  grid grid-cols-1 gap-6
+    @apply w-full flex-grow grid grid-cols-1 gap-5
     md:grid-cols-2;
 }
 
@@ -36,7 +38,7 @@ html, body{
 
 
 .edit-term-container{
-    @apply w-full max-h-[calc(100vh-124px)]  flex flex-col p-5 bg-white rounded-xl;
+    @apply w-full max-h-[calc(100vh-124px)]  flex flex-col p-2 bg-white rounded-xl;
 }
 
 .edit-title-container{
@@ -45,9 +47,9 @@ html, body{
 
 .editable-container{
     border: 2px solid black;
-    @apply bg-white rounded-md text-black min-h-[50px] p-2;
+    @apply bg-white rounded-md text-black min-h-[50px] h-auto p-2;
 }
 
 .save-btn{
-    @apply w-[100px] h-[50px] bg-violet-800 cursor-pointer;
+    @apply w-[100px] h-[50px] min-h-[50px] min-w-[100px] bg-violet-800 cursor-pointer mt-3;
 }
