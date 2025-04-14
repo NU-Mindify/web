@@ -65,7 +65,7 @@ export default function ManageQuestion() {
 
   return (
     <div className="w-full md:w-[90%] max-w-[1250px] 2xl:max-w-[1300px] mx-auto flex-col h-fit flex flex-1 gap-2">
-      <div className="bg-white p-5 flex flex-col h-[20svh] gap-4  rounded-2xl">
+      <div className="bg-white p-5 flex flex-col h-fit gap-4 rounded-2xl">
         <div className=" text-primary font-extrabold text-3xl">
           Manage Questions
         </div>
@@ -108,7 +108,7 @@ export default function ManageQuestion() {
           ))}
         </div>
       </div>
-      <div className="flex-grow overflow-auto !h-[76svh]">
+      <div className="flex-grow overflow-auto xl:!h-[76svh] h-[70svh]">
         <div className="p-4 bg-white rounded-2xl text-black gap-4 flex flex-grow flex-col ">
           {questions.map((question, index) => (
             <QuestionCard data={question} key={question._id} index={index} />
@@ -148,7 +148,7 @@ const QuestionCard = ({ data, index }) => {
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <button className="btn btn-sm btn-outline btn-primary">Edit</button>
+            <button className="btn btn-sm btn-outline btn-secondary">Edit</button>
             <button className="btn btn-sm btn-outline btn-error">
               Archive
             </button>

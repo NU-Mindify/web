@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+:root{
+    --color-primary: oklch(0.88 0.1763 93.56);
+    --color-secondary: #35408E;
+}
 
 * {
     box-sizing: border-box;
@@ -172,13 +176,13 @@ body{
 /*----- CONTENTS CONTAINER -----*/
 
 .content-container{
-    background-color: rgba(157, 200, 243, 0.3);
+    /* background-color: rgba(157, 200, 243, 0.3); */
     @apply w-full rounded-xl overflow-hidden ml-0
     lg:w-full lg:ml-3 ;
 }
 
 .active-content-container{
-    background-color: rgba(157, 200, 243, 0.3);
+    /* background-color: rgba(157, 200, 243, 0.3); */
     @apply w-full ml-0 rounded-xl overflow-hidden
     lg:ml-3;
 }
