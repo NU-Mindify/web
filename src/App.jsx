@@ -33,6 +33,8 @@ onAuthStateChanged(firebaseAuth, user => {
 function App() {
   const [isActive, setActive] = useState(false)
   const [selected, setSelected] = useState('')
+  const [currentUserEmail, setCurrentUserEmail] = useState('')
+  const [currentUserBranch, setCurrentUserBranch] = useState('')
 
   
   useEffect(() => {
@@ -60,7 +62,7 @@ function App() {
 
   return (
     <ActiveContext.Provider
-      value={{ isActive, setActive, selected, setSelected }}
+      value={{ isActive, setActive, selected, setSelected, currentUserEmail, setCurrentUserEmail, currentUserBranch, setCurrentUserBranch }}
     >
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>

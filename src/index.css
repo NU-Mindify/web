@@ -146,10 +146,6 @@ body{
     @apply text-xl font-bold text-amber-500;
 }
 
-.user-email{
-    @apply text-xs text-gray-500 font-medium mb-1;
-}
-
 /********************************/
 
 

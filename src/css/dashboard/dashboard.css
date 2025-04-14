@@ -47,14 +47,33 @@
 
 
 .analytics-container-dashboard{
-    @apply w-full grid grid-cols-1 gap-4
+    @apply w-full grid grid-cols-1 gap-4 place-items-center
     md:grid-cols-2
     lg:grid-cols-3
     xl:grid-cols-5;
 }
 
 .analytics-properties-dashboard{
-    @apply w-full h-[200px] bg-white rounded-xl;
+    @apply w-full h-[200px] bg-white rounded-xl p-3;
+}
+
+.dashboard-title{
+    @apply text-black;
+}
+.dashboard-sub-title{
+    @apply text-black text-[14px];
+}
+
+.dashboard-progress-bar {
+    @apply w-full rounded-full;
+    appearance: none; 
+    overflow: hidden; 
+}
+  
+
+
+.analytics-percent{
+    @apply w-full flex flex-row justify-between;
 }
 
 
@@ -87,4 +106,9 @@
 
 .leaderboards-container-dashboard{
     @apply w-full h-[450px] bg-white rounded-xl;
+}
+
+
+.chart{
+    @apply w-full h-full self-center bg-red-400;
 }
