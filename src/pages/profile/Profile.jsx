@@ -75,7 +75,6 @@ export default function Profile(props){
     }
 
     const handleUpdateProfile = () => {
-
         setIsEditing(false)
     }
 
@@ -139,7 +138,6 @@ export default function Profile(props){
                             {isEditing ? (
                                 <>
                                     <button class="edit-btn-properties" onClick={handleImageClick}>Upload Photo</button>
-                                    <button class="edit-btn-properties" onClick={handleUpdateProfile}>Save Profile</button>
                                 </>
                             ) : (
                                 <button class="edit-btn-properties" onClick={handleEditProfile}>Edit Profile</button>
@@ -277,6 +275,11 @@ export default function Profile(props){
                             onChange={(e) => {changeUserPosition(e.target.value)}}
                             />
                         </div>
+                    </div>
+
+                    <div className='save-btn-container-profile-settings' style={isEditing ? {display:'block'} : {display:'none'}}>
+                        <button className='save-btn-properties-profile-settings' onClick={handleUpdateProfile}>Save Profile</button>
+                        <button className='cancel-btn-properties-profile-settings'>Cancel</button>
                     </div>
 
 

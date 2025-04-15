@@ -14,9 +14,6 @@ html, body, #root {
   @apply w-full h-full flex flex-col overflow-y-auto;
 }
 
-
-
-
 .header-container-prof-settings {
   @apply w-full h-[100px] pl-6 pt-3;
 }
@@ -25,9 +22,6 @@ html, body, #root {
   @apply text-2xl font-[Poppins] font-bold text-[#FFD41C]
     md:text-4xl;
 }
-
-
-
 
 .content-container-prof-settings {
   @apply w-full flex-1 rounded-xl flex flex-col bg-white mt-[100px]
@@ -95,4 +89,23 @@ html, body, #root {
 .input-properties-disabled {
   border: 1px solid black;
   @apply w-full h-[60px] pl-3 rounded-xl text-black text-[16px] bg-gray-300 font-[Poppins];
+}
+
+.save-btn-container-profile-settings{
+  @apply w-full h-full flex justify-center items-center flex-col mt-5
+    lg:w-[300px] lg:ml-8 lg:justify-start;
+}
+
+.cancel-btn-properties-profile-settings{
+  border: 1px solid black;
+  @apply w-3/4 h-8 rounded-3xl text-black font-[Poppins] font-bold text-sm cursor-pointer mt-3
+    md:w-7/12
+    lg:w-10/12 lg:h-1/6;
+}
+
+.save-btn-properties-profile-settings{
+  border: 1px solid black;
+  @apply w-3/4 h-8 rounded-3xl text-black font-[Poppins] font-bold text-sm cursor-pointer mt-3
+    md:w-7/12
+    lg:w-10/12 lg:h-1/6;
 }
