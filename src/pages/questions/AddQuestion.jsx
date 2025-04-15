@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Style from "./addQuestion.module.css";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { CheckCircle2Icon, XCircle } from "lucide-react";
 
 const categoriesObj = [
   {
@@ -108,7 +109,9 @@ function AddQuestion() {
             }
           >
             {categoriesObj.map((category) => (
-              <option key={category.id} value={category.id}>{category.name}</option>
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
             ))}
           </select>
         </label>
@@ -145,9 +148,27 @@ function AddQuestion() {
         </div>
 
         <div className={`${Style.row} flex`}>
-          <label htmlFor="options">Options:</label>
-          <div className="md:!w-[70%] flex">
-            <div className="border border-black/20 rounded px-4 rounded-e-none border-e-0 h-full flex items-center">
+          <label htmlFor="options" className="md:!w-[20%]">
+            Options:
+          </label>
+          <div className="md:!w-[80%] flex">
+            <label className="!swap swap-rotate !w-[15%]">
+              <input
+                type="checkbox"
+                name="correctLetter"
+                class="my-auto me-2"
+                checked={question.answer === "a"}
+                onChange={(e) => onAnswerChange(e)}
+                value={"a"}
+              />
+              <CheckCircle2Icon className="swap-on h-8 w-8" size={10} />
+              <XCircle className="swap-off h-8 w-8" size={10} />
+            </label>
+            <div
+              className={`${
+                question.answer == "a" ? "bg-green-500" : "bg-red-300"
+              } border border-black/20 rounded px-4 rounded-e-none border-e-0 h-full flex items-center transition`}
+            >
               A
             </div>
             <textarea
@@ -160,12 +181,28 @@ function AddQuestion() {
             ></textarea>
           </div>
         </div>
-        {["B", "C", "D"].map((letter, index) => (
+        {["b", "c", "d"].map((letter, index) => (
           <div className={`${Style.row} mt-0`} key={letter}>
-            <div className="!w-[30%]"></div>
-            <div className="md:!w-[70%] flex">
-              <div className="border border-black/20 rounded px-4 rounded-e-none border-e-0 h-full flex items-center">
-                {letter}
+            <div className="!w-[20%]"></div>
+            <div className="md:!w-[80%] flex">
+              <label className="!swap swap-rotate !w-[15%]">
+                <input
+                  type="checkbox"
+                  name="correctLetter"
+                  class="my-auto me-2"
+                  checked={question.answer === letter}
+                  onChange={(e) => onAnswerChange(e)}
+                  value={letter}
+                />
+                <CheckCircle2Icon className="swap-on h-8 w-8" size={8} />
+                <XCircle className="swap-off h-8 w-8" size={8} />
+              </label>
+              <div
+                className={`${
+                  question.answer == letter ? "bg-green-500" : "bg-red-300"
+                } border border-black/20 rounded px-4 rounded-e-none border-e-0 h-full flex items-center transition`}
+              >
+                {letter.toUpperCase()}
               </div>
               <textarea
                 className="!grow !rounded-s-none text-sm"
@@ -177,20 +214,6 @@ function AddQuestion() {
             </div>
           </div>
         ))}
-
-        <label className={Style["row"]}>
-          <label htmlFor="Answer">Correct Answer:</label>
-          <select
-            id="Answer"
-            disabled={isFormDisabled}
-            value={question.answer}
-            onChange={(e) => onAnswerChange(e)}
-          >
-            {["A", "B", "C", "D"].map((letter) => (
-              <option key={letter} value={letter.toLowerCase()}>{letter}</option>
-            ))}
-          </select>
-        </label>
 
         <div className={Style["row"]}>
           <label htmlFor="Rationale">Rationale: </label>
