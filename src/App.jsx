@@ -73,7 +73,7 @@ function App() {
             </Routes>
           ) : (
             <div className="main-container">
-              <Sidebar />
+              {selected === '' ? <Sidebar className={'sidebar-hidden'} /> : <Sidebar />}
               <div
                 className={
                   isActive ? "active-content-container" : "content-container"

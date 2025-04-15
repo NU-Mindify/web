@@ -40,6 +40,10 @@ body{
     lg:w-[50px] lg:h-full lg:pt-3 lg:p-0 lg:block;
 
 }
+
+.sidebar-hidden{
+    @apply hidden;
+}
   
 .active-side-menu{
     @apply absolute top-0 left-0 z-[999] bg-white pt-3 overflow-hidden transition-all duration-300 ease-in-out 

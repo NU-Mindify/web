@@ -3,6 +3,7 @@ import "../../css/dashboard/dashboard.css";
 import logo from '../../assets/logo/logo.svg';
 import Chart from 'chart.js/auto';
 import { ActiveContext } from '../../contexts/Contexts';
+import BarGraph from '../../components/barGraph/BarGraph';
 
 
 export default function Dashboard() {
@@ -49,7 +50,9 @@ export default function Dashboard() {
       </div>
 
       <div className="reports-content-container-dashboard">
-        <div className="total-students-container-dashboard"></div>
+        <div className="total-students-container-dashboard">
+          <BarGraph />
+        </div>
         <div className="badges-container-dashboard"></div>
         <div className="leaderboards-container-dashboard"></div>
       </div>

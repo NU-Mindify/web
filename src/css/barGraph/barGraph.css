@@ -1,0 +1,5 @@
+@reference "tailwindcss";
+
+.bar-container{
+    @apply relative h-72 w-full bg-red-300 grid;
+};
