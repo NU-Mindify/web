@@ -23,10 +23,6 @@ export default function EditProfile(){
         setImage(event.target.files[0]);
     }
 
-    const [isEditing, setIsEditing] = useState(true);
-
-    
-
     return(
 
         <>  

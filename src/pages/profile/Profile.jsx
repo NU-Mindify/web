@@ -1,8 +1,9 @@
 
 import '../../css/profile/profile.css'
-import { use, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom'
 import DotLoader from "react-spinners/DotLoader"
+import axios from 'axios';
 
 export default function Profile(props){
 
@@ -20,6 +21,20 @@ export default function Profile(props){
     const [getEmployeeNum, setEmployeeNo] = useState(100)
     const [getNUBranch, setNUBranch] = useState("moa")
     const [getUserPosition, setUserPosition] = useState("Accounts Admin")
+
+    const { uid } = useParams();
+    const [webUser, setWebUser] = useState({});
+
+    useEffect(() => {
+        axios.get("https://nu-mindify-api.vercel.app/api/getUser/w5WgP0ai2OV9nzhHbKr7eDBkRbe2")
+         .then((response) => {
+            console.log(response.data);
+            setWebUser(response.data);
+         })
+         .catch((error) => {
+            console.log(error)
+         })
+    }, [uid]);
 
     const [showLoader, setShowLoader] = useState(false)
 
@@ -243,7 +258,7 @@ export default function Profile(props){
                             type="email"
                             placeholder="Email"
                             className="input input-properties-disabled"
-                            value={getUserEmail}
+                            value={webUser.email}
                             disabled
                             onChange={(e) => {changeUserEmail(e.target.value)}}
                             />
