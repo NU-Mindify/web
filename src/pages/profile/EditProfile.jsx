@@ -26,7 +26,7 @@ export default function EditProfile(){
 
     const handleUpdateProfile = async () => {
         try{
-            await axios.put(`http://localhost:8000/api/updateWebUsers/sK4xMv2ZQK6du5jF9XPCrs`, editWebUser);
+            await axios.put(`http://localhost:8080/api/updateWebUsers/${editWebUser._id}`, editWebUser);
             alert("Update Successful!");
             navigate('/profile')
         }catch(error){
