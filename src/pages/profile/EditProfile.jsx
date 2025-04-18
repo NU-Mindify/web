@@ -1,13 +1,42 @@
 import '../../css/profile/profile.css'
-import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useRef, useState, useEffect } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
+import axios from 'axios';
 
 export default function EditProfile(){
 
     const navigate = useNavigate()
+    const { uid } = useParams();
+    const location = useLocation();
+    const [editWebUser, setEditWebUser] = useState(location.state?.webUser || null);
 
-    const handleSaveProfile = () => {
-        navigate('/profile')
+    useEffect(()=>{
+        const fetchWebUserDetails = async () => {
+            try{
+                const response = await axios.get(`http://localhost:8080/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`);
+                setEditWebUser(response.data)
+            }catch (error){
+                console.error("Error fetching user details", error);
+                alert("Failed to get user details");
+            }
+        };
+
+        if (uid) fetchWebUserDetails();
+    }, [uid]);
+
+    const handleUpdateProfile = async () => {
+        try{
+            await axios.put(`http://localhost:8000/api/updateWebUsers/sK4xMv2ZQK6du5jF9XPCrs`, editWebUser);
+            alert("Update Successful!");
+            navigate('/profile')
+        }catch(error){
+            console.error(error);
+            alert("Update Unsuccessful!");
+        }
+    }
+
+    const handleCancelEdit = () =>{
+        navigate('/profile');
     }
 
     const inputRef = useRef(null);
@@ -49,12 +78,11 @@ export default function EditProfile(){
                         style={{display: "none"}}
                         accept='image/*'
                         />
-                        <h1 className="username-properties">Suosuo Frieren</h1>
+                        {/* <h1 className="username-properties">{editWebUser.firstName} {editWebUser.lastName}</h1> */}
                     </div>
 
 
                         <div className='edit-btn-container-prof-settings'>
-                            <button class="edit-btn-properties" onClick={handleSaveProfile}>Save Profile</button>
                             <button class="edit-btn-properties" onClick={handleImageClick}>Upload Photo</button>
                         </div>
                     </div>
@@ -68,8 +96,9 @@ export default function EditProfile(){
                             type="text"
                             placeholder="First Name"
                             className="input input-properties"
-                            value={"Suosuo"}
-                            disabled
+                            value={editWebUser.firstName}
+                            onChange={(e)=> setEditWebUser({...editWebUser, firstName: e.target.value})}
+                            
                             />
                         </div>
 
@@ -79,41 +108,21 @@ export default function EditProfile(){
                             type="text"
                             placeholder="Last Name"
                             className="input input-properties"
-                            value={"Frieren"}
-                            disabled
+                            value={editWebUser.lastName}
+                            onChange={(e)=> setEditWebUser({...editWebUser, lastName: e.target.value})}
+                            
                             />
                         </div>
 
-                        <div className="forms-properties">
-                            <label className="forms-label-properties">Email</label>
-                            <input
-                            type="email"
-                            placeholder="Email"
-                            className="input input-properties"
-                            value={"virgojl@students.nu-moa.edu.ph"}
-                            disabled
-                            />
-                        </div>
-
-                        <div className="forms-properties">
-                            <label className="forms-label-properties">Employee No.</label>
-                            <input
-                            type="text"
-                            placeholder="Employee No."
-                            className="input input-properties"
-                            value={"01"}
-                            disabled
-                            />
-                        </div>
+                        
 
                         <div className="forms-properties">
                             <label className="forms-label-properties">NU Branch</label>
                             <select
-                            className="input input-bordered input-disabled cursor-not-allowed input-properties"
-                            disabled
-                            value={"moa"}
+                            className="input input-bordered cursor-pointer input-properties"
+                            value={editWebUser.branch}
+                            onChange={(e)=> setEditWebUser({...editWebUser, branch: e.target.value})}
                             >
-                            <option value="default">Select a Branch</option>
                             <option value="manila">NU Manila</option>
                             <option value="moa">NU MOA</option>
                             <option value="laguna">NU Laguna</option>
@@ -128,17 +137,44 @@ export default function EditProfile(){
                         </div>
 
                         <div className="forms-properties">
+                            <label className="forms-label-properties">Email</label>
+                            <input
+                            type="email"
+                            placeholder="Email"
+                            className="input input-properties-disabled"
+                            value={editWebUser.email}
+                            disabled
+                            
+                            />
+                        </div>
+
+                        <div className="forms-properties">
+                            <label className="forms-label-properties">Employee No.</label>
+                            <input
+                            type="text"
+                            placeholder="Employee No."
+                            className="input input-properties-disabled"
+                            value={editWebUser.employeenum}
+                            disabled
+                            />
+                        </div>
+
+                        <div className="forms-properties">
                             <label className="forms-label-properties">Position</label>
                             <input
                             type="text"
                             placeholder="Position"
-                            className="input input-properties"
-                            value={"Account Admin"}
+                            className="input input-properties-disabled"
+                            value={editWebUser.position}
                             disabled
                             />
                         </div>
                     </div>
 
+                    <div className='edit-btn-container-prof-settings'>
+                            <button class="edit-btn-properties" onClick={handleUpdateProfile}>Save Profile</button>
+                            <button class="edit-btn-properties" onClick={handleCancelEdit}>Cancel</button>
+                    </div>
 
                 </div>      
             </div>

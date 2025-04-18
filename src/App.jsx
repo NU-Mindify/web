@@ -90,7 +90,7 @@ function App() {
                   <Route path="/students" element={<ManageStudents />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/account" element={<AccountManagement />} />
-                  <Route path="/editprofile" element={<EditProfile />} />
+                  <Route path="/profile/edit/:id" element={<EditProfile />} />
                   <Route path="/glossary/edit" element={<EditGlossary />} />
                   <Route path="*" element={<Login />} />
                 </Routes>
