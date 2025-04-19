@@ -1,0 +1,33 @@
+[
+    {
+      "uid" : "iWPAE5KpcmwPsXUgHCd3Ak",
+      "firstname": "Jerome",
+      "lastname": "Virgo",
+      "branch": "manila",
+      "email": "100%",
+      "employeenum" : "2",
+      "position" : "Professor",
+      "useravatar" : "https://avatarfiles.alphacoders.com/375/375159.jpeg"
+    },
+    {
+        "uid" : "86SRQDTGi4vqbgft6nM3mq",
+        "firstname": "Francis",
+        "lastname": "Salles",
+        "branch": "laguna",
+        "email": "salesfe@students.nu-moa.edu.ph",
+        "employeenum" : "3",
+        "position" : "Accounts Admin",
+        "useravatar" : "https://static.kpopping.com/d3/3/241130-IVE-Liz-at-2024-Melon-Music-Awards-MMA-documents-1(2).jpeg"
+    },
+    {
+        "uid" : "dh2KxiCAz1sA22Mw74quUq",
+        "firstname": "Stephanie",
+        "lastname": "Guce",
+        "branch": "clark",
+        "email": "gucesa@students.nu-moa.edu.ph",
+        "employeenum" : "4",
+        "position" : "Professor",
+        "useravatar" : "https://preview.redd.it/winter-of-aespa-v0-380zdj55a2vb1.jpg?width=640&crop=smart&auto=webp&s=eace76eb3c0a22f96441f2fd04269e8abb9e453d"
+    }
+]
+

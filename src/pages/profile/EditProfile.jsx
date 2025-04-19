@@ -13,7 +13,7 @@ export default function EditProfile(){
     useEffect(()=>{
         const fetchWebUserDetails = async () => {
             try{
-                const response = await axios.get(`http://localhost:8080/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`); //to replace with uid from firebase db
+                const response = await axios.get(`https://nu-mindify-api.vercel.app/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`); //to replace with uid from firebase db
                 setEditWebUser(response.data)
             }catch (error){
                 console.error("Error fetching user details", error);
@@ -26,7 +26,7 @@ export default function EditProfile(){
 
     const handleUpdateProfile = async () => {
         try{
-            await axios.put(`http://localhost:8080/api/updateWebUsers/${editWebUser._id}`, editWebUser);
+            await axios.put(`https://nu-mindify-api.vercel.app/api/updateWebUsers/${editWebUser._id}`, editWebUser);
             alert("Update Successful!");
             navigate('/profile')
         }catch(error){

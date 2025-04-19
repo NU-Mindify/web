@@ -17,7 +17,7 @@ export default function Profile(){
     const [getUserAvatar, setUserAvatar] = useState('')
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`) //to replace with uid from firebase db
+        axios.get(`https://nu-mindify-api.vercel.app/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`) //to replace with uid from firebase db
          .then((response) => {
             console.log(response.data);
             setWebUser(response.data);
