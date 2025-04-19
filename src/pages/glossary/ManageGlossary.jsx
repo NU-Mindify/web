@@ -5,9 +5,23 @@ import dropdown from '../../assets/glossary/dropdown.svg'
 import '../../css/glossary/glossary.css'
 import SearchBar from "../../components/searchbar/SearchBar";
 import { useNavigate } from "react-router";
-
+// import abnormal from '../../data/GlossaryTerms.json'
 
 export default function ManageGlossary() {
+
+    // useEffect(() => {
+    //   let newAbnormal = []
+    //   abnormal.map((term) => {
+    //     newAbnormal.push({
+    //       "word": term.word,
+    //       "meaning": term.meaning,
+    //       tags: ["Abnormal Psychology"],
+    //       is_deleted: false
+    //     })
+    //   })
+    //   console.log(JSON.stringify(newAbnormal));
+    // }, [])
+
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
     const navigate = useNavigate();

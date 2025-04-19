@@ -1,7 +1,9 @@
 [
     {
       "word": "Death Darer",
-      "meaning": "A person who is ambivalent about the wish to die even as he or she attempts suicide."
+      "meaning": "A person who is ambivalent about the wish to die even as he or she attempts suicide.",
+      "tags":["Abnormal Psychology", "death"],
+      "is_deleted": false
     },
     {
       "word": "Death Ignorer",
