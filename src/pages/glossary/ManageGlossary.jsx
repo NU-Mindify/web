@@ -5,13 +5,9 @@ import dropdown from '../../assets/glossary/dropdown.svg'
 import '../../css/glossary/glossary.css'
 import SearchBar from "../../components/searchbar/SearchBar";
 import { useNavigate } from "react-router";
-<<<<<<< HEAD
+
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-
-=======
-// import abnormal from '../../data/GlossaryTerms.json'
->>>>>>> f4c0b36708ab93d134b798dab647e2a43ac99e1b
 
 export default function ManageGlossary() {
 

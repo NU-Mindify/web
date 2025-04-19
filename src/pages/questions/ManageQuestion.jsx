@@ -85,34 +85,39 @@ export default function ManageQuestion() {
    
     <div className="question-main-container">
       <div className="question-header">
-      <div className="title-header">
-            <h1 className="quesiton-title">Manage Questions</h1>
-            <button className="btn" onClick={addQuestion}>
-               Add Question
-             </button>
-             <button className="btn btn-error" onClick={handleBack}>
-               Back
-             </button>
-          </div>
+        <div className="title-header">
+          {gotSelected ? 
+              <>
+                <h1 className="quesiton-title">Manage Questions</h1>
+                <button className="btn" onClick={addQuestion}>
+                  Add Question
+                </button>
+                <button className="btn btn-error" onClick={handleBack}>
+                  Back
+                </button> 
+              </>
+              : 
+              <h1 className="quesiton-title">Select Category</h1>
+          } 
+        </div>
           
-          <SearchBar className='question-search' />
+          {gotSelected ? <SearchBar className='question-search' /> : ''}
         </div>
       {gotSelected ? 
         <div className="allquesitons-container">
           <div className="flex-grow overflow-auto xl:!h-[76svh] h-[70svh]">
-            <div className="p-4 bg-white rounded-2xl text-black gap-4 flex flex-grow flex-col ">
-              {questions.map((question, index) => (
-                <QuestionCard data={question} key={question._id} index={index} />
-              ))}
+            <div className="p-4 bg-white rounded-2xl text-black gap-4 flex flex-grow flex-col">
+              {questions.length === 0 ? (
+                <div className="text-center text-gray-500 text-lg">No questions found.</div>
+              ) : (
+                questions.map((question, index) => (
+                  <QuestionCard data={question} key={question._id} index={index} />
+                ))
+              )}
             </div>
           </div>
         </div>
-      
         : 
-        
-        
-          
-
         <div className="question-body">
           {categoriesObj.map((elem) => (
             <Category_Choices
