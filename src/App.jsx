@@ -22,6 +22,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import AddQuestion from './pages/questions/AddQuestion'
+import TermsAndConditions from './pages/login/TermsAndConditions'
 
 
 const queryClient = new QueryClient();
@@ -69,6 +70,7 @@ function App() {
           {selected === "login" ? (
             <Routes>
               <Route path="/" element={<Login />} />
+              <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="*" element={<Login />} />
             </Routes>
           ) : (
