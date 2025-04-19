@@ -13,7 +13,7 @@ export default function EditProfile(){
     useEffect(()=>{
         const fetchWebUserDetails = async () => {
             try{
-                const response = await axios.get(`http://localhost:8080/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`); //to replace with uid from firebase db
+                const response = await axios.get(`https://nu-mindify-api.vercel.app/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`); //to replace with uid from firebase db
                 setEditWebUser(response.data)
             }catch (error){
                 console.error("Error fetching user details", error);
@@ -26,7 +26,7 @@ export default function EditProfile(){
 
     const handleUpdateProfile = async () => {
         try{
-            await axios.put(`http://localhost:8080/api/updateWebUsers/${editWebUser._id}`, editWebUser);
+            await axios.put(`https://nu-mindify-api.vercel.app/api/updateWebUsers/${editWebUser._id}`, editWebUser);
             alert("Update Successful!");
             navigate('/profile')
         }catch(error){
@@ -69,8 +69,9 @@ export default function EditProfile(){
                     <div className='avatar-edit-container-prof-settings'>
 
                     <div className="avatar-container-prof-settings">
-                        {image ? (
-                            <img className="avatar-dimensions" src={URL.createObjectURL(image)} alt="" />
+                        <img className="avatar-dimensions" src={editWebUser.useravatar} alt="" />
+                        {/* {image ? (
+                            <img className="avatar-dimensions" src={editWebUser.useravatar} alt="" />
                         ) : (
                             <img className="avatar-dimensions" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />
                         )}
@@ -80,13 +81,22 @@ export default function EditProfile(){
                         onChange={handleImageChange} 
                         style={{display: "none"}}
                         accept='image/*'
-                        />
+                        /> */}
                     </div>
 
 
                         <div className='edit-btn-container-prof-settings'>
-                            <button class="edit-btn-properties" onClick={handleImageClick}>Upload Photo</button>
+                            {/* <button class="edit-btn-properties" onClick={handleImageClick}>Upload Photo</button> */}
+                            <label className="forms-label-properties">Enter Image URL</label>
+                            <input
+                            type="text"
+                            placeholder="Image URL"
+                            className="input input-properties"
+                            value={editWebUser.useravatar}
+                            onChange={(e)=> setEditWebUser({...editWebUser, useravatar: e.target.value})}
+                            />
                         </div>
+                        
                     </div>
                     
                     
