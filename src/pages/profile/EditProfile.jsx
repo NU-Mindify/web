@@ -13,7 +13,7 @@ export default function EditProfile(){
     useEffect(()=>{
         const fetchWebUserDetails = async () => {
             try{
-                const response = await axios.get(`http://localhost:8080/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`);
+                const response = await axios.get(`http://localhost:8080/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`); //to replace with uid from firebase db
                 setEditWebUser(response.data)
             }catch (error){
                 console.error("Error fetching user details", error);
@@ -40,16 +40,19 @@ export default function EditProfile(){
     }
 
     const inputRef = useRef(null);
-    const [image, setImage] = useState("")
+    // const [image, setImage] = useState("")
 
     const handleImageClick = () => { 
         inputRef.current.click();
     }
 
+    const [image, setImage] = useState('')
+    
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         console.log(file);
-        setImage(event.target.files[0]);
+        setImage(file)
+        setEditWebUser({...editWebUser, useravatar: file})
     }
 
     return(
@@ -78,7 +81,6 @@ export default function EditProfile(){
                         style={{display: "none"}}
                         accept='image/*'
                         />
-                        {/* <h1 className="username-properties">{editWebUser.firstName} {editWebUser.lastName}</h1> */}
                     </div>
 
 

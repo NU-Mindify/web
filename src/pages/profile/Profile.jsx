@@ -17,7 +17,7 @@ export default function Profile(){
     const [getUserAvatar, setUserAvatar] = useState('')
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`)
+        axios.get(`http://localhost:8080/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`) //to replace with uid from firebase db
          .then((response) => {
             console.log(response.data);
             setWebUser(response.data);
@@ -36,22 +36,9 @@ export default function Profile(){
 
     }
 
-    //npm install --save react-spinners
-
     const handleEditProfile = () => {
         setShowLoader(true)
         myDisplay(webUser)
-        
-    }
-
-    const handleImageClick = () => { 
-        inputRef.current.click();
-    }
-
-    const handleImageChange = (event) => {
-        const file = event.target.files[0];
-        console.log(file);
-        setUserAvatar(event.target.files[0]);
     }
 
     return(
@@ -68,18 +55,8 @@ export default function Profile(){
 
                         
                         <div className="avatar-container-prof-settings">
-                            {getUserAvatar ? (
-                                <img className="avatar-dimensions" src={URL.createObjectURL(getUserAvatar)} alt="" />
-                            ) : (
-                                <img className="avatar-dimensions" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />
-                            )}
-                            <input 
-                            type='file' 
-                            ref={inputRef} 
-                            onChange={handleImageChange} 
-                            style={{display: "none"}}
-                            accept='image/*'
-                            />
+
+                            <img className="avatar-dimensions" src={webUser.useravatar} alt="" />
 
                             <h1 className="username-properties">{webUser.firstName} {webUser.lastName}</h1>
                         </div>
