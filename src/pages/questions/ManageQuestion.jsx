@@ -3,34 +3,42 @@ import search from "../../assets/search/search.svg";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
+import '../../css/questions/questions.css'
+import SearchBar from "../../components/searchbar/SearchBar";
 
 const categoriesObj = [
   {
     id: "abnormal",
     name: "Abnormal Psychology",
+    color: '#eb73e1'
   },
   {
     id: "developmental",
     name: "Developmental Psychology",
+    color: '#40ed6b'
   },
   {
     id: "psychological",
     name: "Psychological Assessment",
+    color: '#de9645'
   },
   {
     id: "industrial",
     name: "Industrial Psychology",
+    color: '#3051d9'
   },
   {
     id: "general",
     name: "General Psychology",
+    color: '#f53141'
   },
 ];
 
 export default function ManageQuestion() {
-  // const [questions, setQuestions] = useState([]);
   const [category, setCategory] = useState(null);
   const navigate = useNavigate();
+
+  const [gotSelected, setGotSelected] = useState(false)
 
   const getData = async () => {
     try {
@@ -50,9 +58,10 @@ export default function ManageQuestion() {
     error,
     data: questions,
   } = useQuery({
-    queryKey: ["questionsList"],
+    queryKey: ["questionsList", category],
     initialData: [],
     queryFn: getData,
+    enabled: gotSelected,
   });
 
   const addQuestion = () => {
@@ -63,61 +72,80 @@ export default function ManageQuestion() {
 
   if (error) return <div>Error: {error}</div>;
 
+  function handleAbnormal(){
+    setGotSelected(true)
+    
+  }
+
+  function handleBack(){
+    setGotSelected(false)
+  }
+
   return (
-    <div className="w-full md:w-[90%] max-w-[1250px] 2xl:max-w-[1300px] mx-auto flex-col h-fit flex flex-1 gap-2">
-      <div className="bg-white p-5 flex flex-col h-fit gap-4 rounded-2xl">
-        <div className=" text-primary font-extrabold text-3xl">
-          Manage Questions
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="search-bar-leaderboards !w-[90%]">
-            <button className="search-btn-leaderboards">
-              <img src={search}></img>
-            </button>
-            <input
-              type="text"
-              placeholder="Search for question"
-              className="search-input-leaderboards"
-            />
+   
+    <div className="question-main-container">
+      <div className="question-header">
+      <div className="title-header">
+            <h1 className="quesiton-title">Manage Questions</h1>
+            <button className="btn" onClick={addQuestion}>
+               Add Question
+             </button>
+             <button className="btn btn-error" onClick={handleBack}>
+               Back
+             </button>
           </div>
-          <button className="btn" onClick={addQuestion}>
-            Add Question
-          </button>
+          
+          <SearchBar className='question-search' />
         </div>
-        <div className="filter gap-1 items-center">
-          <div className="text-black">Select Category:</div>
-          <input
-            className="btn filter-reset"
-            type="radio"
-            name="category"
-            aria-label="All"
-            onClick={() => setCategory("")}
+      {gotSelected ? 
+        <div className="allquesitons-container">
+          <div className="flex-grow overflow-auto xl:!h-[76svh] h-[70svh]">
+            <div className="p-4 bg-white rounded-2xl text-black gap-4 flex flex-grow flex-col ">
+              {questions.map((question, index) => (
+                <QuestionCard data={question} key={question._id} index={index} />
+              ))}
+            </div>
+          </div>
+        </div>
+      
+        : 
+        
+        
+          
+
+        <div className="question-body">
+          {categoriesObj.map((elem) => (
+            <Category_Choices
+            key={elem.id}
+            text={elem.name}
+            id={elem.id}
+            bgColor={elem.color}
+            onClick={() => {
+              setCategory(elem.id);
+              setGotSelected(true);
+            }}
           />
-          {categoriesObj.map((category) => (
-            <input
-              className="btn"
-              type="radio"
-              name="category"
-              aria-label={category.name}
-              value={category.id}
-              key={category.id}
-              onClick={() => {
-                setCategory(category.id);
-              }}
-            />
           ))}
         </div>
-      </div>
-      <div className="flex-grow overflow-auto xl:!h-[76svh] h-[70svh]">
-        <div className="p-4 bg-white rounded-2xl text-black gap-4 flex flex-grow flex-col ">
-          {questions.map((question, index) => (
-            <QuestionCard data={question} key={question._id} index={index} />
-          ))}
-        </div>
-      </div>
+        
+      
+      }
+    </div>
+    
+    
+  );
+}
+
+function Category_Choices({ text, id, onClick, bgColor }) {
+  return (
+    <div className="category-container" key={id} onClick={onClick} style={{backgroundColor: bgColor}}>
+      <h1 className="category-text" key={id} onClick={onClick}>{text}</h1>
+      <p className="category-quantity" onClick={onClick}>Questions: 2022</p>
     </div>
   );
 }
+
+
 const QuestionCard = ({ data, index }) => {
   return (
     <>

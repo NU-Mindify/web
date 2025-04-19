@@ -1,14 +1,21 @@
 import { useRef, useState, } from "react";
-import terms from '../../data/GlossaryTerms.json'
+// import terms from '../../data/GlossaryTerms.json'
 import edit from '../../assets/glossary/edit.svg'
 import dropdown from '../../assets/glossary/dropdown.svg'
 import '../../css/glossary/glossary.css'
 import SearchBar from "../../components/searchbar/SearchBar";
 import { useNavigate } from "react-router";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 
 export default function ManageGlossary() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+    
+
+    
+    
 
     const navigate = useNavigate();
     
@@ -17,16 +24,7 @@ export default function ManageGlossary() {
     const [activeTermWord, setActiveTermWord] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     
-    const groupedTerms = terms.reduce((acc, term) => {
-      const firstLetter = term.word[0].toUpperCase();
-      if (!acc[firstLetter]) acc[firstLetter] = [];
-      acc[firstLetter].push(term);
-      return acc;
-    }, {});
-
-    const filteredTerms = terms.filter(term =>
-      term.word.toLowerCase().startsWith(searchTerm.toLowerCase())
-    );
+    
     
     
     const scrollToLetter = (letter) => {
@@ -45,6 +43,46 @@ export default function ManageGlossary() {
       });
       
     }
+
+    const getTerms = async () => {
+      try {
+        const response = await axios.get(`https://nu-mindify-api.vercel.app/api/getTerms`);
+        console.log(`terms are: ${response.data}`);
+        return response.data || []; 
+        
+        
+      } catch (error) {
+        console.log(`gege ${error}`);
+        return []; 
+      }
+    };
+    
+    
+
+    const {
+      isPending,
+      error,
+      data: terms,
+    } = useQuery({
+      queryKey: ["terms"],
+      initialData: [],
+      queryFn: getTerms,
+    });
+
+    if (isPending) return <div>Loading</div>;
+
+    if (error) return <div>Error: {error}</div>;
+
+    const groupedTerms = terms.reduce((acc, term) => {
+      const firstLetter = term.word[0].toUpperCase();
+      if (!acc[firstLetter]) acc[firstLetter] = [];
+      acc[firstLetter].push(term);
+      return acc;
+    }, {});
+
+    const filteredTerms = terms.filter(term =>
+      term.word.toLowerCase().startsWith(searchTerm.toLowerCase())
+    );
     
     return (
       <>
