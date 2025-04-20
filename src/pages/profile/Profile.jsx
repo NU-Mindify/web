@@ -39,8 +39,9 @@ export default function Profile(){
     }
 
     const handleEditProfile = () => {
-        setShowLoader(true)
-        myDisplay(webUser)
+        // setShowLoader(true)
+        // myDisplay(webUser)
+        navigate(`/profile/edit/${webUser._id}`, {state:{webUser}})
     }
 
     return(
@@ -63,23 +64,9 @@ export default function Profile(){
                             <h1 className="username-properties">{webUser.firstName} {webUser.lastName}</h1>
                         </div>
 
-
-                        <div className='edit-btn-container-prof-settings'>
-                            {showLoader ? (
-                                <div id='dotloader-cont' style={{display: "block"}}>
-                                    <DotLoader 
-                                        loading
-                                    />
-                                </div>
-                            ) : (
-                                <div id='dotloader-cont' style={{display: "none"}}>
-                                    <DotLoader 
-                                        loading
-                                    />
-                                </div>
-                            )}
+                        {/* <div className='edit-btn-container-prof-settings'>
                             <button class="edit-btn-properties" onClick={handleEditProfile}>Edit Profile</button>
-                        </div>
+                        </div> */}
                     </div>
                     
                     <div className="forms-container">
@@ -163,6 +150,10 @@ export default function Profile(){
                             />
                         </div>
                     </div>
+
+                    <div className='edit-btn-container-prof-settings'>
+                            <button class="edit-btn-properties" onClick={handleEditProfile}>Edit Profile</button>
+                        </div>
                 </div>      
             </div>
         </>

@@ -45,21 +45,21 @@ export default function EditProfile(){
         navigate('/profile');
     }
 
-    const inputRef = useRef(null);
+    // const inputRef = useRef(null);
     // const [image, setImage] = useState("")
 
-    const handleImageClick = () => { 
-        inputRef.current.click();
-    }
+    // const handleImageClick = () => { 
+    //     inputRef.current.click();
+    // }
 
-    const [image, setImage] = useState('')
+    // const [image, setImage] = useState('')
     
-    const handleImageChange = (event) => {
-        const file = event.target.files[0];
-        console.log(file);
-        setImage(file)
-        setEditWebUser({...editWebUser, useravatar: file})
-    }
+    // const handleImageChange = (event) => {
+    //     const file = event.target.files[0];
+    //     console.log(file);
+    //     setImage(file)
+    //     setEditWebUser({...editWebUser, useravatar: file})
+    // }
 
     return(
 

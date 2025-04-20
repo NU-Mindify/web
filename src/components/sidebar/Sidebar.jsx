@@ -14,8 +14,10 @@ import profile from '../../assets/sidebar/profile.svg'
 import account from '../../assets/sidebar/account.svg'
 import logout from '../../assets/sidebar/logout.svg'
 import '../../index.css'
-import { useNavigate } from "react-router"
-
+import { useNavigate, useParams } from "react-router"
+import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import { API_URL } from '../../Constants';
 
 
 export default function Sidebar() {
@@ -50,6 +52,21 @@ export default function Sidebar() {
         setActive(false)
     }
 
+    const { uid } = useParams();
+    const [webUser, setWebUser] = useState({});
+
+    useEffect(() => {
+        axios
+          .get(`${API_URL}/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`) //to replace with uid from firebase db
+          .then((response) => {
+            console.log(response.data);
+            setWebUser(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    }, [uid]);
+
     return (
         <div className={isActive ? 'active-side-menu' : 'side-menu'}>
             <button className='btn-icon' onClick={handleSideMenu}>
@@ -60,11 +77,11 @@ export default function Sidebar() {
                 <>
                     <div className="avatar">
                         <div className="avatar-container">
-                            <img src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="avatar" />
+                            <img src={webUser.useravatar} alt="avatar" />
                         </div>
                     </div>
                     <div className="name-container">
-                        <h1 className="user-name">Suosuo Frieren</h1>
+                        <h1 className="user-name">{webUser.firstName} {webUser.lastName}</h1>
                     </div>
                 </>
             )}
