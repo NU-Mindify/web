@@ -6,7 +6,7 @@ export default function SearchBar(props){
 
     return(
         <div className='searchbar-container'>
-            <input type="search" 
+            <input type="text" 
             className={className} 
             placeholder={placeholder} 
             onChange={handleChange}/>

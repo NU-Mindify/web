@@ -73,10 +73,6 @@ export default function ManageQuestion() {
 
   if (error) return <div>Error: {error}</div>;
 
-  function handleAbnormal(){
-    setGotSelected(true)
-    
-  }
 
   function handleBack(){
     setGotSelected(false)
@@ -90,26 +86,36 @@ export default function ManageQuestion() {
           {gotSelected ? 
               <>
                 <h1 className="quesiton-title">Manage Questions</h1>
-                <button className="btn" onClick={addQuestion}>
-                  Add Question
-                </button>
-                <button className="btn btn-error" onClick={handleBack}>
-                  Back
-                </button> 
+                <div className="add-ques-container">
+                  <button className="btn" onClick={addQuestion}>
+                    Add Question
+                  </button>
+                  <button className="btn btn-error" onClick={handleBack}>
+                    Back
+                  </button> 
+                </div>
+                
               </>
               : 
               <h1 className="quesiton-title">Select Category</h1>
           } 
         </div>
           
-          {gotSelected ? <SearchBar className='question-search' /> : ''}
+          {gotSelected ? 
+            
+            <div className="ques-search-container">
+              <SearchBar className='question-search' /> 
+            </div>
+            : 
+            ''
+          }
         </div>
       {gotSelected ? 
         <div className="allquesitons-container">
-          <div className="flex-grow overflow-auto xl:!h-[76svh] h-[70svh]">
-            <div className="p-4 bg-white rounded-2xl text-black gap-4 flex flex-grow flex-col">
+          <div className="ques-sub-container">
+            <div className="allques-main-holder">
               {questions.length === 0 ? (
-                <div className="text-center text-gray-500 text-lg">No questions found.</div>
+                <div className="text-center text-gray-500 text-xl">No questions found.</div>
               ) : (
                 questions.map((question, index) => (
                   <QuestionCard data={question} key={question._id} index={index} />

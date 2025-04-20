@@ -6,13 +6,28 @@
 }
 
 .question-header{
-    @apply w-full h-[140px]  mb-4 flex flex-col justify-center items-center  p-5;
+    @apply w-full h-auto  mb-0 flex flex-col justify-center items-center p-3;
 }
+
 .title-header{
-    @apply w-full h-1/2  flex justify-start;
+    @apply w-full h-[70px] flex justify-between items-center  px-3 ;
 }
+
+.quesiton-title{
+    @apply font-[Poppins] text-[#FFD41C] font-bold text-3xl;
+}
+
+.add-ques-container{
+    @apply w-[250px] h-full  flex items-center justify-between px-3;
+}
+
+
+.ques-search-container{
+    @apply w-full h-[70px]  flex justify-center items-center;
+}
+
 .question-search{
-    @apply w-full h-1/2 bg-white;
+    @apply w-full h-1/2 bg-white text-black;
 }
 
 
@@ -20,7 +35,7 @@
 
 
 .question-body{
-    @apply w-full flex-grow  px-5 py-3 overflow-y-auto overflow-hidden;
+    @apply w-full flex-grow  px-5 py-3 overflow-y-auto overflow-hidden ;
 }
 
 
@@ -38,4 +53,12 @@
 
 .allquestions-container{
     @apply w-full flex-grow bg-amber-800; 
+}
+
+.ques-sub-container{
+    @apply flex-grow overflow-auto md:!h-[calc(100svh-185px)] h-[100%-140px];
+}
+
+.allques-main-holder{
+    @apply p-4 bg-white rounded-2xl text-black gap-4 flex flex-grow flex-col;
 }
