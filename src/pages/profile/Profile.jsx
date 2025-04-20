@@ -29,18 +29,16 @@ export default function Profile(){
           });
     }, [uid]);
 
-    const [showLoader, setShowLoader] = useState(false)
+    // const [showLoader, setShowLoader] = useState(false)
 
-    async function myDisplay(webUser) {
-        let myPromise = new Promise(function(resolve) {
-          setTimeout(function() {resolve(navigate(`/profile/edit/${webUser._id}`, {state:{webUser}}),setShowLoader(false));}, 1500);
-        });
+    // async function myDisplay(webUser) {
+    //     let myPromise = new Promise(function(resolve) {
+    //       setTimeout(function() {resolve(navigate(`/profile/edit/${webUser._id}`, {state:{webUser}}),setShowLoader(false));}, 1500);
+    //     });
 
-    }
+    // }
 
     const handleEditProfile = () => {
-        // setShowLoader(true)
-        // myDisplay(webUser)
         navigate(`/profile/edit/${webUser._id}`, {state:{webUser}})
     }
 
