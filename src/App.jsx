@@ -23,6 +23,7 @@ import {
 } from "@tanstack/react-query";
 import AddQuestion from './pages/questions/AddQuestion'
 import TermsAndConditions from './pages/login/TermsAndConditions'
+import AddTerm from './pages/glossary/AddTerm'
 
 
 const queryClient = new QueryClient();
@@ -94,6 +95,7 @@ function App() {
                   <Route path="/account" element={<AccountManagement />} />
                   <Route path="/profile/edit/:id" element={<EditProfile />} />
                   <Route path="/glossary/edit" element={<EditGlossary />} />
+                  <Route path="/addterm" element={<AddTerm />} />
                   <Route path="*" element={<Login />} />
                 </Routes>
               </div>

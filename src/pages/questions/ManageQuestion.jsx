@@ -6,32 +6,38 @@ import { useNavigate } from "react-router";
 import '../../css/questions/questions.css'
 import SearchBar from "../../components/searchbar/SearchBar";
 import { API_URL } from "../../Constants";
+import abnormal from '../../assets/questions/abnormalBG.png'
+import developmental from '../../assets/questions/developmentalBG.png'
+import general from '../../assets/questions/generalBG.png'
+import industrial from '../../assets/questions/industrialBG.png'
+import psychological from '../../assets/questions/psychologicalBG.png'
+
 
 const categoriesObj = [
   {
     id: "abnormal",
     name: "Abnormal Psychology",
-    color: '#eb73e1'
+    bg: abnormal
   },
   {
     id: "developmental",
     name: "Developmental Psychology",
-    color: '#40ed6b'
+    bg: developmental
   },
   {
     id: "psychological",
     name: "Psychological Assessment",
-    color: '#de9645'
+    bg: psychological
   },
   {
     id: "industrial",
     name: "Industrial Psychology",
-    color: '#3051d9'
+    bg: industrial
   },
   {
     id: "general",
     name: "General Psychology",
-    color: '#f53141'
+    bg: general
   },
 ];
 
@@ -128,15 +134,15 @@ export default function ManageQuestion() {
         <div className="question-body">
           {categoriesObj.map((elem) => (
             <Category_Choices
-            key={elem.id}
-            text={elem.name}
-            id={elem.id}
-            bgColor={elem.color}
-            onClick={() => {
-              setCategory(elem.id);
-              setGotSelected(true);
-            }}
-          />
+              key={elem.id}
+              text={elem.name}
+              id={elem.id}
+              bgImage={elem.bg}
+              onClick={() => {
+                setCategory(elem.id);
+                setGotSelected(true);
+              }}
+            />
           ))}
         </div>
         
@@ -148,9 +154,9 @@ export default function ManageQuestion() {
   );
 }
 
-function Category_Choices({ text, id, onClick, bgColor }) {
+function Category_Choices({ text, id, onClick, bgImage }) {
   return (
-    <div className="category-container" key={id} onClick={onClick} style={{backgroundColor: bgColor}}>
+    <div className="category-container" key={id} onClick={onClick} style={{backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat'}}>
       <h1 className="category-text" key={id} onClick={onClick}>{text}</h1>
       <p className="category-quantity" onClick={onClick}>Questions: 2022</p>
     </div>

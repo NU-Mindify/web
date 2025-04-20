@@ -2,29 +2,39 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import terms from '../../data/GlossaryTerms.json'
 import '../../css/glossary/editGlossary.css'
+import axios from 'axios';
+import { API_URL } from '../../Constants';
+
 
 export default function EditGlossary() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { word, meaning } = location.state || {};
+    const { _id, word, meaning } = location.state || {};
 
     const [editedWord, setEditedWord] = useState(word);
     const [editedMeaning, setEditedMeaning] = useState(meaning);
 
-    function handleSave(){
-    // const existingGlossary = terms || [];
-
-    // const updatedGlossary = existingGlossary.map(term =>
-    //   term.word === word ? { word: editedWord, meaning: editedMeaning } : term
-    // );
+    const editedTerm = { editedWord, editedMeaning };
 
 
-        navigate('/glossary');
+    const handleSave = async () => {
+        try {
+          await axios.put(`${API_URL}/updateTerm/${_id}`, {
+            term_id: _id,
+            word: editedWord,
+            meaning: editedMeaning
+          });
+      
+          navigate('/glossary'); 
+        } catch (error) {
+            console.error("Error updating term:", error);
+          }
     };
 
     function handleBack(){
         navigate('/glossary');
     }
+      
 
 
 
@@ -65,7 +75,7 @@ export default function EditGlossary() {
                 
             </div>
                 <button 
-                onClick={handleSave}
+                onClick={() => handleSave()}
                 className='save-btn'
                 >
                     Save

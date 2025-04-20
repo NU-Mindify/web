@@ -35,7 +35,7 @@
 
 
 .question-body{
-    @apply w-full flex-grow  px-5 py-3 overflow-y-auto overflow-hidden ;
+    @apply w-full flex-grow  px-5 py-3 overflow-y-auto overflow-hidden;
 }
 
 
@@ -44,11 +44,11 @@
 }
 
 .category-text{
-    @apply w-1/2 h-full  flex justify-start items-center cursor-pointer;
+    @apply w-1/2 h-full flex justify-start items-center cursor-pointer text-3xl font-extrabold;
 }
 
 .category-quantity{
-    @apply w-1/2 h-full cursor-pointer flex justify-end items-center;
+    @apply w-1/2 h-full cursor-pointer flex justify-end items-center text-xl font-bold;
 }
 
 .allquestions-container{

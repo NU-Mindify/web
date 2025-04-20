@@ -1,4 +1,4 @@
-import { useRef, useState, } from "react";
+import { useEffect, useRef, useState, } from "react";
 // import terms from '../../data/GlossaryTerms.json'
 import edit from '../../assets/glossary/edit.svg'
 import dropdown from '../../assets/glossary/dropdown.svg'
@@ -52,12 +52,14 @@ export default function ManageGlossary() {
       setActiveTermWord(activeTermWord === word ? null : word);
     }
 
-    function handlesEdit(word, meaning){
+    function handlesEdit(_id, word, meaning){
       navigate('/glossary/edit', {
-        state: { word, meaning }
+        state: {_id, word, meaning }
       });
       
     }
+
+    
 
     const getTerms = async () => {
       try {
@@ -71,7 +73,6 @@ export default function ManageGlossary() {
         return []; 
       }
     };
-    
     
 
     const {
@@ -98,12 +99,17 @@ export default function ManageGlossary() {
     const filteredTerms = terms.filter(term =>
       term.word.toLowerCase().startsWith(searchTerm.toLowerCase())
     );
+
+    function handleAddTerm(){
+      navigate('/addterm')
+    }
     
     return (
       <>
         <div className="header">
           <div className="glossary-title-container">
             <h1 className="glossary-title">Manage Glossary</h1>
+            <button className="btn btn-error" onClick={handleAddTerm}>Add Term</button>
           </div>
   
           <div className="glossary-search-container">
@@ -150,7 +156,7 @@ export default function ManageGlossary() {
                           {term.meaning}
                         </div>
                         <div className="gege">
-                          <img src={edit} className="editIcon" alt="edit icon" onClickCapture={() => handlesEdit(term.word, term.meaning)} />
+                          <img src={edit} className="editIcon" alt="edit icon" onClick={() => handlesEdit(term._id, term.word, term.meaning)} />
                           <div className="dropdown" onClick={() => handleDropdown(term.word)}>
                             <img src={dropdown} className="mainIcon" alt="dropdown icon" />
                           </div>
@@ -177,7 +183,12 @@ export default function ManageGlossary() {
                         {term.meaning}
                       </div>
                       <div className="gege">
-                        <img src={edit} className="editIcon" alt="edit icon" onClick={handlesEdit} />
+                      <img 
+                        src={edit} 
+                        className="editIcon" 
+                        alt="edit icon" 
+                        onClick={() => handlesEdit(term._id, term.word, term.meaning)} 
+                      />
                         <div className="dropdown" onClick={() => handleDropdown(term.word)}>
                           <img src={dropdown} className="mainIcon" alt="dropdown icon" />
                         </div>
