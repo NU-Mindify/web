@@ -3,6 +3,7 @@ import Style from "./addQuestion.module.css";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { CheckCircle2Icon, XCircle } from "lucide-react";
+import { API_URL } from "../../Constants";
 
 const categoriesObj = [
   {
@@ -63,7 +64,7 @@ function AddQuestion() {
   const addToDB = async () => {
     setIsFormDisabled(true)
     try {
-      const { data } = await axios.post("https://nu-mindify-api.vercel.app/api/addQuestion", question)
+      const { data } = await axios.post(`${API_URL}/addQuestion`, question);
       console.log(data);
       alert("Added Successfully");
       nav(-1)

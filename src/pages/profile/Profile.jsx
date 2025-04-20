@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import DotLoader from "react-spinners/DotLoader"
 import axios from 'axios';
+import { API_URL } from '../../Constants';
 
 export default function Profile(){
 
@@ -17,14 +18,15 @@ export default function Profile(){
     const [getUserAvatar, setUserAvatar] = useState('')
 
     useEffect(() => {
-        axios.get(`https://nu-mindify-api.vercel.app/api/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`) //to replace with uid from firebase db
-         .then((response) => {
+        axios
+          .get(`${API_URL}/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`) //to replace with uid from firebase db
+          .then((response) => {
             console.log(response.data);
             setWebUser(response.data);
-         })
-         .catch((error) => {
-            console.log(error)
-         })
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     }, [uid]);
 
     const [showLoader, setShowLoader] = useState(false)

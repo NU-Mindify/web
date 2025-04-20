@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import '../../css/questions/questions.css'
 import SearchBar from "../../components/searchbar/SearchBar";
+import { API_URL } from "../../Constants";
 
 const categoriesObj = [
   {
@@ -44,7 +45,7 @@ export default function ManageQuestion() {
     try {
       console.log("fetching again");
       const { data } = await axios.get(
-        `https://nu-mindify-api.vercel.app/api/getQuestions?${
+        `${API_URL}/getQuestions?${
           category ? `category=${category}&level=1` : ""
         }`
       );

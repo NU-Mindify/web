@@ -8,6 +8,7 @@ import { useNavigate } from "react-router";
 
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { API_URL } from "../../Constants";
 
 export default function ManageGlossary() {
 
@@ -60,7 +61,7 @@ export default function ManageGlossary() {
 
     const getTerms = async () => {
       try {
-        const response = await axios.get(`https://nu-mindify-api.vercel.app/api/getTerms`);
+        const response = await axios.get(`${API_URL}/getTerms`);
         console.log(`terms are: ${response.data}`);
         return response.data || []; 
         
