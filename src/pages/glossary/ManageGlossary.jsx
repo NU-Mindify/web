@@ -1,11 +1,9 @@
-import { useEffect, useRef, useState, } from "react";
-// import terms from '../../data/GlossaryTerms.json'
+import { useRef, useState, } from "react";
 import edit from '../../assets/glossary/edit.svg'
 import dropdown from '../../assets/glossary/dropdown.svg'
 import '../../css/glossary/glossary.css'
 import SearchBar from "../../components/searchbar/SearchBar";
 import { useNavigate } from "react-router";
-
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { API_URL } from "../../Constants";
@@ -28,13 +26,10 @@ export default function ManageGlossary() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
     
-
-    
-    
-
     const navigate = useNavigate();
     
     const termRefs = useRef({});
+    
 
     const [activeTermWord, setActiveTermWord] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -64,7 +59,7 @@ export default function ManageGlossary() {
     const getTerms = async () => {
       try {
         const response = await axios.get(`${API_URL}/getTerms`);
-        console.log(`terms are: ${response.data}`);
+        console.log(`tags are: ${response.data}`);
         return response.data || []; 
         
         
@@ -187,7 +182,7 @@ export default function ManageGlossary() {
                         src={edit} 
                         className="editIcon" 
                         alt="edit icon" 
-                        onClick={() => handlesEdit(term._id, term.word, term.meaning)} 
+                        onClick={() => handlesEdit(term._id, term.word, term.meaning, term.tags)} 
                       />
                         <div className="dropdown" onClick={() => handleDropdown(term.word)}>
                           <img src={dropdown} className="mainIcon" alt="dropdown icon" />

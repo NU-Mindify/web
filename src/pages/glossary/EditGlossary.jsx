@@ -88,8 +88,11 @@ export default function EditGlossary() {
                     <input
                         className='editable-container'
                         type="text"
-                        value={editTags}
-                        onChange={(e) => setEditTags(e.target.value)}
+                        placeholder="Enter tags separated by commas"
+                        value={editTags.join(', ')}
+                        onChange={(e) =>
+                        setEditTags(e.target.value.split(',').map(tag => tag.trim()))
+                        }
                     />
 
                 </div>

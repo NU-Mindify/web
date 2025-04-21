@@ -17,7 +17,7 @@ export default function AddTerm(){
 
         axios.post(`${API_URL}/addTerm`, newTerm)
         alert("added successfully")
-        setNewTerm({word: '', meaning: ''})
+        setNewTerm({word: '', meaning: '', tags: [], is_deleted: false})
     }
 
     function handleBack(){
@@ -48,14 +48,6 @@ export default function AddTerm(){
 
             <h1>Word:</h1>
             <input 
-                type="text"
-                placeholder="Tags"
-                className="w-[400px]"
-                value={newTerm.tags}
-                onChange={(e) => setNewTerm({...newTerm, tags: e.target.value})}
-            />
-
-            {/* <input 
             type="text"
             placeholder="Tags (comma-separated)"
             className="w-[400px]"
@@ -66,7 +58,9 @@ export default function AddTerm(){
                 tags: e.target.value.split(',').map(tag => tag.trim())
                 })
             }
-            /> */}
+            />
+
+            
             <button className="btn btn-success" onClick={handleCreateNewTerm}>Create</button>
         </>
     )
