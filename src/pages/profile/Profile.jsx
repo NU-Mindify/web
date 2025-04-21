@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import DotLoader from "react-spinners/DotLoader"
 import axios from 'axios';
 import { API_URL } from '../../Constants';
+import { onAuthStateChanged } from 'firebase/auth'
+import { firebaseAuth } from '../../Firebase';
 
 export default function Profile(){
 
@@ -15,11 +17,11 @@ export default function Profile(){
     const { uid } = useParams();
     const [webUser, setWebUser] = useState({});
 
-    const [getUserAvatar, setUserAvatar] = useState('')
+    const user = firebaseAuth.currentUser
 
     useEffect(() => {
         axios
-          .get(`${API_URL}/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`) //to replace with uid from firebase db
+          .get(`${API_URL}/getwebuser/grwsw6vBH8Q1tSRcNPAeCfltBDJ2`) //to replace with uid from firebase db
           .then((response) => {
             console.log(response.data);
             setWebUser(response.data);
@@ -27,7 +29,7 @@ export default function Profile(){
           .catch((error) => {
             console.log(error);
           });
-    }, [uid]);
+    }, []);
 
     // const [showLoader, setShowLoader] = useState(false)
 

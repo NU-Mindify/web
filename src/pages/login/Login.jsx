@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { ActiveContext } from '../../contexts/Contexts'
 import { useContext, useState } from 'react'
 
+import { firebaseAuth } from '../../Firebase'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 
 export default function Login(){
     const { isActive, setActive, selected, setSelected, currentUserEmail, setCurrentUserEmail, setCurrentUserBranch } = useContext(ActiveContext)
@@ -27,18 +29,77 @@ export default function Login(){
     ]
     
     const [email, setEmail] = useState('');
-    const [branch, setBranch] = useState('')
-     
+    const [password, setPassword] = useState('')
+    const [branch, setBranch] = useState('');
+
+    
+    const handelLoginFirebase = async (e) => {
+        e.preventDefault();
+        const matchedBranch = emailValidation.find((item) => item.branch === branch);
+        try{
+
+            if (!matchedBranch) {
+                console.log('Please select a campus.');
+                alert("please select a campus")
+                return;
+            }
+
+            if(!email){
+                alert("Please enter a valid email")
+                return;
+            }
+    
+            if(!password){
+                alert("Please enter your password")
+                return;
+            }
+    
+            if (!email.endsWith(`@${matchedBranch.extension}`)) {
+                console.log('nde match email at branch');
+                alert("Account: "+email+ " not found at NU "+ branch.toUpperCase())
+                return;
+            }
+
+            await signInWithEmailAndPassword(firebaseAuth, email, password);
+            const user = firebaseAuth.currentUser;
+            console.log(user.uid);
+            alert("User Login Successfully!")
+            setCurrentUserBranch(branch)
+            setCurrentUserEmail(email)
+            navigate('/dashboard');
+            setSelected('dashboard');
+        }catch(error){
+            console.log(error.message);
+            alert(error.message);
+        }
+    }
 
     function handleLogin() {
         const matchedBranch = emailValidation.find((item) => item.branch === branch);
     
+        if (!matchedBranch) {
+            console.log('Please select a campus.');
+            alert("please select a campus")
+            return;
+        }
+
+        if(!email){
+            alert("Please enter a valid email")
+            return;
+        }
+
+        if(!password){
+            alert("Please enter your password")
+            return;
+        }
+
         if (!email.endsWith(`@${matchedBranch.extension}`)) {
             console.log('nde match email at branch');
+            alert("Account: "+email+ " not found at NU "+ branch.toUpperCase())
             return;
         }
     
-        console.log("Login successful with:", email);
+        console.log("Login successful with:", email, password);
         setCurrentUserBranch(branch)
         setCurrentUserEmail(email)
         navigate('/dashboard');
@@ -101,6 +162,7 @@ export default function Login(){
                             <input type="password" className="input validator inputs" required placeholder="Password" minLength="8" 
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
                                 title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" 
+                                onChange={(e) => setPassword(e.target.value)}
                             />   
                         </label>
 
@@ -111,7 +173,7 @@ export default function Login(){
 
                         <button 
                             className="login-btn" 
-                            onClick={handleLogin}
+                            onClick={handelLoginFirebase}
                         >
                             Log In
                         </button>

@@ -4,6 +4,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import axios from 'axios';
 import { API_URL } from '../../Constants';
 
+
 export default function EditProfile(){
 
     const navigate = useNavigate()

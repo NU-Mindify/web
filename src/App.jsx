@@ -53,7 +53,7 @@ function App() {
         '/question': 'question',
         '/glossary': 'glossary',
         '/students': 'students',
-        '/profile': 'profile',
+        '/profile' : 'profile',
         '/account': 'account'
       }
 
@@ -91,7 +91,7 @@ function App() {
                   <Route path="/question/add" element={<AddQuestion />} />
                   <Route path="/glossary" element={<ManageGlossary />} />
                   <Route path="/students" element={<ManageStudents />} />
-                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/profile/" element={<Profile />} />
                   <Route path="/account" element={<AccountManagement />} />
                   <Route path="/profile/edit/:id" element={<EditProfile />} />
                   <Route path="/glossary/edit" element={<EditGlossary />} />
