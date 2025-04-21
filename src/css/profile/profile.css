@@ -24,7 +24,7 @@ html, body, #root {
 }
 
 .content-container-prof-settings {
-  @apply w-full flex-1 rounded-xl flex flex-col bg-white mt-[100px]
+  @apply w-full flex-grow rounded-xl flex flex-col bg-white mt-[100px] py-5
     md:mt-[100px];
 }
 
@@ -53,9 +53,9 @@ html, body, #root {
 
 .edit-btn-properties {
   border: 1px solid black;
-  @apply w-3/4 h-8 rounded-3xl text-black font-[Poppins] font-bold text-sm cursor-pointer mt-3
-    md:w-7/12
-    lg:w-10/12 lg:h-1/6;
+  @apply w-[250px] h-[40px] rounded-3xl text-black font-[Poppins] font-bold text-sm cursor-pointer mt-3
+    md:w-[250px]
+    lg:w-[250px];
 }
 
 .username-properties {

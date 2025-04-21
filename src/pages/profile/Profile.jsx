@@ -150,8 +150,8 @@ export default function Profile(){
                     </div>
 
                     <div className='edit-btn-container-prof-settings'>
-                            <button class="edit-btn-properties" onClick={handleEditProfile}>Edit Profile</button>
-                        </div>
+                        <button class="edit-btn-properties" onClick={handleEditProfile}>Edit Profile</button>
+                    </div>
                 </div>      
             </div>
         </>

@@ -1,6 +1,6 @@
 import '../../css/leaderboard/leaderboards.css'
 import search from '../../assets/search/search.svg'
-import mockleaders from '../../data/MockLeaderboards.json'
+import mockleaders from '../../data//staticData/MockLeaderboards.json'
 
 export default function Leaderboard(){
     return(

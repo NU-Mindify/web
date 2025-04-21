@@ -8,7 +8,7 @@ import { API_URL } from "../../Constants";
 
 export default function AddTerm(){
 
-    const [newTerm, setNewTerm] = useState({})
+    const [newTerm, setNewTerm] = useState({word: '', meaning: '', tags: [], is_deleted: false})
 
     const navigate = useNavigate();
 
@@ -45,6 +45,28 @@ export default function AddTerm(){
             >
 
             </textarea>
+
+            <h1>Word:</h1>
+            <input 
+                type="text"
+                placeholder="Tags"
+                className="w-[400px]"
+                value={newTerm.tags}
+                onChange={(e) => setNewTerm({...newTerm, tags: e.target.value})}
+            />
+
+            {/* <input 
+            type="text"
+            placeholder="Tags (comma-separated)"
+            className="w-[400px]"
+            value={newTerm.tags.join(', ')} 
+            onChange={(e) => 
+                setNewTerm({ 
+                ...newTerm, 
+                tags: e.target.value.split(',').map(tag => tag.trim())
+                })
+            }
+            /> */}
             <button className="btn btn-success" onClick={handleCreateNewTerm}>Create</button>
         </>
     )

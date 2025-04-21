@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import terms from '../../data/GlossaryTerms.json'
 import '../../css/glossary/editGlossary.css'
 import axios from 'axios';
 import { API_URL } from '../../Constants';
@@ -9,12 +8,11 @@ import { API_URL } from '../../Constants';
 export default function EditGlossary() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { _id, word, meaning } = location.state || {};
+    const { _id, word, meaning, tags } = location.state || {};
 
-    const [editedWord, setEditedWord] = useState(word);
-    const [editedMeaning, setEditedMeaning] = useState(meaning);
-
-    const editedTerm = { editedWord, editedMeaning };
+    const [editedWord, setEditedWord] = useState(word || '');
+    const [editedMeaning, setEditedMeaning] = useState(meaning || '');
+    const [editTags, setEditTags] = useState(tags || []);
 
 
     const handleSave = async () => {
@@ -22,7 +20,8 @@ export default function EditGlossary() {
           await axios.put(`${API_URL}/updateTerm/${_id}`, {
             term_id: _id,
             word: editedWord,
-            meaning: editedMeaning
+            meaning: editedMeaning,
+            tags: editTags
           });
       
           navigate('/glossary'); 
@@ -33,6 +32,18 @@ export default function EditGlossary() {
 
     function handleBack(){
         navigate('/glossary');
+    }
+
+    const handleDelete = async () => {
+        try {
+            await axios.put(`${API_URL}/deleteTerm/${_id}`, {
+                term_id: _id,
+                is_deleted: true
+              });
+            navigate('/glossary'); 
+          } catch (error) {
+              console.error("Error updating term:", error);
+            }
     }
       
 
@@ -72,13 +83,30 @@ export default function EditGlossary() {
                     />
                 </div>
 
+                <div className='edit-term-container'>
+                    <h1 className='edit-title-container'>Tags</h1>
+                    <input
+                        className='editable-container'
+                        type="text"
+                        value={editTags}
+                        onChange={(e) => setEditTags(e.target.value)}
+                    />
+
+                </div>
+
                 
             </div>
-                <button 
+            <button 
                 onClick={() => handleSave()}
                 className='save-btn'
                 >
                     Save
+            </button>
+            <button 
+                onClick={() => handleDelete()}
+                className='btn btn-error'
+                >
+                    Delete
             </button>
         </div>
     );

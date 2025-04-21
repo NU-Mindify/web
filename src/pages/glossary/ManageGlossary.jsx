@@ -52,9 +52,9 @@ export default function ManageGlossary() {
       setActiveTermWord(activeTermWord === word ? null : word);
     }
 
-    function handlesEdit(_id, word, meaning){
+    function handlesEdit(_id, word, meaning, tags){
       navigate('/glossary/edit', {
-        state: {_id, word, meaning }
+        state: {_id, word, meaning, tags}
       });
       
     }
@@ -96,9 +96,9 @@ export default function ManageGlossary() {
       return acc;
     }, {});
 
-    const filteredTerms = terms.filter(term =>
-      term.word.toLowerCase().startsWith(searchTerm.toLowerCase())
-    );
+    const filteredTerms = terms
+      .filter(term => !term.is_deleted)
+      .filter(term => term.word.toLowerCase().startsWith(searchTerm.toLowerCase()));
 
     function handleAddTerm(){
       navigate('/addterm')
@@ -156,7 +156,7 @@ export default function ManageGlossary() {
                           {term.meaning}
                         </div>
                         <div className="gege">
-                          <img src={edit} className="editIcon" alt="edit icon" onClick={() => handlesEdit(term._id, term.word, term.meaning)} />
+                          <img src={edit} className="editIcon" alt="edit icon" onClick={() => handlesEdit(term._id, term.word, term.meaning, term.tags)} />
                           <div className="dropdown" onClick={() => handleDropdown(term.word)}>
                             <img src={dropdown} className="mainIcon" alt="dropdown icon" />
                           </div>
