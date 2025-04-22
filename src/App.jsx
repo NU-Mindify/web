@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Sidebar from './components/sidebar/Sidebar'
 import { ActiveContext } from './contexts/Contexts'
+import { UserLoggedInContext } from './contexts/Contexts'
 import Dashboard from './pages/dashboard/Dashboard'
 import Analytics from './pages/analytics/Analytics'
 import Reports from './pages/reports/Reports'
@@ -28,9 +29,8 @@ import AddTerm from './pages/glossary/AddTerm'
 
 const queryClient = new QueryClient();
 
-onAuthStateChanged(firebaseAuth, user => {
-  console.log(user);
-})
+
+
 
 function App() {
   const [isActive, setActive] = useState(false)
@@ -38,7 +38,22 @@ function App() {
   const [currentUserEmail, setCurrentUserEmail] = useState('')
   const [currentUserBranch, setCurrentUserBranch] = useState('')
 
+  const [currentWebUser, setCurrentWebUser] = useState({firstName: '', lastName: '', branch: '', email: '', employeenum: '', position: '', uid: '', useravatar: ''})
+  const [currentWebUserUID, setCurrentWebUserUID] = useState('')
   
+
+  onAuthStateChanged(firebaseAuth, user => {
+    if (user) {
+      console.log(user);
+      localStorage.setItem('userUID', user.uid);
+      setCurrentWebUserUID(user.uid);
+    } else {
+      localStorage.removeItem('userUID');
+      setCurrentWebUserUID('');
+    }
+  });
+  
+
   useEffect(() => {
     const currentPath = window.location.pathname
 
@@ -66,43 +81,47 @@ function App() {
     <ActiveContext.Provider
       value={{ isActive, setActive, selected, setSelected, currentUserEmail, setCurrentUserEmail, currentUserBranch, setCurrentUserBranch }}
     >
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          {selected === "login" ? (
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-              <Route path="*" element={<Login />} />
-            </Routes>
-          ) : (
-            <div className="main-container">
-              {selected === '' ? <Sidebar className={'sidebar-hidden'} /> : <Sidebar />}
-              <div
-                className={
-                  isActive ? "active-content-container" : "content-container"
-                }
-              >
-                <Routes>
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/analytics" element={<Analytics />} />
-                  <Route path="/reports" element={<Reports />} />
-                  <Route path="/leaderboard" element={<Leaderboard />} />
-                  <Route path="/question" element={<ManageQuestion />} />
-                  <Route path="/question/add" element={<AddQuestion />} />
-                  <Route path="/glossary" element={<ManageGlossary />} />
-                  <Route path="/students" element={<ManageStudents />} />
-                  <Route path="/profile/" element={<Profile />} />
-                  <Route path="/account" element={<AccountManagement />} />
-                  <Route path="/profile/edit/:id" element={<EditProfile />} />
-                  <Route path="/glossary/edit" element={<EditGlossary />} />
-                  <Route path="/addterm" element={<AddTerm />} />
-                  <Route path="*" element={<Login />} />
-                </Routes>
+    <UserLoggedInContext.Provider
+      value={{currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID}}
+    >
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            {selected === "login" ? (
+              <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+                <Route path="*" element={<Login />} />
+              </Routes>
+            ) : (
+              <div className="main-container">
+                {selected === '' ? <Sidebar className={'sidebar-hidden'} /> : <Sidebar />}
+                <div
+                  className={
+                    isActive ? "active-content-container" : "content-container"
+                  }
+                >
+                  <Routes>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/analytics" element={<Analytics />} />
+                    <Route path="/reports" element={<Reports />} />
+                    <Route path="/leaderboard" element={<Leaderboard />} />
+                    <Route path="/question" element={<ManageQuestion />} />
+                    <Route path="/question/add" element={<AddQuestion />} />
+                    <Route path="/glossary" element={<ManageGlossary />} />
+                    <Route path="/students" element={<ManageStudents />} />
+                    <Route path="/profile/" element={<Profile />} />
+                    <Route path="/account" element={<AccountManagement />} />
+                    <Route path="/profile/edit/:id" element={<EditProfile />} />
+                    <Route path="/glossary/edit" element={<EditGlossary />} />
+                    <Route path="/addterm" element={<AddTerm />} />
+                    <Route path="*" element={<Login />} />
+                  </Routes>
+                </div>
               </div>
-            </div>
-          )}
-        </BrowserRouter>
-      </QueryClientProvider>
+            )}
+          </BrowserRouter>
+        </QueryClientProvider>
+      </UserLoggedInContext.Provider>
     </ActiveContext.Provider>
   );
 }

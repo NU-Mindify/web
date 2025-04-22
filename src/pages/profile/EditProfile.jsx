@@ -1,11 +1,14 @@
 import '../../css/profile/profile.css'
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import axios from 'axios';
 import { API_URL } from '../../Constants';
 
+import { UserLoggedInContext } from '../../contexts/Contexts';
+
 
 export default function EditProfile(){
+    const { setCurrentWebUser, setCurrentWebUserUID  } = useContext(UserLoggedInContext);
 
     const navigate = useNavigate()
     const { uid } = useParams();
@@ -17,7 +20,7 @@ export default function EditProfile(){
             try{
                 const response = await axios.get(
                   `${API_URL}/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`
-                ); //to replace with uid from firebase db
+                ); 
                 setEditWebUser(response.data)
             }catch (error){
                 console.error("Error fetching user details", error);
@@ -29,18 +32,27 @@ export default function EditProfile(){
     }, [uid]);
 
     const handleUpdateProfile = async () => {
-        try{
-            await axios.put(
-              `${API_URL}/updateWebUsers/${editWebUser._id}`,
-              editWebUser
+        try {
+            const response = await axios.put(
+                `${API_URL}/updateWebUsers/${editWebUser._id}`,
+                editWebUser
             );
+    
+            const updatedUser = await axios.get(`${API_URL}/getwebuser/${editWebUser.uid}`);
+    
+            setCurrentWebUser(updatedUser.data);
+            setCurrentWebUserUID(updatedUser.data.uid);
+            localStorage.setItem('userUID', updatedUser.data.uid);
+    
             alert("Update Successful!");
-            navigate('/profile')
-        }catch(error){
+            navigate('/profile');
+        } catch (error) {
             console.error(error);
             alert("Update Unsuccessful!");
         }
-    }
+    };
+    
+    
 
     const handleCancelEdit = () =>{
         navigate('/profile');

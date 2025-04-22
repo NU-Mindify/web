@@ -3,13 +3,18 @@ import logo from '../../assets/logo/logo.svg'
 import nuLogo from '../../assets/logo/nuLogo.svg'
 import { useNavigate } from 'react-router-dom'
 import { ActiveContext } from '../../contexts/Contexts'
-import { useContext, useState } from 'react'
+import { UserLoggedInContext } from '../../contexts/Contexts'
+import { useContext, useEffect, useState } from 'react'
 
 import { firebaseAuth } from '../../Firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 
+import axios from 'axios'
+import { API_URL } from '../../Constants';
+
 export default function Login(){
     const { isActive, setActive, selected, setSelected, currentUserEmail, setCurrentUserEmail, setCurrentUserBranch } = useContext(ActiveContext)
+    const {currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID} = useContext(UserLoggedInContext)
 
     const navigate = useNavigate()
 
@@ -32,7 +37,6 @@ export default function Login(){
     const [password, setPassword] = useState('')
     const [branch, setBranch] = useState('');
 
-    
     const handelLoginFirebase = async (e) => {
         e.preventDefault();
         const matchedBranch = emailValidation.find((item) => item.branch === branch);
@@ -62,52 +66,22 @@ export default function Login(){
 
             await signInWithEmailAndPassword(firebaseAuth, email, password);
             const user = firebaseAuth.currentUser;
-            console.log(user.uid);
-            alert("User Login Successfully!")
-            setCurrentUserBranch(branch)
-            setCurrentUserEmail(email)
-            navigate('/dashboard');
-            setSelected('dashboard');
+
+            if(user){
+                
+                setCurrentWebUserUID(user.uid)
+                localStorage.setItem('userUID', user.uid);
+                alert("User Login Successfully!")
+                setCurrentUserBranch(branch)
+                setCurrentUserEmail(email)
+                navigate('/dashboard');
+                setSelected('dashboard');
+            }
         }catch(error){
             console.log(error.message);
             alert(error.message);
         }
     }
-
-    function handleLogin() {
-        const matchedBranch = emailValidation.find((item) => item.branch === branch);
-    
-        if (!matchedBranch) {
-            console.log('Please select a campus.');
-            alert("please select a campus")
-            return;
-        }
-
-        if(!email){
-            alert("Please enter a valid email")
-            return;
-        }
-
-        if(!password){
-            alert("Please enter your password")
-            return;
-        }
-
-        if (!email.endsWith(`@${matchedBranch.extension}`)) {
-            console.log('nde match email at branch');
-            alert("Account: "+email+ " not found at NU "+ branch.toUpperCase())
-            return;
-        }
-    
-        console.log("Login successful with:", email, password);
-        setCurrentUserBranch(branch)
-        setCurrentUserEmail(email)
-        navigate('/dashboard');
-        setSelected('dashboard');
-    }
-    
-
-    
 
     return(
 

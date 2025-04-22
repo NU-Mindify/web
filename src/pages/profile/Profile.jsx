@@ -1,6 +1,6 @@
 
 import '../../css/profile/profile.css'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import DotLoader from "react-spinners/DotLoader"
 import axios from 'axios';
@@ -8,11 +8,16 @@ import { API_URL } from '../../Constants';
 import { onAuthStateChanged } from 'firebase/auth'
 import { firebaseAuth } from '../../Firebase';
 
+import { UserLoggedInContext } from '../../contexts/Contexts';
+
 export default function Profile(){
+    const {currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID} = useContext(UserLoggedInContext)
 
     const navigate = useNavigate()
 
     const inputRef = useRef(null);
+    // console.log(currentWebUserUID);
+    
 
     const { uid } = useParams();
     const [webUser, setWebUser] = useState({});
@@ -20,16 +25,30 @@ export default function Profile(){
     const user = firebaseAuth.currentUser
 
     useEffect(() => {
-        axios
-          .get(`${API_URL}/getwebuser/grwsw6vBH8Q1tSRcNPAeCfltBDJ2`) //to replace with uid from firebase db
-          .then((response) => {
-            console.log(response.data);
-            setWebUser(response.data);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-    }, []);
+  let uid = currentWebUserUID;
+
+  // Fallback to localStorage if context is empty
+  if (!uid) {
+    const storedUID = localStorage.getItem('userUID');
+    if (storedUID) {
+      uid = storedUID;
+      setCurrentWebUserUID(storedUID); // sync it back into context
+    }
+  }
+
+  if (uid) {
+    axios
+      .get(`${API_URL}/getwebuser/${uid}`)
+      .then((response) => {
+        console.log(response.data);
+        setWebUser(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+}, [currentWebUserUID]);
+
 
     // const [showLoader, setShowLoader] = useState(false)
 

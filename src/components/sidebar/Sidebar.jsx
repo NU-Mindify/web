@@ -19,9 +19,12 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../Constants';
 
+import { UserLoggedInContext } from "../../contexts/Contexts"
+
 
 export default function Sidebar() {
     const { isActive, setActive, selected, setSelected } = useContext(ActiveContext)
+    const {currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID} = useContext(UserLoggedInContext)
 
     const navigate = useNavigate()
 
@@ -43,29 +46,39 @@ export default function Sidebar() {
     }
 
     const handleLogout = () => {
-        document.getElementById('logout_modal')?.showModal()
+        localStorage.removeItem('webUser');
+        document.getElementById('logout_modal')?.showModal();
     }
 
     const confirmLogout = () => {
-        navigate('/')
-        setSelected('login')
-        setActive(false)
-    }
+        setCurrentWebUser(null);
+        setCurrentWebUserUID(null);
+        localStorage.removeItem('webUser');
+        setSelected('login');
+        setActive(false);
+        navigate('/');
+    };
 
     const { uid } = useParams();
     const [webUser, setWebUser] = useState({});
 
     useEffect(() => {
+        const uid = currentWebUserUID;
+    
+        if (!uid) return;
+    
         axios
-          .get(`${API_URL}/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`) //to replace with uid from firebase db
-          .then((response) => {
-            console.log(response.data);
-            setWebUser(response.data);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-    }, [uid]);
+            .get(`${API_URL}/getwebuser/${uid}`)
+            .then((response) => {
+                setCurrentWebUser(response.data);
+                setWebUser(response.data);
+                localStorage.setItem('webUser', JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                console.log("Error fetching sidebar user:", error);
+            });
+    }, [currentWebUserUID]);
+    
 
     return (
         <div className={isActive ? 'active-side-menu' : 'side-menu'}>
@@ -76,12 +89,12 @@ export default function Sidebar() {
             {isActive && (
                 <>
                     <div className="avatar">
-                        <div className="avatar-container">
-                            <img src={webUser.useravatar} alt="avatar" />
-                        </div>
+                    <div className="avatar-container">
+                        <img src={currentWebUser.useravatar} alt="avatar" />
+                    </div>
                     </div>
                     <div className="name-container">
-                        <h1 className="user-name">{webUser.firstName} {webUser.lastName}</h1>
+                    <h1 className="user-name">{currentWebUser.firstName} {currentWebUser.lastName}</h1>
                     </div>
                 </>
             )}
