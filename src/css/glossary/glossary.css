@@ -94,7 +94,7 @@
 /* Non-active word container */
 .per-word-container {
   border: 1px solid black;
-  @apply w-full flex justify-between items-center mb-2 rounded-xl px-1;
+  @apply w-full flex justify-between items-center mb-2 rounded-xl px-1 hover:bg-gray-300;
 }
 
 .active-per-word-container {
@@ -128,7 +128,7 @@
 }
 
 
-.gege {
+.action-container {
   @apply w-4/12 h-full flex justify-around items-center p-2;
 }
 

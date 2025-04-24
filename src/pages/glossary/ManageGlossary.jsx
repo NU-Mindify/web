@@ -168,7 +168,7 @@ export default function ManageGlossary() {
                       <div className={activeTermWord === term.word ? "active-meaning-container" : "meaning-container"}>
                         {term.meaning}
                       </div>
-                      <div className="gege">
+                      <div className="action-container">
                         <img 
                           src={edit} 
                           className="editIcon" 
