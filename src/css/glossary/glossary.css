@@ -56,8 +56,6 @@
 /* ------------------- MAIN BODY ---------------- */
 
 .glossary-body {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   @apply w-full h-[calc(100%-146px)] overflow-y-auto px-2 pb-2 rounded-xl bg-white
     md:h-[calc(100%-212px)];
 }

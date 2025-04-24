@@ -84,6 +84,62 @@ export default function ManageQuestion() {
     setGotSelected(false)
   }
 
+  function Category_Choices({ text, id, onClick, bgImage }) {
+    return (
+      
+      <div className="category-container" onClick={onClick} key={id}>
+        <img src={bgImage} className="category-bg" />
+        <h1 className="category-text">{text}</h1>
+        <p className="category-quantity">Questions: 2022</p>
+        
+      </div>
+    
+      
+    );
+  }
+  
+  
+  const QuestionCard = ({ data, index }) => {
+    return (
+      <>
+        <div className="collapse collapse-arrow shadow-lg hover:bg-base-300/10 bg-white rounded-md border cursor-pointer h-fit">
+          <input type="checkbox" name="question-accordion" />
+          <div className="collapse-title font-semibold">
+            {index + 1}. {data.question}
+          </div>
+          <div className="collapse-content text-sm flex justify-between">
+            <div>
+              {data.choices.map((choice) => (
+                <div
+                  className={choice.isCorrect ? "text-red-500" : ""}
+                  key={choice.letter}
+                >
+                  {choice.letter}. {choice.text}
+                </div>
+              ))}
+              <div className="mt-4">
+                <span className="font-bold">Rationale: </span>
+                {data.rationale}
+              </div>
+              <div className="mt-4">
+                <span className="font-bold">Category: </span>
+                {categoriesObj.find((categ) => categ.id == data.category).name}
+                <span className="font-bold ms-8">Level: </span>
+                {data.level}
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <button className="btn btn-sm btn-outline btn-secondary">Edit</button>
+              <button className="btn btn-sm btn-outline btn-error">
+                Archive
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
+
   return (
    
     <div className="question-main-container">
@@ -153,54 +209,3 @@ export default function ManageQuestion() {
     
   );
 }
-
-function Category_Choices({ text, id, onClick, bgImage }) {
-  return (
-    <div className="category-container" key={id} onClick={onClick} style={{backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat'}}>
-      <h1 className="category-text" key={id} onClick={onClick}>{text}</h1>
-      <p className="category-quantity" onClick={onClick}>Questions: 2022</p>
-    </div>
-  );
-}
-
-
-const QuestionCard = ({ data, index }) => {
-  return (
-    <>
-      <div className="collapse collapse-arrow shadow-lg hover:bg-base-300/10 bg-white rounded-md border cursor-pointer h-fit">
-        <input type="checkbox" name="question-accordion" />
-        <div className="collapse-title font-semibold">
-          {index + 1}. {data.question}
-        </div>
-        <div className="collapse-content text-sm flex justify-between">
-          <div>
-            {data.choices.map((choice) => (
-              <div
-                className={choice.isCorrect ? "text-red-500" : ""}
-                key={choice.letter}
-              >
-                {choice.letter}. {choice.text}
-              </div>
-            ))}
-            <div className="mt-4">
-              <span className="font-bold">Rationale: </span>
-              {data.rationale}
-            </div>
-            <div className="mt-4">
-              <span className="font-bold">Category: </span>
-              {categoriesObj.find((categ) => categ.id == data.category).name}
-              <span className="font-bold ms-8">Level: </span>
-              {data.level}
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <button className="btn btn-sm btn-outline btn-secondary">Edit</button>
-            <button className="btn btn-sm btn-outline btn-error">
-              Archive
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};

@@ -1,0 +1,14 @@
+[
+  {
+    "color": "white",
+    "type": "cat",
+    "size": "medium",
+    "name": "Jerome"
+  },
+  {
+    "color": "white",
+    "type": "dog",
+    "size": "medium",
+    "name": "Knicole"
+  }
+]

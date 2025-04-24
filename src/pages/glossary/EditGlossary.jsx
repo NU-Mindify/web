@@ -34,6 +34,7 @@ export default function EditGlossary() {
         navigate('/glossary');
     }
 
+
     const handleDelete = async () => {
         try {
             await axios.put(`${API_URL}/deleteTerm/${_id}`, {
