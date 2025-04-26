@@ -18,6 +18,7 @@ import { useLocation, useNavigate, useParams } from "react-router"
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../Constants';
+import Cookies from 'js-cookie';
 
 
 import { UserLoggedInContext } from "../../contexts/Contexts"
@@ -47,6 +48,7 @@ export default function Sidebar() {
     useEffect(() => {
         const path = location.pathname;
     
+        // if (path === '/') setSelected('login');
         if (path.startsWith('/dashboard')) setSelected('dashboard');
         else if (path.startsWith('/analytics')) setSelected('analytics');
         else if (path.startsWith('/reports')) setSelected('reports');
@@ -71,11 +73,13 @@ export default function Sidebar() {
     const confirmLogout = () => {
         setCurrentWebUser(null);
         setCurrentWebUserUID(null);
-        localStorage.removeItem('webUser');
+        Cookies.remove('userUID');  // Remove cookie
+        localStorage.removeItem('webUser'); // If you still use localStorage
         setSelected('login');
         setActive(false);
         navigate('/');
-    };
+      };
+      
 
     const { uid } = useParams();
     const [webUser, setWebUser] = useState({});

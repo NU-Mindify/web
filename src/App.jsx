@@ -25,6 +25,7 @@ import {
 import AddQuestion from './pages/questions/AddQuestion'
 import TermsAndConditions from './pages/login/TermsAndConditions'
 import AddTerm from './pages/glossary/AddTerm'
+import ProtectedRoute from '../ProtectedRoute'
 
 
 const queryClient = new QueryClient();
@@ -56,6 +57,7 @@ function App() {
 
   useEffect(() => {
     const currentPath = window.location.pathname
+    
 
     if (currentPath === '/' || currentPath === '') {
       setSelected('login')
@@ -102,21 +104,22 @@ function App() {
                   }
                 >
                   <Routes>
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/analytics" element={<Analytics />} />
-                    <Route path="/reports" element={<Reports />} />
-                    <Route path="/leaderboard" element={<Leaderboard />} />
-                    <Route path="/question" element={<ManageQuestion />} />
-                    <Route path="/question/add" element={<AddQuestion />} />
-                    <Route path="/glossary" element={<ManageGlossary />} />
-                    <Route path="/students" element={<ManageStudents />} />
-                    <Route path="/profile/" element={<Profile />} />
-                    <Route path="/account" element={<AccountManagement />} />
-                    <Route path="/profile/edit/:id" element={<EditProfile />} />
-                    <Route path="/glossary/edit" element={<EditGlossary />} />
-                    <Route path="/addterm" element={<AddTerm />} />
+                    <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                    <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+                    <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
+                    <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+                    <Route path="/question" element={<ProtectedRoute><ManageQuestion /></ProtectedRoute>} />
+                    <Route path="/question/add" element={<ProtectedRoute><AddQuestion /></ProtectedRoute>} />
+                    <Route path="/glossary" element={<ProtectedRoute><ManageGlossary /></ProtectedRoute>} />
+                    <Route path="/students" element={<ProtectedRoute><ManageStudents /></ProtectedRoute>} />
+                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="/account" element={<ProtectedRoute><AccountManagement /></ProtectedRoute>} />
+                    <Route path="/profile/edit/:id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+                    <Route path="/glossary/edit" element={<ProtectedRoute><EditGlossary /></ProtectedRoute>} />
+                    <Route path="/addterm" element={<ProtectedRoute><AddTerm /></ProtectedRoute>} />
                     <Route path="*" element={<Login />} />
                   </Routes>
+
                 </div>
               </div>
             )}

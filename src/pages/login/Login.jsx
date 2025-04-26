@@ -1,7 +1,7 @@
 import '../../css/login/login.css'
 import logo from '../../assets/logo/logo.svg'
 import nuLogo from '../../assets/logo/nuLogo.svg'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ActiveContext } from '../../contexts/Contexts'
 import { UserLoggedInContext } from '../../contexts/Contexts'
 import { useContext, useEffect, useState } from 'react'
@@ -76,6 +76,7 @@ export default function Login(){
                 setCurrentUserEmail(email)
                 navigate('/dashboard');
                 setSelected('dashboard');
+                window.location.pathname = '/dashboard';
             }
         }catch(error){
             console.log(error.message);
