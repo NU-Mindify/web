@@ -76,6 +76,7 @@ function App() {
       setSelected(newSelected)
     }
   }, [])
+  
 
   return (
     <ActiveContext.Provider
@@ -94,7 +95,7 @@ function App() {
               </Routes>
             ) : (
               <div className="main-container">
-                {selected === '' ? <Sidebar className={'sidebar-hidden'} /> : <Sidebar />}
+                {selected !== 'login' && <Sidebar />}
                 <div
                   className={
                     isActive ? "active-content-container" : "content-container"

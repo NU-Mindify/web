@@ -14,10 +14,11 @@ import profile from '../../assets/sidebar/profile.svg'
 import account from '../../assets/sidebar/account.svg'
 import logout from '../../assets/sidebar/logout.svg'
 import '../../index.css'
-import { useNavigate, useParams } from "react-router"
+import { useLocation, useNavigate, useParams } from "react-router"
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../Constants';
+
 
 import { UserLoggedInContext } from "../../contexts/Contexts"
 
@@ -27,6 +28,8 @@ export default function Sidebar() {
     const {currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID} = useContext(UserLoggedInContext)
 
     const navigate = useNavigate()
+    const location = useLocation();
+
 
     const paths = {
         login: '/',
@@ -40,6 +43,21 @@ export default function Sidebar() {
         profile: '/profile',
         account: '/account',
     }
+
+    useEffect(() => {
+        const path = location.pathname;
+    
+        if (path.startsWith('/dashboard')) setSelected('dashboard');
+        else if (path.startsWith('/analytics')) setSelected('analytics');
+        else if (path.startsWith('/reports')) setSelected('reports');
+        else if (path.startsWith('/leaderboard')) setSelected('leaderboard');
+        else if (path.startsWith('/question')) setSelected('question');
+        else if (path.startsWith('/glossary')) setSelected('glossary');
+        else if (path.startsWith('/students')) setSelected('students');
+        else if (path.startsWith('/profile')) setSelected('profile');
+        else if (path.startsWith('/account')) setSelected('account');
+    }, [location.pathname]);
+
 
     const handleSideMenu = () => {
         setActive((prev) => !prev)
