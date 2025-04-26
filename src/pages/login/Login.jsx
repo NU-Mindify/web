@@ -71,7 +71,7 @@ export default function Login(){
                 
                 setCurrentWebUserUID(user.uid)
                 localStorage.setItem('userUID', user.uid);
-                alert("User Login Successfully!")
+                alert("User Signed In Successfully!")
                 setCurrentUserBranch(branch)
                 setCurrentUserEmail(email)
                 navigate('/dashboard');
@@ -93,7 +93,7 @@ export default function Login(){
                     <h1 className='info'>
                     A gamified reviewer designed to help aspiring psychometricians at NU MOA prepare for their 
                     licensure examination through interactive and engaging 
-                    learning experiences. {branch}{email}
+                    learning experiences.
                     </h1>
                 </div>
                 <div className='login-form'>
@@ -103,7 +103,7 @@ export default function Login(){
 
                     <div className='input-container'>
                         <h1 className='welcome-txt'>WELCOME!</h1>
-                        <h3 className='mini-txt'>Login to access your account</h3>
+                        <h3 className='mini-txt'>Sign In to access your account</h3>
 
 
                         <label className="floating-label">
@@ -149,7 +149,7 @@ export default function Login(){
                             className="login-btn" 
                             onClick={handelLoginFirebase}
                         >
-                            Log In
+                            Sign In
                         </button>
 
                         <div className="flex items-center w-full mt-5">
@@ -160,7 +160,7 @@ export default function Login(){
 
                         <button className="login-btn">
                             <svg aria-label="Microsoft logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M96 96H247V247H96" fill="#f24f23"></path><path d="M265 96V247H416V96" fill="#7eba03"></path><path d="M96 265H247V416H96" fill="#3ca4ef"></path><path d="M265 265H416V416H265" fill="#f9ba00"></path></svg>
-                            Login with Microsoft
+                            Sign In with Microsoft
                         </button>
 
                     </div> 
