@@ -44,7 +44,7 @@ function App() {
 
   onAuthStateChanged(firebaseAuth, user => {
     if (user) {
-      console.log(user);
+      // console.log(user);
       localStorage.setItem('userUID', user.uid);
       setCurrentWebUserUID(user.uid);
     } else {
