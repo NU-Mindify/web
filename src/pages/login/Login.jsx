@@ -76,7 +76,6 @@ export default function Login(){
                 setCurrentUserEmail(email)
                 navigate('/dashboard');
                 setSelected('dashboard');
-                window.location.pathname = '/dashboard';
             }
         }catch(error){
             console.log(error.message);

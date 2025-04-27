@@ -23,6 +23,8 @@ import Cookies from 'js-cookie';
 
 import { UserLoggedInContext } from "../../contexts/Contexts"
 
+import { getAuth, signOut } from "firebase/auth"
+
 
 export default function Sidebar() {
     const { isActive, setActive, selected, setSelected } = useContext(ActiveContext)
@@ -45,21 +47,6 @@ export default function Sidebar() {
         account: '/account',
     }
 
-    useEffect(() => {
-        const path = location.pathname;
-    
-        // if (path === '/') setSelected('login');
-        if (path.startsWith('/dashboard')) setSelected('dashboard');
-        else if (path.startsWith('/analytics')) setSelected('analytics');
-        else if (path.startsWith('/reports')) setSelected('reports');
-        else if (path.startsWith('/leaderboard')) setSelected('leaderboard');
-        else if (path.startsWith('/question')) setSelected('question');
-        else if (path.startsWith('/glossary')) setSelected('glossary');
-        else if (path.startsWith('/students')) setSelected('students');
-        else if (path.startsWith('/profile')) setSelected('profile');
-        else if (path.startsWith('/account')) setSelected('account');
-    }, [location.pathname]);
-
 
     const handleSideMenu = () => {
         setActive((prev) => !prev)
@@ -67,17 +54,26 @@ export default function Sidebar() {
 
     const handleLogout = () => {
         localStorage.removeItem('webUser');
+        localStorage.removeItem('userUID');
         document.getElementById('logout_modal')?.showModal();
     }
 
     const confirmLogout = () => {
-        setCurrentWebUser(null);
-        setCurrentWebUserUID(null);
-        Cookies.remove('userUID');  // Remove cookie
-        localStorage.removeItem('webUser'); // If you still use localStorage
-        setSelected('login');
-        setActive(false);
-        navigate('/');
+
+        const auth = getAuth();
+        signOut(auth).then(()=>{
+            setCurrentWebUser(null);
+            setCurrentWebUserUID(null);
+            // Cookies.remove('userUID');  // Remove cookie
+            localStorage.removeItem('webUser'); // If you still use localStorage
+            localStorage.removeItem('userUID');
+            setSelected('login');
+            setActive(false);
+            navigate('/');
+        }).catch((error)=> {
+            console.log(error);
+            
+        })
       };
       
 

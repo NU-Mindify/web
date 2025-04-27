@@ -18,7 +18,6 @@ export default function Profile(){
     const inputRef = useRef(null);
     // console.log(currentWebUserUID);
     
-
     const { uid } = useParams();
     const [webUser, setWebUser] = useState({});
 
