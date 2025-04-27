@@ -33,7 +33,7 @@ export default function Sidebar() {
     const navigate = useNavigate()
     const location = useLocation();
 
-
+    
     const paths = {
         login: '/',
         dashboard: '/dashboard',
@@ -47,34 +47,62 @@ export default function Sidebar() {
         account: '/account',
     }
 
+    const currentPath = window.location.pathname
+
+    if(currentPath === '/dashboard'){
+        setSelected('dashboard')
+    }
+    else if(currentPath === '/analytics'){
+        setSelected('analytics')
+    }
+    else if(currentPath === '/reports'){
+        setSelected('reports')
+    }
+    else if(currentPath === '/leaderboard'){
+        setSelected('leaderboard')
+    }
+    else if(currentPath === '/question'){
+        setSelected('question')
+    }
+    else if(currentPath === '/glossary'){
+        setSelected('glossary')
+    }
+    else if(currentPath === '/students'){
+        setSelected('students')
+    }
+    else if(currentPath === '/profile'){
+        setSelected('profile')
+    }
+    else if(currentPath === '/account'){
+        setSelected('account')
+    }
+    
+
 
     const handleSideMenu = () => {
         setActive((prev) => !prev)
     }
 
     const handleLogout = () => {
-        localStorage.removeItem('webUser');
-        localStorage.removeItem('userUID');
         document.getElementById('logout_modal')?.showModal();
     }
 
     const confirmLogout = () => {
-
         const auth = getAuth();
-        signOut(auth).then(()=>{
+        signOut(auth).then(() => {
             setCurrentWebUser(null);
             setCurrentWebUserUID(null);
-            // Cookies.remove('userUID');  // Remove cookie
-            localStorage.removeItem('webUser'); // If you still use localStorage
+            localStorage.removeItem('webUser');
             localStorage.removeItem('userUID');
+            document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
             setSelected('login');
             setActive(false);
             navigate('/');
-        }).catch((error)=> {
+        }).catch((error) => {
             console.log(error);
-            
-        })
-      };
+        });
+    };
+    
       
 
     const { uid } = useParams();
@@ -224,8 +252,7 @@ export default function Sidebar() {
                     icons={logout}
                     active={isActive}
                     text='Logout'
-                    onPress={confirmLogout}
-                    goTo={paths.login}
+                    onPress={handleLogout}
                 />
             ) : (
                 <button className="btn btn-active btn-warning" onClick={handleLogout}>Sign out</button>

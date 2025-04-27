@@ -30,9 +30,6 @@ import ProtectedRoute from '../ProtectedRoute'
 
 const queryClient = new QueryClient();
 
-
-
-
 function App() {
   const [isActive, setActive] = useState(false)
   const [selected, setSelected] = useState('')
@@ -63,7 +60,7 @@ function App() {
 
   useEffect(() => {
     const currentPath = window.location.pathname
-    
+
 
     if (currentPath === '/' || currentPath === '') {
       setSelected('login')
@@ -98,7 +95,10 @@ function App() {
           
             {!currentWebUserUID ? (
               <Routes>
-                <Route path="/" element={<Login />} />
+                <Route 
+                  path="/" 
+                  element={<Login />} 
+                />
                 <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
                 <Route path="*" element={<Login />} />
               </Routes>
@@ -111,7 +111,7 @@ function App() {
                   }
                 >
                   <Routes>
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    {/* <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/reports" element={<Reports />} />
                     <Route path="/leaderboard" element={<Leaderboard />} />
@@ -124,22 +124,116 @@ function App() {
                     <Route path="/profile/edit/:id" element={<EditProfile />} />
                     <Route path="/glossary/edit" element={<EditGlossary />} />
                     <Route path="/addterm" element={<AddTerm />} />
-                    <Route path="*" element={<Login />} />
-
-                    {/* <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                    <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
-                    <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
-                    <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
-                    <Route path="/question" element={<ProtectedRoute><ManageQuestion /></ProtectedRoute>} />
-                    <Route path="/question/add" element={<ProtectedRoute><AddQuestion /></ProtectedRoute>} />
-                    <Route path="/glossary" element={<ProtectedRoute><ManageGlossary /></ProtectedRoute>} />
-                    <Route path="/students" element={<ProtectedRoute><ManageStudents /></ProtectedRoute>} />
-                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                    <Route path="/account" element={<ProtectedRoute><AccountManagement /></ProtectedRoute>} />
-                    <Route path="/profile/edit/:id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
-                    <Route path="/glossary/edit" element={<ProtectedRoute><EditGlossary /></ProtectedRoute>} />
-                    <Route path="/addterm" element={<ProtectedRoute><AddTerm /></ProtectedRoute>} />
                     <Route path="*" element={<Login />} /> */}
+
+                    <Route 
+                      path="/dashboard" 
+                      element={
+                        <ProtectedRoute>
+                          <Dashboard />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/analytics" 
+                      element={
+                        <ProtectedRoute>
+                          <Analytics />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/reports" 
+                      element={
+                        <ProtectedRoute>
+                          <Reports />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/leaderboard" 
+                      element={
+                        <ProtectedRoute>
+                          <Leaderboard />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/question" 
+                      element={
+                        <ProtectedRoute>
+                          <ManageQuestion />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route
+                      path="/question/add" 
+                      element={
+                        <ProtectedRoute>
+                          <AddQuestion />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route path="/glossary" 
+                      element={
+                        <ProtectedRoute>
+                          <ManageGlossary />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route path="/students" 
+                    element={
+                        <ProtectedRoute>
+                          <ManageStudents />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/profile" 
+                      element={
+                        <ProtectedRoute>
+                          <Profile />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/account" 
+                      element={
+                        <ProtectedRoute>
+                          <AccountManagement />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/profile/edit/:id" 
+                      element={
+                        <ProtectedRoute>
+                          <EditProfile />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/glossary/edit" 
+                      element={
+                        <ProtectedRoute>
+                          <EditGlossary />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/addterm" 
+                      element={
+                        <ProtectedRoute>
+                          <AddTerm />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="*" 
+                      element={
+                        <Login />
+                      } 
+                    />
                   </Routes>
 
                 </div>

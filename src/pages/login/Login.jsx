@@ -32,7 +32,8 @@ export default function Login(){
         {branch: 'bacolod', extension: 'nu-bacolod.edu.ph'},
         {branch: 'cebu', extension: 'nu-cebu.edu.ph'},
     ]
-    
+
+        
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
     const [branch, setBranch] = useState('');
@@ -68,6 +69,12 @@ export default function Login(){
             const user = firebaseAuth.currentUser;
 
             if(user){
+                const token = await user.getIdToken(); 
+
+  
+                const oneWeekInSeconds = 7 * 24 * 60 * 60;
+                document.cookie = `token=${token}; path=/; Max-Age=${oneWeekInSeconds}; Secure; SameSite=Strict`;
+
                 
                 setCurrentWebUserUID(user.uid)
                 localStorage.setItem('userUID', user.uid);
@@ -117,6 +124,15 @@ export default function Login(){
                                 <option value='moa'>NU MOA</option>
                                 <option value='manila'>NU MANILA</option>
                                 <option value='baliwag'>NU BALIWAG</option>
+                                <option value='fairview'>NU FAIRVIEW</option>
+                                <option value='east-ortigas'>NU EAST-ORTIGAS</option>
+                                <option value='las-pinas'>NU LAS PINAS</option>
+                                <option value='lipa'>NU LIPA</option>
+                                <option value='clark'>NU CLARK</option>
+                                <option value='laguna'>NU LAGUNA</option>
+                                <option value='dasmarinas'>NU DASMARINAS</option>
+                                <option value='bacolod'>NU BACOLOD</option>
+                                <option value='cebu'>NU CEBU</option>
                             </select>
                         </label>
                         
