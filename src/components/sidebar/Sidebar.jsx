@@ -76,6 +76,9 @@ export default function Sidebar() {
     else if(currentPath === '/account'){
         setSelected('account')
     }
+    else if(currentPath === "/"){
+        navigate(1)
+    }
     
 
 
