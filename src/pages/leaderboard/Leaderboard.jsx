@@ -10,7 +10,7 @@ export default function Leaderboard(){
                 <div className='classic-cont'>
 
                     <div className='leaderboard-titles-cont'>
-                        <h1 className='leaderboard-title'>Classic</h1>
+                        <h1 className='leaderboard-title classic-title'>Classic</h1>
                         <h2 className='leaderboard-subtitle'>top performing students in Classic</h2>
                     </div>
 
@@ -38,10 +38,12 @@ export default function Leaderboard(){
                         <div className='leaders-main-container'>
                             {mockleaders.map((leaders, element) => (
                                 <div key={element} className='leaders-container'>
-                                    <h1 className='leader-info'>{leaders.rank}</h1>
-                                    <h1 className='leader-info'>{leaders.name}</h1>
+                                    <h1 className='leader-info'>
+                                        {leaders.rank == 1 ? "🥇" : leaders.rank == 2 ? "🥈" : leaders.rank == 3 ? "🥉" : leaders.rank}
+                                    </h1>
+                                    <h1 className='leader-info text-blue-500 font-bold'>{leaders.name}</h1>
                                     <h1 className='leader-info'>{leaders.world}</h1>
-                                    <h1 className='leader-info'>{leaders.score}</h1>
+                                    <h1 className='leader-info font-bold'>{leaders.score}</h1>
                                 </div>
                             ))}
                         </div>
@@ -49,11 +51,9 @@ export default function Leaderboard(){
                 </div>
 
 
-
-
                 <div className='mastery-cont'>
                     <div className='leaderboard-titles-cont'>
-                        <h1 className='leaderboard-title'>Mastery</h1>
+                        <h1 className='leaderboard-title mastery-title'>Mastery</h1>
                         <h2 className='leaderboard-subtitle'>top performing students in Mastery</h2>
                     </div>
 
@@ -81,10 +81,12 @@ export default function Leaderboard(){
                         <div className='leaders-main-container'>
                             {mockleaders.map((leaders, element) => (
                                 <div key={element} className='leaders-container'>
-                                    <h1 className='leader-info'>{leaders.rank}</h1>
-                                    <h1 className='leader-info'>{leaders.name}</h1>
+                                    <h1 className='leader-info'>
+                                    {leaders.rank == 1 ? "🥇" : leaders.rank == 2 ? "🥈" : leaders.rank == 3 ? "🥉" : leaders.rank}
+                                    </h1>
+                                    <h1 className='leader-info text-blue-500 font-bold'>{leaders.name}</h1>
                                     <h1 className='leader-info'>{leaders.world}</h1>
-                                    <h1 className='leader-info'>{leaders.score}</h1>
+                                    <h1 className='leader-info font-bold'>{leaders.score}</h1>
                                 </div>
                             ))}
                         </div>
