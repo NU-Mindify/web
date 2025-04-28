@@ -2,7 +2,6 @@
 @reference "tailwindcss";
 @plugin "daisyui";
 
-
 .leaderboard-body{ 
   @apply w-full h-full grid gap-2 grid-cols-2;
 }
@@ -16,15 +15,19 @@
 }
 
 .leaderboard-titles-cont {
-  @apply w-full h-[100px]  p-2;
+  @apply w-full flex flex-col p-2 gap-2 mt-5 mb-2;
 }
 
-.leaderboard-title{
-  @apply font-[Poppins] text-[#FFD41C] font-bold text-4xl;
+.classic-title {
+  @apply font-[Poppins] text-[#FFA500] font-bold text-4xl; 
+}
+
+.mastery-title {
+  @apply font-[Poppins] text-[#FFD700] font-bold text-4xl; 
 }
 
 .leaderboard-subtitle {
-  @apply font-[Poppins] text-black text-xl;
+  @apply font-[Poppins] text-black text-xl mb-5;
 }
 
 .search-bar-cont-leaderboards {
@@ -33,7 +36,7 @@
 
 .search-bar-leaderboards{
   box-shadow: 2px 2px 5px rgb(99, 97, 97);
-  @apply w-[100%] h-[50px] bg-white rounded-3xl flex items-center;
+  @apply w-[95%] h-[50px] bg-white rounded-3xl flex items-center;
 }
 
 .search-input-leaderboards{                            
@@ -50,14 +53,25 @@
   @apply w-full h-auto pt-1 flex flex-col py-3;
 }
 
-.content-header{
-  @apply w-full grid grid-cols-4 gap-6 sticky top-0 mt-2 bg-red-100;
+.content-header {
+  @apply w-full grid grid-cols-[1fr_2fr_2fr_1fr] gap-2 sticky top-0 mt-2 px-5;
 }
 
-.title-header{
-  @apply w-full h-[15px] text-black text-center font-bold text-[10px]
+.title-header {
+  @apply w-full h-[15px] text-black font-bold text-left text-[10px]
   sm:text-base sm:h-[25px]
   md:text-lg md:h-[30px]
+  lg:text-xl;
+}
+
+.leaders-container {
+  @apply w-full h-[80px] grid grid-cols-[1fr_2.3fr_3.7fr_1fr] gap-2 px-10 items-center overflow-hidden;
+} 
+
+.leader-info {
+  @apply text-left text-xs
+  sm:text-base
+  md:text-lg
   lg:text-xl;
 }
 
@@ -65,13 +79,6 @@
   @apply w-full h-auto;
 }
 
-.leaders-container{
-  @apply w-full h-[80px] grid grid-cols-4 gap-6 place-items-center; 
-}
-
-.leader-info{
-  @apply text-black text-center text-xs
-  sm:text-base
-  md:text-lg
-  lg:text-xl;
+.leaders-container:hover {
+  @apply bg-gray-100 transition-all duration-200;
 }
