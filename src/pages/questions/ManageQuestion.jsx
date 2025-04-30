@@ -46,6 +46,7 @@ export default function ManageQuestion() {
   const navigate = useNavigate();
 
   const [gotSelected, setGotSelected] = useState(false)
+  const [selectedCat, setSelectedCat] = useState(null)
 
   const getData = async () => {
     try {
@@ -144,7 +145,7 @@ export default function ManageQuestion() {
         <div className="title-header">
           {gotSelected ? 
               <>
-                <h1 className="quesiton-title">Manage Questions</h1>
+                <h1 className="quesiton-title">{selectedCat}</h1>
                 <div className="add-ques-container">
                   <button className="btn" onClick={addQuestion}>
                     Add Question
@@ -194,6 +195,7 @@ export default function ManageQuestion() {
               onClick={() => {
                 setCategory(elem.id);
                 setGotSelected(true);
+                setSelectedCat(elem.name);
               }}
             />
           ))}
