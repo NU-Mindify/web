@@ -34,19 +34,15 @@ body{
 
 .side-menu {
     border-radius: 10px;
-    overflow: visible;
-    scrollbar-width: none;
     @apply w-10 h-10 bg-white transition-all duration-300 ease-in-out flex justify-center items-center mb-2
     lg:w-[50px] lg:h-full lg:pt-3 lg:p-0 lg:block;
-
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
 }
 
-.sidebar-hidden{
-    @apply hidden;
-}
-  
+
 .active-side-menu{
-    @apply absolute top-0 left-0 z-[999] bg-white pt-3 overflow-hidden transition-all duration-300 ease-in-out 
+    @apply absolute top-0 left-0 z-[999] bg-white pt-3 overflow-visible transition-all duration-300 ease-in-out 
     w-[calc(100svw-24px)] h-[calc(100svh-24px)] m-3 rounded-xl
     lg:w-[250px] lg:min-w-[250px] lg:h-full lg:flex lg:flex-col lg:static lg:m-0;
 
@@ -55,9 +51,27 @@ body{
     -ms-overflow-style: none;
 }
 
-.active-side-menu::-webkit-scrollbar {
-    display: none;
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+.menu-list-container{
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    /* @apply overflow-y-auto overflow-x-visible h-full z-0 ;  */
 }
+  
+  .question-category-container {
+    list-style: none;
+    padding-left: 1rem;
+    @apply w-full;
+  }
+
+  .question-category{
+    @apply w-full h-[50px] text-black;
+  }
+  
 
 /********************************/
 
@@ -79,6 +93,23 @@ body{
 }
 
 .active-btn-container:hover{
+    @apply bg-[#FFEFBA];
+}
+
+.sub-btn-container {        
+    @apply hidden w-[50px] h-[50px] mt-0 bg-red-400 ml-[-16px]
+    lg:flex lg:mt-1.5 lg:items-center lg:transition-all lg:duration-300 lg:ease-in-out;
+}
+    
+.sub-btn-container:hover{
+   @apply bg-[#FFEFBA];
+}
+
+.active-sub-btn-container{        
+    @apply w-full h-[45px] flex bg-transparent justify-start items-center transition-all duration-300 ease-in-out;
+}
+
+.active-sub-btn-container:hover{
     @apply bg-[#FFEFBA];
 }
 

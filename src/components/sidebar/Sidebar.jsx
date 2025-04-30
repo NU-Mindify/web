@@ -134,133 +134,192 @@ export default function Sidebar() {
             <button className='btn-icon' onClick={handleSideMenu}>
                 <img src={isActive ? halfburger : hamburger} className="mainIcon" alt="menu" />
             </button>
-
+    
             {isActive && (
                 <>
                     <div className="avatar">
-                    <div className="avatar-container">
-                        <img src={currentWebUser.useravatar} alt="avatar" />
-                    </div>
+                        <div className="avatar-container">
+                            <img src={currentWebUser.useravatar} alt="avatar" />
+                        </div>
                     </div>
                     <div className="name-container">
-                    <h1 className="user-name">{currentWebUser.firstName} {currentWebUser.lastName}</h1>
+                        <h1 className="user-name">{currentWebUser.firstName} {currentWebUser.lastName}</h1>
                     </div>
                 </>
             )}
+            <div className="menu-list-container">
+                <ul className="menu-list">
+                    <li>
+                        <MenuBtn
+                            icons={dashboard}
+                            active={isActive}
+                            text='Dashboard'
+                            isSelected={selected === 'dashboard'}
+                            onPress={() => setSelected('dashboard')}
+                            goTo={paths.dashboard}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={analytics}
+                            active={isActive}
+                            text='Analytics'
+                            isSelected={selected === 'analytics'}
+                            onPress={() => setSelected('analytics')}
+                            goTo={paths.analytics}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={reports}
+                            active={isActive}
+                            text='Reports'
+                            isSelected={selected === 'reports'}
+                            onPress={() => setSelected('reports')}
+                            goTo={paths.reports}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={leaderboard}
+                            active={isActive}
+                            text='Leaderboard'
+                            isSelected={selected === 'leaderboard'}
+                            onPress={() => setSelected('leaderboard')}
+                            goTo={paths.leaderboard}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={question}
+                            active={isActive}
+                            text='Manage Questions'
+                            isSelected={selected === 'question'}
+                            onPress={() => setSelected('question')}
+                            goTo={paths.question}
+                        />
+                        {selected === 'question' ? 
+                            <ul className="question-category-container">
+                                <li>
+                                    <div className={`${isActive ? 'active-sub-btn-container' : 'sub-btn-container'}`}>
+                                        <button
+                                            className={`${isActive ? 'active-btn-icon' : 'btn-icon'} ${!isActive ? 'tooltip tooltip-right' : ''}`}
+                                            data-tip="Abnormal Psychology"
+                                        >
+                                            <img src={question} className={isActive ? 'active-mainIcon' : 'mainIcon'} alt={"abnormal"} />
+                                            {isActive && <h1 className='active-btn-txt'>Abnormal Psychology</h1>}
+                                        </button>
+                                    </div>
+                                </li>
 
-            <MenuBtn 
-                icons={dashboard}
-                active={isActive}
-                text='Dashboard'
-                isSelected={selected === 'dashboard'}
-                onPress={() => {
-                    setSelected('dashboard');
-                }}
-                goTo={paths.dashboard}
-            />
+                                <li>
+                                    <div className={`${isActive ? 'active-sub-btn-container' : 'sub-btn-container'}`}>
+                                        <button
+                                            className={`${isActive ? 'active-btn-icon' : 'btn-icon'} ${!isActive ? 'tooltip tooltip-right' : ''}`}
+                                            data-tip="Developmental Psychology"
+                                        >
+                                            <img src={question} className={isActive ? 'active-mainIcon' : 'mainIcon'} alt={"abnormal"} />
+                                            {isActive && <h1 className='active-btn-txt'>Developmental Psychology</h1>}
+                                        </button>
+                                    </div>
+                                </li>
 
-            
-            <MenuBtn
-                icons={analytics}
-                active={isActive}
-                text='Analytics'
-                isSelected={selected === 'analytics'}
-                onPress={() => {
-                    setSelected('analytics');
-                }}
-                goTo={paths.analytics}
-            />
+                                <li>
+                                    <div className={`${isActive ? 'active-sub-btn-container' : 'sub-btn-container'}`}>
+                                        <button
+                                            className={`${isActive ? 'active-btn-icon' : 'btn-icon'} ${!isActive ? 'tooltip tooltip-right z-100' : ''}`}
+                                            data-tip="Psychological Psychology"
+                                        >
+                                            <img src={question} className={isActive ? 'active-mainIcon' : 'mainIcon'} alt={"abnormal"} />
+                                            {isActive && <h1 className='active-btn-txt'>Psychological Psychology</h1>}
+                                        </button>
+                                    </div>
+                                </li>
 
-            <MenuBtn
-                icons={reports}
-                active={isActive}
-                text='Reports'
-                isSelected={selected === 'reports'}
-                onPress={() => {
-                    setSelected('reports');
-                }}
-                goTo={paths.reports}
-            />
+                                <li>
+                                    <div className={`${isActive ? 'active-sub-btn-container' : 'sub-btn-container'}`}>
+                                        <button
+                                            className={`${isActive ? 'active-btn-icon' : 'btn-icon'} ${!isActive ? 'tooltip tooltip-right z-100' : ''}`}
+                                            data-tip="Industrial Psychology"
+                                        >
+                                            <img src={question} className={isActive ? 'active-mainIcon' : 'mainIcon'} alt={"abnormal"} />
+                                            {isActive && <h1 className='active-btn-txt'>Industrial Psychology</h1>}
+                                        </button>
+                                    </div>
+                                </li>
 
-            <MenuBtn
-                icons={leaderboard}
-                active={isActive}
-                text='Leaderboard'
-                isSelected={selected === 'leaderboard'}
-                onPress={() => {
-                    setSelected('leaderboard');
-                }}
-                goTo={paths.leaderboard}
-            />
-
-            <MenuBtn
-                icons={question}
-                active={isActive}
-                text='Manage Questions'
-                isSelected={selected === 'question'}
-                onPress={() => {
-                    setSelected('question');
-                }}
-                goTo={paths.question}
-            />
-
-            <MenuBtn
-                icons={glossary}
-                active={isActive}
-                text='Manage Glossary'
-                isSelected={selected === 'glossary'}
-                onPress={() => {
-                    setSelected('glossary');
-                }}
-                goTo={paths.glossary}
-            />
-            
-            <MenuBtn
-                icons={student}
-                active={isActive}
-                text='Manage Students'
-                isSelected={selected === 'students'}
-                onPress={() => {
-                    setSelected('students');
-                }}
-                goTo={paths.students}
-            />
-
-            <MenuBtn
-                icons={profile}
-                active={isActive}
-                text='Profile Settings'
-                isSelected={selected === 'profile'}
-                onPress={() => {
-                    setSelected('profile');
-                }}
-                goTo={paths.profile}
-            />
-
-            
-            <MenuBtn
-                icons={account}
-                active={isActive}
-                text='Account Management'
-                isSelected={selected === 'account'}
-                onPress={() => {
-                    setSelected('account');
-                }}
-                goTo={paths.account}
-            />
-            
-
-            {!isActive ? (
-                <MenuBtn
-                    icons={logout}
-                    active={isActive}
-                    text='Logout'
-                    onPress={handleLogout}
-                />
-            ) : (
-                <button className="btn btn-active btn-warning" onClick={handleLogout}>Sign out</button>
-            )}
-
+                                <li>
+                                    <div className={`${isActive ? 'active-sub-btn-container' : 'sub-btn-container'}`}>
+                                        <button
+                                            className={`${isActive ? 'active-btn-icon' : 'btn-icon'} ${!isActive ? 'tooltip tooltip-right z-100' : ''}`}
+                                            data-tip="General Psychology"
+                                        >
+                                            <img src={question} className={isActive ? 'active-mainIcon' : 'mainIcon'} alt={"abnormal"} />
+                                            {isActive && <h1 className='active-btn-txt'>General Psychology</h1>}
+                                        </button>
+                                    </div>
+                                </li>
+                                
+                            </ul>
+                            : ""
+                        }
+                        
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={glossary}
+                            active={isActive}
+                            text='Manage Glossary'
+                            isSelected={selected === 'glossary'}
+                            onPress={() => setSelected('glossary')}
+                            goTo={paths.glossary}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={student}
+                            active={isActive}
+                            text='Manage Students'
+                            isSelected={selected === 'students'}
+                            onPress={() => setSelected('students')}
+                            goTo={paths.students}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={profile}
+                            active={isActive}
+                            text='Profile Settings'
+                            isSelected={selected === 'profile'}
+                            onPress={() => setSelected('profile')}
+                            goTo={paths.profile}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={account}
+                            active={isActive}
+                            text='Account Management'
+                            isSelected={selected === 'account'}
+                            onPress={() => setSelected('account')}
+                            goTo={paths.account}
+                        />
+                    </li>
+                    <li>
+                        {!isActive ? (
+                            <MenuBtn
+                                icons={logout}
+                                active={isActive}
+                                text='Logout'
+                                onPress={handleLogout}
+                            />
+                        ) : (
+                            <button className="btn btn-active btn-warning" onClick={handleLogout}>Sign out</button>
+                        )}
+                    </li>
+                </ul>
+            </div>
+    
             <dialog id="logout_modal" className="modal">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">Are you sure you want to sign out?</h3>
@@ -273,5 +332,6 @@ export default function Sidebar() {
                 </div>
             </dialog>
         </div>
-    )
+    );
+    
 }

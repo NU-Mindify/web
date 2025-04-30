@@ -88,13 +88,10 @@ export default function ManageQuestion() {
     return (
       
       <div className="category-container" onClick={onClick} key={id}>
-        <img src={bgImage} className="category-bg" />
+        <img src={bgImage} className="category-bg" alt="bgImages" />
         <h1 className="category-text">{text}</h1>
         <p className="category-quantity">Questions: 2022</p>
-        
-      </div>
-    
-      
+      </div> 
     );
   }
   
