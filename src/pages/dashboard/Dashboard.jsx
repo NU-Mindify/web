@@ -2,28 +2,24 @@ import { useContext, useEffect } from 'react';
 import "../../css/dashboard/dashboard.css";
 import logo from '../../assets/logo/logo.svg';
 import Chart from 'chart.js/auto';
-import { ActiveContext } from '../../contexts/Contexts';
+import { ActiveContext, UserLoggedInContext } from '../../contexts/Contexts';
 import BarGraph from '../../components/barGraph/BarGraph';
+
 
 
 export default function Dashboard() {
 
   const { currentUserBranch ,currentUserEmail } = useContext(ActiveContext)
-
+  const { currentWebUser } = useContext(UserLoggedInContext)
+  const branch = currentWebUser.branch.toUpperCase();
   return (
     <div className="main-container-dashboard">
       <div className="dashboard-header">
-        <div className="search-container">
-          <div className="searchbar"></div>
-          <div className="header-message">
-            <h1 className="header-text-dashboard">Dashboard</h1>
-            <h2 className="header-greeting-dashboard">
-              Hi, {currentUserEmail} from {currentUserBranch}. Welcome back to NU Mindify!
-            </h2>
-          </div>
-        </div>
-        <div className="logo-container-dashboard">
-          <img className="mindify-logo-dashboard" src={logo} alt="NU Mindify Logo" />
+        <div className="header-message">
+          <h1 className="header-text-dashboard">Dashboard</h1>
+          <h2 className="header-greeting-dashboard">
+            Hi, {currentWebUser.firstName} {currentWebUser.lastName} from {branch}. Welcome back to NU Mindify!
+          </h2>
         </div>
       </div>
 

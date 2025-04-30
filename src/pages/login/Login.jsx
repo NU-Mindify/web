@@ -79,8 +79,6 @@ export default function Login(){
                 setCurrentWebUserUID(user.uid)
                 localStorage.setItem('userUID', user.uid);
                 alert("User Login Successfully!")
-                setCurrentUserBranch(branch)
-                setCurrentUserEmail(email)
                 navigate('/dashboard');
                 setSelected('dashboard');
             }

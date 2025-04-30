@@ -162,7 +162,7 @@ function App() {
                       path="/question" 
                       element={
                         <ProtectedRoute>
-                          <ManageQuestion />
+                          <ManageQuestion key={location.key} />
                         </ProtectedRoute>
                       } 
                     />

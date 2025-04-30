@@ -19,6 +19,8 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../Constants';
 import Cookies from 'js-cookie';
+import close from '../../assets/sidebar/close.svg'
+
 
 
 import { UserLoggedInContext } from "../../contexts/Contexts"
@@ -29,6 +31,7 @@ import { getAuth, signOut } from "firebase/auth"
 export default function Sidebar() {
     const { isActive, setActive, selected, setSelected } = useContext(ActiveContext)
     const {currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID} = useContext(UserLoggedInContext)
+    const [activeQuestion, setActiveQuestion] = useState(false)
 
     const navigate = useNavigate()
     const location = useLocation();
@@ -47,38 +50,32 @@ export default function Sidebar() {
         account: '/account',
     }
 
-    const currentPath = window.location.pathname
-
-    if(currentPath === '/dashboard'){
-        setSelected('dashboard')
-    }
-    else if(currentPath === '/analytics'){
-        setSelected('analytics')
-    }
-    else if(currentPath === '/reports'){
-        setSelected('reports')
-    }
-    else if(currentPath === '/leaderboard'){
-        setSelected('leaderboard')
-    }
-    else if(currentPath === '/question'){
-        setSelected('question')
-    }
-    else if(currentPath === '/glossary'){
-        setSelected('glossary')
-    }
-    else if(currentPath === '/students'){
-        setSelected('students')
-    }
-    else if(currentPath === '/profile'){
-        setSelected('profile')
-    }
-    else if(currentPath === '/account'){
-        setSelected('account')
-    }
-    else if(currentPath === "/"){
-        navigate(1)
-    }
+    useEffect(() => {
+        const currentPath = window.location.pathname;
+      
+        if (currentPath === '/dashboard') {
+          setSelected('dashboard');
+        } else if (currentPath === '/analytics') {
+          setSelected('analytics');
+        } else if (currentPath === '/reports') {
+          setSelected('reports');
+        } else if (currentPath === '/leaderboard') {
+          setSelected('leaderboard');
+        } else if (currentPath === '/question') {
+          setSelected('question');
+        } else if (currentPath === '/glossary') {
+          setSelected('glossary');
+        } else if (currentPath === '/students') {
+          setSelected('students');
+        } else if (currentPath === '/profile') {
+          setSelected('profile');
+        } else if (currentPath === '/account') {
+          setSelected('account');
+        } else if (currentPath === '/') {
+          navigate(1); // Consider if you really want to force navigation like this
+        }
+      }, [navigate, setSelected]);
+      
     
 
 
@@ -132,7 +129,7 @@ export default function Sidebar() {
     return (
         <div className={isActive ? 'active-side-menu' : 'side-menu'}>
             <button className='btn-icon' onClick={handleSideMenu}>
-                <img src={isActive ? halfburger : hamburger} className="mainIcon" alt="menu" />
+                <img src={isActive ? close : hamburger} className="mainIcon" alt="menu" />
             </button>
     
             {isActive && (
@@ -197,67 +194,111 @@ export default function Sidebar() {
                             active={isActive}
                             text='Manage Questions'
                             isSelected={selected === 'question'}
-                            onPress={() => setSelected('question')}
+                            onPress={() => {
+                                setSelected('question');
+                                setActiveQuestion(!activeQuestion);
+                            }}
+                            
                             goTo={paths.question}
                         />
-                        {selected === 'question' ? 
+                        {selected === 'question' && isActive && activeQuestion ? 
                             <ul className="question-category-container">
                                 <li>
-                                    <div className={`${isActive ? 'active-sub-btn-container' : 'sub-btn-container'}`}>
-                                        <button
-                                            className={`${isActive ? 'active-btn-icon' : 'btn-icon'} ${!isActive ? 'tooltip tooltip-right' : ''}`}
-                                            data-tip="Abnormal Psychology"
+                                    <div className={'active-sub-btn-container'}>
+                                    <button 
+                                        className={'active-btn-icon'}
+                                        onClick={() => {
+                                            navigate("/question", {
+                                            state: {
+                                                category: 'abnormal',
+                                                categoryName: 'Abnormal Psychology',
+                                                catSelected: true
+                                            }
+                                            });
+                                            setSelected('question');
+                                        }}
                                         >
-                                            <img src={question} className={isActive ? 'active-mainIcon' : 'mainIcon'} alt={"abnormal"} />
-                                            {isActive && <h1 className='active-btn-txt'>Abnormal Psychology</h1>}
+                                        <h1 className='active-btn-txt'>Abnormal Psychology</h1>
                                         </button>
                                     </div>
                                 </li>
 
                                 <li>
-                                    <div className={`${isActive ? 'active-sub-btn-container' : 'sub-btn-container'}`}>
-                                        <button
-                                            className={`${isActive ? 'active-btn-icon' : 'btn-icon'} ${!isActive ? 'tooltip tooltip-right' : ''}`}
-                                            data-tip="Developmental Psychology"
+                                    <div className={'active-sub-btn-container'}>
+                                        <button 
+                                            className={'active-btn-icon'}
+                                            onClick={() => {
+                                                navigate("/question", {
+                                                state: {
+                                                    category: 'developmental',
+                                                    categoryName: 'Developmental Psychology',
+                                                    catSelected: true
+                                                }
+                                                });
+                                                setSelected('question');
+                                            }}
                                         >
-                                            <img src={question} className={isActive ? 'active-mainIcon' : 'mainIcon'} alt={"abnormal"} />
-                                            {isActive && <h1 className='active-btn-txt'>Developmental Psychology</h1>}
+                                            <h1 className='active-btn-txt'>Developmental Psychology</h1>
                                         </button>
                                     </div>
                                 </li>
 
                                 <li>
-                                    <div className={`${isActive ? 'active-sub-btn-container' : 'sub-btn-container'}`}>
-                                        <button
-                                            className={`${isActive ? 'active-btn-icon' : 'btn-icon'} ${!isActive ? 'tooltip tooltip-right z-100' : ''}`}
-                                            data-tip="Psychological Psychology"
+                                    <div className={'active-sub-btn-container'}>
+                                        <button 
+                                            className={'active-btn-icon'}
+                                            onClick={() => {
+                                                navigate("/question", {
+                                                state: {
+                                                    category: 'psychological',
+                                                    categoryName: 'Psychological Assessment',
+                                                    catSelected: true
+                                                }
+                                                });
+                                                setSelected('question');
+                                            }}
                                         >
-                                            <img src={question} className={isActive ? 'active-mainIcon' : 'mainIcon'} alt={"abnormal"} />
-                                            {isActive && <h1 className='active-btn-txt'>Psychological Psychology</h1>}
+                                            <h1 className='active-btn-txt'>Psychological Assessment</h1>
                                         </button>
                                     </div>
                                 </li>
 
                                 <li>
-                                    <div className={`${isActive ? 'active-sub-btn-container' : 'sub-btn-container'}`}>
-                                        <button
-                                            className={`${isActive ? 'active-btn-icon' : 'btn-icon'} ${!isActive ? 'tooltip tooltip-right z-100' : ''}`}
-                                            data-tip="Industrial Psychology"
+                                    <div className={'active-sub-btn-container'}>
+                                        <button 
+                                            className={'active-btn-icon'}
+                                            onClick={() => {
+                                                navigate("/question", {
+                                                state: {
+                                                    category: 'industrial',
+                                                    categoryName: 'Industrial Psychology',
+                                                    catSelected: true
+                                                }
+                                                });
+                                                setSelected('question');
+                                            }}
                                         >
-                                            <img src={question} className={isActive ? 'active-mainIcon' : 'mainIcon'} alt={"abnormal"} />
-                                            {isActive && <h1 className='active-btn-txt'>Industrial Psychology</h1>}
+                                            <h1 className='active-btn-txt'>Industrial Psychology</h1>
                                         </button>
                                     </div>
                                 </li>
 
                                 <li>
-                                    <div className={`${isActive ? 'active-sub-btn-container' : 'sub-btn-container'}`}>
-                                        <button
-                                            className={`${isActive ? 'active-btn-icon' : 'btn-icon'} ${!isActive ? 'tooltip tooltip-right z-100' : ''}`}
-                                            data-tip="General Psychology"
+                                    <div className={'active-sub-btn-container'}>
+                                        <button 
+                                            className={'active-btn-icon'}
+                                            onClick={() => {
+                                                navigate("/question", {
+                                                state: {
+                                                    category: 'general',
+                                                    categoryName: 'General Psychology',
+                                                    catSelected: true
+                                                }
+                                                });
+                                                setSelected('question');
+                                            }}
                                         >
-                                            <img src={question} className={isActive ? 'active-mainIcon' : 'mainIcon'} alt={"abnormal"} />
-                                            {isActive && <h1 className='active-btn-txt'>General Psychology</h1>}
+                                            <h1 className='active-btn-txt'>General Psychology</h1>
                                         </button>
                                     </div>
                                 </li>
