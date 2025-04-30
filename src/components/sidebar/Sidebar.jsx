@@ -139,7 +139,9 @@ export default function Sidebar() {
                 <>
                     <div className="avatar">
                         <div className="avatar-container">
-                            <img src={currentWebUser.useravatar} alt="avatar" />
+                            <div className="avatar-padding">
+                                <img src={currentWebUser.useravatar} alt="avatar" className="avatar-img" />
+                            </div>
                         </div>
                     </div>
                     <div className="name-container">
@@ -314,7 +316,8 @@ export default function Sidebar() {
                                 onPress={handleLogout}
                             />
                         ) : (
-                            <button className="btn btn-active btn-warning" onClick={handleLogout}>Sign out</button>
+                            <button className="btn btn-active btn-warning w-full flex items-center justify-center py-2 rounded-lg" 
+                            onClick={handleLogout}>SIGN OUT</button>
                         )}
                     </li>
                 </ul>
