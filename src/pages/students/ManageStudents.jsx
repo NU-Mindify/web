@@ -1,4 +1,3 @@
-
 import search from '../../assets/students/search-01.svg';
 import filter from '../../assets/students/filter.svg';
 import branchdropdown from '../../assets/students/branch-dropdown.svg';
@@ -31,7 +30,6 @@ export default function ManageStudents() {
             console.log(error);
         });
     };
-
 
     return (
       <>
