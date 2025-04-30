@@ -14,20 +14,29 @@ import profile from '../../assets/sidebar/profile.svg'
 import account from '../../assets/sidebar/account.svg'
 import logout from '../../assets/sidebar/logout.svg'
 import '../../index.css'
-import { useNavigate, useParams } from "react-router"
+import { useLocation, useNavigate, useParams } from "react-router"
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../Constants';
+import Cookies from 'js-cookie';
+import close from '../../assets/sidebar/close.svg'
+
+
 
 import { UserLoggedInContext } from "../../contexts/Contexts"
+
+import { getAuth, signOut } from "firebase/auth"
 
 
 export default function Sidebar() {
     const { isActive, setActive, selected, setSelected } = useContext(ActiveContext)
     const {currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID} = useContext(UserLoggedInContext)
+    const [activeQuestion, setActiveQuestion] = useState(false)
 
     const navigate = useNavigate()
+    const location = useLocation();
 
+    
     const paths = {
         login: '/',
         dashboard: '/dashboard',
@@ -41,23 +50,60 @@ export default function Sidebar() {
         account: '/account',
     }
 
+    useEffect(() => {
+        const currentPath = window.location.pathname;
+      
+        if (currentPath === '/dashboard') {
+          setSelected('dashboard');
+        } else if (currentPath === '/analytics') {
+          setSelected('analytics');
+        } else if (currentPath === '/reports') {
+          setSelected('reports');
+        } else if (currentPath === '/leaderboard') {
+          setSelected('leaderboard');
+        } else if (currentPath === '/question') {
+          setSelected('question');
+        } else if (currentPath === '/glossary') {
+          setSelected('glossary');
+        } else if (currentPath === '/students') {
+          setSelected('students');
+        } else if (currentPath === '/profile') {
+          setSelected('profile');
+        } else if (currentPath === '/account') {
+          setSelected('account');
+        } else if (currentPath === '/') {
+          navigate(1); // Consider if you really want to force navigation like this
+        }
+      }, [navigate, setSelected]);
+      
+    
+
+
     const handleSideMenu = () => {
         setActive((prev) => !prev)
     }
 
     const handleLogout = () => {
-        localStorage.removeItem('webUser');
         document.getElementById('logout_modal')?.showModal();
     }
 
     const confirmLogout = () => {
-        setCurrentWebUser(null);
-        setCurrentWebUserUID(null);
-        localStorage.removeItem('webUser');
-        setSelected('login');
-        setActive(false);
-        navigate('/');
+        const auth = getAuth();
+        signOut(auth).then(() => {
+            setCurrentWebUser(null);
+            setCurrentWebUserUID(null);
+            localStorage.removeItem('webUser');
+            localStorage.removeItem('userUID');
+            document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            setSelected('login');
+            setActive(false);
+            navigate('/');
+        }).catch((error) => {
+            console.log(error);
+        });
     };
+    
+      
 
     const { uid } = useParams();
     const [webUser, setWebUser] = useState({});
@@ -83,147 +129,253 @@ export default function Sidebar() {
     return (
         <div className={isActive ? 'active-side-menu' : 'side-menu'}>
             <button className='btn-icon' onClick={handleSideMenu}>
-                <img src={isActive ? halfburger : hamburger} className="mainIcon" alt="menu" />
+                <img src={isActive ? close : hamburger} className="mainIcon" alt="menu" />
             </button>
-
+    
             {isActive && (
                 <>
                     <div className="avatar">
-                    <div className="avatar-container">
-                        <img src={currentWebUser.useravatar} alt="avatar" />
-                    </div>
+                        <div className="avatar-container">
+                            <div className="avatar-padding">
+                                <img src={currentWebUser.useravatar} alt="avatar" className="avatar-img" />
+                            </div>
+                        </div>
                     </div>
                     <div className="name-container">
-                    <h1 className="user-name">{currentWebUser.firstName} {currentWebUser.lastName}</h1>
+                        <h1 className="user-name">{currentWebUser.firstName} {currentWebUser.lastName}</h1>
                     </div>
                 </>
             )}
+            <div className="menu-list-container">
+                <ul className="menu-list">
+                    <li>
+                        <MenuBtn
+                            icons={dashboard}
+                            active={isActive}
+                            text='Dashboard'
+                            isSelected={selected === 'dashboard'}
+                            onPress={() => setSelected('dashboard')}
+                            goTo={paths.dashboard}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={analytics}
+                            active={isActive}
+                            text='Analytics'
+                            isSelected={selected === 'analytics'}
+                            onPress={() => setSelected('analytics')}
+                            goTo={paths.analytics}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={reports}
+                            active={isActive}
+                            text='Reports'
+                            isSelected={selected === 'reports'}
+                            onPress={() => setSelected('reports')}
+                            goTo={paths.reports}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={leaderboard}
+                            active={isActive}
+                            text='Leaderboard'
+                            isSelected={selected === 'leaderboard'}
+                            onPress={() => setSelected('leaderboard')}
+                            goTo={paths.leaderboard}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={question}
+                            active={isActive}
+                            text='Manage Questions'
+                            isSelected={selected === 'question'}
+                            onPress={() => {
+                                setSelected('question');
+                                setActiveQuestion(!activeQuestion);
+                            }}
+                            
+                            goTo={paths.question}
+                        />
+                        {selected === 'question' && isActive && activeQuestion ? 
+                            <ul className="question-category-container">
+                                <li>
+                                    <div className={'active-sub-btn-container'}>
+                                    <button 
+                                        className={'active-btn-icon'}
+                                        onClick={() => {
+                                            navigate("/question", {
+                                            state: {
+                                                category: 'abnormal',
+                                                categoryName: 'Abnormal Psychology',
+                                                catSelected: true
+                                            }
+                                            });
+                                            setSelected('question');
+                                        }}
+                                        >
+                                        <h1 className='active-btn-txt'>Abnormal Psychology</h1>
+                                        </button>
+                                    </div>
+                                </li>
 
-            <MenuBtn 
-                icons={dashboard}
-                active={isActive}
-                text='Dashboard'
-                isSelected={selected === 'dashboard'}
-                onPress={() => {
-                    setSelected('dashboard');
-                }}
-                goTo={paths.dashboard}
-            />
+                                <li>
+                                    <div className={'active-sub-btn-container'}>
+                                        <button 
+                                            className={'active-btn-icon'}
+                                            onClick={() => {
+                                                navigate("/question", {
+                                                state: {
+                                                    category: 'developmental',
+                                                    categoryName: 'Developmental Psychology',
+                                                    catSelected: true
+                                                }
+                                                });
+                                                setSelected('question');
+                                            }}
+                                        >
+                                            <h1 className='active-btn-txt'>Developmental Psychology</h1>
+                                        </button>
+                                    </div>
+                                </li>
 
-            
-            <MenuBtn
-                icons={analytics}
-                active={isActive}
-                text='Analytics'
-                isSelected={selected === 'analytics'}
-                onPress={() => {
-                    setSelected('analytics');
-                }}
-                goTo={paths.analytics}
-            />
+                                <li>
+                                    <div className={'active-sub-btn-container'}>
+                                        <button 
+                                            className={'active-btn-icon'}
+                                            onClick={() => {
+                                                navigate("/question", {
+                                                state: {
+                                                    category: 'psychological',
+                                                    categoryName: 'Psychological Assessment',
+                                                    catSelected: true
+                                                }
+                                                });
+                                                setSelected('question');
+                                            }}
+                                        >
+                                            <h1 className='active-btn-txt'>Psychological Assessment</h1>
+                                        </button>
+                                    </div>
+                                </li>
 
-            <MenuBtn
-                icons={reports}
-                active={isActive}
-                text='Reports'
-                isSelected={selected === 'reports'}
-                onPress={() => {
-                    setSelected('reports');
-                }}
-                goTo={paths.reports}
-            />
+                                <li>
+                                    <div className={'active-sub-btn-container'}>
+                                        <button 
+                                            className={'active-btn-icon'}
+                                            onClick={() => {
+                                                navigate("/question", {
+                                                state: {
+                                                    category: 'industrial',
+                                                    categoryName: 'Industrial Psychology',
+                                                    catSelected: true
+                                                }
+                                                });
+                                                setSelected('question');
+                                            }}
+                                        >
+                                            <h1 className='active-btn-txt'>Industrial Psychology</h1>
+                                        </button>
+                                    </div>
+                                </li>
 
-            <MenuBtn
-                icons={leaderboard}
-                active={isActive}
-                text='Leaderboard'
-                isSelected={selected === 'leaderboard'}
-                onPress={() => {
-                    setSelected('leaderboard');
-                }}
-                goTo={paths.leaderboard}
-            />
-
-            <MenuBtn
-                icons={question}
-                active={isActive}
-                text='Manage Questions'
-                isSelected={selected === 'question'}
-                onPress={() => {
-                    setSelected('question');
-                }}
-                goTo={paths.question}
-            />
-
-            <MenuBtn
-                icons={glossary}
-                active={isActive}
-                text='Manage Glossary'
-                isSelected={selected === 'glossary'}
-                onPress={() => {
-                    setSelected('glossary');
-                }}
-                goTo={paths.glossary}
-            />
-            
-            <MenuBtn
-                icons={student}
-                active={isActive}
-                text='Manage Students'
-                isSelected={selected === 'students'}
-                onPress={() => {
-                    setSelected('students');
-                }}
-                goTo={paths.students}
-            />
-
-            <MenuBtn
-                icons={profile}
-                active={isActive}
-                text='Profile Settings'
-                isSelected={selected === 'profile'}
-                onPress={() => {
-                    setSelected('profile');
-                }}
-                goTo={paths.profile}
-            />
-
-            
-            <MenuBtn
-                icons={account}
-                active={isActive}
-                text='Account Management'
-                isSelected={selected === 'account'}
-                onPress={() => {
-                    setSelected('account');
-                }}
-                goTo={paths.account}
-            />
-            
-
-            {!isActive ? (
-                <MenuBtn
-                    icons={logout}
-                    active={isActive}
-                    text='Logout'
-                    onPress={confirmLogout}
-                    goTo={paths.login}
-                />
-            ) : (
-                <button className="btn btn-active btn-warning" onClick={handleLogout}>Logout</button>
-            )}
-
+                                <li>
+                                    <div className={'active-sub-btn-container'}>
+                                        <button 
+                                            className={'active-btn-icon'}
+                                            onClick={() => {
+                                                navigate("/question", {
+                                                state: {
+                                                    category: 'general',
+                                                    categoryName: 'General Psychology',
+                                                    catSelected: true
+                                                }
+                                                });
+                                                setSelected('question');
+                                            }}
+                                        >
+                                            <h1 className='active-btn-txt'>General Psychology</h1>
+                                        </button>
+                                    </div>
+                                </li>
+                                
+                            </ul>
+                            : ""
+                        }
+                        
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={glossary}
+                            active={isActive}
+                            text='Manage Glossary'
+                            isSelected={selected === 'glossary'}
+                            onPress={() => setSelected('glossary')}
+                            goTo={paths.glossary}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={student}
+                            active={isActive}
+                            text='Manage Students'
+                            isSelected={selected === 'students'}
+                            onPress={() => setSelected('students')}
+                            goTo={paths.students}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={profile}
+                            active={isActive}
+                            text='Profile Settings'
+                            isSelected={selected === 'profile'}
+                            onPress={() => setSelected('profile')}
+                            goTo={paths.profile}
+                        />
+                    </li>
+                    <li>
+                        <MenuBtn
+                            icons={account}
+                            active={isActive}
+                            text='Account Management'
+                            isSelected={selected === 'account'}
+                            onPress={() => setSelected('account')}
+                            goTo={paths.account}
+                        />
+                    </li>
+                    <li>
+                        {!isActive ? (
+                            <MenuBtn
+                                icons={logout}
+                                active={isActive}
+                                text='Logout'
+                                onPress={handleLogout}
+                            />
+                        ) : (
+                            <button className="btn btn-active btn-warning w-full flex items-center justify-center py-2 rounded-lg" 
+                            onClick={handleLogout}>SIGN OUT</button>
+                        )}
+                    </li>
+                </ul>
+            </div>
+    
             <dialog id="logout_modal" className="modal">
                 <div className="modal-box">
-                    <h3 className="font-bold text-lg">Are you sure you want to logout?</h3>
+                    <h3 className="font-bold text-lg">Are you sure you want to sign out?</h3>
                     <div className="modal-action">
                         <form method="dialog">
                             <button className="btn">Cancel</button>
                         </form>
-                        <button className="btn btn-warning" onClick={confirmLogout}>Logout</button>
+                        <button className="btn btn-warning" onClick={confirmLogout}>Sign out</button>
                     </div>
                 </div>
             </dialog>
         </div>
-    )
+    );
+    
 }

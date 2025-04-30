@@ -1,3 +1,4 @@
+
 import search from '../../assets/students/search-01.svg';
 import filter from '../../assets/students/filter.svg';
 import branchdropdown from '../../assets/students/branch-dropdown.svg';
@@ -5,9 +6,33 @@ import chevron from '../../assets/students/chevron-down.svg';
 import settings from '../../assets/students/settings.svg';
 import samplepic from '../../assets/students/sample-minji.svg';
 import '../../css/students/students.css';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { API_URL } from '../../Constants'
 
 
 export default function ManageStudents() {
+
+    const [students, setStudents] = useState([]);
+
+    useEffect(()=>{
+        fetchStudents();
+    }, []);
+
+    const fetchStudents = () => {
+        axios.get(`${API_URL}/getUsers`)
+        .then((response) => {
+            console.log(response.data);
+            setStudents(response.data);
+            
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
+    };
+
+
     return (
       <>
         <div className="manage-students">
@@ -31,112 +56,27 @@ export default function ManageStudents() {
             </div>
             <div className="cell">Action</div>
           </div>
-
+          
           <div className="students-body">
             <div className="students-table">
-
-              <div className="student-row">
-                <div className="cell">20XX-123456</div>
-                <div className="student-name">
-                <img
-                    src={samplepic}
-                    className="student-avatar"
-                    alt=""
-                  />
-                  Kim Minji
+              {students.map(student => (
+                <div className="student-row">
+                  <div className="cell">{student.student_id}</div>
+                  <div className="student-name">
+                  <img
+                      src={samplepic}
+                      className="student-avatar"
+                      alt=""
+                    />
+                    {student.username}
+                  </div>
+                  <div className="cell">{student.branch}</div>
+                  <div className="cell action-cell">
+                    <img src={settings} className="icon" alt="dropdown icon" />
+                    <img src={chevron} className="icon" alt="chevron icon" />
+                  </div>
                 </div>
-                <div className="cell">NU MOA</div>
-                <div className="cell action-cell">
-                  <img src={settings} className="icon" alt="dropdown icon" />
-                  <img src={chevron} className="icon" alt="chevron icon" />
-                </div>
-              </div>
-
-              <div className="student-row">
-                <div className="cell">20XX-123456</div>
-                <div className="student-name">
-                <img
-                    src={samplepic}
-                    className="student-avatar"
-                    alt=""
-                  />
-                  Jang Wonyoung
-                </div>
-                <div className="cell">NU MOA</div>
-                <div className="cell action-cell">
-                  <img src={settings} className="icon" alt="dropdown icon" />
-                  <img src={chevron} className="icon" alt="chevron icon" />
-                </div>
-              </div>
-
-              <div className="student-row">
-                <div className="cell">20XX-123456</div>
-                <div className="student-name">
-                <img
-                    src={samplepic}
-                    className="student-avatar"
-                    alt=""
-                  />
-                  Hanni Pham
-                </div>
-                <div className="cell">NU MOA</div>
-                <div className="cell action-cell">
-                  <img src={settings} className="icon" alt="dropdown icon" />
-                  <img src={chevron} className="icon" alt="chevron icon" />
-                </div>
-              </div>
-
-              <div className="student-row">
-                <div className="cell">20XX-123456</div>
-                <div className="student-name">
-                <img
-                    src={samplepic}
-                    className="student-avatar"
-                    alt=""
-                  />
-                  Danielle Marsh
-                </div>
-                <div className="cell">NU MOA</div>
-                <div className="cell action-cell">
-                  <img src={settings} className="icon" alt="dropdown icon" />
-                  <img src={chevron} className="icon" alt="chevron icon" />
-                </div>
-              </div>
-
-              <div className="student-row">
-                <div className="cell">20XX-123456</div>
-                <div className="student-name">
-                <img
-                    src={samplepic}
-                    className="student-avatar"
-                    alt=""
-                  />
-                  Kang Haerin
-                </div>
-                <div className="cell">NU MOA</div>
-                <div className="cell action-cell">
-                  <img src={settings} className="icon" alt="dropdown icon" />
-                  <img src={chevron} className="icon" alt="chevron icon" />
-                </div>
-              </div>
-
-              <div className="student-row">
-                <div className="cell">20XX-123456</div>
-                <div className="student-name">
-                <img
-                    src={samplepic}
-                    className="student-avatar"
-                    alt=""
-                  />
-                  Lee Hyein
-                </div>
-                <div className="cell">NU MOA</div>
-                <div className="cell action-cell">
-                  <img src={settings} className="icon" alt="dropdown icon" />
-                  <img src={chevron} className="icon" alt="chevron icon" />
-                </div>
-              </div>
-
+              ))}
             </div>
           </div>
 
