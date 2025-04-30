@@ -42,9 +42,9 @@ body{
 
 
 .active-side-menu{
-    @apply absolute top-0 left-0 z-[999] bg-white pt-3 overflow-visible transition-all duration-300 ease-in-out 
+    @apply absolute top-0 left-0 z-[999] bg-white pt-5 pb-4 pl-3 pr-3 overflow-visible transition-all duration-500 ease-in-out 
     w-[calc(100svw-24px)] h-[calc(100svh-24px)] m-3 rounded-xl
-    lg:w-[250px] lg:min-w-[250px] lg:h-full lg:flex lg:flex-col lg:static lg:m-0;
+    lg:w-[250px] lg:min-w-[250px] lg:h-full lg:flex lg:flex-col lg:static lg:m-0 gap-5;
 
     overflow-y: auto;
     scrollbar-width: none; 
@@ -55,11 +55,11 @@ body{
     list-style: none;
     padding: 0;
     margin: 0;
-  }
+    @apply flex flex-col gap-4 mt-4;
+}
 .menu-list-container{
     scrollbar-width: none; 
     -ms-overflow-style: none;
-    /* @apply overflow-y-auto overflow-x-visible h-full z-0 ;  */
 }
   
   .question-category-container {
@@ -76,49 +76,53 @@ body{
 /********************************/
 
 
-
 /*----- BUTTON MAIN CONTAINER -----*/
 
 .btn-container {        
     @apply hidden w-[50px] h-[50px] mt-0
-    lg:flex lg:mt-1.5 lg:items-center lg:transition-all lg:duration-300 lg:ease-in-out;
+    lg:flex lg:mt-1.5 lg:items-center lg:transition-all lg:duration-500 lg:ease-in-out;
 }
     
 .btn-container:hover{
-   @apply bg-[#FFEFBA];
+    @apply bg-[#FFEFDB];
+    border-radius: 0.5rem;
 }
 
 .active-btn-container{        
-    @apply w-full h-[45px] flex bg-transparent justify-start items-center transition-all duration-300 ease-in-out;
+    @apply w-full h-[45px] flex bg-transparent justify-start items-center transition-all duration-500 ease-in-out;
 }
 
 .active-btn-container:hover{
-    @apply bg-[#FFEFBA];
+    @apply bg-[#FFEFDB];
+    border-radius: 0.5rem;
 }
 
 .sub-btn-container {        
     @apply hidden w-[50px] h-[50px] mt-0 bg-red-400 ml-[-16px]
-    lg:flex lg:mt-1.5 lg:items-center lg:transition-all lg:duration-300 lg:ease-in-out;
+    lg:flex lg:mt-1.5 lg:items-center lg:transition-all lg:duration-500 lg:ease-in-out;
 }
     
 .sub-btn-container:hover{
    @apply bg-[#FFEFBA];
+
 }
 
 .active-sub-btn-container{        
-    @apply w-full h-[45px] flex bg-transparent justify-start items-center transition-all duration-300 ease-in-out;
+    @apply w-full h-[45px] flex bg-transparent justify-start items-center transition-all duration-500 ease-in-out;
 }
 
 .active-sub-btn-container:hover{
-    @apply bg-[#FFEFBA];
+    @apply bg-[#FFF9DB];
+    
 }
-
 
 .selected{
     @apply bg-[#FFEFBA];
+    border-radius: 0.5rem;
 }
 
 .selected .active-btn-txt{
+    @apply font-bold;
     filter: invert(66%) sepia(96%) saturate(350%) hue-rotate(1deg) brightness(105%) contrast(105%);
 }
 
@@ -147,7 +151,7 @@ body{
 }
 
 .active-btn-icon{
-    @apply flex items-center cursor-pointer;
+    @apply flex items-center cursor-pointer gap-3;
 }
 
 .active-btn-icon:hover .active-mainIcon{
@@ -170,15 +174,24 @@ body{
 }
 
 .avatar-container{
-    @apply w-1/4 rounded-full shadow-[0_0_0_4px_red] outline-red-500 
+    @apply w-1/4 rounded-full shadow-[0_0_0_2px_#FFC916]
     lg:w-1/2;
+}
+
+.avatar-padding {
+    @apply p-1 bg-white rounded-full;
+}
+
+.avatar-img {
+    @apply w-full h-full rounded-full object-cover;
 }
 
 .name-container{
     @apply w-full flex flex-col justify-center items-center mt-0.5;
 }
-.user-name{
-    @apply text-xl font-bold text-amber-500;
+
+.user-name {
+    @apply text-xl font-bold text-[#343537];
 }
 
 /********************************/
@@ -218,3 +231,28 @@ body{
     lg:ml-3;
 }
 /********************************/
+
+/*----- LOG OUT -----*/
+
+.btn.btn-active.btn-warning {
+    @apply w-full py-2 flex justify-center items-center rounded-lg bg-[#FFC300] text-white transition-all duration-500 ease-in-out;
+}
+
+.btn.btn-active.btn-warning:hover {
+    background-color: #FFB100; 
+    filter: brightness(1.2);
+}
+
+/* Modal Button */
+.modal .btn-warning {
+    @apply py-2 flex justify-center items-center rounded-lg bg-[#FFC300] text-white 
+    transition-colors transition-shadow duration-500 ease-in-out;
+}
+
+.modal .btn-warning:hover {
+    background-color: #FFB100; 
+    filter: brightness(1.2);
+}
+
+/********************************/
+
