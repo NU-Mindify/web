@@ -1,5 +1,7 @@
 import { useRef, useState, useEffect } from "react";
+import search from '../../assets/search/search.svg';  
 import edit from '../../assets/glossary/edit.svg';
+import add from '../../assets/glossary/add.png';
 import dropdown from '../../assets/glossary/dropdown.svg';
 import '../../css/glossary/glossary.css';
 import SearchBar from "../../components/searchbar/SearchBar";
@@ -118,16 +120,21 @@ export default function ManageGlossary() {
       <div className="header">
         <div className="glossary-title-container">
           <h1 className="glossary-title">Manage Glossary</h1>
-          <button className="btn btn-error" onClick={handleAddTerm}>Add Term</button>
         </div>
 
         <div className="glossary-search-container">
-          <SearchBar 
-            placeholder="Search here..." 
-            handleChange={(e) => setSearchTerm(e.target.value)}
-            className='search-input text-black'
-            value={searchTerm}
-          />
+          <div className="search-bar-glossary">
+            <button className="search-btn-glossary">
+              <img src={search} alt="search icon" />
+            </button>
+            <input 
+              type="text"
+              placeholder="Search here..." 
+              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchTerm}
+              className="search-input-glossary"
+            />
+          </div>
         </div>
 
         <div className="glossary-letters-btn-container">
@@ -168,17 +175,27 @@ export default function ManageGlossary() {
                       <div className={activeTermWord === term.word ? "active-meaning-container" : "meaning-container"}>
                         {term.meaning}
                       </div>
+
                       <div className="action-container">
-                        <img 
-                          src={edit} 
-                          className="editIcon" 
-                          alt="edit icon" 
-                          onClick={() => handlesEdit(term._id, term.word, term.meaning, term.tags)} 
-                        />
+                        <div className="icon-group">
+                          <img 
+                            src={edit} 
+                            className="editIcon" 
+                            alt="edit icon" 
+                            onClick={() => handlesEdit(term._id, term.word, term.meaning, term.tags)} 
+                          />
+                          <img 
+                            src={add} 
+                            className="addIcon" 
+                            alt="add icon" 
+                            onClick={() => console.log('Add clicked')}
+                          />
+                        </div>
                         <div className="dropdown" onClick={() => handleDropdown(term.word)}>
                           <img src={dropdown} className="mainIcon" alt="dropdown icon" />
                         </div>
-                      </div>  
+                      </div>
+                      
                     </div>
                   ))}
                 </div>
@@ -186,7 +203,16 @@ export default function ManageGlossary() {
             ) : null
           )
         )}
+
       </div>
+
+      <div className="glossary-footer">
+        <button className="add-term-btn" onClick={handleAddTerm}>
+          Add Term
+        </button>
+      </div>
+
+      
     </>
   );
 }
