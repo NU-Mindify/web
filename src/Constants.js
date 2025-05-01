@@ -83,3 +83,12 @@ export const categories = [
 ]
 
 export const levels = [1,2,3]
+
+export const modes = [
+  {
+    mode: "classic"
+  },
+  {
+    mode: "mastery"
+  }
+]

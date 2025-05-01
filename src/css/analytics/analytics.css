@@ -14,10 +14,6 @@
     @apply text-4xl font-[Poppins] font-bold text-[#FFD41C];
 }
 
-
-
-
-
 .content-container-analytics{
     scrollbar-width: none;
   -ms-overflow-style: none;
@@ -25,9 +21,23 @@
 }
 
 .analytics-container-properties{
-    @apply w-full h-[400px] bg-white rounded-xl p-2;
+    @apply w-full h-[400px] bg-white rounded-xl p-15;
 }
 
 .analytics-title-text-properties {
     @apply text-4xl font-[Poppins] font-bold text-black;
 }
+
+.progress-bar-container {
+    @apply flex-row mt-7
+}
+
+.analytics-progress-bar {
+    @apply w-[95%] rounded-full mr-5;
+    appearance: none; 
+    overflow: hidden; 
+}
+
+.progress-yellow::-webkit-progress-value {
+    background-color: #FFBF1A;
+  }
