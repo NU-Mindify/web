@@ -43,7 +43,7 @@ body{
 
 .active-side-menu{
     @apply absolute top-0 left-0 z-[999] bg-white pt-5 pb-4 pl-3 pr-3 overflow-visible transition-all duration-500 ease-in-out 
-    w-[calc(100svw-24px)] h-[calc(100svh-24px)] m-3 rounded-xl
+    w-[calc(100svw-24px)] h-[calc(100svh-24px)] m-3 rounded-xl;
 
     overflow-y: auto;
     scrollbar-width: none; 
@@ -54,11 +54,7 @@ body{
     list-style: none;
     padding: 0;
     margin: 0;
-<<<<<<< Updated upstream
-    @apply flex flex-col gap-4 mt-4;
-=======
     @apply flex flex-col gap-3 mt-2;
->>>>>>> Stashed changes
 }
 .menu-list-container{
     scrollbar-width: none; 
