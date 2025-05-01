@@ -45,7 +45,23 @@ export default function Leaderboard(){
                                     <h1 className='leader-info'>{leaders.world}</h1>
                                     <h1 className='leader-info font-bold'>{leaders.score}</h1>
                                 </div>
+<<<<<<< Updated upstream
                             ))}
+=======
+                                <div className="leader-info font-bold" style={{ color: '#0068DD' }}>
+                                {leader.user_id?.username || "Unknown User"}
+                                </div>
+                                <div className="leader-info text-black">{leader.category}</div>
+                                <div className="leader-info text-black font-bold">
+                                {leader.total_items > 0
+                                    ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%` //rounds up para whole num
+                                    : "N/A"}
+                                </div>
+                            </div>
+                        ))}
+
+
+>>>>>>> Stashed changes
                         </div>
                     </div>
                 </div>
@@ -79,6 +95,7 @@ export default function Leaderboard(){
                             <h1 className='title-header'>Score</h1>
                         </div>
                         <div className='leaders-main-container'>
+<<<<<<< Updated upstream
                             {mockleaders.map((leaders, element) => (
                                 <div key={element} className='leaders-container'>
                                     <h1 className='leader-info'>
@@ -87,6 +104,24 @@ export default function Leaderboard(){
                                     <h1 className='leader-info text-blue-500 font-bold'>{leaders.name}</h1>
                                     <h1 className='leader-info'>{leaders.world}</h1>
                                     <h1 className='leader-info font-bold'>{leaders.score}</h1>
+=======
+
+
+                            {rankedLeadersMastery.map((leader) => (
+                                <div key={leader._id} className="leaders-container">
+                                    <div className="leader-info text-black">
+                                    {leader.rank === 1 ? "🥇" : leader.rank === 2 ? "🥈" : leader.rank === 3 ? "🥉" : leader.rank}
+                                    </div>
+                                    <div className="leader-info font-bold" style={{ color: '#0068DD' }}>
+                                    {leader.user_id?.username || "Unknown User"}
+                                    </div>
+                                    <div className="leader-info text-black">{leader.category}</div>
+                                    <div className="leader-info text-black font-bold">
+                                    {leader.total_items > 0
+                                        ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
+                                        : "N/A"}
+                                    </div>
+>>>>>>> Stashed changes
                                 </div>
                             ))}
                         </div>

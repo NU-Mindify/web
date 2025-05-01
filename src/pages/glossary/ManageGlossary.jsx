@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import search from '../../assets/search/search.svg';  
 import edit from '../../assets/glossary/edit.svg';
-import add from '../../assets/glossary/add.png';
 import dropdown from '../../assets/glossary/dropdown.svg';
 import '../../css/glossary/glossary.css';
 import SearchBar from "../../components/searchbar/SearchBar";
@@ -184,12 +183,6 @@ export default function ManageGlossary() {
                             alt="edit icon" 
                             onClick={() => handlesEdit(term._id, term.word, term.meaning, term.tags)} 
                           />
-                          <img 
-                            src={add} 
-                            className="addIcon" 
-                            alt="add icon" 
-                            onClick={() => console.log('Add clicked')}
-                          />
                         </div>
                         <div className="dropdown" onClick={() => handleDropdown(term.word)}>
                           <img src={dropdown} className="mainIcon" alt="dropdown icon" />
@@ -208,7 +201,7 @@ export default function ManageGlossary() {
 
       <div className="glossary-footer">
         <button className="add-term-btn" onClick={handleAddTerm}>
-          Add Term
+          ADD TERM
         </button>
       </div>
 
