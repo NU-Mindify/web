@@ -9,52 +9,54 @@ export default function Leaderboard(){
 
     const [leaderboards, setLeaderboards] = useState([]);
     const [leaderboardsMastery, setLeaderboardsMastery] = useState([]);
+    const [searchClassic, setSearchClassic] = useState('');
+    const [searchMastery, setSearchMastery] = useState('');
+
 
     useEffect(()=>{
-        fetchLeaderboards();
-        fetchLeaderboardsMastery();
+        fetchTopLeaderboards();
+        fetchTopLeaderboardsMastery();
     }, []);
 
-    const fetchLeaderboards = () => {
-        const requests = [];
-      
-        categories.forEach(cat => {
-          levels.forEach(level => {
-            const url = `${API_URL}/getleaderboard?category=${cat.category}&level=${level}&mode=classic`;
-            requests.push(axios.get(url));
+    const fetchTopLeaderboards = async () => {
+        try {
+          const categoryList = categories.map(c => c.category).join(',');
+          const levelList = levels.join(','); 
+          
+          const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
+            params: {
+              categories: categoryList,
+              levels: levelList,
+              mode: 'classic'
+            }
           });
-        });
       
-        Promise.all(requests)
-          .then(responses => {
-            const allData = responses.flatMap(res => res.data);
-            setLeaderboards(allData);
-          })
-          .catch(error => {
-            console.error("Error fetching leaderboards:", error);
-          });
-      };
-        
-
-    const fetchLeaderboardsMastery = () => {
-        const requests = [];
-      
-        categories.forEach(cat => {
-          levels.forEach(level => {
-            const url = `${API_URL}/getleaderboard?category=${cat.category}&level=${level}&mode=mastery`;
-            requests.push(axios.get(url));
-          });
-        });
-      
-        Promise.all(requests)
-          .then(responses => {
-            const allData = responses.flatMap(res => res.data);
-            setLeaderboardsMastery(allData);
-          })
-          .catch(error => {
-            console.error("Error fetching leaderboards:", error);
-          });
+          console.log(response.data); 
+          setLeaderboards(response.data);
+        } catch (error) {
+          console.error('Error fetching top leaderboards:', error.message);
+        }
     };
+
+    const fetchTopLeaderboardsMastery = async () => {
+        try {
+          const categoryList = categories.map(c => c.category).join(',');
+          const levelList = levels.join(','); 
+          
+          const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
+            params: {
+              categories: categoryList,
+              levels: levelList,
+              mode: 'mastery'
+            }
+          });
+      
+          console.log(response.data); // Check if data is returned
+          setLeaderboardsMastery(response.data);
+        } catch (error) {
+          console.error('Error fetching top leaderboards:', error.message);
+        }
+      };
 
     //classic sorting
     const rankedLeaders = [...leaderboards]
@@ -91,6 +93,13 @@ export default function Leaderboard(){
             rank: index + 1,
     }));
 
+    const filteredLeaders = rankedLeaders.filter(
+        leader => leader.user_id?.username?.toLowerCase().includes(searchClassic)
+    );
+
+    const filteredLeadersMastery = rankedLeadersMastery.filter(
+        leader => leader.user_id?.username?.toLowerCase().includes(searchMastery)
+    );
 
     return(
         <>
@@ -112,7 +121,8 @@ export default function Leaderboard(){
                                 type='text'
                                 placeholder='Search for a student'
                                 className='search-input-leaderboards'
-
+                                value={searchClassic}
+                                onChange={(e) => setSearchClassic(e.target.value.toLowerCase())}
                             />
                         </div>
                     </div>
@@ -126,22 +136,22 @@ export default function Leaderboard(){
                         </div>
                         <div className='leaders-main-container'>
 
-                        {rankedLeaders.map((leader) => (
-                            <div key={leader._id} className="leaders-container">
-                                <div className="leader-info text-black">
-                                {leader.rank === 1 ? "🥇" : leader.rank === 2 ? "🥈" : leader.rank === 3 ? "🥉" : leader.rank}
+                            {filteredLeaders.map((leader) => (
+                                <div key={leader._id} className="leaders-container">
+                                    <div className="leader-info text-black">
+                                    {leader.rank === 1 ? "🥇" : leader.rank === 2 ? "🥈" : leader.rank === 3 ? "🥉" : leader.rank}
+                                    </div>
+                                    <div className="leader-info text-black font-bold">
+                                    {leader.user_id?.username || "Unknown User"}
+                                    </div>
+                                    <div className="leader-info text-black">{leader.category}</div>
+                                    <div className="leader-info text-black font-bold">
+                                    {leader.total_items > 0
+                                        ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%` //rounds up para whole num
+                                        : "N/A"}
+                                    </div>
                                 </div>
-                                <div className="leader-info text-black font-bold">
-                                {leader.user_id?.username || "Unknown User"}
-                                </div>
-                                <div className="leader-info text-black">{leader.category}</div>
-                                <div className="leader-info text-black font-bold">
-                                {leader.total_items > 0
-                                    ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%` //rounds up para whole num
-                                    : "N/A"}
-                                </div>
-                            </div>
-                        ))}
+                            ))}
 
 
                         </div>
@@ -164,7 +174,8 @@ export default function Leaderboard(){
                                 type='text'
                                 placeholder='Search for a student'
                                 className='search-input-leaderboards'
-
+                                value={searchMastery}
+                                onChange={(e) => setSearchMastery(e.target.value.toLowerCase())}
                             />
                         </div>
                     </div>
@@ -179,7 +190,7 @@ export default function Leaderboard(){
                         <div className='leaders-main-container'>
 
 
-                            {rankedLeadersMastery.map((leader) => (
+                            {filteredLeadersMastery.map((leader) => (
                                 <div key={leader._id} className="leaders-container">
                                     <div className="leader-info text-black">
                                     {leader.rank === 1 ? "🥇" : leader.rank === 2 ? "🥈" : leader.rank === 3 ? "🥉" : leader.rank}
