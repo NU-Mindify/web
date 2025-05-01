@@ -63,3 +63,23 @@ export const branches = [
     extension: 'nu-cebu.edu.ph'
   }
 ]
+
+export const categories = [
+  {
+    category: "abnormal"
+  },
+  {
+    category: "developmental"
+  },
+  {
+    category: "psychological"
+  },
+  {
+    category: "industrial"
+  },
+  {
+    category: "general"
+  }
+]
+
+export const levels = [1,2,3]

@@ -41,7 +41,7 @@
 
 /* Body Container */
 .students-body {
-  @apply mt-1 space-y-4;
+  @apply mt-1 space-y-4 overflow-y-auto;
 }
 
 .students-table {
