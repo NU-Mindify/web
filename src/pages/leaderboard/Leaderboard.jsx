@@ -20,13 +20,9 @@ export default function Leaderboard(){
 
     const fetchTopLeaderboards = async () => {
         try {
-          const categoryList = categories.map(c => c.category).join(',');
-          const levelList = levels.join(','); 
           
           const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
             params: {
-              categories: categoryList,
-              levels: levelList,
               mode: 'classic'
             }
           });
@@ -40,13 +36,9 @@ export default function Leaderboard(){
 
     const fetchTopLeaderboardsMastery = async () => {
         try {
-          const categoryList = categories.map(c => c.category).join(',');
-          const levelList = levels.join(','); 
           
           const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
             params: {
-              categories: categoryList,
-              levels: levelList,
               mode: 'mastery'
             }
           });
@@ -56,7 +48,7 @@ export default function Leaderboard(){
         } catch (error) {
           console.error('Error fetching top leaderboards:', error.message);
         }
-      };
+    };
 
     //classic sorting
     const rankedLeaders = [...leaderboards]
@@ -138,20 +130,24 @@ export default function Leaderboard(){
 
                             {filteredLeaders.map((leader) => (
                                 <div key={leader._id} className="leaders-container">
-                                    <div className="leader-info text-black">
+                                    <div className="leader-info text-black leaders-content-font">
                                     {leader.rank === 1 ? "🥇" : leader.rank === 2 ? "🥈" : leader.rank === 3 ? "🥉" : leader.rank}
                                     </div>
-                                    <div className="leader-info text-black font-bold">
+                                    <div className="leader-info text-black font-bold leaders-content-font">
                                     {leader.user_id?.username || "Unknown User"}
                                     </div>
-                                    <div className="leader-info text-black">{leader.category}</div>
-                                    <div className="leader-info text-black font-bold">
+                                    <div className="leader-info text-black leaders-content-font">{leader.category === "developmental" ? "Developmental Psychology" : 
+                                                                                                  leader.category === "abnormal" ? "Abnormal Psychology" : 
+                                                                                                  leader.category === "psychological" ? "Psychological Psychology":
+                                                                                                  leader.category === "industrial" ? "Industrial Psychology":
+                                                                                                  leader.category === "general" ? "General Psychology": leader.category}</div>
+                                    <div className="leader-info text-black font-bold leaders-content-font">
                                     {leader.total_items > 0
                                         ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%` //rounds up para whole num
                                         : "N/A"}
                                     </div>
                                 </div>
-                            ))}
+                            ))};
 
 
                         </div>
@@ -192,14 +188,19 @@ export default function Leaderboard(){
 
                             {filteredLeadersMastery.map((leader) => (
                                 <div key={leader._id} className="leaders-container">
-                                    <div className="leader-info text-black">
+                                    <div className="leader-info text-black leaders-content-font">
                                     {leader.rank === 1 ? "🥇" : leader.rank === 2 ? "🥈" : leader.rank === 3 ? "🥉" : leader.rank}
                                     </div>
-                                    <div className="leader-info text-black font-bold">
+                                    <div className="leader-info text-black font-bold leaders-content-font">
                                     {leader.user_id?.username || "Unknown User"}
                                     </div>
-                                    <div className="leader-info text-black">{leader.category}</div>
-                                    <div className="leader-info text-black font-bold">
+                                    <div className="leader-info text-black leaders-content-font">{leader.category === "developmental" ? "Developmental Psychology" : 
+                                                                                                  leader.category === "abnormal" ? "Abnormal Psychology" : 
+                                                                                                  leader.category === "psychological" ? "Psychological Psychology":
+                                                                                                  leader.category === "industrial" ? "Industrial Psychology":
+                                                                                                  leader.category === "general" ? "General Psychology": leader.category}</div>
+                                                                                                  
+                                    <div className="leader-info text-black font-bold leaders-content-font">
                                     {leader.total_items > 0
                                         ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
                                         : "N/A"}

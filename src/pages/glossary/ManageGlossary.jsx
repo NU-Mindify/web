@@ -185,12 +185,6 @@ export default function ManageGlossary() {
                             alt="edit icon" 
                             onClick={() => handlesEdit(term._id, term.word, term.meaning, term.tags)} 
                           />
-                          <img 
-                            src={add} 
-                            className="addIcon" 
-                            alt="add icon" 
-                            onClick={() => console.log('Add clicked')}
-                          />
                         </div>
                         <div
                           className={activeTermWord === term.word ? "active-dropdown" : "dropdown"}
@@ -213,7 +207,7 @@ export default function ManageGlossary() {
 
       <div className="glossary-footer">
         <button className="add-term-btn" onClick={handleAddTerm}>
-          Add Term
+          ADD TERM
         </button>
       </div>
 

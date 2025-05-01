@@ -82,3 +82,7 @@
 .leaders-container:hover {
   @apply bg-gray-100 transition-all duration-200;
 }
+
+.leaders-content-font {
+  @apply font-[Poppins] text-black;
+}
