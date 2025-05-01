@@ -8,7 +8,7 @@ import '../../css/students/students.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
-import { API_URL } from '../../Constants'
+import { API_URL, branches } from '../../Constants'
 
 
 export default function ManageStudents() {
@@ -35,7 +35,7 @@ export default function ManageStudents() {
       <>
         <div className="manage-students">
           <h1 className="header-title">Manage Students</h1>
-  
+
           <div className="search-bar">
             <img src={search} className="search-icon" alt="search icon" />
             <input
@@ -49,26 +49,29 @@ export default function ManageStudents() {
           <div className="students-table-header">
             <div className="cell">Student ID</div>
             <div className="cell">Name</div>
-            <div className="cell branch-cell">Branch
-              <img src={branchdropdown} className="dropdown-icon" alt="dropdown icon" />
+            <div className="cell branch-cell">
+              Branch
+              <img
+                src={branchdropdown}
+                className="dropdown-icon"
+                alt="dropdown icon"
+              />
             </div>
             <div className="cell">Action</div>
           </div>
-          
+
           <div className="students-body">
             <div className="students-table">
-              {students.map(student => (
+              {students.map((student) => (
                 <div className="student-row">
                   <div className="cell">{student.student_id}</div>
                   <div className="student-name">
-                  <img
-                      src={samplepic}
-                      className="student-avatar"
-                      alt=""
-                    />
+                    <img src={samplepic} className="student-avatar" alt="" />
                     {student.username}
                   </div>
-                  <div className="cell">{student.branch}</div>
+                  <div className="cell">
+                    {branches.find((branch) => branch.id === student.branch).name}
+                  </div>
                   <div className="cell action-cell">
                     <img src={settings} className="icon" alt="dropdown icon" />
                     <img src={chevron} className="icon" alt="chevron icon" />
@@ -81,22 +84,18 @@ export default function ManageStudents() {
           <div className="students-page-indicator">
             <span className="page-info">Showing 2 of 17</span>
             <div className="page-controls">
-              <button>{'<'}</button>
-                <button>1</button>
-                <button className="active">2</button>
-                <button>3</button>
-                <button>4</button>
-                <button>5</button>
-                <button>6</button>
-                <span>...</span>
-              <button>{'>'}</button>
+              <button>{"<"}</button>
+              <button>1</button>
+              <button className="active">2</button>
+              <button>3</button>
+              <button>4</button>
+              <button>5</button>
+              <button>6</button>
+              <span>...</span>
+              <button>{">"}</button>
             </div>
           </div>
-
         </div>
-  
-
-  
       </>
     );
   }

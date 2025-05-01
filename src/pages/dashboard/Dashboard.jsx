@@ -11,6 +11,10 @@ export default function Dashboard() {
 
   const { currentUserBranch ,currentUserEmail } = useContext(ActiveContext)
   const { currentWebUser } = useContext(UserLoggedInContext)
+  // TODO: Loading screen
+  if (!currentWebUser) {
+    return
+  }
   const branch = currentWebUser.branch.toUpperCase();
   return (
     <div className="main-container-dashboard">
