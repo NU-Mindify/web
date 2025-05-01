@@ -2,6 +2,7 @@ import '../../css/analytics/analytics.css'
 import axios from 'axios'
 import { API_URL, categories, modes, levels } from '../../Constants'
 import { useEffect, useState } from 'react'
+import AnimatedProgressBar from '../../components/animatedProgressBar/AnimatedProgressBar'
 
 export default function Analytics(){
 
@@ -18,7 +19,7 @@ export default function Analytics(){
             const levelList = levels.join(','); 
             const modeList = modes.map(m => m.mode).join(',');
             
-            const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
+            const response = await axios.get(`${API_URL}/getAnalytics`, {
               params: {
                 categories: categoryList,
                 levels: levelList,
@@ -29,7 +30,7 @@ export default function Analytics(){
             console.log(response.data); 
             setAttempts(response.data);
           } catch (error) {
-            console.error('Error fetching top leaderboards:', error.message);
+            console.error('Error fetching analytics data:', error.message);
           }
     };
 
@@ -69,7 +70,6 @@ export default function Analytics(){
     const developmentalCorrectPercent = developmentalAttempts.length > 0
     ? (
         developmentalAttempts.reduce((acc, curr) => {
-            //sum of all correct scores + sum of all total items
             const percent = (curr.correct / curr.total_items) * 100;
             return acc + percent;
         }, 0) / developmentalAttempts.length
@@ -126,140 +126,192 @@ export default function Analytics(){
 
                 <div className='content-container-analytics'>
 
-                    <div className='analytics-container-properties'>
                     {/* GENERAL ANALYTICS  */}
+                    <div className='analytics-container-properties'>
                         <h1 className='analytics-title-text-properties'>General Analytics</h1>
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Overall Attempts</p>
-                            <progress value={attempts.length} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{attempts.length}</label>
-                        </div>
-
-                        <div className='progress-bar-container'>
-    
-                            {/* idk what this should calculate */}
-                            <p className='text-black font-bold'>Completion Rate</p>
-                            <progress value={0} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>n/a</label>
-                        </div>
-
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Perfect %</p>
-                            <progress value={parseInt(perfectPercent)} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{perfectPercent}</label>
-                        </div>
                         
+                        <div className="progress-bar-container">
+                        <p className="text-black font-bold">Total Attempts</p>
+                            <div className="flex items-center gap-2 w-[95%]">
+                                <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
+                                <div
+                                    className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
+                                    style={{ width: `${Math.min(attempts.length, 100)}%` }}
+                                ></div>
+                                </div>
+                                <span className="text-black font-bold min-w-[40px] text-right">{attempts.length}</span>
+                            </div>
+                        </div>
+
+                        
+                        <AnimatedProgressBar
+                            label="Completion Rate"
+                            percent={0}
+                            color="bg-[#FFBF1A]"
+                        />
+
+                        <AnimatedProgressBar
+                            label="Perfect %"
+                            percent={parseInt(perfectPercent)}
+                            color="bg-[#FFBF1A]"
+                        />
                     </div> 
 
                     {/* ABNORMAL PSYCH ANALYTICS */}
                     <div className='analytics-container-properties'>
                         <h1 className='analytics-title-text-properties'>Abnormal Psychology Analytics</h1>
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Total Attempts</p>
-                            <progress value={abnormalAttempts.length} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{abnormalAttempts.length}</label>
+                        
+                        <div className="progress-bar-container">
+                        <p className="text-black font-bold">Total Attempts</p>
+                            <div className="flex items-center gap-2 w-[95%]">
+                                <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
+                                <div
+                                    className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
+                                    style={{ width: `${Math.min(abnormalAttempts.length, 100)}%` }}
+                                ></div>
+                                </div>
+                                <span className="text-black font-bold min-w-[40px] text-right">{abnormalAttempts.length}</span>
+                            </div>
                         </div>
 
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Correct %</p>
-                            <progress value={parseInt(abnormalCorrectPercent)} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{abnormalCorrectPercent}</label>
-                        </div>
+                        
+                        <AnimatedProgressBar
+                            label="Correct %"
+                            percent={parseInt(abnormalCorrectPercent)}
+                            color="bg-[#FFBF1A]"
+                        />
+                        
+                        <AnimatedProgressBar
+                            label="Mastery %"
+                            percent={0}
+                            color="bg-[#FFBF1A]"
+                        />
+                    </div> 
 
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Mastery %</p>
-                            <progress value={0} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>n/a</label>
-                        </div>
-                    </div>
 
                     {/* DEVELOPMENTAL PSYCH ANALYTICS */}
                     <div className='analytics-container-properties'>
                         <h1 className='analytics-title-text-properties'>Developmental Psychology Analytics</h1>
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Total Attempts</p>
-                            <progress value={developmentalAttempts.length} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{developmentalAttempts.length}</label>
+                        
+                        <div className="progress-bar-container">
+                        <p className="text-black font-bold">Total Attempts</p>
+                            <div className="flex items-center gap-2 w-[95%]">
+                                <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
+                                <div
+                                    className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
+                                    style={{ width: `${Math.min(developmentalAttempts.length, 100)}%` }}
+                                ></div>
+                                </div>
+                                <span className="text-black font-bold min-w-[40px] text-right">{developmentalAttempts.length}</span>
+                            </div>
                         </div>
 
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Correct %</p>
-                            <progress value={parseInt(developmentalCorrectPercent)} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{developmentalCorrectPercent}</label>
-                        </div>
-
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Mastery %</p>
-                            <progress value={0} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>n/a</label>
-                        </div>
-                    </div>
+                        
+                        <AnimatedProgressBar
+                            label="Correct %"
+                            percent={parseInt(developmentalCorrectPercent)}
+                            color="bg-[#FFBF1A]"
+                        />
+                        
+                        <AnimatedProgressBar
+                            label="Mastery %"
+                            percent={0}
+                            color="bg-[#FFBF1A]"
+                        />
+                    </div> 
 
                     {/* PSYCHO PSYCH ANALYTICS */}
                     <div className='analytics-container-properties'>
-                        <h1 className='analytics-title-text-properties'>Psychological Assessment Analytics</h1>
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Total Attempts</p>
-                            <progress value={psychologicalAttempts.length} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{psychologicalAttempts.length}</label>
+                        <h1 className='analytics-title-text-properties'>Psychological Psychology Analytics</h1>
+                        
+                        <div className="progress-bar-container">
+                        <p className="text-black font-bold">Total Attempts</p>
+                            <div className="flex items-center gap-2 w-[95%]">
+                                <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
+                                <div
+                                    className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
+                                    style={{ width: `${Math.min(psychologicalAttempts.length, 100)}%` }}
+                                ></div>
+                                </div>
+                                <span className="text-black font-bold min-w-[40px] text-right">{psychologicalAttempts.length}</span>
+                            </div>
                         </div>
 
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Correct %</p>
-                            <progress value={parseInt(psychologicalCorrectPercent)} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{psychologicalCorrectPercent}</label>
-                        </div>
-
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Mastery %</p>
-                            <progress value={0} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>n/a</label>
-                        </div>
-                    </div>
+                        
+                        <AnimatedProgressBar
+                            label="Correct %"
+                            percent={parseInt(psychologicalCorrectPercent)}
+                            color="bg-[#FFBF1A]"
+                        />
+                        
+                        <AnimatedProgressBar
+                            label="Mastery %"
+                            percent={0}
+                            color="bg-[#FFBF1A]"
+                        />
+                    </div> 
 
                     {/* INDUSTRIAL PSYCH ANALYTICS */}
                     <div className='analytics-container-properties'>
-                        <h1 className='analytics-title-text-properties'>Industrial/Organizational Analytics</h1>
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Total Attempts</p>
-                            <progress value={industrialAttempts.length} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{industrialAttempts.length}</label>
+                        <h1 className='analytics-title-text-properties'>Industrial/Organizational Psychology Analytics</h1>
+                        
+                        <div className="progress-bar-container">
+                        <p className="text-black font-bold">Total Attempts</p>
+                            <div className="flex items-center gap-2 w-[95%]">
+                                <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
+                                <div
+                                    className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
+                                    style={{ width: `${Math.min(industrialAttempts.length, 100)}%` }}
+                                ></div>
+                                </div>
+                                <span className="text-black font-bold min-w-[40px] text-right">{industrialAttempts.length}</span>
+                            </div>
                         </div>
 
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Correct %</p>
-                            <progress value={parseInt(industrialCorrectPercent)} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{industrialCorrectPercent}</label>
-                        </div>
-
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Mastery %</p>
-                            <progress value={0} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>n/a</label>
-                        </div>
-                    </div>
+                        
+                        <AnimatedProgressBar
+                            label="Correct %"
+                            percent={parseInt(industrialCorrectPercent)}
+                            color="bg-[#FFBF1A]"
+                        />
+                        
+                        <AnimatedProgressBar
+                            label="Mastery %"
+                            percent={0}
+                            color="bg-[#FFBF1A]"
+                        />
+                    </div> 
 
                     {/* GENERAL PSYCH ANALYTICS */}
                     <div className='analytics-container-properties'>
                         <h1 className='analytics-title-text-properties'>General Psychology Analytics</h1>
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Total Attempts</p>
-                            <progress value={generalAttempts.length} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{generalAttempts.length}</label>
+                        
+                        <div className="progress-bar-container">
+                        <p className="text-black font-bold">Total Attempts</p>
+                            <div className="flex items-center gap-2 w-[95%]">
+                                <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
+                                <div
+                                    className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
+                                    style={{ width: `${Math.min(generalAttempts.length, 100)}%` }}
+                                ></div>
+                                </div>
+                                <span className="text-black font-bold min-w-[40px] text-right">{generalAttempts.length}</span>
+                            </div>
                         </div>
 
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Correct %</p>
-                            <progress value={parseInt(generalCorrectPercent)} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>{generalCorrectPercent}</label>
-                        </div>
-
-                        <div className='progress-bar-container'>
-                            <p className='text-black font-bold'>Mastery %</p>
-                            <progress value={0} max={100}  className='analytics-progress-bar progress-yellow' />
-                            <label className='text-black'>n/a</label>
-                        </div>
-                    </div>
+                        
+                        <AnimatedProgressBar
+                            label="Correct %"
+                            percent={parseInt(generalCorrectPercent)}
+                            color="bg-[#FFBF1A]"
+                        />
+                        
+                        <AnimatedProgressBar
+                            label="Mastery %"
+                            percent={0}
+                            color="bg-[#FFBF1A]"
+                        />
+                    </div> 
                 </div>
             </div>
             
