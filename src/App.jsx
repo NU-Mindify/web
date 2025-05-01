@@ -25,7 +25,8 @@ import {
 import AddQuestion from './pages/questions/AddQuestion'
 import TermsAndConditions from './pages/login/TermsAndConditions'
 import AddTerm from './pages/glossary/AddTerm'
-import ProtectedRoute from '../ProtectedRoute'
+import axios from 'axios'
+import { API_URL } from './Constants'
 
 
 const queryClient = new QueryClient();
@@ -92,7 +93,8 @@ function App() {
     >
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-          
+            {/* Checks whether the user is logged in or not */}
+            {/* if false, only login route will be available */}
             {!currentWebUserUID ? (
               <Routes>
                 <Route 
@@ -100,18 +102,19 @@ function App() {
                   element={<Login />} 
                 />
                 <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-                <Route path="*" element={<Login />} />
+                <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             ) : (
               <div className="main-container">
-                {selected !== 'login' && <Sidebar />}
+                <Sidebar />
                 <div
                   className={
                     isActive ? "active-content-container" : "content-container"
                   }
                 >
                   <Routes>
-                    {/* <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/reports" element={<Reports />} />
                     <Route path="/leaderboard" element={<Leaderboard />} />
@@ -124,116 +127,8 @@ function App() {
                     <Route path="/profile/edit/:id" element={<EditProfile />} />
                     <Route path="/glossary/edit" element={<EditGlossary />} />
                     <Route path="/addterm" element={<AddTerm />} />
-                    <Route path="*" element={<Login />} /> */}
+                    <Route path="*" element={<Navigate to="/" />} />
 
-                    <Route 
-                      path="/dashboard" 
-                      element={
-                        <ProtectedRoute>
-                          <Dashboard />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/analytics" 
-                      element={
-                        <ProtectedRoute>
-                          <Analytics />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/reports" 
-                      element={
-                        <ProtectedRoute>
-                          <Reports />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/leaderboard" 
-                      element={
-                        <ProtectedRoute>
-                          <Leaderboard />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/question" 
-                      element={
-                        <ProtectedRoute>
-                          <ManageQuestion />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route
-                      path="/question/add" 
-                      element={
-                        <ProtectedRoute>
-                          <AddQuestion />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route path="/glossary" 
-                      element={
-                        <ProtectedRoute>
-                          <ManageGlossary />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route path="/students" 
-                    element={
-                        <ProtectedRoute>
-                          <ManageStudents />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/profile" 
-                      element={
-                        <ProtectedRoute>
-                          <Profile />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/account" 
-                      element={
-                        <ProtectedRoute>
-                          <AccountManagement />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/profile/edit/:id" 
-                      element={
-                        <ProtectedRoute>
-                          <EditProfile />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/glossary/edit" 
-                      element={
-                        <ProtectedRoute>
-                          <EditGlossary />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/addterm" 
-                      element={
-                        <ProtectedRoute>
-                          <AddTerm />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="*" 
-                      element={
-                        <Login />
-                      } 
-                    />
                   </Routes>
 
                 </div>

@@ -54,7 +54,7 @@
 }
 
 .content-header {
-  @apply w-full grid grid-cols-[1fr_2fr_2fr_1fr] gap-2 sticky top-0 mt-2 px-5;
+  @apply w-full grid grid-cols-[1fr_2fr_2fr_1fr] gap-2 sticky top-0 mt-2 px-5 bg-white;
 }
 
 .title-header {

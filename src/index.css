@@ -18,10 +18,7 @@ body{
 /*----- CONTAINER GOD -----*/
 
 .main-container {
-    background-image: url('../src/assets/background/pattern.png');
-    background-size: cover;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
+    background: radial-gradient(#02386E, #00264D);
     @apply w-[100svw] h-[100svh] p-3 flex flex-col overflow-hidden
     lg:flex-row;
 }
@@ -55,21 +52,22 @@ body{
     padding: 0;
     margin: 0;
     @apply flex flex-col gap-3 mt-2;
+
 }
 .menu-list-container{
     scrollbar-width: none; 
     -ms-overflow-style: none;
 }
   
-  .question-category-container {
+.question-category-container {
     list-style: none;
     padding-left: 1rem;
     @apply w-full;
-  }
+}
 
-  .question-category{
+.question-category{
     @apply w-full h-[50px] text-black;
-  }
+}
   
 
 /********************************/
@@ -78,8 +76,8 @@ body{
 /*----- BUTTON MAIN CONTAINER -----*/
 
 .btn-container {        
-    @apply hidden w-[50px] h-[50px] mt-0
-    lg:flex lg:mt-1.5 lg:items-center lg:transition-all lg:duration-500 lg:ease-in-out;
+    @apply hidden w-[50px] h-[calc(100vh/15.2)] 
+    lg:flex lg:items-center lg:transition-all lg:duration-500 lg:ease-in-out;
 }
     
 .btn-container:hover{
@@ -88,22 +86,12 @@ body{
 }
 
 .active-btn-container{        
-    @apply w-full h-[45px] flex bg-transparent justify-start items-center transition-all duration-500 ease-in-out;
+    @apply w-full h-[50px] flex bg-transparent justify-start items-center transition-all duration-500 ease-in-out;
 }
 
 .active-btn-container:hover{
     @apply bg-[#FFEFDB];
     border-radius: 0.5rem;
-}
-
-.sub-btn-container {        
-    @apply hidden w-[50px] h-[50px] mt-0 bg-red-400 ml-[-16px]
-    lg:flex lg:mt-1.5 lg:items-center lg:transition-all lg:duration-500 lg:ease-in-out;
-}
-    
-.sub-btn-container:hover{
-   @apply bg-[#FFEFBA];
-
 }
 
 .active-sub-btn-container{        
@@ -112,7 +100,6 @@ body{
 
 .active-sub-btn-container:hover{
     @apply bg-[#FFF9DB];
-    
 }
 
 .selected{
@@ -165,7 +152,7 @@ body{
 /********************************/
 
 
-/*----- AVATAR AND NAME AND EMAIL -----*/
+/*----- AVATAR AND NAME -----*/
 
 .avatar{
     @apply w-full flex justify-center items-center;
@@ -174,11 +161,11 @@ body{
 
 .avatar-container{
     @apply w-1/4 rounded-full shadow-[0_0_0_2px_#FFC916]
-    lg:w-1/2;
+    lg:w-[80%];
 }
 
 .avatar-padding {
-    @apply p-1 bg-white rounded-full;
+    @apply p-1 bg-white rounded-full w-full h-full;
 }
 
 .avatar-img {

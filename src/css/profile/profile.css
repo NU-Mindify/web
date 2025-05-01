@@ -89,7 +89,7 @@ html, body, #root {
 .input-properties-disabled {
   
   border: 1px solid black;
-  @apply w-full h-[60px] pl-3 rounded-xl text-black text-[16px] bg-gray-400 font-[Poppins] shadow-[-2px_-2px_0px_0px_rgba(0,0,0)];
+  @apply w-full h-[60px] pl-3 rounded-xl text-black text-[16px] bg-gray-200 font-[Poppins] shadow-[-2px_-2px_0px_0px_rgba(0,0,0)];
 }
 
 .save-btn-container-profile-settings{

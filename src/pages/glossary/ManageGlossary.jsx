@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import search from '../../assets/search/search.svg';  
 import edit from '../../assets/glossary/edit.svg';
+import add from '../../assets/glossary/add.png';
 import dropdown from '../../assets/glossary/dropdown.svg';
 import '../../css/glossary/glossary.css';
 import SearchBar from "../../components/searchbar/SearchBar";

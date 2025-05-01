@@ -1,2 +1,111 @@
-@reference "tailwindcss";
+@import "tailwindcss";
 @plugin "daisyui";
+
+/* Container for managing students */
+.manage-students {
+  @apply flex flex-col w-full h-[calc(100vh-2rem)] p-8 bg-white rounded-xl overflow-hidden;
+}
+
+/* Header Section */
+.header {
+  @apply flex justify-between items-center p-4 mb-4;
+}
+
+.header-title {
+  @apply font-[Poppins] text-[#FFD41C] font-bold mb-6;
+  font-size: 36px !important;
+}
+
+/* Search Section */
+.search-bar {
+  @apply flex text-[#000000] items-center bg-gray-100 px-3 py-2 rounded-full w-full;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.search-input {
+  @apply p-2 rounded-lg px-2 py-1 border-none flex-1 bg-transparent focus:outline-none;
+}
+
+.search-icon {
+  @apply block w-[24px] h-[24px] object-contain;
+}
+
+/* Table-Like Header Row */
+.students-table-header {
+  @apply grid grid-cols-[1.5fr_2.5fr_2fr_1.5fr] font-[Poppins] text-left text-black font-semibold px-6 py-8;
+}
+
+.students-table-header * {
+  font-size: 16px !important;
+}
+
+/* Body Container */
+.students-body {
+  @apply mt-1 space-y-4 overflow-y-auto;
+}
+
+.students-table {
+  @apply flex flex-col gap-6;
+}
+
+/* Each Student Row */
+.student-row {
+  @apply font-[Poppins] grid grid-cols-[1.5fr_2.5fr_2fr_1.5fr] items-center px-4 py-6 border border-black rounded-xl bg-white transition duration-300;
+}
+
+.student-row:hover {
+  @apply bg-gray-100;
+}
+
+/* Row Cells */
+.cell {
+  @apply text-sm text-gray-700;
+}
+
+/* Avatar & Name Style */
+.student-name {
+  @apply flex items-center gap-2 text-black text-sm;
+}
+
+.student-avatar {
+  @apply rounded-full w-[30px] h-[30px] object-cover;
+}
+
+/* Action Icon */
+.dropdown-icon {
+  @apply w-4 h-4 cursor-pointer object-contain;
+}
+
+.action-cell{
+  @apply flex items-center gap-10;
+}
+
+.branch-cell{
+  @apply flex items-center gap-1;
+}
+
+.icon {
+  @apply w-7 h-7 cursor-pointer object-contain;
+}
+
+
+/* Page Controls */
+.students-page-indicator {
+  @apply mt-6 flex justify-between items-center text-sm text-gray-600 px-2;
+}
+
+.page-info {
+  @apply font-[Poppins];
+}
+
+.page-controls {
+  @apply flex gap-2 items-center;
+}
+
+.page-controls button{
+  @apply px-2 py-3 rounded-md hover:bg-gray-200 transition;
+}
+
+.page-controls .active {
+  @apply text-indigo-600 font-bold;
+}

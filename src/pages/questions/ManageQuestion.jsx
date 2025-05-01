@@ -1,8 +1,9 @@
-import { useState } from "react";
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import { useEffect, useState } from "react";
 import search from "../../assets/search/search.svg";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import '../../css/questions/questions.css'
 import SearchBar from "../../components/searchbar/SearchBar";
 import { API_URL } from "../../Constants";
@@ -11,6 +12,7 @@ import developmental from '../../assets/questions/developmentalBG.png'
 import general from '../../assets/questions/generalBG.png'
 import industrial from '../../assets/questions/industrialBG.png'
 import psychological from '../../assets/questions/psychologicalBG.png'
+
 
 
 const categoriesObj = [
@@ -42,11 +44,29 @@ const categoriesObj = [
 ];
 
 export default function ManageQuestion() {
-  const [category, setCategory] = useState(null);
+
+
+  const location = useLocation();
+  useEffect(() => {
+    const category = location.state?.category;
+    const categoryName = location.state?.categoryName;
+    const catSelected = location.state?.catSelected;
+  
+    if (category && catSelected) {
+      setCategory(category);
+      setGotSelected(true);
+      setSelectedCat(categoryName);
+    }
+  }, [location.state]);
+  
   const navigate = useNavigate();
 
+
+  const [category, setCategory] = useState(null);
   const [gotSelected, setGotSelected] = useState(false)
   const [selectedCat, setSelectedCat] = useState(null)
+
+  
 
   const getData = async () => {
     try {
@@ -88,6 +108,7 @@ export default function ManageQuestion() {
   function Category_Choices({ text, id, onClick, bgImage }) {
     return (
       
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events
       <div className="category-container" onClick={onClick} key={id}>
         <img src={bgImage} className="category-bg" alt="bgImages" />
         <h1 className="category-text">{text}</h1>

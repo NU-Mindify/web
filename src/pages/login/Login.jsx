@@ -1,37 +1,23 @@
 import '../../css/login/login.css'
 import logo from '../../assets/logo/logo.svg'
 import nuLogo from '../../assets/logo/nuLogo.svg'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ActiveContext } from '../../contexts/Contexts'
 import { UserLoggedInContext } from '../../contexts/Contexts'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 
 import { firebaseAuth } from '../../Firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 
-import axios from 'axios'
-import { API_URL } from '../../Constants';
+import { branches } from '../../Constants';
 
 export default function Login(){
-    const { isActive, setActive, selected, setSelected, currentUserEmail, setCurrentUserEmail, setCurrentUserBranch } = useContext(ActiveContext)
-    const {currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID} = useContext(UserLoggedInContext)
+    const { setSelected } = useContext(ActiveContext)
+    const {setCurrentWebUserUID} = useContext(UserLoggedInContext)
 
     const navigate = useNavigate()
 
-    const emailValidation =[
-        {branch: 'moa', extension: 'nu-moa.edu.ph'},
-        {branch: 'manila', extension: 'nu-manila.edu.ph'},
-        {branch: 'fairview', extension: 'nu-fairview.edu.ph'},
-        {branch: 'east-ortigas', extension: 'nu-east-ortigas.edu.ph'},
-        {branch: 'las-pinas', extension: 'nu-las-pinas.edu.ph'},
-        {branch: 'baliwag', extension: 'nu-baliwag.edu.ph'},
-        {branch: 'clark', extension: 'nu-clark.edu.ph'},
-        {branch: 'laguna', extension: 'nu-laguna.edu.ph'},
-        {branch: 'dasmarinas', extension: 'nu-dasmarinas.edu.ph'},
-        {branch: 'lipa', extension: 'nu-lipa.edu.ph'},
-        {branch: 'bacolod', extension: 'nu-bacolod.edu.ph'},
-        {branch: 'cebu', extension: 'nu-cebu.edu.ph'},
-    ]
+   
 
         
     const [email, setEmail] = useState('');
@@ -40,7 +26,9 @@ export default function Login(){
 
     const handelLoginFirebase = async (e) => {
         e.preventDefault();
-        const matchedBranch = emailValidation.find((item) => item.branch === branch);
+        const matchedBranch = branches.find((item) => item.id === branch);
+        console.log(matchedBranch);
+        
         try{
 
             if (!matchedBranch) {
@@ -79,8 +67,6 @@ export default function Login(){
                 setCurrentWebUserUID(user.uid)
                 localStorage.setItem('userUID', user.uid);
                 alert("User Login Successfully!")
-                setCurrentUserBranch(branch)
-                setCurrentUserEmail(email)
                 navigate('/dashboard');
                 setSelected('dashboard');
             }
@@ -121,18 +107,9 @@ export default function Login(){
                                 onChange={(e) => setBranch(e.target.value)}
                             >
                                 <option disabled={true} value='default'>Select a Campus</option>
-                                <option value='moa'>NU MOA</option>
-                                <option value='manila'>NU MANILA</option>
-                                <option value='baliwag'>NU BALIWAG</option>
-                                <option value='fairview'>NU FAIRVIEW</option>
-                                <option value='east-ortigas'>NU EAST-ORTIGAS</option>
-                                <option value='las-pinas'>NU LAS PINAS</option>
-                                <option value='lipa'>NU LIPA</option>
-                                <option value='clark'>NU CLARK</option>
-                                <option value='laguna'>NU LAGUNA</option>
-                                <option value='dasmarinas'>NU DASMARINAS</option>
-                                <option value='bacolod'>NU BACOLOD</option>
-                                <option value='cebu'>NU CEBU</option>
+                                    {branches.map(branch => (
+                                        <option value={branch.id} key={branch.id}>{branch.name}</option>
+                                    ))}
                             </select>
                         </label>
                         
