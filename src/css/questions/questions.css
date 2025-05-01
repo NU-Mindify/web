@@ -14,7 +14,7 @@
 }
 
 .quesiton-title{
-    @apply font-[Poppins] text-[#FFD41C] font-bold text-3xl;
+    @apply text-[40px] font-[Poppins] font-bold text-[#FFD41C];
 }
 
 .add-ques-container{

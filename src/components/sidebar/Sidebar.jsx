@@ -29,7 +29,7 @@ import { getAuth, signOut } from "firebase/auth"
 
 
 export default function Sidebar() {
-    const { isActive, setActive, selected, setSelected } = useContext(ActiveContext)
+    const { isActive, setActive, selected, setSelected, subSelected, setSubSelected } = useContext(ActiveContext)
     const {currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID} = useContext(UserLoggedInContext)
     const [activeQuestion, setActiveQuestion] = useState(false)
 
@@ -72,7 +72,7 @@ export default function Sidebar() {
         } else if (currentPath === '/account') {
           setSelected('account');
         } else if (currentPath === '/') {
-          navigate(1); // Consider if you really want to force navigation like this
+          navigate(1); 
         }
       }, [navigate, setSelected]);
       
@@ -154,7 +154,11 @@ export default function Sidebar() {
                             active={isActive}
                             text='Dashboard'
                             isSelected={selected === 'dashboard'}
-                            onPress={() => setSelected('dashboard')}
+                            onPress={() => {
+                                setSelected('dashboard');
+                                setSubSelected('');
+                                setActiveQuestion(false);
+                            }}
                             goTo={paths.dashboard}
                         />
                     </li>
@@ -164,7 +168,11 @@ export default function Sidebar() {
                             active={isActive}
                             text='Analytics'
                             isSelected={selected === 'analytics'}
-                            onPress={() => setSelected('analytics')}
+                            onPress={() => {
+                                setSelected('analytics');
+                                setSubSelected('');
+                                setActiveQuestion(false);
+                            }}
                             goTo={paths.analytics}
                         />
                     </li>
@@ -174,7 +182,11 @@ export default function Sidebar() {
                             active={isActive}
                             text='Reports'
                             isSelected={selected === 'reports'}
-                            onPress={() => setSelected('reports')}
+                            onPress={() => {
+                                setSelected('reports');
+                                setSubSelected('');
+                                setActiveQuestion(false);
+                            }}
                             goTo={paths.reports}
                         />
                     </li>
@@ -184,7 +196,11 @@ export default function Sidebar() {
                             active={isActive}
                             text='Leaderboard'
                             isSelected={selected === 'leaderboard'}
-                            onPress={() => setSelected('leaderboard')}
+                            onPress={() => {
+                                setSelected('leaderboard');
+                                setSubSelected('');
+                                setActiveQuestion(false);
+                            }}
                             goTo={paths.leaderboard}
                         />
                     </li>
@@ -204,7 +220,7 @@ export default function Sidebar() {
                         {selected === 'question' && isActive && activeQuestion ? 
                             <ul className="question-category-container">
                                 <li>
-                                    <div className={'active-sub-btn-container'}>
+                                    <div className={`${subSelected === 'abnormal' ? 'active-sub-selected' : 'active-sub-btn-container'}`}>
                                     <button 
                                         className={'active-btn-icon'}
                                         onClick={() => {
@@ -216,6 +232,7 @@ export default function Sidebar() {
                                             }
                                             });
                                             setSelected('question');
+                                            setSubSelected('abnormal');;
                                         }}
                                         >
                                         <h1 className='active-btn-txt'>Abnormal Psychology</h1>
@@ -224,7 +241,7 @@ export default function Sidebar() {
                                 </li>
 
                                 <li>
-                                    <div className={'active-sub-btn-container'}>
+                                    <div className={`${subSelected === 'developmental' ? 'active-sub-selected' : 'active-sub-btn-container'}`}>
                                         <button 
                                             className={'active-btn-icon'}
                                             onClick={() => {
@@ -236,6 +253,7 @@ export default function Sidebar() {
                                                 }
                                                 });
                                                 setSelected('question');
+                                                setSubSelected('developmental');
                                             }}
                                         >
                                             <h1 className='active-btn-txt'>Developmental Psychology</h1>
@@ -244,9 +262,9 @@ export default function Sidebar() {
                                 </li>
 
                                 <li>
-                                    <div className={'active-sub-btn-container'}>
+                                    <div className={`${subSelected === 'psychological' ? 'active-sub-selected' : 'active-sub-btn-container'}`}>
                                         <button 
-                                            className={'active-btn-icon'}
+                                            className="active-btn-icon"
                                             onClick={() => {
                                                 navigate("/question", {
                                                 state: {
@@ -256,6 +274,7 @@ export default function Sidebar() {
                                                 }
                                                 });
                                                 setSelected('question');
+                                                setSubSelected('psychological');
                                             }}
                                         >
                                             <h1 className='active-btn-txt'>Psychological Assessment</h1>
@@ -264,7 +283,7 @@ export default function Sidebar() {
                                 </li>
 
                                 <li>
-                                    <div className={'active-sub-btn-container'}>
+                                    <div className={`${subSelected === 'industrial' ? 'active-sub-selected' : 'active-sub-btn-container'}`}>
                                         <button 
                                             className={'active-btn-icon'}
                                             onClick={() => {
@@ -276,6 +295,7 @@ export default function Sidebar() {
                                                 }
                                                 });
                                                 setSelected('question');
+                                                setSubSelected('industrial');
                                             }}
                                         >
                                             <h1 className='active-btn-txt'>Industrial Psychology</h1>
@@ -284,7 +304,7 @@ export default function Sidebar() {
                                 </li>
 
                                 <li>
-                                    <div className={'active-sub-btn-container'}>
+                                    <div className={`${subSelected === 'general' ? 'active-sub-selected' : 'active-sub-btn-container'}`}>
                                         <button 
                                             className={'active-btn-icon'}
                                             onClick={() => {
@@ -296,6 +316,7 @@ export default function Sidebar() {
                                                 }
                                                 });
                                                 setSelected('question');
+                                                setSubSelected('general');
                                             }}
                                         >
                                             <h1 className='active-btn-txt'>General Psychology</h1>
@@ -314,7 +335,11 @@ export default function Sidebar() {
                             active={isActive}
                             text='Manage Glossary'
                             isSelected={selected === 'glossary'}
-                            onPress={() => setSelected('glossary')}
+                            onPress={() => {
+                                setSelected('glossary');
+                                setSubSelected('');
+                                setActiveQuestion(false);
+                            }}
                             goTo={paths.glossary}
                         />
                     </li>
@@ -324,7 +349,11 @@ export default function Sidebar() {
                             active={isActive}
                             text='Manage Students'
                             isSelected={selected === 'students'}
-                            onPress={() => setSelected('students')}
+                            onPress={() => {
+                                setSelected('students');
+                                setSubSelected('');
+                                setActiveQuestion(false);
+                            }}
                             goTo={paths.students}
                         />
                     </li>
@@ -334,7 +363,11 @@ export default function Sidebar() {
                             active={isActive}
                             text='Profile Settings'
                             isSelected={selected === 'profile'}
-                            onPress={() => setSelected('profile')}
+                            onPress={() => {
+                                setSelected('profile');
+                                setSubSelected('');
+                                setActiveQuestion(false);
+                            }}
                             goTo={paths.profile}
                         />
                     </li>
@@ -344,7 +377,11 @@ export default function Sidebar() {
                             active={isActive}
                             text='Account Management'
                             isSelected={selected === 'account'}
-                            onPress={() => setSelected('account')}
+                            onPress={() => {
+                                setSelected('account');
+                                setSubSelected('');
+                                setActiveQuestion(false);
+                            }}
                             goTo={paths.account}
                         />
                     </li>

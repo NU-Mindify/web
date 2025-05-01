@@ -26,6 +26,7 @@ export default function ManageGlossary() {
   const pageSize = 20;
 
 
+
   //dropdown function
   const handleDropdown = (word) => {
     setActiveTermWord(activeTermWord === word ? null : word);
@@ -191,8 +192,12 @@ export default function ManageGlossary() {
                             onClick={() => console.log('Add clicked')}
                           />
                         </div>
-                        <div className="dropdown" onClick={() => handleDropdown(term.word)}>
-                          <img src={dropdown} className="mainIcon" alt="dropdown icon" />
+                        <div
+                          className={activeTermWord === term.word ? "active-dropdown" : "dropdown"}
+                          onClick={() => handleDropdown(term.word)}
+                        >
+
+                          <img src={dropdown} className="glossary-icon" alt="dropdown icon" />
                         </div>
                       </div>
                       

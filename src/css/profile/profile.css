@@ -15,12 +15,12 @@ html, body, #root {
 }
 
 .header-container-prof-settings {
-  @apply w-full h-[100px] pl-6 pt-3;
+  @apply w-full h-[120px] pl-6 pt-3;
 }
 
 .header-text-prof-settings {
   @apply text-2xl font-[Poppins] font-bold text-[#FFD41C]
-    md:text-4xl;
+    md:text-[40px];
 }
 
 .content-container-prof-settings {

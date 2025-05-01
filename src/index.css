@@ -121,6 +121,15 @@ body{
     filter: invert(70%) sepia(100%) saturate(350%) hue-rotate(1deg) brightness(100%) contrast(85%);
 }
 
+.active-sub-selected{
+    @apply w-full h-[45px] flex justify-start items-center transition-all duration-500 ease-in-out bg-[#FFEFBA];
+}
+
+.active-sub-selected .active-btn-txt{
+    @apply font-bold;
+    filter: invert(66%) sepia(96%) saturate(350%) hue-rotate(1deg) brightness(105%) contrast(105%);
+}
+
 
 /********************************/
 

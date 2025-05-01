@@ -2,59 +2,40 @@
 @reference "tailwindcss";
 @plugin "daisyui";
 
+
+/* MAIN CONTAINER */
 .main-container-dashboard{
     scrollbar-width: none;
     -ms-overflow-style: none;
     @apply w-full h-full flex flex-col rounded-xl overflow-y-auto;
 }
 
+
+/* HEADER CONTENTS */
 .dashboard-header{
-    @apply w-full h-[150px] flex flex-row;
-}
-
-.search-container{
-    @apply w-4/5 h-full rounded-xl;
-}   
-
-.searchbar{
-    @apply w-full bg-green-300 h-[50px];
-}
-
-.logo-container-dashboard{
-    @apply w-1/5 h-full flex justify-center items-start ;
-}
-
-.mindify-logo-dashboard{
-    @apply w-[150px];
-}
-
-.header-message{
-    @apply w-full h-[80px] mt-5;
+    @apply w-full h-[120px] max-h-[120px] min-h-[100px] flex flex-col;
 }
 
 .header-text-dashboard{
-    @apply text-white font-[Poppins] font-bold text-[25px];
+    @apply text-white font-[Poppins] font-bold text-[40px];
 }
 
 .header-greeting-dashboard{
     @apply text-white font-[Poppins] font-light italic text-[15px];
-    
 }
 
 
 
-
-
-
+/* ANALYTICS */
 .analytics-container-dashboard{
-    @apply w-full grid grid-cols-1 gap-4 place-items-center
+    @apply w-full grid grid-cols-1 gap-4 place-items-center 
     md:grid-cols-2
     lg:grid-cols-3
     xl:grid-cols-5;
 }
 
 .analytics-properties-dashboard{
-    @apply w-full h-[200px] bg-white rounded-xl p-3;
+    @apply w-full h-[200px] max-h-[200px] min-h-[150px] bg-white rounded-xl p-3;
 }
 
 .dashboard-title{
@@ -70,43 +51,41 @@
     overflow: hidden; 
 }
   
-
-
 .analytics-percent{
     @apply w-full flex flex-row justify-between;
 }
 
 
 
-
+/* REPORT TITLE */
 .reports-title-container-dashboard{
-    @apply  w-full h-[80px] mt-4;
+    @apply  w-full h-[100px] flex items-center;
 }
-
 .reports-title-properties-dashboard{
-    @apply text-white font-[Poppins] font-bold text-[25px];
+    @apply text-white font-[Poppins] font-bold text-[40px];
 }
 
 
 
 
 .reports-content-container-dashboard{
-    @apply  w-full grid grid-cols-1 gap-4 my-2
+    @apply  w-full grid grid-cols-1 gap-4 mt-2
     md:grid-cols-2
     xl:grid-cols-3;
 }
 
 .total-students-container-dashboard{
-    @apply w-full h-[450px] bg-white rounded-xl ;
+    @apply w-full h-[480px] bg-white rounded-xl ;
 }
 
 .badges-container-dashboard{
-    @apply w-full h-[450px] bg-white rounded-xl ;
+    @apply w-full h-[480px] bg-white rounded-xl ;
 }
 
 .leaderboards-container-dashboard{
-    @apply w-full h-[450px] bg-white rounded-xl;
+    @apply w-full h-[480px] bg-white rounded-xl;
 }
+
 
 
 .chart{

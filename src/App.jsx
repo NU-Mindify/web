@@ -33,6 +33,7 @@ const queryClient = new QueryClient();
 
 function App() {
   const [isActive, setActive] = useState(false)
+  const [subSelected, setSubSelected] = useState('')
   const [selected, setSelected] = useState('')
   const [currentUserEmail, setCurrentUserEmail] = useState('')
   const [currentUserBranch, setCurrentUserBranch] = useState('')
@@ -86,7 +87,7 @@ function App() {
 
   return (
     <ActiveContext.Provider
-      value={{ isActive, setActive, selected, setSelected, currentUserEmail, setCurrentUserEmail, currentUserBranch, setCurrentUserBranch }}
+      value={{ isActive, setActive, selected, setSelected, currentUserEmail, setCurrentUserEmail, currentUserBranch, setCurrentUserBranch, subSelected, setSubSelected }}
     >
     <UserLoggedInContext.Provider
       value={{currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID}}
