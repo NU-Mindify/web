@@ -109,3 +109,42 @@
 .page-controls .active {
   @apply text-indigo-600 font-bold;
 }
+
+/* Analytics box properties */
+
+.analytics-properties-students{
+  @apply w-full h-[200px] max-h-[200px] min-h-[150px] bg-gray-100 rounded-xl p-3 mt-3;
+}
+
+.analytics-box-container{
+  @apply w-full grid grid-cols-1 gap-4 place-items-center 
+  md:grid-cols-2
+  lg:grid-cols-3
+  xl:grid-cols-5;
+}
+
+/* Progress bar container */
+.progress-bar-container-students{
+  @apply flex-row mt-[-20px]
+}
+
+/* Chevron animation */
+.chevron-icon {
+  transition: transform 0.3s ease;
+}
+
+.chevron-icon.rotate {
+  transform: rotate(180deg);
+}
+
+/* Dropdown animation */
+.dropdown-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.dropdown-content.open {
+  max-height: 500px; 
+}
+

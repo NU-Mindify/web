@@ -1,7 +1,7 @@
 import '../../css/leaderboard/leaderboards.css'
 import search from '../../assets/search/search.svg'
 import axios from 'axios'
-import { API_URL, categories, levels } from '../../Constants'
+import { API_URL } from '../../Constants'
 import { useEffect, useState } from 'react'
 
 
@@ -27,7 +27,7 @@ export default function Leaderboard(){
             }
           });
       
-          console.log(response.data); 
+        //   console.log(response.data); 
           setLeaderboards(response.data);
         } catch (error) {
           console.error('Error fetching top leaderboards:', error.message);
@@ -43,7 +43,7 @@ export default function Leaderboard(){
             }
           });
       
-          console.log(response.data); // Check if data is returned
+          //console.log(response.data); Check if data is returned
           setLeaderboardsMastery(response.data);
         } catch (error) {
           console.error('Error fetching top leaderboards:', error.message);

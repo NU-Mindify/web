@@ -11,25 +11,25 @@ export default function EditProfile(){
     const { setCurrentWebUser, setCurrentWebUserUID  } = useContext(UserLoggedInContext);
 
     const navigate = useNavigate()
-    const { uid } = useParams();
+    // const { uid } = useParams();
     const location = useLocation();
     const [editWebUser, setEditWebUser] = useState(location.state?.webUser || null);
 
-    useEffect(()=>{
-        const fetchWebUserDetails = async () => {
-            try{
-                const response = await axios.get(
-                  `${API_URL}/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`
-                ); 
-                setEditWebUser(response.data)
-            }catch (error){
-                console.error("Error fetching user details", error);
-                alert("Failed to get user details");
-            }
-        };
+    // useEffect(()=>{
+    //     const fetchWebUserDetails = async () => {
+    //         try{
+    //             const response = await axios.get(
+    //               `${API_URL}/getwebuser/sK4xMv2ZQK6du5jF9XPCrs`
+    //             ); 
+    //             setEditWebUser(response.data)
+    //         }catch (error){
+    //             console.error("Error fetching user details", error);
+    //             alert("Failed to get user details");
+    //         }
+    //     };
 
-        if (uid) fetchWebUserDetails();
-    }, [uid]);
+    //     if (uid) fetchWebUserDetails();
+    // }, [uid]);
 
     const handleUpdateProfile = async () => {
         try {
