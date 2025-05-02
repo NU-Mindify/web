@@ -18,7 +18,7 @@ export default function Login(){
     const navigate = useNavigate()
 
    
-
+    const [isLoading, setIsLoading] = useState(false);
         
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
@@ -26,6 +26,8 @@ export default function Login(){
 
     const handelLoginFirebase = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+
         const matchedBranch = branches.find((item) => item.id === branch);
         console.log(matchedBranch);
         
@@ -58,22 +60,32 @@ export default function Login(){
 
             if(user){
                 const token = await user.getIdToken(); 
-
-  
                 const oneWeekInSeconds = 7 * 24 * 60 * 60;
                 document.cookie = `token=${token}; path=/; Max-Age=${oneWeekInSeconds}; Secure; SameSite=Strict`;
 
-                
                 setCurrentWebUserUID(user.uid)
                 localStorage.setItem('userUID', user.uid);
-                alert("User Login Successfully!")
-                navigate('/dashboard');
+
+                setIsLoading(false)
                 setSelected('dashboard');
+                navigate('/dashboard');
             }
         }catch(error){
             console.log(error.message);
             alert(error.message);
+        } finally {
+            setIsLoading(false);
         }
+    }
+
+    if (isLoading) {
+        return (
+            <div className="loading-overlay">
+                <img src={logo} alt="Mindify Logo" style={{ width: '80px', marginBottom: '20px' }} />
+                <div className="spinner"></div>
+                <p>Signing you in...</p>
+            </div>
+        );
     }
 
     return(
