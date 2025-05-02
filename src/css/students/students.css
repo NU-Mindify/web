@@ -123,6 +123,14 @@
   xl:grid-cols-5;
 }
 
+.analytics-box-title{
+  @apply text-black font-bold font-[Poppins] text-[14px]
+}
+
+.analytics-box-subtitle{
+  @apply text-black text-[14px] font-[Poppins]
+}
+
 /* Progress bar container */
 .progress-bar-container-students{
   @apply flex-row mt-[-20px]

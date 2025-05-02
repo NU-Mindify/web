@@ -89,7 +89,7 @@ export default function ManageStudents() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <img src={filter} className="icon" alt="filter icon" />
+          {/* <img src={filter} className="icon" alt="filter icon" /> */}
         </div>
 
         <div className="students-table-header">
@@ -141,14 +141,13 @@ export default function ManageStudents() {
                     openDropdownId === student.student_id ? "open" : ""
                   }`}
                 >
-
                   {/* Abnormal Psychology */}
                   <div className="analytics-box-container">
                     <div className="analytics-properties-students">
-                      <p className="text-black font-bold">
+                      <p className="analytics-box-title">
                         Abnormal Psychology
                       </p>
-                      <p className="text-black text-[14px]">World 1</p>
+                      <p className="analytics-box-subtitle">World 1</p>
                       <div className="progress-bar-container-students">
                         <AnimatedProgressBar
                           label="Classic"
@@ -175,10 +174,10 @@ export default function ManageStudents() {
 
                     {/* Developmental Psychology */}
                     <div className="analytics-properties-students">
-                      <p className="text-black font-bold">
+                      <p className="analytics-box-title">
                         Developmental Psychology
                       </p>
-                      <p className="text-black text-[14px]">World 2</p>
+                      <p className="analytics-box-subtitle">World 2</p>
                       <div className="progress-bar-container-students">
                         <AnimatedProgressBar
                           label="Classic"
@@ -205,10 +204,10 @@ export default function ManageStudents() {
 
                     {/* Psychological Psychology */}
                     <div className="analytics-properties-students">
-                      <p className="text-black font-bold">
+                      <p className="analytics-box-title">
                         Psychological Psychology
                       </p>
-                      <p className="text-black text-[14px]">World 3</p>
+                      <p className="analytics-box-subtitle">World 3</p>
                       <div className="progress-bar-container-students">
                         <AnimatedProgressBar
                           label="Classic"
@@ -235,10 +234,10 @@ export default function ManageStudents() {
 
                     {/* Insdustrial/Organizational Psychology */}
                     <div className="analytics-properties-students">
-                      <p className="text-black font-bold">
+                      <p className="analytics-box-title">
                         Industrial/Organizational Psychology
                       </p>
-                      <p className="text-black text-[14px]">World 4</p>
+                      <p className="analytics-box-subtitle">World 4</p>
                       <div className="progress-bar-container-students">
                         <AnimatedProgressBar
                           label="Classic"
@@ -265,8 +264,8 @@ export default function ManageStudents() {
 
                     {/* General Psychology */}
                     <div className="analytics-properties-students">
-                      <p className="text-black font-bold">General Psychology</p>
-                      <p className="text-black text-[14px]">World 5</p>
+                      <p className="analytics-box-title">General Psychology</p>
+                      <p className="analytics-box-subtitle">World 5</p>
                       <div className="progress-bar-container-students">
                         <AnimatedProgressBar
                           label="Classic"
@@ -299,7 +298,6 @@ export default function ManageStudents() {
 
         {/* Pagination */}
         <div className="students-page-indicator">
-
           <span className="page-info">
             Showing {indexOfFirstStudent + 1} to {indexOfLastStudent} of{" "}
             {filteredStudents.length}

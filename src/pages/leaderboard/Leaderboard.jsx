@@ -14,6 +14,8 @@ export default function Leaderboard(){
     const [searchClassic, setSearchClassic] = useState('');
     const [searchMastery, setSearchMastery] = useState('');
 
+    const [loadingDataClassic, setLoadingDataClassic] = useState(false);
+    const [loadingDataMastery, setLoadingDataMastery] = useState(false);
 
     useEffect(()=>{
         fetchTopLeaderboards();
@@ -21,6 +23,7 @@ export default function Leaderboard(){
     }, []);
 
     const fetchTopLeaderboards = async () => {
+        setLoadingDataClassic(true)
         try {
           
           const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
@@ -33,10 +36,13 @@ export default function Leaderboard(){
           setLeaderboards(response.data);
         } catch (error) {
           console.error('Error fetching top leaderboards:', error.message);
+        } finally{
+            setLoadingDataClassic(false)
         }
     };
 
     const fetchTopLeaderboardsMastery = async () => {
+        setLoadingDataMastery(true)
         try {
           
           const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
@@ -49,6 +55,8 @@ export default function Leaderboard(){
           setLeaderboardsMastery(response.data);
         } catch (error) {
           console.error('Error fetching top leaderboards:', error.message);
+        }finally{
+            setLoadingDataMastery(false)
         }
     };
 
@@ -148,8 +156,13 @@ export default function Leaderboard(){
                             <h1 className='title-header'>Score</h1>
                             <h1 className='title-header'>Date</h1>
                         </div>
-                        <div className='leaders-main-container'>
-
+                        {loadingDataClassic ? (
+                            <div className='loading-overlay-leaderboards'>
+                                <div className='spinner'></div>
+                                <p>Fetching data...</p>
+                            </div>
+                        ) : (
+                            <div className='leaders-main-container'>
                             {filteredLeaders.map((leader) => (
                                 <div key={leader._id} className="leaders-container">
                                     <div className="leader-info text-black leaders-content-font">
@@ -182,10 +195,9 @@ export default function Leaderboard(){
                                     {new Date(leader.date).toLocaleDateString() || "N/A"}
                                     </div>
                                 </div>
-                            ))}
-
-
+                            ))};
                         </div>
+                        )}
                     </div>
                 </div>
 
@@ -237,9 +249,14 @@ export default function Leaderboard(){
                             <h1 className='title-header'>Score</h1>
                             <h1 className='title-header'>Date</h1>
                         </div>
-                        <div className='leaders-main-container'>
 
-
+                        {loadingDataMastery ? (
+                            <div className='loading-overlay-leaderboards'>
+                                <div className='spinner'></div>
+                                <p>Fetching data...</p>
+                            </div>
+                        ) : (
+                            <div className='leaders-main-container'>
                             {filteredLeadersMastery.map((leader) => (
                                 <div key={leader._id} className="leaders-container">
                                     <div className="leader-info text-black leaders-content-font">
@@ -258,10 +275,9 @@ export default function Leaderboard(){
                                                                                                   leader.category === "psychological" ? "Psychological Psychology":
                                                                                                   leader.category === "industrial" ? "Industrial Psychology":
                                                                                                   leader.category === "general" ? "General Psychology": leader.category}</div>
-                                                                                                  
                                     <div className="leader-info text-black font-bold leaders-content-font">
                                     {leader.total_items > 0
-                                        ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
+                                        ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%` //rounds up para whole num
                                         : "N/A"}
                                     </div>
 
@@ -269,8 +285,9 @@ export default function Leaderboard(){
                                     {new Date(leader.date).toLocaleDateString() || "N/A"}
                                     </div>
                                 </div>
-                            ))}
+                            ))};
                         </div>
+                        )}
                     </div>
                 </div>
             </div>
