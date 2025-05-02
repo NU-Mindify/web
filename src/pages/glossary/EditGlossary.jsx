@@ -3,6 +3,7 @@ import { useState } from 'react';
 import '../../css/glossary/editGlossary.css'
 import axios from 'axios';
 import { API_URL } from '../../Constants';
+import close from '../../assets/glossary/close btn.svg'
 
 
 export default function EditGlossary() {
@@ -58,36 +59,24 @@ export default function EditGlossary() {
                     className='back-btn' 
                     onClick={handleBack}
                 >
-                    ?
+                    <img src={close} alt='close btn' />
                 </button>
+
+                
             </div>
 
             <div className='edit-content'>
-                <div className='edit-term-container'>
+                <div>
                     <h1 className='edit-title-container'>Word</h1>
                     <input
-                        className='editable-container'
+                        className='edit-input'
                         type="text"
                         value={editedWord}
                         onChange={(e) => setEditedWord(e.target.value)}
                     />
-                </div>
-
-                <div className='edit-term-container'>
-                    <h1 className='edit-title-container'>Meaning</h1>
-                    <textarea
-                        rows={10}
-                        className='editable-container'
-                        type="text"
-                        value={editedMeaning}
-                        onChange={(e) => setEditedMeaning(e.target.value)}
-                    />
-                </div>
-
-                <div className='edit-term-container'>
                     <h1 className='edit-title-container'>Tags</h1>
                     <input
-                        className='editable-container'
+                        className='edit-input'
                         type="text"
                         placeholder="Enter tags separated by commas"
                         value={editTags.join(', ')}
@@ -95,7 +84,17 @@ export default function EditGlossary() {
                         setEditTags(e.target.value.split(',').map(tag => tag.trim()))
                         }
                     />
+                </div>
 
+                <div>
+                    <h1 className='edit-title-container'>Meaning</h1>
+                    <textarea
+                        rows={10}
+                        className='edit-textarea'
+                        type="text"
+                        value={editedMeaning}
+                        onChange={(e) => setEditedMeaning(e.target.value)}
+                    />
                 </div>
 
                 
@@ -108,7 +107,7 @@ export default function EditGlossary() {
             </button>
             <button 
                 onClick={() => handleDelete()}
-                className='btn btn-error'
+                className='delete-btn'
                 >
                     Delete
             </button>

@@ -241,7 +241,10 @@ export default function Sidebar() {
                                 </li>
 
                                 <li>
-                                    <div className={`${subSelected === 'developmental' ? 'active-sub-selected' : 'active-sub-btn-container'}`}>
+                                    <div 
+                                        className={`${subSelected === 'developmental' ? 'active-sub-selected' : 'active-sub-btn-container'}`}
+                                        
+                                    >
                                         <button 
                                             className={'active-btn-icon'}
                                             onClick={() => {

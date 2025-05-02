@@ -13,11 +13,11 @@
 
 /* HEADER CONTENTS */
 .dashboard-header{
-    @apply w-full h-[120px] max-h-[120px] min-h-[100px] flex flex-col;
+    @apply w-full h-[120px] max-h-[120px] min-h-[100px] flex flex-col ;
 }
 
 .header-text-dashboard{
-    @apply text-white font-[Poppins] font-bold text-[40px];
+    @apply text-white font-[Poppins] font-bold text-[40px] mt-[-10px]; 
 }
 
 .header-greeting-dashboard{

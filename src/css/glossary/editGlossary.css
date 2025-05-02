@@ -15,41 +15,50 @@ html, body{
 
 
 .edit-header{
-    @apply w-full h-[100px] flex flex-row items-center justify-between;
+    @apply w-full h-[100px] flex flex-row justify-between p-5;
 }
 
-.back-btn{
-    @apply w-[50px] h-[50px] bg-red-500 cursor-pointer;
+.back-btn {
+    @apply cursor-pointer transition-shadow duration-200 rounded-full w-[50px] h-[50px];
 }
+  
+.back-btn:hover {
+box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6); /* red glow */
+}
+
 
 .edit-title {
-    @apply font-[Poppins] text-[#FFD41C] font-bold text-xl
-      md:text-4xl;
+    @apply font-[Poppins] text-[#FFD41C] font-bold text-[25px]
+        md:text-[40px];
 }
 
 
 .edit-content{
-    @apply w-full flex-grow grid grid-cols-1 gap-5
-    md:grid-cols-2;
+    @apply w-full h-[calc(100%-100px)] grid grid-cols-2 gap-1 place-items-center;
 }
 
 
 
 
 
-.edit-term-container{
-    @apply w-full max-h-[calc(100vh-124px)]  flex flex-col p-2 bg-white rounded-xl;
-}
 
-.edit-title-container{
+
+/* .edit-title-container{
     @apply text-black mb-4;
-}
+} */
 
-.editable-container{
+.edit-input{
     border: 2px solid black;
-    @apply bg-white rounded-md text-black min-h-[50px] h-auto p-2;
+    @apply w-[600px] h-[50px] max-h-[50px] min-h-[40px] my-3;
+}
+.edit-textarea{
+    @apply w-[600px] h-[350px] max-h-[350px] min-h-[100px];
 }
 
 .save-btn{
-    @apply w-[100px] h-[50px] min-h-[50px] min-w-[100px] bg-violet-800 cursor-pointer mt-3;
+    @apply w-[150px] h-[50px] min-h-[50px] min-w-[100px] btn btn-success cursor-pointer mt-3;
+}
+
+.delete-btn{
+    @apply w-[150px] h-[50px] btn btn-error mt-4;
 }

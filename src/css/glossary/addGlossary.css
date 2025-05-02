@@ -1,0 +1,50 @@
+@reference "tailwindcss";
+@plugin "daisyui";
+
+
+
+.add-term-main-container{
+    @apply w-full h-full overflow-y-auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.add-term-header{
+    @apply w-full h-[100px] flex flex-row justify-between p-5;
+}
+
+.close-btn{
+    @apply w-[50px] h-[50px] cursor-pointer rounded-full ;
+}
+
+.close-btn:hover {
+    box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6); /* red glow */
+}
+  
+.add-term-title{
+    @apply font-[Poppins] text-[#FFD41C] font-bold text-[25px]
+        md:text-[40px];
+}
+
+
+
+
+.add-term-contents{
+    @apply w-full h-[calc(100%-180px)] grid grid-cols-2 gap-1 place-items-center;
+}
+
+.add-term-input{
+    @apply w-[600px] h-[50px] max-h-[50px] min-h-[40px] my-3;
+}
+
+.add-term-textarea{
+    @apply w-[600px] h-[350px] max-h-[350px] min-h-[100px];
+}
+
+.create-container{
+    @apply w-full flex justify-center items-center;
+}
+
+.create-btn{
+    @apply w-[150px] h-[50px] btn btn-success text-xl;
+}

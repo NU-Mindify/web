@@ -2,7 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "../../Constants";
-
+import close from '../../assets/glossary/close btn.svg'
+import '../../css/glossary/addGlossary.css'
 
 
 
@@ -27,41 +28,67 @@ export default function AddTerm(){
 
     return(
         <>
-            <button className="btn btn-error" onClick={handleBack}>Back</button>
-            <h1>Word:</h1>
-            <input 
-                type="text"
-                placeholder="word"
-                className="w-[400px]"
-                value={newTerm.word}
-                onChange={(e) => setNewTerm({...newTerm, word: e.target.value})}
-            />
-            <h1>Meaning:</h1>
-            <textarea 
-                className="w-[400px]"
-                value={newTerm.meaning}
-                placeholder="meaning"
-                onChange={(e) => setNewTerm({...newTerm, meaning: e.target.value})}
-            >
+        <div className="add-term-main-container">
+            <div className="add-term-header">
+                <h1 className="add-term-title">Add Terminology</h1>
 
-            </textarea>
+                <button className="close-btn" onClick={handleBack}>
+                    <img src={close} alt="close btn" />
+                </button>
+            </div>
 
-            <h1>Word:</h1>
-            <input 
-            type="text"
-            placeholder="Tags (comma-separated)"
-            className="w-[400px]"
-            value={newTerm.tags.join(', ')} 
-            onChange={(e) => 
-                setNewTerm({ 
-                ...newTerm, 
-                tags: e.target.value.split(',').map(tag => tag.trim())
-                })
-            }
-            />
+            <div className="add-term-contents">
+                <div>
+                    <h1>Terminology:</h1>
+                    <input 
+                        type="text"
+                        placeholder="word"
+                        className="add-term-input"
+                        value={newTerm.word}
+                        onChange={(e) => setNewTerm({...newTerm, word: e.target.value})}
+                    />
+
+                    <h1>Tags:</h1>
+                    <input 
+                    type="text"
+                    placeholder="Tags (comma-separated)"
+                    className="add-term-input"
+                    value={newTerm.tags.join(', ')} 
+                    onChange={(e) => 
+                        setNewTerm({ 
+                        ...newTerm, 
+                        tags: e.target.value.split(',').map(tag => tag.trim())
+                        })
+                    }
+                    />
+                </div>
+
+
+                <div>
+                    <h1>Definition:</h1>
+                    <textarea 
+                        className="add-term-textarea"
+                        rows={10}
+                        value={newTerm.meaning}
+                        placeholder="meaning"
+                        onChange={(e) => setNewTerm({...newTerm, meaning: e.target.value})}
+                    >
+                    </textarea>
+                </div>
+            </div>
+            <div className="create-container">
+                <button className="create-btn" onClick={handleCreateNewTerm}>Create</button>
+            </div>
+            
+        </div>
+            
+            
+            
 
             
-            <button className="btn btn-success" onClick={handleCreateNewTerm}>Create</button>
+
+            
+            
         </>
     )
 }

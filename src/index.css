@@ -146,7 +146,7 @@ body{
 }
 
 .active-btn-icon{
-    @apply flex items-center cursor-pointer gap-3;
+    @apply flex items-center cursor-pointer gap-3 w-full h-full;
 }
 
 .active-btn-icon:hover .active-mainIcon{
