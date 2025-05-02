@@ -12,7 +12,7 @@
 
 .glossary-title-container {
 
-  @apply w-full h-1/2 flex items-center pl-[40px] pt-10
+  @apply w-full h-1/2 flex items-center pl-[10px] pt-5
     md:h-1/3;
 }
 .glossary-title {
@@ -23,7 +23,7 @@
 
 
 .glossary-search-container {
-  @apply w-full h-1/12 flex justify-center items-center pt-13 pb-5;
+  @apply w-full h-1/12 flex justify-center items-center pt-10 pb-9;
 }
 
 .search-bar-glossary {
@@ -106,7 +106,7 @@
 /* Non-active word container */
 .per-word-container {
   border: 1px solid black;
-  @apply w-full flex justify-between items-center mb-2 rounded-xl px-1 hover:bg-gray-300;
+  @apply w-full flex justify-between items-center mb-2 rounded-xl px-1 hover:bg-gray-100;
 }
 
 .active-per-word-container {
@@ -166,11 +166,6 @@
 
 .active-per-word-container .editIcon{
   filter: invert(1); 
-}
-
-.addIcon {
-  @apply w-[20px] h-[20px] cursor-pointer 
-    md:w-[25px] md:h-[25px];
 }
 
 .dropdown {

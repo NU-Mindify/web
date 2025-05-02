@@ -15,7 +15,24 @@
 }
 
 .leaderboard-titles-cont {
-  @apply w-full flex flex-col p-2 gap-2 mt-5 mb-2;
+  @apply w-full flex justify-between items-center p-2 gap-2 mt-5;
+}
+
+.export-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px; 
+}
+
+.export-btn img {
+  width: 20px;
+  height: 25px;
+}
+
+.leaderboard-subtitle {
+  @apply font-[Poppins] text-black text-xl;
+  padding-left: 10px; 
 }
 
 .classic-title {
@@ -54,25 +71,25 @@
 }
 
 .content-header {
-  @apply w-full grid grid-cols-[1fr_2fr_2fr_1fr] gap-2 sticky top-0 mt-2 px-5 bg-white;
+  @apply w-full grid grid-cols-[1fr_1.5fr_2fr_2fr_1.5fr_1fr] gap-2 sticky top-0 mt-1 px-3 bg-white;
 }
 
 .title-header {
   @apply w-full h-[15px] text-black font-bold text-left text-[10px]
-  sm:text-base sm:h-[25px]
-  md:text-lg md:h-[30px]
+  sm:text-base sm:h-[20px]
+  md:text-lg md:h-[25px]
   lg:text-xl;
 }
 
 .leaders-container {
-  @apply w-full h-[80px] grid grid-cols-[1fr_2.3fr_3.7fr_1fr] gap-2 px-10 items-center overflow-hidden;
-} 
+  @apply w-full h-[80px] grid grid-cols-[1fr_3.5fr_3fr_4fr_2fr_1fr] gap-2 px-8 items-center overflow-hidden;
+}
 
 .leader-info {
-  @apply text-left text-xs
-  sm:text-base
-  md:text-lg
-  lg:text-xl;
+  @apply text-left text-[10px]
+  sm:text-sm
+  md:text-base
+  lg:text-lg;
 }
 
 .leaders-main-container{
@@ -84,7 +101,10 @@
 }
 
 .leaders-content-font {
-  @apply font-[Poppins] text-black;
+  @apply font-[Poppins] text-black text-[10px]
+  sm:text-xs
+  md:text-sm
+  lg:text-base;
 }
 
 /* try loading spinner */
@@ -107,3 +127,4 @@
 }
 
 /* end of try loading spinner */
+
