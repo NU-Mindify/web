@@ -144,9 +144,7 @@ export default function ManageStudents() {
                   {/* Abnormal Psychology */}
                   <div className="analytics-box-container">
                     <div className="analytics-properties-students">
-                      <p className="analytics-box-title">
-                        Abnormal Psychology
-                      </p>
+                      <p className="analytics-box-title">Abnormal Psychology</p>
                       <p className="analytics-box-subtitle">World 1</p>
                       <div className="progress-bar-container-students">
                         <AnimatedProgressBar
@@ -297,6 +295,8 @@ export default function ManageStudents() {
         </div>
 
         {/* Pagination */}
+
+        {/* TODO: This div should not adjust when moving to another page*/}
         <div className="students-page-indicator">
           <span className="page-info">
             Showing {indexOfFirstStudent + 1} to {indexOfLastStudent} of{" "}
