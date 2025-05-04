@@ -36,6 +36,8 @@ export default function Sidebar() {
     const navigate = useNavigate()
     const location = useLocation();
 
+
+    
     
     const paths = {
         login: '/',
@@ -51,30 +53,30 @@ export default function Sidebar() {
     }
 
     useEffect(() => {
-        const currentPath = window.location.pathname;
+        const pathToKeyMap = {
+          '/dashboard': 'dashboard',
+          '/analytics': 'analytics',
+          '/reports': 'reports',
+          '/leaderboard': 'leaderboard',
+          '/question': 'question',
+          '/glossary': 'glossary',
+          '/students': 'students',
+          '/profile': 'profile',
+          '/account': 'account',
+        };
       
-        if (currentPath === '/dashboard') {
-          setSelected('dashboard');
-        } else if (currentPath === '/analytics') {
-          setSelected('analytics');
-        } else if (currentPath === '/reports') {
-          setSelected('reports');
-        } else if (currentPath === '/leaderboard') {
-          setSelected('leaderboard');
-        } else if (currentPath === '/question') {
-          setSelected('question');
-        } else if (currentPath === '/glossary') {
-          setSelected('glossary');
-        } else if (currentPath === '/students') {
-          setSelected('students');
-        } else if (currentPath === '/profile') {
-          setSelected('profile');
-        } else if (currentPath === '/account') {
-          setSelected('account');
-        } else if (currentPath === '/') {
-          navigate(1); 
+        const currentKey = pathToKeyMap[location.pathname];
+        if (currentKey) {
+          setSelected(currentKey);
         }
-      }, [navigate, setSelected]);
+      }, [location.pathname, setSelected]);
+        
+      useEffect(() => {
+        if (location.pathname === '/' && currentWebUserUID) {
+          navigate('/dashboard');
+        }
+      }, [location.pathname, currentWebUserUID, navigate]);
+      
       
     
 

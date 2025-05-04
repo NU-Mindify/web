@@ -27,6 +27,8 @@ import TermsAndConditions from './pages/login/TermsAndConditions'
 import AddTerm from './pages/glossary/AddTerm'
 import axios from 'axios'
 import { API_URL } from './Constants'
+import AddAccount from './pages/accounts/AddAccount'
+
 
 
 const queryClient = new QueryClient();
@@ -128,6 +130,7 @@ function App() {
                     <Route path="/profile/edit/:id" element={<EditProfile />} />
                     <Route path="/glossary/edit" element={<EditGlossary />} />
                     <Route path="/addterm" element={<AddTerm />} />
+                    <Route path="/addaccount" element={<AddAccount />} />
                     <Route path="*" element={<Navigate to="/" />} />
 
                   </Routes>
