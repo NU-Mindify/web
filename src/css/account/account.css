@@ -3,8 +3,94 @@
 @plugin "daisyui";
 
 
-.acc-main-container{
-    width: 100%;
-    height: 100%;
-    background-color: salmon;
+.account-main-container {
+    @apply p-3 flex flex-col h-full w-full bg-white;
+}
+
+.account-header{
+    @apply w-full h-[150px] p-2;
+}
+
+.account-title{
+    @apply text-[40px] font-[Poppins] font-bold text-[#FFD41C] h-[50px] ;
+}
+
+.acc-search-bar {
+    @apply flex text-[#000000] items-center bg-gray-100 px-3 py-2 rounded-full w-10/12 mt-5;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.acc-search-input{
+    @apply p-2 rounded-lg px-2 py-1 border-none flex-1 bg-transparent focus:outline-none;
+}
+
+
+
+.titles-container{
+    @apply w-full h-[40px] flex items-center flex-col;  
+}
+.header-info{
+    @apply w-11/12 h-full grid grid-cols-4 px-2;
+}
+.title-info{
+    @apply text-black text-2xl font-bold;
+}
+
+
+
+
+
+.users-container {
+    @apply w-full h-[calc(100vh-300px)] overflow-hidden overflow-y-auto flex flex-col items-center;
+    scrollbar-width: none;
+    -ms-overflow-style: none;  
+}
+.user-card {
+    @apply w-11/12 grid grid-cols-4 bg-white my-2 py-1 rounded-xl px-2;
+    border: 1px solid black;
+}
+.active-user-card{
+    @apply w-11/12 grid grid-cols-4 bg-blue-500 my-2 py-1 rounded-xl px-2;
+    border: 1px solid black;
+}
+.name-img-container{
+    @apply flex flex-row items-center;
+}
+
+.admin-info{
+    @apply text-xl text-black flex items-center;
+}
+
+.mini-avatar{
+    @apply w-[30px] h-[30px] rounded-full mr-2;
+}
+
+.action-container{
+    @apply flex flex-row justify-between w-1/2;
+}
+.setting-icon, .chevron-icon{
+    @apply w-[35px] h-[35px] transition-transform duration-500;
+}
+.active-user-card .chevron-icon {
+    @apply rotate-180 transition-transform duration-500;
+}
+
+
+
+
+
+
+.acc-footer{
+    @apply w-full h-[80px] flex flex-col ;
+}
+
+.pagination-container{
+    @apply w-full h-1/2 flex flex-row justify-between items-center px-5;
+}
+
+.add-user-container{
+    @apply w-full h-1/2 flex justify-center items-center;
 }
