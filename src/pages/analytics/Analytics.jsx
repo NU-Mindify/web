@@ -11,7 +11,7 @@ export default function Analytics(){
     //Should change progress bars as if the number reaches 100 the progress bar would be full and therefore be meaningless
     
     //Other possible analytics we could display
-    //Average Score of all users
+    //Average Score per world
     //Most Challenging Topic - Topic with the lowest average score
     //Most Attempted Topic - topic with the highest average score
     //Return % - percentage at which how many users return/continue to use the app
