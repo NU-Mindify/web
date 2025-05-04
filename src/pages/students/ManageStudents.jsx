@@ -21,6 +21,8 @@ export default function ManageStudents() {
   const [currentPage, setCurrentPage] = useState(1);
   const [studentsPerPage] = useState(5);
 
+  const [loadingStudents, setLoadingStudents] = useState(false)
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   //dropdown for chevron
@@ -48,7 +50,8 @@ export default function ManageStudents() {
       });
   };
 
-  const fetchStudents = () => {
+  const fetchStudents = async () => {
+    setLoadingStudents(true)
     axios
       .get(`${API_URL}/getUsers`)
       .then((response) => {
@@ -57,7 +60,10 @@ export default function ManageStudents() {
       })
       .catch((error) => {
         console.log(error);
-      });
+      })
+      .finally(() => {
+        setLoadingStudents(false)
+      })
   };
 
   //for search
@@ -107,7 +113,13 @@ export default function ManageStudents() {
         </div>
 
         <div className="students-body">
-          <div className="students-table">
+          {loadingStudents ? (
+            <div className="loading-overlay-students">
+                <div className="spinner"></div>
+                <p>Fetching data...</p>
+            </div>
+          ) : (
+            <div className="students-table">
             {currentStudents.map((student) => (
               <div key={student.student_id} className="student-row-wrapper">
                 <div className="student-row">
@@ -292,11 +304,10 @@ export default function ManageStudents() {
               </div>
             ))}
           </div>
+          )}
         </div>
 
         {/* Pagination */}
-
-        {/* TODO: This div should not adjust when moving to another page*/}
         <div className="students-page-indicator">
           <span className="page-info">
             Showing {indexOfFirstStudent + 1} to {indexOfLastStudent} of{" "}

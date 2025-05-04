@@ -6,6 +6,20 @@ import AnimatedProgressBar from '../../components/animatedProgressBar/AnimatedPr
 
 export default function Analytics(){
 
+    //notes and possible changes for analytics
+    
+    //Should change progress bars as if the number reaches 100 the progress bar would be full and therefore be meaningless
+    
+    //Other possible analytics we could display
+    //Average Score of all users
+    //Most Challenging Topic - Topic with the lowest average score
+    //Most Attempted Topic - topic with the highest average score
+    //Return % - percentage at which how many users return/continue to use the app
+    //Average Session Duration - average time spent per session
+    //Highest Streak Leader - lists students with the longest streak
+    //Daily login streak - lists students who logged in the app for consecutive days
+
+
     const [attempts, setAttempts] = useState([]);
     const [perfectCount, setPerfectCount] = useState(0);
 

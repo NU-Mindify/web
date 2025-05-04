@@ -41,7 +41,7 @@
 
 /* Body Container */
 .students-body {
-  @apply mt-1 space-y-4 overflow-y-auto;
+  @apply mt-1 space-y-4 overflow-y-auto h-full;
 }
 
 .students-table {
@@ -156,3 +156,23 @@
   max-height: 500px; 
 }
 
+/* try loading spinner */
+
+.loading-overlay-students {
+  @apply flex flex-col items-center justify-center h-full;
+}
+
+.spinner {
+  @apply w-14 h-14 border-4 border-[#FFBF1A]/30 border-t-[#FFBF1A] rounded-full animate-spin mb-4;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-overlay-students p {
+  @apply text-black text-lg font-medium font-[Poppins]
+}
+
+/* end of try loading spinner */
