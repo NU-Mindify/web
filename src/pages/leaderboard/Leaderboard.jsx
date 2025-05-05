@@ -6,6 +6,10 @@ import axios from "axios";
 import { API_URL } from "../../Constants";
 import { useEffect, useState } from "react";
 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+
 export default function Leaderboard() {
   const [leaderboards, setLeaderboards] = useState([]);
   const [leaderboardsMastery, setLeaderboardsMastery] = useState([]);
@@ -98,15 +102,76 @@ export default function Leaderboard() {
     leader.user_id?.username?.toLowerCase().includes(searchMastery)
   );
 
+  //needed for saving as pdf
+  //npm install jspdf jspdf-autotable
+
+  //CSV export
+  const exportToCSV = (data, filename) => {
+    const headers = ["Rank", "Name", "Campus", "World", "Score", "Time"];
+    const rows = data.map((leader) => [
+      leader.rank,
+      leader.user_id?.username || "Unknown User",
+      leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
+      leader.category,
+      leader.total_items > 0
+        ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
+        : "N/A",
+      `${leader.time_completion.toFixed(0)}s`,
+    ]);
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((row) => row.join(","))].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `${filename}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // PDF Export
+  const exportToPDF = (data, title) => {
+    const doc = new jsPDF();
+    doc.text(title, 14, 10);
+
+    const rows = data.map((leader) => [
+      leader.rank,
+      leader.user_id?.username || "Unknown User",
+      leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
+      leader.category,
+      leader.total_items > 0
+        ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
+        : "N/A",
+      `${leader.time_completion.toFixed(0)}s`,
+    ]);
+
+    autoTable(doc, {
+      head: [["Rank", "Name", "Campus", "World", "Score", "Time"]],
+      body: rows,
+      startY: 20,
+    });
+
+    doc.save(`${title}.pdf`);
+  };
+
   return (
     <>
       <div className="leaderboard-body">
         <div className="classic-cont">
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title classic-title">Classic</h1>
-            <button className="export-btn">
-              <img src={download} alt="Export" />
-            </button>
+            <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportToCSV(filteredLeaders, "Classic_Leaderboard");
+                } else if (format === "pdf") {
+                  exportToPDF(filteredLeaders, "Classic Leaderboard");
+                }
+              }}
+            />
           </div>
 
           <h2 className="leaderboard-subtitle">
@@ -153,7 +218,10 @@ export default function Leaderboard() {
             ) : (
               <div className="leaders-main-container">
                 {filteredLeaders.map((leader) => (
-                  <div key={leader._id} className="leaders-container bg-gray-100 rounded-xl mt-2">
+                  <div
+                    key={leader._id}
+                    className="leaders-container bg-gray-100 rounded-xl mt-2"
+                  >
                     <div className="leader-info text-black leaders-content-font">
                       {leader.rank === 1
                         ? "🥇"
@@ -201,7 +269,7 @@ export default function Leaderboard() {
 
                     <div className="leader-info text-black leaders-content-font">
                       {/* {new Date(leader.date).toLocaleDateString() || "N/A"} */}
-                      {(leader.time_completion).toFixed(0)+"s"}
+                      {leader.time_completion.toFixed(0) + "s"}
                     </div>
                   </div>
                 ))}
@@ -215,9 +283,15 @@ export default function Leaderboard() {
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title mastery-title">Mastery</h1>
 
-            <button className="export-btn">
-              <img src={download} alt="Export" />
-            </button>
+            <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportToCSV(filteredLeadersMastery, "Mastery_Leaderboard");
+                } else if (format === "pdf") {
+                  exportToPDF(filteredLeadersMastery, "Mastery Leaderboard");
+                }
+              }}
+            />
           </div>
 
           <h2 className="leaderboard-subtitle">
@@ -265,7 +339,10 @@ export default function Leaderboard() {
             ) : (
               <div className="leaders-main-container">
                 {filteredLeadersMastery.map((leader) => (
-                  <div key={leader._id} className="leaders-container bg-gray-100 rounded-xl mt-2">
+                  <div
+                    key={leader._id}
+                    className="leaders-container bg-gray-100 rounded-xl mt-2"
+                  >
                     <div className="leader-info text-black leaders-content-font">
                       {leader.rank === 1
                         ? "🥇"
@@ -312,7 +389,7 @@ export default function Leaderboard() {
 
                     <div className="leader-info text-black leaders-content-font">
                       {/* {new Date(leader.date).toLocaleDateString() || "N/A"} */}
-                      {(leader.time_completion).toFixed(0)+"s"}
+                      {leader.time_completion.toFixed(0) + "s"}
                     </div>
                   </div>
                 ))}

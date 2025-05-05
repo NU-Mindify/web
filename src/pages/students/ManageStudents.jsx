@@ -19,7 +19,7 @@ export default function ManageStudents() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [studentsPerPage] = useState(5);
+  const [studentsPerPage] = useState(10);
 
   const [loadingStudents, setLoadingStudents] = useState(false)
 

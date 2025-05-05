@@ -22,6 +22,14 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAttempts, setIsLoadingAttempts] = useState(false);
 
+  const [mostChallengingWorld, setMostChallengingWorld] = useState(null);
+  const [mostChallengingWorldScore, setMostChallengingWorldScore] =
+    useState(null);
+
+  const [bestPerformingWorld, setBestPerformingWorld] = useState(null);
+  const [bestPerformingWorldScore, setBestPerformingWorldScore] =
+    useState(null);
+
   useEffect(() => {
     fetchStudents();
     fetchAttempts();
@@ -94,6 +102,84 @@ export default function Dashboard() {
     setAvgScoresByWorld({ overall: overallAverage });
   }, [attempts]);
 
+  //calculates for lowest average score per world to get the most challenging world
+  useEffect(() => {
+    if (attempts.length === 0) return;
+
+    const categoryScores = {};
+
+    attempts.forEach(({ category, correct }) => {
+      if (!category) return;
+
+      if (!categoryScores[category]) {
+        categoryScores[category] = { correctSum: 0, attempts: 0 };
+      }
+
+      categoryScores[category].correctSum += correct;
+      categoryScores[category].attempts += 1;
+    });
+
+    let lowestAvg = Infinity;
+    let bottomCategory = null;
+
+    for (const category in categoryScores) {
+      const { correctSum, attempts } = categoryScores[category];
+      const avgScore = correctSum / attempts;
+
+      if (avgScore < lowestAvg) {
+        lowestAvg = avgScore;
+        bottomCategory = category;
+      }
+    }
+
+    if (bottomCategory) {
+      setMostChallengingWorld(bottomCategory);
+      setMostChallengingWorldScore(parseFloat(lowestAvg.toFixed(2)));
+    } else {
+      setMostChallengingWorld("N/A");
+      setMostChallengingWorldScore(null);
+    }
+  }, [attempts]);
+
+  //calculates the highest average score per world to get the best performing world
+  useEffect(() => {
+    if (attempts.length === 0) return;
+
+    const categoryScores = {};
+
+    attempts.forEach(({ category, correct, total_items }) => {
+      if (!category || total_items === 0) return;
+
+      if (!categoryScores[category]) {
+        categoryScores[category] = { correct: 0, total: 0 };
+      }
+
+      categoryScores[category].correct += correct;
+      categoryScores[category].total += total_items;
+    });
+
+    let highestAvg = -1;
+    let topCategory = null;
+
+    for (const category in categoryScores) {
+      const { correct, total } = categoryScores[category];
+      const avgScore = (correct / total) * 8;
+
+      if (avgScore > highestAvg) {
+        highestAvg = avgScore;
+        topCategory = category;
+      }
+    }
+
+    if (topCategory) {
+      setBestPerformingWorld(topCategory);
+      setBestPerformingWorldScore(parseFloat(highestAvg.toFixed(2)));
+    } else {
+      setBestPerformingWorld("N/A");
+      setBestPerformingWorldScore(null);
+    }
+  }, [attempts]);
+
   // TODO: Loading screen
   if (!currentWebUser) {
     return;
@@ -158,11 +244,65 @@ export default function Dashboard() {
             Average student session time placeholder
           </h1>
         </div>
+
         <div className="analytics-properties-dashboard">
-          <h1 className="dashboard-title">Least Attempted World placeholder</h1>
+          {isLoadingAttempts ? (
+            <div className="loading-overlay-dashboard">
+              <div className="spinner"></div>
+              <p>Fetching data...</p>
+            </div>
+          ) : (
+            <div>
+              <h1 className="dashboard-title mb-2 font-[Poppins]">
+                Most Challenging World
+              </h1>
+              {mostChallengingWorld === "N/A" ? (
+                <h2 className="text-3xl font-bold">No Data</h2>
+              ) : (
+                <>
+                  <h2 className="text-xl capitalize mb-1 text-[#FFBF1A] font-[Poppins]">
+                    {mostChallengingWorld + " Psychology"}
+                  </h2>
+                  <h2 className="text-[20px] capitalize mb-1 text-black font-[Poppins]">
+                    Average Score
+                  </h2>
+                  <h2 className="text-3xl font-bold text-black font-[Poppins] text-[50px]">
+                    <CountUp end={mostChallengingWorldScore} decimals={2} /> / 8
+                  </h2>
+                </>
+              )}
+            </div>
+          )}
         </div>
+
         <div className="analytics-properties-dashboard">
-          <h1 className="dashboard-title">Most Attempted World placeholder</h1>
+          {isLoadingAttempts ? (
+            <div className="loading-overlay-dashboard">
+              <div className="spinner"></div>
+              <p>Fetching data...</p>
+            </div>
+          ) : (
+            <div>
+              <h1 className="dashboard-title mb-2 text-black font-[Poppins]">
+                Best Performing World
+              </h1>
+              {bestPerformingWorld === "N/A" ? (
+                <h2 className="text-3xl font-bold">No Data</h2>
+              ) : (
+                <>
+                  <h2 className="text-xl capitalize mb-1 font-[Poppins] text-[#FFBF1A]">
+                    {bestPerformingWorld + " Psychology"}
+                  </h2>
+                  <h2 className="text-[20px] capitalize mb-1 text-black font-[Poppins]">
+                    Average Score
+                  </h2>
+                  <h2 className="text-3xl font-bold text-black font-[Poppins] text-[50px]">
+                    <CountUp end={bestPerformingWorldScore} decimals={2} />{" "} / 8
+                  </h2>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
