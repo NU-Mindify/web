@@ -80,8 +80,8 @@
     @apply w-[35px] h-[35px] transition-transform duration-500 cursor-pointer;  
 }
 
-.chevron-icon {
-    @apply w-[35px] h-[35px] transition-transform duration-500 origin-center;
+.active-user-card .chevron-icon{
+    @apply w-[35px] h-[35px] transition-transform duration-500 cursor-pointer rotate-180; 
 }
   
 
