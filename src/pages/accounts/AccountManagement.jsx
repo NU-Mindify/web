@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import '../../css/account//account.css'
 import axios from 'axios';
-import { API_URL } from '../../Constants';
+import { API_URL, branches } from '../../Constants';
 import { useNavigate } from "react-router";
 import search from "../../assets/students/search-01.svg";
 import filter from "../../assets/students/filter.svg";
 import chevron from "../../assets/glossary/dropdown.svg";
 import settings from "../../assets/students/settings.svg";
+
 
 
 export default function AccountManagement(){
@@ -33,7 +34,7 @@ export default function AccountManagement(){
             });
     };
 
-    const usersPerPage = 5;
+    const usersPerPage = 10;
 
     const filteredUsers = webusers.filter((user) =>
         `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchUser.toLowerCase())
@@ -68,7 +69,7 @@ export default function AccountManagement(){
 
     
 
-    function AccountCard({ id, fname, lname, branch, position, image, onClick, cardActive }) {
+    function AccountCard({ id, fname, lname, userbranch, position, image, onClick, cardActive }) {
         return (
             <div className={cardActive === id ? 'active-user-card' : 'user-card'} key={id}>
                 <div className="name-img-container">
@@ -77,10 +78,18 @@ export default function AccountManagement(){
                 </div>
                 
                 <h1 className="admin-info">{position}</h1>
-                <h1 className="admin-info">{branch}</h1>
+                <h1 className="admin-info">{
+                    branches.find((branch) => branch.id === userbranch)?.name || 'Unknown Branch'
+                }</h1>
                 <div className="action-container">
                     <img src={settings} alt="settings" className="setting-icon" />
-                    <img src={chevron} alt="settings" className="chevron-icon" onClick={() => onClick(id)} />
+                    <img
+                        src={chevron}
+                        alt="chevron"
+                        className={`chevron-icon ${cardActive === id ? 'rotate-180' : ''}`}
+                        onClick={() => onClick(id)}
+                    />
+
                 </div>
             </div>
         )
@@ -130,7 +139,7 @@ export default function AccountManagement(){
                             fname={admin.firstName} 
                             lname={admin.lastName}  
                             image={admin.useravatar}
-                            branch={admin.branch}
+                            userbranch={admin.branch}
                             position={admin.position}
                             onClick={handleDropdown}
                             cardActive={cardActive}
@@ -148,8 +157,11 @@ export default function AccountManagement(){
                 <div className="acc-footer">
                     <div className="pagination-container">
                         <div>
-                            <h1 className="text-black">Page {currentPage} of {totalPages}</h1>
+                            <h1 className="text-black">
+                                Showing {filteredUsers.length === 0 ? 0 : indexOfFirstUser + 1} to {Math.min(indexOfLastUser, filteredUsers.length)} of {filteredUsers.length}
+                            </h1>
                         </div>
+
                         <div className="join">
                             <button
                                 className="join-item btn bg-white text-black"

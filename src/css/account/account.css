@@ -2,11 +2,13 @@
 @reference "tailwindcss";
 @plugin "daisyui";
 
-
+/*------------------------- MAIN CONTAINER --------------------------*/
 .account-main-container {
     @apply p-3 flex flex-col h-full w-full bg-white;
 }
 
+
+/*------------------------- FOR HEADER --------------------------*/
 .account-header{
     @apply w-full h-[150px] p-2;
 }
@@ -29,6 +31,7 @@
 
 
 
+/*------------------------- USER TITLES --------------------------*/
 .titles-container{
     @apply w-full h-[40px] flex items-center flex-col;  
 }
@@ -42,18 +45,18 @@
 
 
 
-
+/*------------------------- USER CONTENTS --------------------------*/
 .users-container {
     @apply w-full h-[calc(100vh-300px)] overflow-hidden overflow-y-auto flex flex-col items-center;
     scrollbar-width: none;
     -ms-overflow-style: none;  
 }
 .user-card {
-    @apply w-11/12 grid grid-cols-4 bg-white my-2 py-1 rounded-xl px-2;
+    @apply w-11/12 grid grid-cols-4 bg-white my-2 py-3 rounded-xl px-2 transition-transform duration-500;
     border: 1px solid black;
 }
 .active-user-card{
-    @apply w-11/12 grid grid-cols-4 bg-blue-500 my-2 py-1 rounded-xl px-2;
+    @apply w-11/12 grid grid-cols-4 bg-blue-500 my-2 py-3 rounded-xl px-2 transition-transform duration-500;
     border: 1px solid black;
 }
 .name-img-container{
@@ -65,24 +68,28 @@
 }
 
 .mini-avatar{
-    @apply w-[30px] h-[30px] rounded-full mr-2;
+    @apply w-[40px] h-[40px] rounded-full mr-2;
 }
 
 .action-container{
     @apply flex flex-row justify-between w-1/2;
 }
+
+
 .setting-icon, .chevron-icon{
-    @apply w-[35px] h-[35px] transition-transform duration-500;
-}
-.active-user-card .chevron-icon {
-    @apply rotate-180 transition-transform duration-500;
+    @apply w-[35px] h-[35px] transition-transform duration-500 cursor-pointer;  
 }
 
+.chevron-icon {
+    @apply w-[35px] h-[35px] transition-transform duration-500 origin-center;
+}
+  
 
 
 
 
 
+/*------------------------- FOOTER PAGINATION AND ADD USER --------------------------*/
 .acc-footer{
     @apply w-full h-[80px] flex flex-col ;
 }

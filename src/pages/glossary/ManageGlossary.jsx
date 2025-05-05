@@ -181,9 +181,9 @@ export default function ManageGlossary() {
                         <div className="icon-group">
                           <img 
                             src={edit} 
-                            className="editIcon" 
+                            className="editIcon"
                             alt="edit icon" 
-                            onClick={() => handlesEdit(term._id, term.word, term.meaning, term.tags)} 
+                            onClick={() => handlesEdit(term._id, term.word, term.meaning, term.tags)}
                           />
                         </div>
                         <div
@@ -191,7 +191,7 @@ export default function ManageGlossary() {
                           onClick={() => handleDropdown(term.word)}
                         >
 
-                          <img src={dropdown} className="glossary-icon" alt="dropdown icon" />
+                          <img src={dropdown} className="dropdown-icon" alt="dropdown icon" />
                         </div>
                       </div>
                       
