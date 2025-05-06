@@ -84,7 +84,7 @@ export default function ManageStudents() {
   return (
     <>
       <div className="manage-students">
-        <h1 className="header-title">Manage Students</h1>
+        <h1 className="header-title">View Students</h1>
 
         <div className="search-bar">
           <img src={search} className="search-icon" alt="search icon" />

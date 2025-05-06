@@ -12,8 +12,10 @@
 }
 
 .header-title {
-  @apply font-[Poppins] text-[#FFD41C] font-bold mb-6;
-  font-size: 36px !important;
+  @apply font-[Poppins] mb-6;
+  font-size: 40px !important;
+  font-weight: 700 !important;
+  color: #FFD41C !important;
 }
 
 /* Search Section */
