@@ -352,7 +352,7 @@ export default function Sidebar() {
                         <MenuBtn
                             icons={student}
                             active={isActive}
-                            text='Manage Students'
+                            text='View Students'
                             isSelected={selected === 'students'}
                             onPress={() => {
                                 setSelected('students');
