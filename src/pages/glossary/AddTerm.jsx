@@ -10,6 +10,8 @@ import '../../css/glossary/addGlossary.css'
 export default function AddTerm(){
 
     const [newTerm, setNewTerm] = useState({word: '', meaning: '', tags: [], is_deleted: false})
+    const [tagInput, setTagInput] = useState('');
+
 
     const navigate = useNavigate();
 
@@ -50,17 +52,32 @@ export default function AddTerm(){
 
                     <h1>Tags:</h1>
                     <input 
-                    type="text"
-                    placeholder="Tags (comma-separated)"
-                    className="add-term-input"
-                    value={newTerm.tags.join(', ')} 
-                    onChange={(e) => 
-                        setNewTerm({ 
-                        ...newTerm, 
-                        tags: e.target.value.split(',').map(tag => tag.trim())
-                        })
-                    }
+                        type="text"
+                        placeholder="Add a tag"
+                        className="add-term-input"
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
                     />
+
+                    <button 
+                        className="btn btn-success" 
+                        type="button"
+                        onClick={() => {
+                            if (tagInput.trim() !== '') {
+                                setNewTerm(prev => ({
+                                    ...prev,
+                                    tags: [...prev.tags, tagInput.trim()]
+                                }));
+                                setTagInput('');
+                            }
+                            else{
+                                alert('Please have an input')
+                            }
+                        }}
+                    >
+                        Add Tag
+                    </button>
+
                 </div>
 
 
