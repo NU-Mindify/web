@@ -4,10 +4,9 @@ import logo from "../../assets/logo/logo.svg";
 import Chart from "chart.js/auto";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import BarGraph from "../../components/barGraph/BarGraph";
-
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { API_URL, categories, modes, levels } from "../../Constants";
+import { API_URL, categories, modes, levels, branches } from "../../Constants";
 import CountUp from "../../components/CountUp/CountUp";
 
 export default function Dashboard() {
@@ -184,7 +183,8 @@ export default function Dashboard() {
   if (!currentWebUser) {
     return;
   }
-  const branch = currentWebUser.branch.toUpperCase();
+  const branch = branches.find((branch)=> branch.id === currentWebUser.branch)?.name || "Unknown Branch";
+  
 
   return (
     <div className="main-container-dashboard">
