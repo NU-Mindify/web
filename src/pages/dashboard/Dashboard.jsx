@@ -183,8 +183,22 @@ export default function Dashboard() {
   if (!currentWebUser) {
     return;
   }
-  const branch = branches.find((branch)=> branch.id === currentWebUser.branch)?.name || "Unknown Branch";
-  
+  const branch =
+    branches.find((branch) => branch.id === currentWebUser.branch)?.name ||
+    "Unknown Branch";
+
+  //get no. of students per branch
+  const branchData = branches
+    .map((branch) => {
+      const studentCount = students.filter(
+        (s) => s.branch === branch.id
+      ).length;
+      return {
+        label: branch.name,
+        count: studentCount,
+      };
+    })
+    .sort((a, b) => b.count - a.count); // sort descending by count
 
   return (
     <div className="main-container-dashboard">
@@ -297,7 +311,7 @@ export default function Dashboard() {
                     Average Score
                   </h2>
                   <h2 className="text-3xl font-bold text-black font-[Poppins] text-[50px]">
-                    <CountUp end={bestPerformingWorldScore} decimals={2} />{" "} / 8
+                    <CountUp end={bestPerformingWorldScore} decimals={2} /> / 8
                   </h2>
                 </>
               )}
@@ -310,14 +324,16 @@ export default function Dashboard() {
         <h1 className="reports-title-properties-dashboard">Reports</h1>
       </div>
 
-      {/* <div className="loading-overlay-dashboard">
-        <div className="spinner"></div>
-        <p>Fetching data...</p>
-      </div> */}
-
       <div className="reports-content-container-dashboard">
         <div className="total-students-container-dashboard">
-          <BarGraph />
+          {isLoadingAttempts ? (
+            <div className="loading-overlay-dashboard">
+              <div className="spinner"></div>
+              <p>Fetching data...</p>
+            </div>
+          ) : (
+            <BarGraph data={branchData} />
+          )}
         </div>
         <div className="badges-container-dashboard">
           <h1 className="text-black">Badges Placeholder</h1>
