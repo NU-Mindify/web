@@ -4,13 +4,17 @@ import download from "../../assets/leaderboard/file-export.svg";
 import dropdown from "../../assets/glossary/dropdown.svg";
 import axios from "axios";
 import { API_URL } from "../../Constants";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 
+import { UserLoggedInContext } from "../../contexts/Contexts";
+
 export default function Leaderboard() {
+  const { currentWebUser } = useContext(UserLoggedInContext);
+
   const [leaderboards, setLeaderboards] = useState([]);
   const [leaderboardsMastery, setLeaderboardsMastery] = useState([]);
   const [searchClassic, setSearchClassic] = useState("");
@@ -121,12 +125,20 @@ export default function Leaderboard() {
 
     const csvContent =
       "data:text/csv;charset=utf-8," +
-      [headers.join(","), ...rows.map((row) => row.join(","))].join("\n");
+      [
+        `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        "",
+        headers.join(","),
+        ...rows.map((row) => row.join(",")),
+      ].join("\n");
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `${filename}.csv`);
+    link.setAttribute(
+      "download",
+      `${filename}_by_${currentWebUser.firstName} ${currentWebUser.lastName}.csv`
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -134,8 +146,9 @@ export default function Leaderboard() {
 
   // PDF Export
   const exportToPDF = (data, title) => {
+    const username = localStorage.getItem("username") || "Unknown User";
     const doc = new jsPDF();
-    doc.text(title, 14, 10);
+    doc.text(`${title} (Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName})`, 14, 10);
 
     const rows = data.map((leader) => [
       leader.rank,
@@ -154,7 +167,7 @@ export default function Leaderboard() {
       startY: 20,
     });
 
-    doc.save(`${title}.pdf`);
+    doc.save(`${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${currentWebUser.lastName}.pdf`);
   };
 
   return (
