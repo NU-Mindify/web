@@ -1,7 +1,9 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import search from "../../assets/students/search-01.svg";
 import filter from "../../assets/students/filter.svg";
 import branchdropdown from "../../assets/students/branch-dropdown.svg";
-import chevron from "../../assets/students/chevron-down.svg";
+import chevron from "../../assets/glossary/dropdown.svg";
 import settings from "../../assets/students/settings.svg";
 import samplepic from "../../assets/students/sample-minji.svg";
 import "../../css/students/students.css";
@@ -13,22 +15,16 @@ import AnimatedProgressBar from "../../components/animatedProgressBar/AnimatedPr
 
 export default function ManageStudents() {
   const [students, setStudents] = useState([]);
-  const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [activeCard, setActiveCard] = useState(false);
 
   const [progressData, setProgressData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [studentsPerPage] = useState(10);
-
   const [loadingStudents, setLoadingStudents] = useState(false)
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  //dropdown for chevron
-  const toggleDropdown = (id) => {
-    setOpenDropdownId((prev) => (prev === id ? null : id));
-  };
+
 
   useEffect(() => {
     fetchStudents();
@@ -73,275 +69,119 @@ export default function ManageStudents() {
       student.student_id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  //for pagination
-  const indexOfLastStudent = currentPage * studentsPerPage;
-  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = filteredStudents.slice(
-    indexOfFirstStudent,
-    indexOfLastStudent
-  );
+
 
   return (
+
     <>
-      <div className="manage-students">
-        <h1 className="header-title">View Students</h1>
+      <div className="students-main-container">
 
-        <div className="search-bar">
-          <img src={search} className="search-icon" alt="search icon" />
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search for a student"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          {/* <img src={filter} className="icon" alt="filter icon" /> */}
-        </div>
-
-        <div className="students-table-header">
-          <div className="cell">Student ID</div>
-          <div className="cell">Name</div>
-          <div className="cell branch-cell">
-            Branch
-            <img
-              src={branchdropdown}
-              className="dropdown-icon"
-              alt="dropdown icon"
-            />
+        <div className="student-header">
+          <h1 className="student-title">View Students</h1>
+          <div className="student-search-bar">
+              <img src={search} className="search-icon" alt="search icon" />
+              <input
+                  type="text"
+                  className="student-search-input"
+                  placeholder="Search for a student"
+                  // value={searchUser}
+                  // onChange={(e) => setSearchUser(e.target.value)}
+              />
           </div>
-          <div className="cell">Action</div>
         </div>
 
-        <div className="students-body">
-          {loadingStudents ? (
-            <div className="loading-overlay-students">
+
+        <div className="student-titles-container">
+            <div className="student-header-info">
+                <h1 className="student-title-info">Student ID</h1>
+                <h1 className="student-title-info">Name</h1>
+                <h1 className="student-title-info">Branch</h1>
+                <h1 className="student-title-info">Action</h1>
+            </div>
+        </div>
+
+
+        
+        <div className="student-users-container">
+          {loadingStudents ? 
+            (
+              <div className="loading-overlay-students">
                 <div className="spinner"></div>
                 <p>Fetching data...</p>
-            </div>
-          ) : (
-            <div className="students-table">
-            {currentStudents.map((student) => (
-              <div key={student.student_id} className="student-row-wrapper">
-                <div className="student-row">
-                  <div className="cell">{student.student_id}</div>
-                  <div className="student-name">
-                    <img src={samplepic} className="student-avatar" alt="" />
-                    {student.username}
+              </div>
+            ) : 
+            (
+              students.map((student) => (
+                <div
+                  className={activeCard === student.student_id ? 'active-student-card' : "student-card"}
+                  key={student.student_id}
+                >
+                  <h1 className="student-info">{student.student_id}</h1>
+                  <div className="name-img-container">
+                    <img src={samplepic} alt={student.username} className="mini-avatar" />
+                    <h1 className="student-info">{student.username}</h1>
                   </div>
-                  <div className="cell">
-                    {
-                      branches.find((branch) => branch.id === student.branch)
-                        .name
-                    }
-                  </div>
-                  <div className="cell action-cell">
-                    <img src={settings} className="icon" alt="settings icon" />
+
+                  <h1 className="student-info">{student.branch}</h1>
+                  <div className="student-action-container">
+                    <img src={settings} alt="settings" className="setting-icon" />
                     <img
                       src={chevron}
-                      className={`icon chevron-icon ${
-                        openDropdownId === student.student_id ? "rotate" : ""
-                      }`}
-                      alt="chevron icon"
-                      onClick={() => toggleDropdown(student.student_id)}
-                      style={{ cursor: "pointer" }}
+                      alt="chevron"
+                      className="chevron-icon"
+                      onClick={() => {
+                        setOpenDropdown(openDropdown === student.student_id ? null : student.student_id);
+                        setActiveCard(activeCard === student.student_id ? null : student.student_id);
+                      }}
                     />
                   </div>
+
+                  {openDropdown === student.student_id && (
+                    <div className="student-progress-container">
+                      {[...Array(5)].map((_, i) => (
+                        <div className="per-word-progress-card" key={i}>
+                          <h1>asd</h1>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
+              ))
+            )}
+        </div>
 
-                <div
-                  className={`dropdown-content ${
-                    openDropdownId === student.student_id ? "open" : ""
-                  }`}
-                >
-                  {/* Abnormal Psychology */}
-                  <div className="analytics-box-container">
-                    <div className="analytics-properties-students">
-                      <p className="analytics-box-title">Abnormal Psychology</p>
-                      <p className="analytics-box-subtitle">World 1</p>
-                      <div className="progress-bar-container-students">
-                        <AnimatedProgressBar
-                          label="Classic"
-                          percent={
-                            ((progressData[student._id]?.classic?.abnormal ||
-                              0) /
-                              10) *
-                            100
-                          }
-                          color="bg-[#FFBF1A]"
-                        />
-                        <AnimatedProgressBar
-                          label="Mastery"
-                          percent={
-                            ((progressData[student._id]?.mastery?.abnormal ||
-                              0) /
-                              10) *
-                            100
-                          }
-                          color="bg-[#FFBF1A]"
-                        />
-                      </div>
-                    </div>
 
-                    {/* Developmental Psychology */}
-                    <div className="analytics-properties-students">
-                      <p className="analytics-box-title">
-                        Developmental Psychology
-                      </p>
-                      <p className="analytics-box-subtitle">World 2</p>
-                      <div className="progress-bar-container-students">
-                        <AnimatedProgressBar
-                          label="Classic"
-                          percent={
-                            ((progressData[student._id]?.classic
-                              ?.developmental || 0) /
-                              10) *
-                            100
-                          }
-                          color="bg-[#FFBF1A]"
-                        />
-                        <AnimatedProgressBar
-                          label="Mastery"
-                          percent={
-                            ((progressData[student._id]?.mastery
-                              ?.developmental || 0) /
-                              10) *
-                            100
-                          }
-                          color="bg-[#FFBF1A]"
-                        />
-                      </div>
-                    </div>
 
-                    {/* Psychological Psychology */}
-                    <div className="analytics-properties-students">
-                      <p className="analytics-box-title">
-                        Psychological Psychology
-                      </p>
-                      <p className="analytics-box-subtitle">World 3</p>
-                      <div className="progress-bar-container-students">
-                        <AnimatedProgressBar
-                          label="Classic"
-                          percent={
-                            ((progressData[student._id]?.classic
-                              ?.psychological || 0) /
-                              10) *
-                            100
-                          }
-                          color="bg-[#FFBF1A]"
-                        />
-                        <AnimatedProgressBar
-                          label="Mastery"
-                          percent={
-                            ((progressData[student._id]?.mastery
-                              ?.psychological || 0) /
-                              10) *
-                            100
-                          }
-                          color="bg-[#FFBF1A]"
-                        />
-                      </div>
-                    </div>
 
-                    {/* Insdustrial/Organizational Psychology */}
-                    <div className="analytics-properties-students">
-                      <p className="analytics-box-title">
-                        Industrial/Organizational Psychology
-                      </p>
-                      <p className="analytics-box-subtitle">World 4</p>
-                      <div className="progress-bar-container-students">
-                        <AnimatedProgressBar
-                          label="Classic"
-                          percent={
-                            ((progressData[student._id]?.classic?.industrial ||
-                              0) /
-                              10) *
-                            100
-                          }
-                          color="bg-[#FFBF1A]"
-                        />
-                        <AnimatedProgressBar
-                          label="Mastery"
-                          percent={
-                            ((progressData[student._id]?.mastery?.industrial ||
-                              0) /
-                              10) *
-                            100
-                          }
-                          color="bg-[#FFBF1A]"
-                        />
-                      </div>
-                    </div>
 
-                    {/* General Psychology */}
-                    <div className="analytics-properties-students">
-                      <p className="analytics-box-title">General Psychology</p>
-                      <p className="analytics-box-subtitle">World 5</p>
-                      <div className="progress-bar-container-students">
-                        <AnimatedProgressBar
-                          label="Classic"
-                          percent={
-                            ((progressData[student._id]?.classic?.general ||
-                              0) /
-                              10) *
-                            100
-                          }
-                          color="bg-[#FFBF1A]"
-                        />
-                        <AnimatedProgressBar
-                          label="Mastery"
-                          percent={
-                            ((progressData[student._id]?.mastery?.general ||
-                              0) /
-                              10) *
-                            100
-                          }
-                          color="bg-[#FFBF1A]"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
+
+        <div className="student-footer">
+          <div className="student-pagination-container">
+              <h1 className="text-black">
+                  Page 1 of
+              </h1>
+
+              <div className="join">
+                  <button
+                      className="join-item btn bg-white text-black"
+                  >
+                      «
+                  </button>
+                  <button className="join-item btn bg-white text-black" disabled>
+                      Page 
+                  </button>
+                  <button
+                      className="join-item btn bg-white text-black"
+                  >
+                      »
+                  </button>
               </div>
-            ))}
           </div>
-          )}
         </div>
 
-        {/* Pagination */}
-        <div className="students-page-indicator">
-          <span className="page-info">
-            Showing {indexOfFirstStudent + 1} to {indexOfLastStudent} of{" "}
-            {filteredStudents.length}
-          </span>
-          <div className="page-controls">
-            <button
-              onClick={() => paginate(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              {"<"}
-            </button>
-            {[
-              ...Array(Math.ceil(filteredStudents.length / studentsPerPage)),
-            ].map((_, index) => (
-              <button
-                key={index}
-                onClick={() => paginate(index + 1)}
-                className={currentPage === index + 1 ? "active" : ""}
-              >
-                {index + 1}
-              </button>
-            ))}
-            <button
-              onClick={() => paginate(currentPage + 1)}
-              disabled={
-                currentPage ===
-                Math.ceil(filteredStudents.length / studentsPerPage)
-              }
-            >
-              {">"}
-            </button>
-          </div>
-        </div>
+
+
       </div>
     </>
   );

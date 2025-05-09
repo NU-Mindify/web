@@ -49,7 +49,7 @@ export default function AccountManagement() {
                     <input
                         type="text"
                         className="acc-search-input"
-                        placeholder="Search for a student"
+                        placeholder="Search for a user"
                         value={searchUser}
                         onChange={(e) => setSearchUser(e.target.value)}
                     />
@@ -92,7 +92,7 @@ export default function AccountManagement() {
                                     src={chevron}
                                     alt="chevron"
                                     onClick={() => toggleCard(admin.employeenum)}
-                                    className={`w-[35px] h-[35px] cursor-pointer transform transition-transform duration-500 origin-center ${
+                                    className={`origin-center chevron-icon ${
                                         cardActive === admin.employeenum ? "rotate-180" : ""
                                     }`}
                                 />

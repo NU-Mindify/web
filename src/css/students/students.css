@@ -1,180 +1,93 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-/* Container for managing students */
-.manage-students {
-  @apply flex flex-col w-full h-[calc(100vh-2rem)] p-8 bg-white rounded-xl overflow-hidden;
+.students-main-container{
+  @apply p-3 flex flex-col h-full w-full bg-white;
 }
 
-/* Header Section */
-.header {
-  @apply flex justify-between items-center p-4 mb-4;
+
+.student-header{
+  @apply w-full h-[150px] p-2;
 }
 
-.header-title {
-  @apply font-[Poppins] mb-6;
-  font-size: 40px !important;
-  font-weight: 700 !important;
-  color: #FFD41C !important;
+.student-title{
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFD41C] h-[50px] ;
 }
 
-/* Search Section */
-.search-bar {
-  @apply flex text-[#000000] items-center bg-gray-100 px-3 py-2 rounded-full w-full;
+.student-search-bar {
+  @apply flex text-[#000000] items-center bg-gray-100 px-3 py-2 rounded-full w-10/12 mt-5;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.search-input {
+.student-search-input{
   @apply p-2 rounded-lg px-2 py-1 border-none flex-1 bg-transparent focus:outline-none;
 }
 
-.search-icon {
-  @apply block w-[24px] h-[24px] object-contain;
-}
 
-/* Table-Like Header Row */
-.students-table-header {
-  @apply grid grid-cols-[1.5fr_2.5fr_2fr_1.5fr] font-[Poppins] text-left text-black font-semibold px-6 py-8;
-}
 
-.students-table-header * {
-  font-size: 16px !important;
-}
 
-/* Body Container */
-.students-body {
-  @apply mt-1 space-y-4 overflow-y-auto h-full;
-}
 
-.students-table {
-  @apply flex flex-col gap-6;
-}
 
-/* Each Student Row */
-.student-row {
-  @apply font-[Poppins] grid grid-cols-[1.5fr_2.5fr_2fr_1.5fr] items-center px-4 py-6 border border-black rounded-xl bg-white transition duration-300;
+.student-titles-container{
+  @apply w-full h-[40px] flex items-center flex-col pt-3;  
 }
-
-.student-row:hover {
-  @apply bg-gray-100;
+.student-header-info{
+  @apply w-11/12 h-full grid grid-cols-[3fr_4fr_2fr_1fr] px-2;
 }
-
-/* Row Cells */
-.cell {
-  @apply text-sm text-gray-700;
-}
-
-/* Avatar & Name Style */
-.student-name {
-  @apply flex items-center gap-2 text-black text-sm;
-}
-
-.student-avatar {
-  @apply rounded-full w-[30px] h-[30px] object-cover;
-}
-
-/* Action Icon */
-.dropdown-icon {
-  @apply w-4 h-4 cursor-pointer object-contain;
-}
-
-.action-cell{
-  @apply flex items-center gap-10;
-}
-
-.branch-cell{
-  @apply flex items-center gap-1;
-}
-
-.icon {
-  @apply w-7 h-7 cursor-pointer object-contain;
+.student-title-info{
+  @apply text-black text-2xl font-bold;
 }
 
 
-/* Page Controls */
-.students-page-indicator {
-  @apply mt-6 flex justify-between items-center text-sm text-gray-600 px-2;
+
+.student-users-container{
+  @apply w-full h-full overflow-hidden overflow-y-auto flex flex-col items-center;
+  scrollbar-width: none;
+  -ms-overflow-style: none; 
+}
+.student-card{
+  @apply w-11/12 grid grid-cols-[3fr_4fr_2fr_1fr] bg-white my-2 py-3 rounded-xl px-2 transition-transform duration-500;
+    border: 1px solid black;
 }
 
-.page-info {
-  @apply font-[Poppins];
+.active-student-card{
+  @apply w-[95%] grid grid-cols-[3fr_4fr_2fr_1fr] bg-blue-500 my-2 py-3 rounded-xl px-2 transition-transform duration-500;
+    border: 1px solid black;
+}
+.student-info{
+  @apply text-xl text-black flex items-center;
 }
 
-.page-controls {
-  @apply flex gap-2 items-center;
+.student-action-container{
+  @apply flex flex-row justify-between w-3/4 ;
 }
 
-.page-controls button{
-  @apply px-2 py-3 rounded-md hover:bg-gray-200 transition;
+.active-student-card .chevron-icon{
+  @apply rotate-180 transition-transform duration-500;
 }
 
-.page-controls .active {
-  @apply text-indigo-600 font-bold;
+.student-progress-container{
+  @apply w-full h-[200px] bg-red-400 col-span-4 mt-4 grid grid-cols-5 gap-3 px-3;
 }
 
-/* Analytics box properties */
-
-.analytics-properties-students{
-  @apply w-full h-[200px] max-h-[200px] min-h-[150px] bg-gray-100 rounded-xl p-3 mt-3;
+.per-word-progress-card{
+  @apply w-full h-full bg-gray-400;
 }
 
-.analytics-box-container{
-  @apply w-full grid grid-cols-1 gap-4 place-items-center 
-  md:grid-cols-2
-  lg:grid-cols-3
-  xl:grid-cols-5;
+
+
+
+
+
+
+
+.student-footer{
+  @apply w-full h-[110px] flex flex-col;
 }
 
-.analytics-box-title{
-  @apply text-black font-bold font-[Poppins] text-[14px]
+.student-pagination-container{
+  @apply w-full h-full flex flex-row items-start justify-between px-5;
 }
-
-.analytics-box-subtitle{
-  @apply text-black text-[14px] font-[Poppins]
-}
-
-/* Progress bar container */
-.progress-bar-container-students{
-  @apply flex-row mt-[-20px]
-}
-
-/* Chevron animation */
-.chevron-icon {
-  transition: transform 0.3s ease;
-}
-
-.chevron-icon.rotate {
-  transform: rotate(180deg);
-}
-
-/* Dropdown animation */
-.dropdown-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease;
-}
-
-.dropdown-content.open {
-  max-height: 500px; 
-}
-
-/* try loading spinner */
-
-.loading-overlay-students {
-  @apply flex flex-col items-center justify-center h-full;
-}
-
-.spinner {
-  @apply w-14 h-14 border-4 border-[#FFBF1A]/30 border-t-[#FFBF1A] rounded-full animate-spin mb-4;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.loading-overlay-students p {
-  @apply text-black text-lg font-medium font-[Poppins]
-}
-
-/* end of try loading spinner */
