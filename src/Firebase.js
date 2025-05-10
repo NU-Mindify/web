@@ -1,7 +1,5 @@
-import { getAuth } from "firebase/auth";
-
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FB_API,
@@ -10,11 +8,16 @@ const firebaseConfig = {
   projectId: "nu-mindify",
   storageBucket: "nu-mindify.firebasestorage.app",
   messagingSenderId: "342146446671",
-  appId: import.meta.env.VITE_APPID
+  appId: import.meta.env.VITE_APPID,
 };
 
-// Initialize Firebase
+// Main app (used across the app)
 const app = initializeApp(firebaseConfig);
+const firebaseAuth = getAuth(app);
 
-export const firebaseAuth = getAuth();
+// ✅ Secondary app (used only for creating new accounts)
+const secondaryApp = initializeApp(firebaseConfig, "Secondary");
+const secondaryAuth = getAuth(secondaryApp);
+
+export { firebaseAuth, secondaryAuth };
 export default app;
