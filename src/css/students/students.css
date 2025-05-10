@@ -70,11 +70,11 @@
 }
 
 .student-progress-container{
-  @apply w-full h-[200px] bg-red-400 col-span-4 mt-4 grid grid-cols-5 gap-3 px-3;
+  @apply w-full h-[220px] bg-red-400 col-span-4 mt-4 grid grid-cols-5 gap-3 px-3;
 }
 
-.per-word-progress-card{
-  @apply w-full h-full bg-gray-400;
+.per-world-progress-card{
+  @apply w-full h-full bg-green-400 flex flex-col px-2 py-2;
 }
 
 
