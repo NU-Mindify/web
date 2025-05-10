@@ -109,6 +109,9 @@ export default function Leaderboard() {
   //needed for saving as pdf
   //npm install jspdf jspdf-autotable
 
+  //get current date
+  const now = new Date().toLocaleString();
+
   //CSV export
   const exportToCSV = (data, filename) => {
     const headers = ["Rank", "Name", "Campus", "World", "Score", "Time"];
@@ -127,6 +130,7 @@ export default function Leaderboard() {
       "data:text/csv;charset=utf-8," +
       [
         `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        `Exported on: ${now}`,
         "",
         headers.join(","),
         ...rows.map((row) => row.join(",")),
@@ -148,7 +152,13 @@ export default function Leaderboard() {
   const exportToPDF = (data, title) => {
     const username = localStorage.getItem("username") || "Unknown User";
     const doc = new jsPDF();
-    doc.text(`${title} (Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName})`, 14, 10);
+    doc.text(`${title}`, 14, 10);
+    doc.text(
+      `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+      14,
+      18
+    );
+    doc.text(`Exported on: ${now}`, 14, 26); // ⬅️ new line for date/time
 
     const rows = data.map((leader) => [
       leader.rank,
@@ -164,10 +174,14 @@ export default function Leaderboard() {
     autoTable(doc, {
       head: [["Rank", "Name", "Campus", "World", "Score", "Time"]],
       body: rows,
-      startY: 20,
+      startY: 30,
     });
 
-    doc.save(`${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${currentWebUser.lastName}.pdf`);
+    doc.save(
+      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
+        currentWebUser.lastName
+      }.pdf`
+    );
   };
 
   return (
