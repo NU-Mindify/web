@@ -82,27 +82,32 @@ export default function EditProfile(){
                 <div className='header-container-prof-settings'>
                     <h1 className='header-text-prof-settings'>Edit Profile</h1>
                 </div>        
-
+                
                 <div className='content-container-prof-settings'>
 
                     <div className='avatar-edit-container-prof-settings'>
+                        
 
-                    <div className="avatar-container-prof-settings">
-                        <img className="avatar-dimensions" src={editWebUser.useravatar} alt="" />
-                        {/* {image ? (
+                        <div className="avatar-container-prof-settings">
                             <img className="avatar-dimensions" src={editWebUser.useravatar} alt="" />
-                        ) : (
-                            <img className="avatar-dimensions" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />
-                        )}
-                        <input 
-                        type='file' 
-                        ref={inputRef} 
-                        onChange={handleImageChange} 
-                        style={{display: "none"}}
-                        accept='image/*'
-                        /> */}
-                    </div>
+                            {/* {image ? (
+                                <img className="avatar-dimensions" src={editWebUser.useravatar} alt="" />
+                            ) : (
+                                <img className="avatar-dimensions" src="https://avatarfiles.alphacoders.com/375/375159.jpeg" alt="" />
+                            )}
+                            <input 
+                            type='file' 
+                            ref={inputRef} 
+                            onChange={handleImageChange} 
+                            style={{display: "none"}}
+                            accept='image/*'
+                            /> */}
 
+                            {/* para di tumaas yung forms pag pumunta sa edit page hehe */}
+                            <h1 className='username-properties' style={{visibility:'hidden'}}>dontremove</h1>
+                        </div>
+                        
+                        
 
                         <div className='edit-btn-container-prof-settings'>
                             {/* <button class="edit-btn-properties" onClick={handleImageClick}>Upload Photo</button> */}
@@ -117,8 +122,7 @@ export default function EditProfile(){
                         </div>
                         
                     </div>
-                    
-                    
+                
                     <div className="forms-container">
 
                         <div className="forms-properties">
@@ -204,7 +208,7 @@ export default function EditProfile(){
 
                     <div className='edit-btn-container-prof-settings'>
                             <button class="edit-btn-properties" onClick={handleUpdateProfile}>Save Profile</button>
-                            <button class="edit-btn-properties" onClick={handleCancelEdit}>Cancel</button>
+                            <button class="edit-btn-properties mt-3" onClick={handleCancelEdit}>Cancel</button>
                     </div>
 
                 </div>      
