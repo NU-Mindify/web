@@ -130,7 +130,13 @@ export default function ManageStudents() {
             <div className="spinner"></div>
             <p>Fetching data...</p>
           </div>
-        ) : (
+        ) : 
+        filteredStudents.length === 0 ? (
+          <div className="no-students-found">
+            <p className="text-black mt-10 text-3xl">No student found.</p>
+          </div>
+        ) :
+        (
           currentStudents.map((student) => (
             <div
               className={
@@ -215,7 +221,7 @@ export default function ManageStudents() {
             <button
               className="join-item btn bg-white text-black"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
+              disabled={currentPage === 1 || filteredStudents.length === 0}
             >
               «
             </button>
@@ -225,7 +231,7 @@ export default function ManageStudents() {
             <button
               className="join-item btn bg-white text-black"
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
+              disabled={currentPage === totalPages || filteredStudents.length === 0}
             >
               »
             </button>
