@@ -4,103 +4,125 @@
 
 /*------------------------- MAIN CONTAINER --------------------------*/
 .account-main-container {
-    @apply p-3 flex flex-col h-full w-full bg-white;
+  @apply p-3 flex flex-col h-full w-full bg-white;
 }
-
 
 /*------------------------- FOR HEADER --------------------------*/
-.account-header{
-    @apply w-full h-[150px] p-2;
+.account-header {
+  @apply w-full h-[150px] p-2;
 }
 
-.account-title{
-    @apply text-[40px] font-[Poppins] font-bold text-[#FFD41C] h-[50px] ;
+.account-title {
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFD41C] h-[50px];
 }
 
 .acc-search-bar {
-    @apply flex text-[#000000] items-center bg-gray-100 px-3 py-2 rounded-full w-10/12 mt-5;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  @apply flex text-[#000000] items-center bg-gray-100 px-3 py-2 rounded-full w-10/12 mt-5;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.acc-search-input{
-    @apply p-2 rounded-lg px-2 py-1 border-none flex-1 bg-transparent focus:outline-none;
+.acc-search-input {
+  @apply p-2 rounded-lg px-2 py-1 border-none flex-1 bg-transparent focus:outline-none;
 }
-
-
 
 /*------------------------- USER TITLES --------------------------*/
-.titles-container{
-    @apply w-full h-[40px] flex items-center flex-col pt-3;  
+.titles-container {
+  @apply w-full h-[40px] flex items-center flex-col pt-3;
 }
-.header-info{
-    @apply w-11/12 h-full grid grid-cols-4 px-2;
+.header-info {
+  @apply w-11/12 h-full grid grid-cols-4 px-2;
 }
-.title-info{
-    @apply text-black text-2xl font-bold;
+.title-info {
+  @apply text-black text-2xl font-bold;
 }
-
-
-
 
 /*------------------------- USER CONTENTS --------------------------*/
 .users-container {
-    @apply w-full h-full overflow-hidden overflow-y-auto flex flex-col items-center 
+  @apply w-full h-full overflow-hidden overflow-y-auto flex flex-col items-center 
     transition-transform duration-500 ease-in-out;
-    scrollbar-width: none;
-    -ms-overflow-style: none;  
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .user-card {
-    @apply w-11/12 grid grid-cols-4 bg-white my-2 py-3 rounded-xl px-2 
+  @apply w-11/12 grid grid-cols-4 bg-white my-2 py-3 rounded-xl px-2 
     transition-transform duration-500 ease-in-out;
-    border: 1px solid black;
+  border: 1px solid black;
 }
-.active-user-card{
-    @apply w-[95%] grid grid-cols-4 bg-blue-500 my-2 py-5 rounded-xl px-2 
+.active-user-card {
+  @apply w-[95%] grid grid-cols-4 bg-blue-500 my-2 py-5 rounded-xl px-2 
     transition-transform duration-500 ease-in-out;
-    border: 1px solid black;
+  border: 1px solid black;
 }
-.name-img-container{
-    @apply flex flex-row items-center;
-}
-
-.admin-info{
-    @apply text-xl text-black flex items-center;
+.name-img-container {
+  @apply flex flex-row items-center;
 }
 
-.mini-avatar{
-    @apply w-[40px] h-[40px] rounded-full mr-2;
+.admin-info {
+  @apply text-xl text-black flex items-center;
 }
 
-.action-container{
-    @apply flex flex-row justify-between w-1/2;
+.mini-avatar {
+  @apply w-[40px] h-[40px] rounded-full mr-2;
 }
 
-
-.setting-icon, .chevron-icon{
-    @apply w-[35px] h-[35px] transition-transform duration-500 cursor-pointer bg-transparent;  
+.action-container {
+  @apply flex flex-row justify-between w-1/2;
 }
 
-.active-user-card .chevron-icon{
-    @apply w-[35px] h-[35px] transition-transform duration-500 cursor-pointer rotate-180; 
+.setting-icon,
+.chevron-icon {
+  @apply w-[35px] h-[35px] transition-transform duration-500 cursor-pointer bg-transparent;
 }
-  
 
-
-
-
+.active-user-card .chevron-icon {
+  @apply w-[35px] h-[35px] transition-transform duration-500 cursor-pointer rotate-180;
+}
 
 /*------------------------- FOOTER PAGINATION AND ADD USER --------------------------*/
-.acc-footer{
-    @apply w-full h-[80px] flex flex-col;
+.acc-footer {
+  @apply w-full h-[80px] flex flex-col;
 }
 
-.pagination-container{
-    @apply w-full h-1/2 flex flex-row justify-between items-center px-5;
+.pagination-container {
+  @apply w-full h-1/2 flex flex-row justify-between items-center px-5;
 }
 
-.add-user-container{
-    @apply w-full h-1/2 flex justify-center items-center;
+.add-user-container {
+  @apply w-full h-1/2 flex justify-center items-center;
+}
+
+/* modal css */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+.modal-content h2 {
+  margin-bottom: 0.5rem;
+  @apply text-black font-[Poppins]
+}
+
+.modal .btn {
+  padding: 0.5rem 1.2rem;
 }
