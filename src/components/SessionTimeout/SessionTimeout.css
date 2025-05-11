@@ -1,0 +1,31 @@
+.modal-btn-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.modal-close-btn,
+.modal-stay-btn {
+  flex: 1; 
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  height: 40px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-close-btn {
+  background-color: #ef4444; /* red */
+  color: white;
+}
+
+.modal-stay-btn {
+  background-color: #22c55e; /* green */
+  color: white;
+  margin-top: 16px;
+}

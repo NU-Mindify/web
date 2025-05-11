@@ -28,6 +28,7 @@ import AddTerm from './pages/glossary/AddTerm'
 import axios from 'axios'
 import { API_URL } from './Constants'
 import AddAccount from './pages/accounts/AddAccount'
+import SessionTimeout from './components/SessionTimeout/SessionTimeout'
 
 
 
@@ -88,6 +89,7 @@ function App() {
   
 
   return (
+    
     <ActiveContext.Provider
       value={{ isActive, setActive, selected, setSelected, currentUserEmail, setCurrentUserEmail, currentUserBranch, setCurrentUserBranch, subSelected, setSubSelected }}
     >
@@ -109,6 +111,7 @@ function App() {
               </Routes>
             ) : (
               <div className="main-container">
+                <SessionTimeout timeout={10 * 1000} /> {/* 15 minutes */}
                 <Sidebar />
                 <div
                   className={
