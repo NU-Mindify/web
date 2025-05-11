@@ -6,7 +6,7 @@
 }
 
 .question-header{
-    @apply w-full h-auto  mb-0 flex flex-col justify-center items-center p-3;
+    @apply w-full h-auto  mb-0 flex flex-col justify-center items-center p-2;
 }
 
 .title-header{
@@ -21,13 +21,43 @@
     @apply w-[250px] h-full  flex items-center justify-between px-3;
 }
 
+/* ------------------- SEARCH ---------------- */
 
-.ques-search-container{
-    @apply w-full h-[70px]  flex justify-center items-center;
+.question-controls-container {
+  @apply w-full flex flex-col lg:flex-row justify-between items-center gap-4 px-4;
 }
 
-.question-search{
-    @apply w-full h-1/2 bg-white text-black;
+.question-search-container {
+  @apply w-full lg:w-1/2 flex items-center;
+}
+
+.search-bar-question {
+  @apply w-full h-12 bg-white rounded-full flex items-center px-4 border border-gray-500 transition duration-300;
+}
+
+.search-btn-question {
+  @apply w-10 h-10 flex justify-center items-center bg-transparent border-none cursor-pointer transition duration-300 hover:bg-[#FFC300] hover:text-white;
+}
+
+.search-input-question {
+  @apply w-full h-full bg-transparent border-none outline-none pl-2 text-sm text-gray-800 placeholder-gray-400;
+}
+
+.sort-container {
+  @apply flex items-center gap-2 w-full lg:w-auto justify-start lg:justify-end lg:mt-0;
+}
+
+.sort-select {
+  @apply border border-gray-400 rounded-md px-2 py-2 text-sm text-gray-700 bg-white focus:ring-2 focus:ring-[#FFC300] focus:outline-none transition duration-300 hover:border-[#FFC300];
+}
+
+.add-ques-container .btn {
+  @apply bg-[#FFC300] text-white flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition duration-300;
+}
+
+.add-ques-container .btn .mainIcon {
+  @apply text-white; 
+  filter: invert(1); 
 }
 
 
@@ -37,7 +67,6 @@
 .question-body{
     @apply w-full flex-grow  px-5 py-3 overflow-y-auto overflow-hidden;
 }
-
 
 
 
@@ -73,5 +102,69 @@
 }
 
 .allques-main-holder{
-    @apply p-4 bg-white rounded-2xl text-black gap-4 flex flex-grow flex-col;
+    @apply p-4 bg-white rounded-2xl text-black gap-1 flex flex-grow flex-col;
+}
+
+
+/* ------------------- QUESTION---------------- */
+
+.question-card {
+  @apply w-full max-w-full bg-white border border-gray-700 rounded-xl my-1 box-border hover:bg-gray-100;
+}
+
+.question-details {
+  @apply flex justify-between items-start;
+}
+
+.question-header {
+  @apply flex justify-between w-full;
+}
+
+.question-text {
+  @apply font-semibold text-gray-900;
+}
+
+.dropdown-icon {
+  @apply w-5 h-5 text-gray-500 mt-1;
+}
+
+
+.choice {
+  @apply flex items-start gap-2 pt-2 text-gray-700 cursor-pointer;
+}
+
+.choice-correct {
+  @apply font-semibold text-gray-900;
+}
+
+.choice-indicator {
+  @apply w-5 h-5 rounded-full border-2 border-yellow-400 bg-white mt-1 relative;
+}
+
+.choice-fill {
+  @apply absolute inset-0 bg-[#FFC300] rounded-full opacity-100;
+}
+
+.rationale-box {
+  @apply border border-gray-300 p-4 mt-4 rounded-lg bg-white text-sm text-gray-600;
+}
+
+.question-meta {
+  @apply flex justify-between mt-4 text-sm font-medium text-gray-700;
+}
+
+.question-level {
+  @apply border border-gray-400 py-1 px-4 rounded-md;
+}
+
+.question-actions {
+  @apply flex justify-center gap-4 mt-6;
+}
+
+.btn-action {
+  @apply py-2 px-6 rounded-full bg-[#FFC300] text-white font-semibold border-none cursor-pointer;
+}
+
+.btn-action:hover {
+  @apply opacity-90;
 }

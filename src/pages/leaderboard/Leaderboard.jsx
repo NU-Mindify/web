@@ -300,7 +300,7 @@ export default function Leaderboard() {
                     </div>
                   </div>
                 ))}
-                ;
+                
               </div>
             )}
           </div>
@@ -420,7 +420,7 @@ export default function Leaderboard() {
                     </div>
                   </div>
                 ))}
-                ;
+                
               </div>
             )}
           </div>
