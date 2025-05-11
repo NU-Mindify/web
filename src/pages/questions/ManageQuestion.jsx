@@ -12,6 +12,8 @@ import developmental from '../../assets/questions/developmentalBG.png'
 import general from '../../assets/questions/generalBG.png'
 import industrial from '../../assets/questions/industrialBG.png'
 import psychological from '../../assets/questions/psychologicalBG.png'
+import plus from '../../assets/questions/plus.svg'
+import sort from '../../assets/questions/sort-alt.svg'
 
 
 
@@ -117,47 +119,54 @@ export default function ManageQuestion() {
     );
   }
   
-  
-  const QuestionCard = ({ data, index }) => {
-    return (
-      <>
-        <div className="collapse collapse-arrow shadow-lg hover:bg-base-300/10 bg-white rounded-md border cursor-pointer h-fit">
-          <input type="checkbox" name="question-accordion" />
-          <div className="collapse-title font-semibold">
-            {index + 1}. {data.question}
-          </div>
-          <div className="collapse-content text-sm flex justify-between">
-            <div>
-              {data.choices.map((choice) => (
-                <div
-                  className={choice.isCorrect ? "text-red-500" : ""}
-                  key={choice.letter}
-                >
-                  {choice.letter}. {choice.text}
-                </div>
-              ))}
-              <div className="mt-4">
-                <span className="font-bold">Rationale: </span>
-                {data.rationale}
-              </div>
-              <div className="mt-4">
-                <span className="font-bold">Category: </span>
-                {categoriesObj.find((categ) => categ.id == data.category).name}
-                <span className="font-bold ms-8">Level: </span>
-                {data.level}
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <button className="btn btn-sm btn-outline btn-secondary">Edit</button>
-              <button className="btn btn-sm btn-outline btn-error">
-                Archive
-              </button>
-            </div>
-          </div>
+const QuestionCard = ({ data, index }) => {
+  return (
+    <div className="collapse collapse-arrow question-card">
+      <input type="checkbox" name="question-accordion" />
+
+      <div className="collapse-title question-details">
+        <div className="question-summary">
+          {index + 1}. {data.question}
         </div>
-      </>
-    );
-  };
+      </div>
+
+      <div className="collapse-content question-content">
+        {data.choices.map((choice) => (
+          <label
+            key={choice.letter}
+            className={`choice ${choice.isCorrect ? "choice-correct" : ""}`}
+          >
+            <span className="choice-indicator">
+              {choice.isCorrect && <span className="choice-fill"></span>}
+            </span>
+            <span>
+              <strong>{choice.letter}.</strong> {choice.text}
+            </span>
+          </label>
+        ))}
+
+        <div className="rationale-box">
+          <p><strong>Rationale:</strong></p>
+          <p>{data.rationale}</p>
+        </div>
+
+        <div className="question-meta">
+          <div>
+            <strong>Category:</strong>{" "}
+            {categoriesObj.find((categ) => categ.id === data.category)?.name}
+          </div>
+          <div className="question-level">LEVEL: {data.level}</div>
+        </div>
+
+        <div className="question-actions">
+          <button className="btn-action">EDIT</button>
+          <button className="btn-action">ARCHIVE</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
   return (
    
@@ -167,29 +176,56 @@ export default function ManageQuestion() {
           {gotSelected ? 
               <>
                 <h1 className="quesiton-title">{selectedCat}</h1>
-                <div className="add-ques-container">
-                  <button className="btn" onClick={addQuestion}>
-                    Add Question
-                  </button>
-                  <button className="btn btn-error" onClick={handleBack}>
-                    Back
-                  </button> 
-                </div>
-                
+                <p className="category-quantity text-sm text-gray-600">Total Q: 2022</p>
+              
               </>
               : 
               <h1 className="quesiton-title">Select Category</h1>
           } 
         </div>
           
-          {gotSelected ? 
-            
-            <div className="ques-search-container">
-              <SearchBar className='question-search' /> 
+        {gotSelected && (
+          <div className="question-controls-container flex flex-wrap items-center justify-between gap-4  pt-4 mb-4">
+            {/* Search Bar */}
+            <div className="question-search-container flex-1 min-w-[200px]">
+              <div className="search-bar-question">
+                <button className="search-btn-question">
+                  <img src={search} alt="search icon" />
+                </button>
+                <input 
+                  type="text"
+                  placeholder="Search questions..." 
+                  className="search-input-question"
+                />
+              </div>
             </div>
-            : 
-            ''
-          }
+
+            {/* Sort Dropdown */}
+            <div className="sort-container relative">
+              <select id="sort" className="sort-select">
+                <option value="" disabled selected hidden>Sort by:</option>
+                <option value="level-asc">Level (1 → 10)</option>
+                <option value="level-desc">Level (10 → 1)</option>
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
+
+            {/* Buttons */}
+          <div className="add-ques-container flex gap-2">
+            <button className="btn flex items-center gap-2 px-4 py-2 text-sm font-medium" onClick={addQuestion}>
+              <img src={plus} className="mainIcon w-4 h-3" alt="plus icon" />
+              Add Question
+            </button>
+
+
+
+              <button className="btn btn-error" onClick={handleBack}>Back</button>
+            </div>
+          </div>
+        )}
+
         </div>
       {gotSelected ? 
         <div className="allquesitons-container">
