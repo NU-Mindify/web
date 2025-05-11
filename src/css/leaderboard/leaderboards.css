@@ -82,7 +82,7 @@
 }
 
 .leaders-container {
-  @apply w-full h-[80px] grid grid-cols-[1fr_3.5fr_3fr_4fr_2fr_1fr] gap-2 px-8 items-center overflow-hidden;
+  @apply w-full h-[40px] grid grid-cols-[1fr_3.5fr_3fr_4fr_2fr_1fr] gap-2 px-8 items-center overflow-hidden;
 }
 
 .leader-info {
