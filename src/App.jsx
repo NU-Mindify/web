@@ -111,7 +111,7 @@ function App() {
               </Routes>
             ) : (
               <div className="main-container">
-                <SessionTimeout timeout={10 * 1000} /> {/* 15 minutes */}
+                <SessionTimeout timeout={15 * 60 * 1000} /> {/* 15 minutes */}
                 <Sidebar />
                 <div
                   className={
