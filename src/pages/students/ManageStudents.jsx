@@ -7,7 +7,7 @@ import samplepic from "../../assets/students/sample-minji.svg";
 import "../../css/students/students.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { API_URL, branches } from "../../Constants";
+import { API_URL, branches, categories, modes, levels } from "../../Constants";
 import AnimatedProgressBar from "../../components/animatedProgressBar/AnimatedProgressBar";
 
 export default function ManageStudents() {
@@ -17,9 +17,12 @@ export default function ManageStudents() {
   const [loadingStudents, setLoadingStudents] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
 
+  const [attempts, setAttempts] = useState([]);
+
   useEffect(() => {
     fetchStudents();
     fetchAllProgress();
+    fetchAttempts();
   }, []);
 
   const fetchStudents = async () => {
@@ -47,27 +50,44 @@ export default function ManageStudents() {
     }
   };
 
+  const fetchAttempts = async () => {
+    try {
+      const categoryList = categories.map((c) => c.category).join(",");
+      const levelList = levels.join(",");
+      const modeList = modes.map((m) => m.mode).join(",");
+
+      const response = await axios.get(`${API_URL}/getAnalytics`, {
+        params: {
+          categories: categoryList,
+          levels: levelList,
+          mode: modeList,
+        },
+      });
+
+      console.log(response.data);
+      setAttempts(response.data);
+    } catch (error) {
+      console.error("Error fetching analytics data:", error.message);
+    }
+  };
+
   const filteredStudents = students.filter(
     (student) =>
       student.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.student_id?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
-
   const [currentPage, setCurrentPage] = useState(1);
-  const studentsPerPage = 10; 
+  const studentsPerPage = 10;
 
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
+  const currentStudents = filteredStudents.slice(
+    indexOfFirstStudent,
+    indexOfLastStudent
+  );
 
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
-
-
-
-
-
 
   const renderProgressCard = (studentId, worldTitle, worldKey, label) => (
     <div className="per-world-progress-card" key={worldKey}>
@@ -92,12 +112,19 @@ export default function ManageStudents() {
 
   const progressWorlds = [
     { title: "Abnormal Psychology", key: "abnormal", label: "World 1" },
-    { title: "Developmental Psychology", key: "developmental", label: "World 2" },
-    { title: "Psychological Assessment", key: "psychological", label: "World 3" },
+    {
+      title: "Developmental Psychology",
+      key: "developmental",
+      label: "World 2",
+    },
+    {
+      title: "Psychological Assessment",
+      key: "psychological",
+      label: "World 3",
+    },
     { title: "Industrial Psychology", key: "industrial", label: "World 4" },
     { title: "General Psychology", key: "general", label: "World 5" },
   ];
-
 
   return (
     <div className="students-main-container">
@@ -130,13 +157,11 @@ export default function ManageStudents() {
             <div className="spinner"></div>
             <p>Fetching data...</p>
           </div>
-        ) : 
-        filteredStudents.length === 0 ? (
+        ) : filteredStudents.length === 0 ? (
           <div className="no-students-found">
             <p className="text-black mt-10 text-3xl">No student found.</p>
           </div>
-        ) :
-        (
+        ) : (
           currentStudents.map((student) => (
             <div
               className={
@@ -156,10 +181,8 @@ export default function ManageStudents() {
                 <h1 className="student-info">{student.username}</h1>
               </div>
               <h1 className="student-info">
-                {
-                  branches.find((branch) => branch.id === student.branch)
-                    ?.name || "Unknown Branch"
-                }
+                {branches.find((branch) => branch.id === student.branch)
+                  ?.name || "Unknown Branch"}
               </h1>
               <div className="student-action-container">
                 <img src={settings} alt="settings" className="setting-icon" />
@@ -180,7 +203,12 @@ export default function ManageStudents() {
               {openDropdown === student.student_id && (
                 <div className="student-progress-container">
                   {progressWorlds.map((world) =>
-                    renderProgressCard(student._id, world.title, world.key, world.label)
+                    renderProgressCard(
+                      student._id,
+                      world.title,
+                      world.key,
+                      world.label
+                    )
                   )}
                 </div>
               )}
@@ -188,24 +216,37 @@ export default function ManageStudents() {
               {openDropdown === student.student_id && (
                 <div className="student-progress-container">
                   <div className="per-world-progress-card">
-                    <h1>asd</h1>
+                    <h1>Abnormal Psychology</h1>
+                    <h1>Attempts: </h1>
+                    <h1>Classic Average Score: </h1>
+                    <h1>Mastery Average Score: </h1>
                   </div>
                   <div className="per-world-progress-card">
-                    <h1>asd</h1>
+                    <h1>Developmental Psychology</h1>
+                    <h1>Attempts: </h1>
+                    <h1>Classic Average Score: </h1>
+                    <h1>Mastery Average Score: </h1>
                   </div>
                   <div className="per-world-progress-card">
-                    <h1>asd</h1>
+                    <h1>Psychological Psychology</h1>
+                    <h1>Attempts: </h1>
+                    <h1>Classic Average Score: </h1>
+                    <h1>Mastery Average Score: </h1>
                   </div>
                   <div className="per-world-progress-card">
-                    <h1>asd</h1>
+                    <h1>Industrial Psychology</h1>
+                    <h1>Attempts: </h1>
+                    <h1>Classic Average Score: </h1>
+                    <h1>Mastery Average Score: </h1>
                   </div>
                   <div className="per-world-progress-card">
-                    <h1>asd</h1>
+                    <h1>General Psychology</h1>
+                    <h1>Attempts: </h1>
+                    <h1>Classic Average Score: </h1>
+                    <h1>Mastery Average Score: </h1>
                   </div>
                 </div>
               )}
-
-              
             </div>
           ))
         )}
@@ -214,8 +255,13 @@ export default function ManageStudents() {
       <div className="student-footer">
         <div className="student-pagination-container">
           <h1 className="text-black">
-            Showing {filteredStudents.length === 0 ? 0 : (currentPage - 1) * studentsPerPage + 1} to{" "}
-                        {Math.min(currentPage * studentsPerPage, filteredStudents.length)} of {filteredStudents.length}
+            Showing{" "}
+            {filteredStudents.length === 0
+              ? 0
+              : (currentPage - 1) * studentsPerPage + 1}{" "}
+            to{" "}
+            {Math.min(currentPage * studentsPerPage, filteredStudents.length)}{" "}
+            of {filteredStudents.length}
           </h1>
           <div className="join">
             <button
@@ -230,14 +276,17 @@ export default function ManageStudents() {
             </button>
             <button
               className="join-item btn bg-white text-black"
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages || filteredStudents.length === 0}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={
+                currentPage === totalPages || filteredStudents.length === 0
+              }
             >
               »
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );

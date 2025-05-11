@@ -16,18 +16,32 @@ export default function EditProfile() {
   );
   const [initialWebUser, setInitialWebUser] = useState(
     location.state?.webUser || null
-  ); // Track initial state
+  );
   const [showModal, setShowModal] = useState(false);
+
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
 
   useEffect(() => {
     if (location.state?.webUser) {
       setEditWebUser(location.state.webUser);
-      setInitialWebUser(location.state.webUser); // Only set once on mount
+      setInitialWebUser(location.state.webUser);
     }
   }, []);
 
+  const validateFirstName = (value) => {
+    if (!value.trim()) return "First name is required.";
+    if (value.trim().length < 2) return "First name must be at least 2 characters.";
+    return "";
+  };
+
+  const validateLastName = (value) => {
+    if (!value.trim()) return "Last name is required.";
+    if (value.trim().length < 2) return "Last name must be at least 2 characters.";
+    return "";
+  };
+
   const hasChanges = () => {
-    // Check if there are any changes between the initial state and the current state
     return (
       initialWebUser.firstName !== editWebUser.firstName ||
       initialWebUser.lastName !== editWebUser.lastName ||
@@ -51,7 +65,6 @@ export default function EditProfile() {
       setCurrentWebUserUID(updatedUser.data.uid);
       localStorage.setItem("userUID", updatedUser.data.uid);
 
-      // Show modal instead of alert
       setShowModal(true);
     } catch (error) {
       console.error(error);
@@ -102,29 +115,39 @@ export default function EditProfile() {
 
           <div className="forms-container">
             <div className="forms-properties">
-              <label className="forms-label-properties">First Name</label>
+              <label className="forms-label-properties">First Name*</label>
               <input
                 type="text"
                 placeholder="First Name"
                 className="input input-properties"
                 value={editWebUser.firstName}
-                onChange={(e) =>
-                  setEditWebUser({ ...editWebUser, firstName: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setEditWebUser({ ...editWebUser, firstName: value });
+                  setFirstNameError(validateFirstName(value));
+                }}
               />
+              {firstNameError && (
+                <span className="error-text text-red-700">{firstNameError}</span>
+              )}
             </div>
 
             <div className="forms-properties">
-              <label className="forms-label-properties">Last Name</label>
+              <label className="forms-label-properties">Last Name*</label>
               <input
                 type="text"
                 placeholder="Last Name"
                 className="input input-properties"
                 value={editWebUser.lastName}
-                onChange={(e) =>
-                  setEditWebUser({ ...editWebUser, lastName: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setEditWebUser({ ...editWebUser, lastName: value });
+                  setLastNameError(validateLastName(value));
+                }}
               />
+              {lastNameError && (
+                <span className="error-text text-red-700">{lastNameError}</span>
+              )}
             </div>
 
             <div className="forms-properties">
@@ -186,12 +209,22 @@ export default function EditProfile() {
           <div className="edit-btn-container-prof-settings">
             <button
               className={
-                !hasChanges()
+                !hasChanges() ||
+                !!firstNameError ||
+                !!lastNameError ||
+                !editWebUser.firstName ||
+                !editWebUser.lastName
                   ? "edit-btn-properties-disabled"
                   : "edit-btn-properties"
               }
               onClick={handleUpdateProfile}
-              disabled={!hasChanges()} // Disable Save if no changes
+              disabled={
+                !hasChanges() ||
+                !!firstNameError ||
+                !!lastNameError ||
+                !editWebUser.firstName ||
+                !editWebUser.lastName
+              }
             >
               Save Profile
             </button>
@@ -204,7 +237,6 @@ export default function EditProfile() {
           </div>
         </div>
 
-        {/* Modal for success */}
         {showModal && (
           <div className="modal-overlay">
             <div className="modal-content">
