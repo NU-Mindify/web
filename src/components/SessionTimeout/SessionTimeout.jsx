@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./sessiontimeout.css";
+import "./SessionTimeout.css";
 import { getAuth, signOut } from "firebase/auth"
 
 export default function SessionTimeout({ timeout = 15 * 60 * 1000 }) {
