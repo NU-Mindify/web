@@ -107,7 +107,7 @@
   lg:text-base;
 }
 
-/* try loading spinner */
+/* loading spinner */
 
 .loading-overlay-leaderboards {
   @apply flex flex-col items-center justify-center pt-50;
@@ -126,5 +126,5 @@
   @apply text-black text-lg font-medium font-[Poppins]
 }
 
-/* end of try loading spinner */
+/* loading spinner */
 
