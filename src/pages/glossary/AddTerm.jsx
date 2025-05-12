@@ -5,6 +5,7 @@ import { API_URL } from "../../Constants";
 import close from '../../assets/glossary/close btn.svg';
 import '../../css/glossary/addGlossary.css';
 import addtermbtn from '../../assets/glossary/add-term btn.svg';
+import { XCircle } from "lucide-react";
 
 
 
@@ -53,6 +54,18 @@ export default function AddTerm({onClose}){
                         />
 
                         <h1>Tags:</h1>
+                        <div className="flex justify-start gap-4">
+                        {newTerm.tags.map(tag=> (
+                            <button 
+                                className="text-black border bg-black/5 p-2 py-1 rounded flex gap-2 hover:cursor-pointer hover:bg-black/15" 
+                                onClick={() => {
+                                    setNewTerm(prev => ({...prev, tags: prev.tags.filter(tagName => tagName != tag)}))
+                                }}
+                            >
+                                {tag} <XCircle />
+                            </button>
+                        ))}
+                        </div>
                         <input 
                             type="text"
                             placeholder="Add a tag."
