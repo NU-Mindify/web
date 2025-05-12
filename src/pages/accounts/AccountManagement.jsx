@@ -1,34 +1,46 @@
 import { useEffect, useState } from "react";
-import "../../css/account/account.css";
-import axios from "axios";
-import { API_URL, branches } from "../../Constants";
 import { useNavigate } from "react-router";
-import search from "../../assets/students/search-01.svg";
-import chevron from "../../assets/glossary/dropdown.svg";
-import settings from "../../assets/students/settings.svg";
+import axios from "axios";
+import "../../css/account/account.css";
+import { API_URL, branches } from "../../Constants";
+
+import searchIcon from "../../assets/students/search-01.svg";
+import chevronIcon from "../../assets/glossary/dropdown.svg";
+import settingsIcon from "../../assets/students/settings.svg";
 
 export default function AccountManagement() {
-    const [webusers, setWebUsers] = useState([]);
+    const [webUsers, setWebUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [cardActive, setCardActive] = useState(null);
-    const [searchUser, setSearchUser] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
+    const usersPerPage = 10;
 
     useEffect(() => {
-        axios.get(`${API_URL}/getWebUsers`)
-            .then((res) => setWebUsers(res.data))
-            .catch((err) => console.error(err));
+        const fetchUsers = async () => {
+            setIsLoading(true);
+            try {
+                const res = await axios.get(`${API_URL}/getWebUsers`);
+                setWebUsers(res.data);
+            } catch (error) {
+                console.error("Error fetching users:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchUsers();
     }, []);
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchUser]);
+    }, [searchQuery]);
 
-    const usersPerPage = 10;
-    const filteredUsers = webusers.filter((user) =>
-        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchUser.toLowerCase())
+    const filteredUsers = webUsers.filter(user =>
+        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
     const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
     const currentUsers = filteredUsers.slice(
         (currentPage - 1) * usersPerPage,
@@ -36,7 +48,7 @@ export default function AccountManagement() {
     );
 
     const toggleCard = (id) => {
-        setCardActive((prev) => (prev === id ? null : id));
+        setCardActive(prev => (prev === id ? null : id));
     };
 
     return (
@@ -45,18 +57,18 @@ export default function AccountManagement() {
             <div className="account-header">
                 <h1 className="account-title">Account Management</h1>
                 <div className="acc-search-bar">
-                    <img src={search} className="search-icon" alt="search icon" />
+                    <img src={searchIcon} alt="Search" className="search-icon" />
                     <input
                         type="text"
                         className="acc-search-input"
                         placeholder="Search for a user"
-                        value={searchUser}
-                        onChange={(e) => setSearchUser(e.target.value)}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
             </div>
 
-            {/* Column titles */}
+            {/* Column Titles */}
             <div className="titles-container">
                 <div className="header-info">
                     <h1 className="title-info">Name</h1>
@@ -66,41 +78,42 @@ export default function AccountManagement() {
                 </div>
             </div>
 
-            {/* User list */}
+            {/* User List */}
             <div className="users-container">
-                {currentUsers.length > 0 ? (
-                    currentUsers.map((admin) => (
+                {isLoading ? (
+                    <div className="loading-overlay-students">
+                        <div className="spinner"></div>
+                        <p>Fetching data...</p>
+                    </div>
+                ) : filteredUsers.length === 0 ? (
+                    <p className="text-black mt-10 text-3xl">No user found.</p>
+                ) : (
+                    currentUsers.map((user) => (
                         <div
-                            key={admin.employeenum}
-                            className={cardActive === admin.employeenum ? "active-user-card" : "user-card"}
+                            key={user.employeenum}
+                            className={cardActive === user.employeenum ? "active-user-card" : "user-card"}
                         >
                             <div className="name-img-container">
-                                <img src={admin.useravatar} alt={admin.firstName} className="mini-avatar" />
+                                <img src={user.useravatar} alt={user.firstName} className="mini-avatar" />
                                 <h1 className="admin-info">
-                                    {admin.firstName} {admin.lastName}
+                                    {user.firstName} {user.lastName}
                                 </h1>
                             </div>
-
-                            <h1 className="admin-info">{admin.position}</h1>
+                            <h1 className="admin-info">{user.position}</h1>
                             <h1 className="admin-info">
-                                {branches.find((branch) => branch.id === admin.branch)?.name || "Unknown Branch"}
+                                {branches.find(b => b.id === user.branch)?.name || "Unknown Branch"}
                             </h1>
-
                             <div className="action-container">
-                                <img src={settings} alt="settings" className="setting-icon" />
+                                <img src={settingsIcon} alt="settings" className="setting-icon" />
                                 <img
-                                    src={chevron}
-                                    alt="chevron"
-                                    onClick={() => toggleCard(admin.employeenum)}
-                                    className={`origin-center chevron-icon ${
-                                        cardActive === admin.employeenum ? "rotate-180" : ""
-                                    }`}
+                                    src={chevronIcon}
+                                    alt="toggle details"
+                                    onClick={() => toggleCard(user.employeenum)}
+                                    className={`origin-center chevron-icon ${cardActive === user.employeenum ? "rotate-180" : ""}`}
                                 />
                             </div>
                         </div>
                     ))
-                ) : (
-                    <div className="text-white text-xl mt-10">No users found.</div>
                 )}
             </div>
 
@@ -111,12 +124,11 @@ export default function AccountManagement() {
                         Showing {filteredUsers.length === 0 ? 0 : (currentPage - 1) * usersPerPage + 1} to{" "}
                         {Math.min(currentPage * usersPerPage, filteredUsers.length)} of {filteredUsers.length}
                     </h1>
-
                     <div className="join">
                         <button
                             className="join-item btn bg-white text-black"
-                            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                            disabled={currentPage === 1}
+                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={currentPage <= 1}
                         >
                             «
                         </button>
@@ -125,14 +137,13 @@ export default function AccountManagement() {
                         </button>
                         <button
                             className="join-item btn bg-white text-black"
-                            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                            disabled={currentPage === totalPages}
+                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage >= totalPages}
                         >
                             »
                         </button>
                     </div>
                 </div>
-
                 <div className="add-user-container">
                     <button onClick={() => navigate("/addaccount")} className="btn btn-success">
                         Add Account

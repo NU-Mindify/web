@@ -43,6 +43,7 @@ function App() {
 
   const [currentWebUser, setCurrentWebUser] = useState({firstName: '', lastName: '', branch: '', email: '', employeenum: '', position: '', uid: '', useravatar: ''})
   const [currentWebUserUID, setCurrentWebUserUID] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
   
 
   useEffect(()=>{
@@ -94,7 +95,7 @@ function App() {
       value={{ isActive, setActive, selected, setSelected, currentUserEmail, setCurrentUserEmail, currentUserBranch, setCurrentUserBranch, subSelected, setSubSelected }}
     >
     <UserLoggedInContext.Provider
-      value={{currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID}}
+      value={{ currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID, isAdmin, setIsAdmin }}
     >
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>

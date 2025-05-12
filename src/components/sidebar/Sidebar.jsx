@@ -30,13 +30,20 @@ import { getAuth, signOut } from "firebase/auth"
 
 export default function Sidebar() {
     const { isActive, setActive, selected, setSelected, subSelected, setSubSelected } = useContext(ActiveContext)
-    const {currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID} = useContext(UserLoggedInContext)
+    const {currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID, isAdmin, setIsAdmin} = useContext(UserLoggedInContext)
     const [activeQuestion, setActiveQuestion] = useState(false)
 
     const navigate = useNavigate()
     const location = useLocation();
 
 
+
+    if(currentWebUser.position.toLowerCase() === 'accounts admin'){
+        setIsAdmin(true)
+    }
+    else{
+        setIsAdmin(false)
+    }
     
     
     const paths = {
@@ -376,20 +383,25 @@ export default function Sidebar() {
                             goTo={paths.profile}
                         />
                     </li>
-                    <li>
-                        <MenuBtn
-                            icons={account}
-                            active={isActive}
-                            text='Account Management'
-                            isSelected={selected === 'account'}
-                            onPress={() => {
-                                setSelected('account');
-                                setSubSelected('');
-                                setActiveQuestion(false);
-                            }}
-                            goTo={paths.account}
-                        />
-                    </li>
+                    {isAdmin ? 
+                        <li>
+                            <MenuBtn
+                                icons={account}
+                                active={isActive}
+                                text='Account Management'
+                                isSelected={selected === 'account'}
+                                onPress={() => {
+                                    setSelected('account');
+                                    setSubSelected('');
+                                    setActiveQuestion(false);
+                                }}
+                                goTo={paths.account}
+                            />
+                        </li>
+                        :
+                        ""
+                    }
+                    
                     <li>
                         {!isActive ? (
                             <MenuBtn
