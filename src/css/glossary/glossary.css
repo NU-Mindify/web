@@ -212,14 +212,18 @@
 }
 
 .add-term-btn {
-  @apply w-full py-2 px-6 flex justify-center items-center rounded-lg bg-[#FFC300] text-white 
+  @apply w-[250px] h-[40px] p-0 flex justify-center items-center 
   transition-all duration-500 ease-in-out absolute bottom-2 left-1/2 transform -translate-x-1/2 font-medium cursor-pointer; 
   width: auto; 
 }
 
 .add-term-btn:hover {
-  background-color: #FFB100;
+  /* background-color: #FFB100; */
   filter: brightness(1.2);
+}
+
+.add-term-icon-btn{
+  @apply w-[250px] h-[40px];
 }
 
 
