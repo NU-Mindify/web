@@ -64,7 +64,7 @@ export default function ManageStudents() {
         },
       });
 
-      console.log(response.data);
+      console.log("Fetched Attempts:", response.data); // Log the fetched attempts
       setAttempts(response.data);
     } catch (error) {
       console.error("Error fetching analytics data:", error.message);
@@ -126,6 +126,54 @@ export default function ManageStudents() {
     { title: "General Psychology", key: "general", label: "World 5" },
   ];
 
+  const getStudentAttemptsByWorld = (studentId) => {
+    // console.log("StudentId (Type):", studentId, "Type:", typeof studentId);
+
+    const studentData = attempts.filter((attempt) => {
+      // console.log("Attempt Object:", attempt);
+      const attemptUserId = attempt.user_id._id; // Access the _id of the user_id object
+
+      // console.log(
+      //   "Attempt user_id (Type):",
+      //   attemptUserId,
+      //   "Converted to String:",
+      //   attemptUserId.toString()
+      // );
+      // console.log("Comparing:", attemptUserId.toString(), "with", studentId);
+
+      return attemptUserId.toString() === String(studentId); // Compare as strings
+    });
+
+    // console.log("Filtered studentData:", studentData);
+    const result = {};
+
+    studentData.forEach((entry) => {
+      const worldKey = entry.category; // category = world key
+      const score = entry.correct;
+
+      if (!result[worldKey]) {
+        result[worldKey] = {
+          classicScores: [],
+          masteryScores: [],
+          classicAttempts: 0,
+          masteryAttempts: 0,
+        };
+      }
+
+      if (entry.mode === "classic") {
+        result[worldKey].classicScores.push(entry.correct);
+        result[worldKey].classicAttempts += 1;
+      }
+
+      if (entry.mode === "mastery") {
+        result[worldKey].masteryScores.push(entry.correct);
+        result[worldKey].masteryAttempts += 1;
+      }
+    });
+
+    return result;
+  };
+
   return (
     <div className="students-main-container">
       <div className="student-header">
@@ -162,93 +210,117 @@ export default function ManageStudents() {
             <p className="text-black mt-10 text-3xl">No student found.</p>
           </div>
         ) : (
-          currentStudents.map((student) => (
-            <div
-              className={
-                openDropdown === student.student_id
-                  ? "active-student-card"
-                  : "student-card"
-              }
-              key={student.student_id}
-            >
-              <h1 className="student-info">{student.student_id}</h1>
-              <div className="name-img-container">
-                <img
-                  src={samplepic}
-                  alt={student.username}
-                  className="mini-avatar"
-                />
-                <h1 className="student-info">{student.username}</h1>
-              </div>
-              <h1 className="student-info">
-                {branches.find((branch) => branch.id === student.branch)
-                  ?.name || "Unknown Branch"}
-              </h1>
-              <div className="student-action-container">
-                <img src={settings} alt="settings" className="setting-icon" />
-                <img
-                  src={chevron}
-                  alt="chevron"
-                  className="chevron-icon"
-                  onClick={() =>
-                    setOpenDropdown(
-                      openDropdown === student.student_id
-                        ? null
-                        : student.student_id
-                    )
-                  }
-                />
-              </div>
-
-              {openDropdown === student.student_id && (
-                <div className="student-progress-container">
-                  {progressWorlds.map((world) =>
-                    renderProgressCard(
-                      student._id,
-                      world.title,
-                      world.key,
-                      world.label
-                    )
-                  )}
+          currentStudents.map((student) => {
+            const studentId = String(student._id); // Ensuring _id is treated as a string
+            return (
+              <div
+                className={
+                  openDropdown === studentId
+                    ? "active-student-card"
+                    : "student-card"
+                }
+                key={student.student_id}
+              >
+                <h1 className="student-info">{student.student_id}</h1>
+                <div className="name-img-container">
+                  <img
+                    src={samplepic}
+                    alt={student.username}
+                    className="mini-avatar"
+                  />
+                  <h1 className="student-info">{student.username}</h1>
                 </div>
-              )}
-
-              {openDropdown === student.student_id && (
-                <div className="student-progress-container">
-                  <div className="per-world-progress-card">
-                    <h1>Abnormal Psychology</h1>
-                    <h1>Attempts: </h1>
-                    <h1>Classic Average Score: </h1>
-                    <h1>Mastery Average Score: </h1>
-                  </div>
-                  <div className="per-world-progress-card">
-                    <h1>Developmental Psychology</h1>
-                    <h1>Attempts: </h1>
-                    <h1>Classic Average Score: </h1>
-                    <h1>Mastery Average Score: </h1>
-                  </div>
-                  <div className="per-world-progress-card">
-                    <h1>Psychological Psychology</h1>
-                    <h1>Attempts: </h1>
-                    <h1>Classic Average Score: </h1>
-                    <h1>Mastery Average Score: </h1>
-                  </div>
-                  <div className="per-world-progress-card">
-                    <h1>Industrial Psychology</h1>
-                    <h1>Attempts: </h1>
-                    <h1>Classic Average Score: </h1>
-                    <h1>Mastery Average Score: </h1>
-                  </div>
-                  <div className="per-world-progress-card">
-                    <h1>General Psychology</h1>
-                    <h1>Attempts: </h1>
-                    <h1>Classic Average Score: </h1>
-                    <h1>Mastery Average Score: </h1>
-                  </div>
+                <h1 className="student-info">
+                  {branches.find((branch) => branch.id === student.branch)
+                    ?.name || "Unknown Branch"}
+                </h1>
+                <div className="student-action-container">
+                  <img src={settings} alt="settings" className="setting-icon" />
+                  <img
+                    src={chevron}
+                    alt="chevron"
+                    className="chevron-icon"
+                    onClick={() =>
+                      setOpenDropdown(
+                        openDropdown === studentId ? null : studentId
+                      )
+                    }
+                  />
                 </div>
-              )}
-            </div>
-          ))
+
+                {openDropdown === studentId && (
+                  <div className="student-progress-container">
+                    {progressWorlds.map((world) =>
+                      renderProgressCard(
+                        studentId,
+                        world.title,
+                        world.key,
+                        world.label
+                      )
+                    )}
+                  </div>
+                )}
+
+                {openDropdown === studentId &&
+                  (() => {
+                    const studentWorldData =
+                      getStudentAttemptsByWorld(studentId);
+
+                    return (
+                      <div className="student-progress-container">
+                        {progressWorlds.map(({ title, key }) => {
+                          const worldStats = studentWorldData[key] || {
+                            classicScores: [],
+                            masteryScores: [],
+                            attemptCount: 0,
+                          };
+
+                          const avg = (arr) => {
+                            const totalItems = 8;
+                            if (arr.length === 0) return "Not attempted yet";
+
+                            const totalCorrect = arr.reduce(
+                              (sum, score) => sum + score,
+                              0
+                            );
+                            const averageCorrect = totalCorrect / arr.length;
+
+                            return `${averageCorrect.toFixed(2)}/${totalItems}`;
+                          };
+
+                          return (
+                            <div className="per-world-progress-card" key={key}>
+                              <h1>{title}</h1>
+                              <h1>
+                                Classic Attempts:{" "}
+                                {worldStats.classicAttempts > 0
+                                  ? worldStats.classicAttempts
+                                  : "Not attempted yet"}
+                              </h1>
+                              <h1>
+                                Classic Average Score:{" "}
+                                {avg(worldStats.classicScores)}
+                              </h1>
+
+                              <h1>
+                                Mastery Attempts:{" "}
+                                {worldStats.masteryAttempts > 0
+                                  ? worldStats.masteryAttempts
+                                  : "Not attempted yet"}
+                              </h1>
+                              <h1>
+                                Mastery Average Score:{" "}
+                                {avg(worldStats.masteryScores)}
+                              </h1>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+              </div>
+            );
+          })
         )}
       </div>
 

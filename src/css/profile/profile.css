@@ -59,7 +59,7 @@ body,
 }
 
 .edit-btn-properties {
-  @apply w-[250px] h-[40px] rounded-md border border-black bg-transparent px-6 font-medium text-black transition-all [box-shadow:0px_4px_1px_#000000] active:translate-y-[2px] active:shadow-none cursor-pointer font-[Poppins]
+  @apply w-[250px] h-[40px] rounded-md border border-black bg-[#FFC300] px-6 font-medium text-black transition-all [box-shadow:0px_4px_1px_#000000] active:translate-y-[2px] active:shadow-none cursor-pointer font-[Poppins]
     md:w-[250px]
     lg:w-[250px];
 }

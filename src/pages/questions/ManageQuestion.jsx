@@ -14,6 +14,10 @@ import industrial from '../../assets/questions/industrialBG.png'
 import psychological from '../../assets/questions/psychologicalBG.png'
 import plus from '../../assets/questions/plus.svg'
 import sort from '../../assets/questions/sort-alt.svg'
+import back from '../../assets/questions/angle-left.svg'
+
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+
 
 
 
@@ -152,11 +156,15 @@ const QuestionCard = ({ data, index }) => {
 
         <div className="question-meta">
           <div>
-            <strong>Category:</strong>{" "}
-            {categoriesObj.find((categ) => categ.id === data.category)?.name}
+            <div>
+              <strong>Category:</strong> {categoriesObj.find(categ => categ.id === data.category)?.name}
+            </div>
+            <div>
+              <strong>LEVEL:</strong> {data.level}
+            </div>
           </div>
-          <div className="question-level">LEVEL: {data.level}</div>
         </div>
+
 
         <div className="question-actions">
           <button className="btn-action">EDIT</button>
@@ -172,25 +180,33 @@ const QuestionCard = ({ data, index }) => {
    
     <div className="question-main-container">
       <div className="question-header">
+
         <div className="title-header">
-          {gotSelected ? 
-              <>
-                <h1 className="quesiton-title">{selectedCat}</h1>
-                <p className="category-quantity text-sm text-gray-600">Total Q: 2022</p>
-              
-              </>
-              : 
-              <h1 className="quesiton-title">Select Category</h1>
-          } 
+          {gotSelected ? (
+            <div className="title-content">
+              <div className="title-left">
+                <button className="back-button" onClick={handleBack}>
+                  <img src={back} alt="back arrow" className="back-icon" />
+                </button>
+                <h1 className="question-title">{selectedCat}</h1>
+              </div>
+              <p className="question-count">Total Questions: {questions.length}</p>
+            </div>
+          ) : (
+            <h1 className="question-title">Select Category</h1>
+          )}
         </div>
           
-        {gotSelected && (
-          <div className="question-controls-container flex flex-wrap items-center justify-between gap-4  pt-4 mb-4">
-            {/* Search Bar */}
+      {gotSelected && (
+        <div className="question-controls-container flex flex-col gap-4 pt-4 mb-4">
+
+
+          <div className="flex flex-wrap items-center justify-between gap-4 w-full">
+
             <div className="question-search-container flex-1 min-w-[200px]">
-              <div className="search-bar-question">
+              <div className="search-bar-question border">
                 <button className="search-btn-question">
-                  <img src={search} alt="search icon" />
+                  <img src={search} alt="search icon" className="w-4 h-4" />
                 </button>
                 <input 
                   type="text"
@@ -200,10 +216,31 @@ const QuestionCard = ({ data, index }) => {
               </div>
             </div>
 
-            {/* Sort Dropdown */}
+          
+            <div className="add-ques-container flex gap-2">
+              <button
+                className="btn flex items-center gap-2 px-4 py-2 text-sm font-medium"
+                onClick={addQuestion}>
+                <img src={plus} className="mainIcon w-4 h-4" alt="plus icon" />
+                Add Question
+              </button>
+
+              <div className="pt-1">
+                <ExportDropdown />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4 w-full justify-start">
+            <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
+              <button className="all-archive-btn active w-1/2">All Questions</button>
+              <button className="all-archive-btn w-1/2">Archive</button>
+            </div>
+
             <div className="sort-container relative">
-              <select id="sort" className="sort-select">
+              <select id="sort" className="sort-select pl-8">
                 <option value="" disabled selected hidden>Sort by:</option>
+                <option value="level-asc">ALL</option>
                 <option value="level-asc">Level (1 → 10)</option>
                 <option value="level-desc">Level (10 → 1)</option>
                 <option value="newest">Newest First</option>
@@ -211,20 +248,23 @@ const QuestionCard = ({ data, index }) => {
               </select>
             </div>
 
-
-            {/* Buttons */}
-          <div className="add-ques-container flex gap-2">
-            <button className="btn flex items-center gap-2 px-4 py-2 text-sm font-medium" onClick={addQuestion}>
-              <img src={plus} className="mainIcon w-4 h-3" alt="plus icon" />
-              Add Question
-            </button>
-
-
-
-              <button className="btn btn-error" onClick={handleBack}>Back</button>
+            <div className="sort-container relative">
+              <select id="filter" className="sort-select pl-8">
+                <option value="" disabled selected hidden>Filter Level:</option>
+                <option value="1">Level 1</option>
+                <option value="2">Level 2</option>
+                <option value="3">Level 3</option>
+                <option value="4">Level 4</option>
+                <option value="5">Level 5</option>
+              </select>
             </div>
           </div>
-        )}
+
+
+
+        </div>
+      )}
+
 
         </div>
       {gotSelected ? 

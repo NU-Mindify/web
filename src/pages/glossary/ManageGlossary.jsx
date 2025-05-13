@@ -8,6 +8,9 @@ import SearchBar from "../../components/searchbar/SearchBar";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { API_URL } from "../../Constants";
+import AddTerm from "./AddTerm";
+import addtermbtn from '../../assets/glossary/add-term btn.svg';
+
 
 export default function ManageGlossary() {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -23,6 +26,7 @@ export default function ManageGlossary() {
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
+  const [showAddModal, setShowAddModal] = useState(false);
   const pageSize = 20;
 
   const [loadingTerms, setLoadingTerms] = useState(false);
@@ -118,7 +122,8 @@ export default function ManageGlossary() {
 
 
   const handleAddTerm = () => {
-    navigate('/addterm');
+    // navigate('/addterm');
+    setShowAddModal(true)
   };
 
   return (
@@ -213,11 +218,26 @@ export default function ManageGlossary() {
           )
         )}
 
+        {showAddModal && (
+          <AddTerm
+            onClose={() => setShowAddModal(false)}
+            onTermAdded={() => {
+              setPage(0);
+              setScrollTerms([]);
+              fetchMoreTerms();
+            }}
+          />
+        )}
+
       </div>
 
       <div className="glossary-footer">
         <button className="add-term-btn" onClick={handleAddTerm}>
-          ADD TERM
+          <img 
+            src={addtermbtn} 
+            alt="add-term button"
+            className="add-term-icon-btn"
+          />
         </button>
       </div>
 
