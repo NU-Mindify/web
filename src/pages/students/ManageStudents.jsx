@@ -288,7 +288,6 @@ export default function ManageStudents() {
                             return `${averageCorrect.toFixed(2)}/${totalItems}`;
                           };
 
-                          // In your component, you would call the avg function like so:
                           return (
                             <div className="per-world-progress-card" key={key}>
                               <h1>{title}</h1>
