@@ -10,6 +10,8 @@ import axios from "axios";
 import { API_URL } from "../../Constants";
 import AddTerm from "./AddTerm";
 import addtermbtn from '../../assets/glossary/add-term btn.svg';
+import EditGlossary from "./EditGlossary";
+
 
 
 export default function ManageGlossary() {
@@ -26,9 +28,12 @@ export default function ManageGlossary() {
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
-  const [showAddModal, setShowAddModal] = useState(false);
   const pageSize = 20;
 
+  
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedTerm, setSelectedTerm] = useState(null);
 
 
   //dropdown function
@@ -39,10 +44,15 @@ export default function ManageGlossary() {
 
   //edit term function
   const handlesEdit = (_id, word, meaning, tags) => {
-    navigate('/glossary/edit', {
-      state: { _id, word, meaning, tags }
-    });
+  setSelectedTerm({ _id, word, meaning, tags });
+  setShowEditModal(true);
   };
+
+  // const handlesEdit = (_id, word, meaning, tags) => {
+  //   navigate('/glossary/edit', {
+  //     state: { _id, word, meaning, tags }
+  //   });
+  // };
 
 
   //fetching all terms
@@ -141,6 +151,14 @@ export default function ManageGlossary() {
               className="search-input-glossary"
             />
           </div>
+            <button onClick={handleAddTerm} style={{ background: 'transparent', border: 'none', paddingRight: 4, paddingLeft:2 }}>
+              <img 
+                src={addtermbtn} 
+                className="add-term-btn"
+                alt="add-term button"
+                style={{ width: 'auto', height: '50px', boxShadow: '1px 1px 5px rgb(99, 97, 97)', borderRadius: '9999px' }}
+              />
+            </button>
         </div>
 
         <div className="glossary-letters-btn-container">
@@ -219,16 +237,29 @@ export default function ManageGlossary() {
           />
         )}
 
+        {showEditModal && selectedTerm && (
+          <EditGlossary
+            term={selectedTerm}
+            onClose={() => setShowEditModal(false)}
+            onTermUpdated={() => {
+              setPage(0);
+              setScrollTerms([]);
+              fetchMoreTerms();
+            }}
+          />
+        )}
+
+
       </div>
 
       <div className="glossary-footer">
-        <button className="add-term-btn" onClick={handleAddTerm}>
+        {/* <button className="add-term-btn" onClick={handleAddTerm}>
           <img 
             src={addtermbtn} 
             alt="add-term button"
             className="add-term-icon-btn"
           />
-        </button>
+        </button> */}
       </div>
 
       

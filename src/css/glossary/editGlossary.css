@@ -6,16 +6,20 @@ html, body{
     box-sizing: border-box;
 }
 
+.modal-overlay {
+    @apply fixed inset-0 bg-black flex justify-center items-center z-[1000];
+}
+
 .edit-glossary-container{
+    @apply bg-white rounded-xl p-6 w-[900px] max-h-[80%] max-w-[90%] shadow-[0_10px_25px_rgba(0,0,0,0.3)];
     scrollbar-width: none;
     -ms-overflow-style: none;
-    @apply w-full h-full overflow-hidden overflow-y-auto p-3 flex flex-col justify-center items-center;
 }
 
 
 
 .edit-header{
-    @apply w-full h-[100px] flex flex-row justify-between p-5;
+  @apply flex justify-between items-center mb-6;
 }
 
 .back-btn {
@@ -29,30 +33,38 @@ box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6); /* red glow */
 
 .edit-title {
     @apply font-[Poppins] text-[#FFD41C] font-bold text-[25px]
-        md:text-[40px];
+    md:text-[40px];
 }
 
 
 .edit-content{
-    @apply w-full h-[calc(100%-100px)] grid grid-cols-2 gap-1 place-items-center;
+   @apply flex flex-col gap-5 mb-6;
 }
 
 
+.edit-content h1 {
+   @apply block font-bold text-black mb-1;
+  
+}
 
-
-
-
-
-/* .edit-title-container{
-    @apply text-black mb-4;
-} */
 
 .edit-input{
     border: 2px solid black;
-    @apply w-[600px] h-[50px] max-h-[50px] min-h-[40px] my-3;
+    @apply w-[600px] h-[50px] text-[#000000] max-h-[50px] min-h-[40px] my-3;
 }
 .edit-textarea{
-    @apply w-[600px] h-[350px] max-h-[350px] min-h-[100px];
+    @apply w-[600px] h-[350px] text-[#000000] max-h-[250px] min-h-[100px];
+}
+
+.edit-input,
+.edit-textarea {
+  @apply w-full rounded-md border border-gray-300 p-3 text-black;
+}
+
+
+
+.buttons{
+    @apply flex justify-center items-center mb-6  mt-3 mx-auto gap-6;
 }
 
 .save-btn{
@@ -60,5 +72,5 @@ box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6); /* red glow */
 }
 
 .delete-btn{
-    @apply w-[150px] h-[50px] btn btn-error mt-4;
+    @apply w-[150px] h-[50px] btn btn-error mt-3;
 }
