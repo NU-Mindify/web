@@ -75,7 +75,7 @@ export default function AccountManagement() {
         </h1>
 
         <div className="acc-search-bar">
-          <img src={searchIcon} alt="Search" className="search-icon" />
+          <img src={searchIcon} alt="Search" className="search-icon w-4 h-4 mr-2" />
           <input
             type="text"
             className="acc-search-input"
