@@ -33,7 +33,7 @@
   @apply w-full h-[40px] flex items-center flex-col pt-3;
 }
 .header-info {
-  @apply w-11/12 h-full grid grid-cols-4 px-2;
+  @apply w-11/12 h-full grid grid-cols-[3fr_2fr_2fr_1fr] px-2;
 }
 .title-info {
   @apply text-black text-2xl font-bold;
@@ -47,12 +47,12 @@
   -ms-overflow-style: none;
 }
 .user-card {
-  @apply w-11/12 grid grid-cols-4 bg-white my-2 py-3 rounded-xl px-2 
+  @apply w-11/12 grid grid-cols-[3fr_2fr_2fr_1fr] bg-white my-2 py-3 rounded-xl px-3 
     transition-transform duration-500 ease-in-out;
   border: 1px solid black;
 }
 .active-user-card {
-  @apply w-[95%] grid grid-cols-4 bg-gray-300 my-2 py-5 rounded-xl px-2 
+  @apply w-[95%] grid grid-cols-[3fr_2fr_2fr_1fr] bg-gray-300 my-2 py-5 rounded-xl px-2 
     transition-transform duration-500 ease-in-out;
   border: 1px solid black;
 }

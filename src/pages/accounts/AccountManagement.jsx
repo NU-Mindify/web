@@ -5,8 +5,8 @@ import "../../css/account/account.css";
 import { API_URL, branches } from "../../Constants";
 
 import searchIcon from "../../assets/students/search-01.svg";
-import chevronIcon from "../../assets/glossary/dropdown.svg";
-import settingsIcon from "../../assets/students/settings.svg";
+import chevronIcon from "../../assets/forAll/chevron.svg";
+import settingsIcon from "../../assets/forAll/settings.svg";
 
 export default function AccountManagement() {
   const [webUsers, setWebUsers] = useState([]);

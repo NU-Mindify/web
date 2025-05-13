@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import search from "../../assets/students/search-01.svg";
-import chevron from "../../assets/glossary/dropdown.svg";
-import settings from "../../assets/students/settings.svg";
+import chevron from "../../assets/forAll/chevron.svg";
+import settings from "../../assets/forall/settings.svg";
 import samplepic from "../../assets/students/sample-minji.svg";
 import "../../css/students/students.css";
 import { useState, useEffect } from "react";

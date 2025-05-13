@@ -25,6 +25,8 @@ export default function ManageGlossary() {
   const [page, setPage] = useState(0);
   const pageSize = 20;
 
+  const [loadingTerms, setLoadingTerms] = useState(false);
+
 
 
   //dropdown function
@@ -41,14 +43,17 @@ export default function ManageGlossary() {
   };
 
 
-  //fetching all terms
+ 
   const getAllTerms = async () => {
     try {
+      setLoadingTerms(true);
       const response = await axios.get(`${API_URL}/getTerms`);
       return response.data || [];
     } catch (error) {
       console.error(`Error: ${error}`);
       return [];
+    } finally {
+      setLoadingTerms(false);
     }
   };
 
@@ -158,7 +163,12 @@ export default function ManageGlossary() {
           <div className="header-title">Action</div>
         </div>
 
-        {searchTerm === '' && displayedTerms.length === 0 ? (
+        {loadingTerms ? 
+          <div className="loading-overlay-students">
+            <div className="spinner"></div>
+            <p>Fetching data...</p>
+          </div>
+        : searchTerm === '' && displayedTerms.length === 0 ? (
           <p className="text-gray-400 italic">No terms to show.</p>
         ) : 
         (
