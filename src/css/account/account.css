@@ -52,7 +52,7 @@
   border: 1px solid black;
 }
 .active-user-card {
-  @apply w-[95%] grid grid-cols-4 bg-blue-500 my-2 py-5 rounded-xl px-2 
+  @apply w-[95%] grid grid-cols-4 bg-gray-300 my-2 py-5 rounded-xl px-2 
     transition-transform duration-500 ease-in-out;
   border: 1px solid black;
 }
@@ -126,3 +126,35 @@
 .modal .btn {
   padding: 0.5rem 1.2rem;
 }
+
+/* test */
+.user-details-card {
+  background-color: #f1f5f9;
+  padding: 1rem 1.5rem;
+  margin: 0 2rem 1rem 2rem;
+  border-left: 4px solid #FFBF1A;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* loading spinner */
+
+.loading-overlay-accounts {
+  @apply flex flex-col items-center justify-center pt-50;
+}
+
+.spinner {
+  @apply w-14 h-14 border-4 border-[#FFBF1A]/30 border-t-[#FFBF1A] rounded-full animate-spin mb-4;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-overlay-accounts p {
+  @apply text-black text-lg font-medium font-[Poppins]
+}
+
+/* loading spinner */

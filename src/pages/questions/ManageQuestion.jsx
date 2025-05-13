@@ -163,9 +163,9 @@ const QuestionCard = ({ data, index }) => {
               <strong>LEVEL:</strong> {data.level}
             </div>
           </div>
+          <div className="question-level">LEVEL: {data.level}</div>
         </div>
-
-
+        
         <div className="question-actions">
           <button className="btn-action">EDIT</button>
           <button className="btn-action">ARCHIVE</button>
@@ -264,7 +264,6 @@ const QuestionCard = ({ data, index }) => {
 
         </div>
       )}
-
 
         </div>
       {gotSelected ? 

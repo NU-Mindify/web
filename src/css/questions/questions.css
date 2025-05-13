@@ -21,6 +21,7 @@
   @apply flex items-center gap-3;
 }
 
+
 .back-button {
   @apply w-8 h-8 flex items-center justify-center hover:opacity-80 transition;
 }
@@ -31,6 +32,44 @@
 
 .question-title {
   @apply text-[40px] font-[Poppins] font-bold text-[#FFD41C];
+}
+/* ------------------- SEARCH ---------------- */
+
+.question-controls-container {
+  @apply w-full flex flex-col lg:flex-row justify-between items-center gap-4 px-4;
+}
+
+.question-search-container {
+  @apply w-full lg:w-1/2 flex items-center;
+}
+
+.search-bar-question {
+  @apply w-full h-12 bg-white rounded-full flex items-center px-4 border border-gray-500 transition duration-300;
+}
+
+.search-btn-question {
+  @apply w-10 h-10 flex justify-center items-center bg-transparent border-none cursor-pointer transition duration-300 hover:bg-[#FFC300] hover:text-white;
+}
+
+.search-input-question {
+  @apply w-full h-full bg-transparent border-none outline-none pl-2 text-sm text-gray-800 placeholder-gray-400;
+}
+
+.sort-container {
+  @apply flex items-center gap-2 w-full lg:w-auto justify-start lg:justify-end lg:mt-0;
+}
+
+.sort-select {
+  @apply border border-gray-400 rounded-md px-2 py-2 text-sm text-gray-700 bg-white focus:ring-2 focus:ring-[#FFC300] focus:outline-none transition duration-300 hover:border-[#FFC300];
+}
+
+.add-ques-container .btn {
+  @apply bg-[#FFC300] text-white flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition duration-300;
+}
+
+.add-ques-container .btn .mainIcon {
+  @apply text-white; 
+  filter: invert(1); 
 }
 
 .question-count {
@@ -93,7 +132,6 @@
 .question-body{
     @apply w-full flex-grow  px-5 py-10 overflow-y-auto;
 }
-
 
 
 

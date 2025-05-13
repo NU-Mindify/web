@@ -60,8 +60,8 @@ export default function Login(){
 
             if(user){
                 const token = await user.getIdToken(); 
-                const oneWeekInSeconds = 7 * 24 * 60 * 60;
-                document.cookie = `token=${token}; path=/; Max-Age=${oneWeekInSeconds}; Secure; SameSite=Strict`;
+                const fifteenMinutes = 15 * 60;
+                document.cookie = `token=${token}; path=/; Max-Age=${fifteenMinutes}; Secure; SameSite=Strict`;
 
                 setCurrentWebUserUID(user.uid)
                 localStorage.setItem('userUID', user.uid);
