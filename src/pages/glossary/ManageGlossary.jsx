@@ -11,6 +11,9 @@ import { API_URL } from "../../Constants";
 import AddTerm from "./AddTerm";
 import addtermbtn from '../../assets/glossary/add-term btn.svg';
 
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import { Plus } from "lucide-react";
+
 
 export default function ManageGlossary() {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -128,20 +131,35 @@ export default function ManageGlossary() {
           <h1 className="glossary-title">Manage Glossary</h1>
         </div>
 
-        <div className="glossary-search-container">
+        <div className="glossary-search-container flex-1 min-w-[200px] flex justify-between items-center flex-wrap gap-2">
           <div className="search-bar-glossary">
             <button className="search-btn-glossary">
               <img src={search} alt="search icon" />
             </button>
             <input 
               type="text"
-              placeholder="Search here..." 
+              placeholder="Search terms..." 
               onChange={(e) => setSearchTerm(e.target.value)}
               value={searchTerm}
               className="search-input-glossary"
             />
           </div>
+
+          <div className="add-ques-container flex gap-2">
+            <button
+              className="btn flex items-center gap-2 px-4 py-2 text-sm font-medium"
+              onClick={handleAddTerm}
+            >
+              <Plus className="w-5 h-5  text-white" />
+              Add Term
+            </button>
+
+            <div className="pt-1 pr-8">
+              <ExportDropdown />
+            </div>
+          </div>
         </div>
+
 
         <div className="glossary-letters-btn-container">
           {letters.map((letter) => (
@@ -221,17 +239,7 @@ export default function ManageGlossary() {
 
       </div>
 
-      <div className="glossary-footer">
-        <button className="add-term-btn" onClick={handleAddTerm}>
-          <img 
-            src={addtermbtn} 
-            alt="add-term button"
-            className="add-term-icon-btn"
-          />
-        </button>
-      </div>
-
-      
+     
     </>
   );
 }

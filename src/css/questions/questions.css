@@ -11,7 +11,7 @@
 /* ------------------- QUESTION HEADER ---------------- */
 
 .title-header {
-  @apply w-full h-[70px] flex items-center px-3 pt-5;
+  @apply w-full h-[70px] flex items-center px-3;
 }
 
 .title-content {
@@ -31,7 +31,7 @@
 }
 
 .question-title {
-  @apply text-[40px] font-[Poppins] font-bold text-[#FFD41C];
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFD41C] pl-2 ;
 }
 
 .question-count {
@@ -46,9 +46,9 @@
 }
 
 .search-bar-question {
-  @apply w-full h-[44px] bg-white flex items-center px-4 rounded-[10px] shadow-md;
-  width: 900px;
-  border: none; 
+  @apply w-full h-[44px] bg-white flex items-center px-4 rounded-[10px] shadow-md border-0;
+  width: 80%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .search-btn-question {
@@ -72,7 +72,7 @@
 }
 
 .add-ques-container .btn {
-  @apply h-[44px] gap-1 bg-[#FFC300] text-white flex items-center text-sm font-medium rounded-[10px] shadow transition duration-300 hover:bg-[#e6b800] border-0;
+  @apply h-[44px] gap-1 bg-[#FFC300] text-white flex items-center text-sm font-medium rounded-[10px] shadow transition duration-300 hover:bg-[#e6b800];
 }
 
 .add-ques-container .btn .mainIcon {

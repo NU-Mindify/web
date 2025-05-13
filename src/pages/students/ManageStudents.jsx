@@ -179,7 +179,7 @@ export default function ManageStudents() {
       <div className="student-header">
         <h1 className="student-title">View Students</h1>
         <div className="student-search-bar">
-          <img src={search} className="search-icon" alt="search icon" />
+          <img src={search} className="search-icon w-4 h-4 mr-2" alt="search icon" />
           <input
             type="text"
             className="student-search-input"

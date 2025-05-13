@@ -12,9 +12,8 @@ import developmental from '../../assets/questions/developmentalBG.png'
 import general from '../../assets/questions/generalBG.png'
 import industrial from '../../assets/questions/industrialBG.png'
 import psychological from '../../assets/questions/psychologicalBG.png'
-import plus from '../../assets/questions/plus.svg'
-import sort from '../../assets/questions/sort-alt.svg'
 import back from '../../assets/questions/angle-left.svg'
+import { Plus } from "lucide-react";
 
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 
@@ -221,7 +220,7 @@ const QuestionCard = ({ data, index }) => {
               <button
                 className="btn flex items-center gap-2 px-4 py-2 text-sm font-medium"
                 onClick={addQuestion}>
-                <img src={plus} className="mainIcon w-4 h-4" alt="plus icon" />
+                <Plus className="w-5 h-5  text-white" />
                 Add Question
               </button>
 
