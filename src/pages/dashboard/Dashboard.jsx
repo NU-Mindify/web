@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import "../../css/dashboard/dashboard.css";
-import logo from "../../assets/logo/logo.svg";
 import Chart from "chart.js/auto";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import BarGraph from "../../components/barGraph/BarGraph";

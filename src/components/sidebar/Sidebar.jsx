@@ -2,7 +2,6 @@ import { useContext } from "react"
 import { ActiveContext } from "../../contexts/Contexts"
 import MenuBtn from "./MenuBtn"
 import hamburger from '../../assets/sidebar/hamburger.svg'
-import halfburger from '../../assets/sidebar/halfburger.svg'
 import dashboard from '../../assets/sidebar/dashboard.svg'
 import analytics from '../../assets/sidebar/analytic.svg'
 import reports from '../../assets/sidebar/report.svg'
@@ -14,11 +13,10 @@ import profile from '../../assets/sidebar/profile.svg'
 import account from '../../assets/sidebar/account.svg'
 import logout from '../../assets/sidebar/logout.svg'
 import '../../index.css'
-import { useLocation, useNavigate, useParams } from "react-router"
-import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from "react-router"
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../Constants';
-import Cookies from 'js-cookie';
 import close from '../../assets/sidebar/close.svg'
 
 
@@ -29,14 +27,43 @@ import { getAuth, signOut } from "firebase/auth"
 
 
 export default function Sidebar() {
-    const { isActive, setActive, selected, setSelected, subSelected, setSubSelected } = useContext(ActiveContext)
-    const {currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID} = useContext(UserLoggedInContext)
-    const [activeQuestion, setActiveQuestion] = useState(false)
+     const {
+        isActive, setActive,
+        selected, setSelected,
+        subSelected, setSubSelected
+    } = useContext(ActiveContext);
 
-    const navigate = useNavigate()
+    const {
+        currentWebUser, setCurrentWebUser,
+        currentWebUserUID, setCurrentWebUserUID,
+        isAdmin, setIsAdmin,
+    } = useContext(UserLoggedInContext);
+
+    const navigate = useNavigate();
     const location = useLocation();
 
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
+    const [activeQuestion, setActiveQuestion] = useState(false);
+    
 
+    
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 1025);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+
+    useEffect(() => {
+        if (currentWebUser?.position?.toLowerCase() === 'accounts admin') {
+            setIsAdmin(true);
+        } else {
+            setIsAdmin(false);
+        }
+    }, [currentWebUser, setIsAdmin]);
     
     
     const paths = {
@@ -104,11 +131,17 @@ export default function Sidebar() {
             console.log(error);
         });
     };
+
+    useEffect(() => {
+        if (currentWebUser?.position?.toLowerCase() === 'accounts admin') {
+            setIsAdmin(true);
+        } else {
+            setIsAdmin(false);
+        }
+    }, [currentWebUser, setIsAdmin]);
     
       
 
-    const { uid } = useParams();
-    const [webUser, setWebUser] = useState({});
 
     useEffect(() => {
         const uid = currentWebUserUID;
@@ -119,7 +152,7 @@ export default function Sidebar() {
             .get(`${API_URL}/getwebuser/${uid}`)
             .then((response) => {
                 setCurrentWebUser(response.data);
-                setWebUser(response.data);
+                
                 localStorage.setItem('webUser', JSON.stringify(response.data));
             })
             .catch((error) => {
@@ -160,6 +193,7 @@ export default function Sidebar() {
                                 setSelected('dashboard');
                                 setSubSelected('');
                                 setActiveQuestion(false);
+                                {isMobile ? setActive(false) : ''}
                             }}
                             goTo={paths.dashboard}
                         />
@@ -174,6 +208,7 @@ export default function Sidebar() {
                                 setSelected('analytics');
                                 setSubSelected('');
                                 setActiveQuestion(false);
+                                {isMobile ? setActive(false) : ''}
                             }}
                             goTo={paths.analytics}
                         />
@@ -188,6 +223,7 @@ export default function Sidebar() {
                                 setSelected('reports');
                                 setSubSelected('');
                                 setActiveQuestion(false);
+                                {isMobile ? setActive(false) : ''}
                             }}
                             goTo={paths.reports}
                         />
@@ -202,6 +238,7 @@ export default function Sidebar() {
                                 setSelected('leaderboard');
                                 setSubSelected('');
                                 setActiveQuestion(false);
+                                {isMobile ? setActive(false) : ''}
                             }}
                             goTo={paths.leaderboard}
                         />
@@ -215,6 +252,7 @@ export default function Sidebar() {
                             onPress={() => {
                                 setSelected('question');
                                 setActiveQuestion(!activeQuestion);
+                                {isMobile ? setActive(false) : ''}
                             }}
                             
                             goTo={paths.question}
@@ -344,6 +382,7 @@ export default function Sidebar() {
                                 setSelected('glossary');
                                 setSubSelected('');
                                 setActiveQuestion(false);
+                                {isMobile ? setActive(false) : ''}
                             }}
                             goTo={paths.glossary}
                         />
@@ -358,6 +397,7 @@ export default function Sidebar() {
                                 setSelected('students');
                                 setSubSelected('');
                                 setActiveQuestion(false);
+                                {isMobile ? setActive(false) : ''}
                             }}
                             goTo={paths.students}
                         />
@@ -372,24 +412,31 @@ export default function Sidebar() {
                                 setSelected('profile');
                                 setSubSelected('');
                                 setActiveQuestion(false);
+                                {isMobile ? setActive(false) : ''}
                             }}
                             goTo={paths.profile}
                         />
                     </li>
-                    <li>
-                        <MenuBtn
-                            icons={account}
-                            active={isActive}
-                            text='Account Management'
-                            isSelected={selected === 'account'}
-                            onPress={() => {
-                                setSelected('account');
-                                setSubSelected('');
-                                setActiveQuestion(false);
-                            }}
-                            goTo={paths.account}
-                        />
-                    </li>
+                    {isAdmin ? 
+                        <li>
+                            <MenuBtn
+                                icons={account}
+                                active={isActive}
+                                text='Account Management'
+                                isSelected={selected === 'account'}
+                                onPress={() => {
+                                    setSelected('account');
+                                    setSubSelected('');
+                                    setActiveQuestion(false);
+                                    {isMobile ? setActive(false) : ''}
+                                }}
+                                goTo={paths.account}
+                            />
+                        </li>
+                        :
+                        ""
+                    }
+                    
                     <li>
                         {!isActive ? (
                             <MenuBtn
@@ -400,7 +447,7 @@ export default function Sidebar() {
                             />
                         ) : (
                             <button className="btn btn-active btn-warning w-full flex items-center justify-center py-2 rounded-lg" 
-                            onClick={handleLogout}>SIGN OUT</button>
+                            onClick={handleLogout}>Sign out</button>
                         )}
                     </li>
                 </ul>

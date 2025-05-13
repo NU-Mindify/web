@@ -91,3 +91,24 @@
 .student-pagination-container{
   @apply w-full h-full flex flex-row items-start justify-between px-5;
 }
+
+/* loading spinner */
+
+.loading-overlay-students {
+  @apply flex flex-col items-center justify-center pt-50;
+}
+
+.spinner {
+  @apply w-14 h-14 border-4 border-[#FFBF1A]/30 border-t-[#FFBF1A] rounded-full animate-spin mb-4;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-overlay-students p {
+  @apply text-black text-lg font-medium font-[Poppins]
+}
+
+/* loading spinner */

@@ -5,6 +5,7 @@
 
 .question-header{
     @apply w-full h-auto  mb-0 flex flex-col justify-center items-center p-2;
+    @apply w-full h-auto  mb-0 flex flex-col justify-center items-center p-2;
 }
 
 /* ------------------- QUESTION HEADER ---------------- */
@@ -71,7 +72,7 @@
 }
 
 .add-ques-container .btn {
-  @apply h-[44px] gap-1 bg-[#FFC300] text-white flex items-center text-sm font-medium rounded-[10px] shadow transition duration-300 hover:bg-[#e6b800];
+  @apply h-[44px] gap-1 bg-[#FFC300] text-white flex items-center text-sm font-medium rounded-[10px] shadow transition duration-300 hover:bg-[#e6b800] border-0;
 }
 
 .add-ques-container .btn .mainIcon {

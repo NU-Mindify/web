@@ -2,19 +2,22 @@
 @plugin "daisyui";
 
 
+.modal-overlay {
+    @apply fixed inset-0 bg-black flex justify-center items-center z-[1000];
+}
 
 .add-term-main-container{
-    @apply w-full h-full overflow-y-auto;
+    @apply bg-white rounded-xl p-6 w-[1300px] max-w-[90%] shadow-[0_10px_25px_rgba(0,0,0,0.3)];
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
 
 .add-term-header{
-    @apply w-full h-[100px] flex flex-row justify-between p-5;
+    @apply flex justify-between items-center mb-6;
 }
 
 .close-btn{
-    @apply w-[50px] h-[50px] cursor-pointer rounded-full ;
+    @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer rounded-full;
 }
 
 .close-btn:hover {
@@ -30,21 +33,36 @@
 
 
 .add-term-contents{
-    @apply w-full h-[calc(100%-180px)] grid grid-cols-2 gap-1 place-items-center;
+    @apply space-y-4 mb-6;
+}
+
+.add-term-contents h1 {
+   @apply block font-bold text-black mb-1;
+  
 }
 
 .add-term-input{
-    @apply w-[600px] h-[50px] max-h-[50px] min-h-[40px] my-3;
+    @apply text-[#000000] w-[400px] h-[50px] my-3 w-full;
 }
 
 .add-term-textarea{
-    @apply w-[600px] h-[350px] max-h-[350px] min-h-[100px];
+    @apply text-[#000000] w-[400px] h-[350px] max-h-[350px] min-h-[100px] w-full h-40;
 }
 
+
+
 .create-container{
-    @apply w-full flex justify-center items-center;
+    @apply flex justify-center mb-6;
 }
 
 .create-btn{
-    @apply w-[150px] h-[50px] btn btn-success text-xl;
+    @apply w-[250px] h-[50px] p-0 cursor-pointer; 
+}
+
+.create-btn:hover{
+    filter: brightness(1.2);
+}
+
+.add-term-icon-btn{
+    @apply w-[250px] h-[50px];
 }

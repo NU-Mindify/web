@@ -25,8 +25,6 @@ import {
 import AddQuestion from './pages/questions/AddQuestion'
 import TermsAndConditions from './pages/login/TermsAndConditions'
 import AddTerm from './pages/glossary/AddTerm'
-import axios from 'axios'
-import { API_URL } from './Constants'
 import AddAccount from './pages/accounts/AddAccount'
 import SessionTimeout from './components/SessionTimeout/SessionTimeout'
 
@@ -38,11 +36,11 @@ function App() {
   const [isActive, setActive] = useState(false)
   const [subSelected, setSubSelected] = useState('')
   const [selected, setSelected] = useState('')
-  const [currentUserEmail, setCurrentUserEmail] = useState('')
-  const [currentUserBranch, setCurrentUserBranch] = useState('')
 
   const [currentWebUser, setCurrentWebUser] = useState({firstName: '', lastName: '', branch: '', email: '', employeenum: '', position: '', uid: '', useravatar: ''})
   const [currentWebUserUID, setCurrentWebUserUID] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
+
   
 
   useEffect(()=>{
@@ -91,10 +89,10 @@ function App() {
   return (
     
     <ActiveContext.Provider
-      value={{ isActive, setActive, selected, setSelected, currentUserEmail, setCurrentUserEmail, currentUserBranch, setCurrentUserBranch, subSelected, setSubSelected }}
+      value={{ isActive, setActive, selected, setSelected, subSelected, setSubSelected }}
     >
     <UserLoggedInContext.Provider
-      value={{currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID}}
+      value={{ currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID, isAdmin, setIsAdmin }}
     >
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
