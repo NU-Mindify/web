@@ -123,7 +123,12 @@ export default function Leaderboard() {
       leader.total_items > 0
         ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
         : "N/A",
-      `${leader.time_completion.toFixed(0)}s`,
+      leader.time_completion > 60
+        ? `${Math.floor(leader.time_completion / 60)}m ${Math.round(
+            leader.time_completion % 60
+          )}s`
+        : `${Math.round(leader.time_completion)}s`,
+      ,
     ]);
 
     const csvContent =
@@ -168,7 +173,12 @@ export default function Leaderboard() {
       leader.total_items > 0
         ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
         : "N/A",
-      `${leader.time_completion.toFixed(0)}s`,
+      leader.time_completion > 60
+        ? `${Math.floor(leader.time_completion / 60)}m ${Math.round(
+            leader.time_completion % 60
+          )}s`
+        : `${Math.round(leader.time_completion)}s`,
+      ,
     ]);
 
     autoTable(doc, {
@@ -296,11 +306,14 @@ export default function Leaderboard() {
 
                     <div className="leader-info text-black leaders-content-font">
                       {/* {new Date(leader.date).toLocaleDateString() || "N/A"} */}
-                      {leader.time_completion.toFixed(0) + "s"}
+                      {leader.time_completion > 60
+                        ? `${Math.floor(
+                            leader.time_completion / 60
+                          )}m ${Math.round(leader.time_completion % 60)}s`
+                        : `${Math.round(leader.time_completion)}s`}
                     </div>
                   </div>
                 ))}
-                
               </div>
             )}
           </div>
@@ -416,11 +429,14 @@ export default function Leaderboard() {
 
                     <div className="leader-info text-black leaders-content-font">
                       {/* {new Date(leader.date).toLocaleDateString() || "N/A"} */}
-                      {leader.time_completion.toFixed(0) + "s"}
+                      {leader.time_completion > 60
+                        ? `${Math.floor(
+                            leader.time_completion / 60
+                          )}m ${Math.round(leader.time_completion % 60)}s`
+                        : `${Math.round(leader.time_completion)}s`}
                     </div>
                   </div>
                 ))}
-                
               </div>
             )}
           </div>
