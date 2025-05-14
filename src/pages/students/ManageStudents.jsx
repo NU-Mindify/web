@@ -1,14 +1,12 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import search from "../../assets/students/search-01.svg";
 import chevron from "../../assets/forAll/chevron.svg";
-import settings from "../../assets/forall/settings.svg";
 import samplepic from "../../assets/students/sample-minji.svg";
 import "../../css/students/students.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL, branches, categories, modes, levels } from "../../Constants";
 import AnimatedProgressBar from "../../components/animatedProgressBar/AnimatedProgressBar";
+import { Settings } from "lucide-react";
 
 export default function ManageStudents() {
   const [students, setStudents] = useState([]);
@@ -235,17 +233,16 @@ export default function ManageStudents() {
                     ?.name || "Unknown Branch"}
                 </h1>
                 <div className="student-action-container">
-                  <img src={settings} alt="settings" className="setting-icon" />
-                  <img
-                    src={chevron}
-                    alt="chevron"
-                    className="chevron-icon"
+                  <Settings className="setting-icon" color="black" />
+                  <button
                     onClick={() =>
                       setOpenDropdown(
                         openDropdown === studentId ? null : studentId
                       )
                     }
-                  />
+                  >
+                    <img src={chevron} alt="chevron" className="chevron-icon" />
+                  </button>
                 </div>
 
                 {openDropdown === studentId && (
