@@ -2,14 +2,14 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "../../Constants";
-import close from '../../assets/glossary/close btn.svg';
 import '../../css/glossary/addGlossary.css';
-import addtermbtn from '../../assets/glossary/add-term btn.svg';
 import { XCircle } from "lucide-react";
+import addtermsbtn from '../../assets/glossary/add-terms-btn.svg';
+import savetermsbtn from '../../assets/glossary/save-terms-btn.svg';
+import closebtn from '../../assets/glossary/close-btn.svg';
+import chevron from "../../assets/glossary/dropdown.svg";
 
-
-
-export default function AddTerm({onClose}){
+export default function AddTerm(){
 
     const [newTerm, setNewTerm] = useState({word: '', meaning: '', tags: [], is_deleted: false})
     const [tagInput, setTagInput] = useState('');
@@ -18,33 +18,46 @@ export default function AddTerm({onClose}){
     const navigate = useNavigate();
 
 
-    const handleCreateNewTerm = () =>{
+    const handleCreateNewTerm = () => {
+    const { word, meaning, tags } = newTerm;
 
-        axios.post(`${API_URL}/addTerm`, newTerm)
-        alert("added successfully")
-        setNewTerm({word: '', meaning: '', tags: [], is_deleted: false})
+    if (!word.trim() || !meaning.trim() || tags.length === 0) {
+        alert("Please fill out all required fields.");
+        return;
     }
 
+    axios.post(`${API_URL}/addTerm`, newTerm)
+        .then(() => {
+            alert("Added successfully!");
+            setNewTerm({ word: '', meaning: '', tags: [], is_deleted: false });
+        })
+        .catch((error) => {
+            console.error("Error adding term:", error);
+            alert("Failed to add term. Please try again.");
+        });
+};
+
     const handleBack = () => {
-        if (onClose) onClose();
+        // if (onClose) onClose();
+        navigate('/glossary')
       };
       
 
     return(
         <>
-        <div className="modal-overlay">
+        <div className="add-term-page-wrapper">
             <div className="add-term-main-container">
                 <div className="add-term-header">
                     <h1 className="add-term-title">Add Terminology</h1>
 
                     <button className="close-btn" onClick={handleBack}>
-                        <img src={close} alt="close btn" />
+                        <img src={closebtn} alt="close btn" />
                     </button>
                 </div>
 
                 <div className="add-term-contents">
                     <div>
-                        <h1>Terminology:</h1>
+                        <h1>Terminology <span>*</span></h1>
                         <input 
                             type="text"
                             placeholder="Type Here."
@@ -53,7 +66,7 @@ export default function AddTerm({onClose}){
                             onChange={(e) => setNewTerm({...newTerm, word: e.target.value})}
                         />
 
-                        <h1>Tags:</h1>
+                        <h1>Tags <span>*</span></h1>
                         <div className="flex justify-start gap-4">
                         {newTerm.tags.map(tag=> (
                             <button 
@@ -97,7 +110,7 @@ export default function AddTerm({onClose}){
 
 
                     <div>
-                        <h1>Definition:</h1>
+                        <h1>Definition <span>*</span></h1>
                         <textarea 
                             className="add-term-textarea"
                             rows={10}
@@ -111,7 +124,7 @@ export default function AddTerm({onClose}){
                 <div className="create-container">
                     <button className="create-btn" onClick={handleCreateNewTerm}>
                         <img 
-                            src={addtermbtn} 
+                            src={addtermsbtn} 
                             alt="add-term button"
                             className="add-term-icon-btn"
                         />
@@ -119,6 +132,62 @@ export default function AddTerm({onClose}){
                 </div>
                 
             </div>
+
+            <div className="terminologies-container"> 
+                <h1 className="terminologies-title">Terminolgies</h1>
+                <div className="terminologies-list">
+                    <div className="term-item">
+                        <h3 className="term-name">New Term#1</h3>
+                        <p className="term-definition">Defintion</p>
+                            <img
+                            src={chevron}
+                            alt="chevron"
+                            className="chevron-icon"
+                            />
+                    </div>
+
+                    <div className="term-item">
+                        <h3 className="term-name">New Term #2</h3>
+                        <p className="term-definition">Defintion</p>
+                            <img
+                            src={chevron}
+                            alt="chevron"
+                            className="chevron-icon"
+                            />
+                    </div>
+
+                    <div className="term-item">
+                        <h3 className="term-name">New Term #3</h3>
+                        <p className="term-definition">Defintion</p>
+                            <img
+                            src={chevron}
+                            alt="chevron"
+                            className="chevron-icon"
+                            />
+                    </div>
+
+                    <div className="term-item">
+                        <h3 className="term-name">New Term #4</h3>
+                        <p className="term-definition">Defintion</p>
+                            <img
+                            src={chevron}
+                            alt="chevron"
+                            className="chevron-icon"
+                            />
+                    </div>
+                </div>
+
+                <div className="save-container">
+                    <button className="save-button">
+                        <img
+                            src={savetermsbtn}
+                            alt="save-term"
+                            className="save-term-icon-btn"
+                        />
+                    </button>
+                </div>
+            </div>
+
         </div>
              
         </>

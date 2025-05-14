@@ -31,7 +31,7 @@ export default function ManageGlossary() {
   const pageSize = 20;
 
   
-  const [showAddModal, setShowAddModal] = useState(false);
+  // const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState(null);
 
@@ -127,8 +127,8 @@ export default function ManageGlossary() {
 
 
   const handleAddTerm = () => {
-    // navigate('/addterm');
-    setShowAddModal(true)
+    navigate('/addterm');
+    // setShowAddModal(true)
   };
 
   return (
@@ -226,7 +226,7 @@ export default function ManageGlossary() {
           )
         )}
 
-        {showAddModal && (
+        {/* {showAddModal && (
           <AddTerm
             onClose={() => setShowAddModal(false)}
             onTermAdded={() => {
@@ -235,7 +235,7 @@ export default function ManageGlossary() {
               fetchMoreTerms();
             }}
           />
-        )}
+        )} */}
 
         {showEditModal && selectedTerm && (
           <EditGlossary

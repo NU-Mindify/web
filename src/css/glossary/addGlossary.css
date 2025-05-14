@@ -2,27 +2,32 @@
 @plugin "daisyui";
 
 
-.modal-overlay {
+/* .modal-overlay {
     @apply fixed inset-0 bg-black flex justify-center items-center z-[1000];
+} */
+
+.add-term-page-wrapper {
+  @apply relative;
 }
 
 .add-term-main-container{
-    @apply bg-white rounded-xl p-6 w-[1300px] max-w-[90%] shadow-[0_10px_25px_rgba(0,0,0,0.3)];
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    @apply w-full h-full bg-white rounded-xl p-5 flex flex-col ;
+     max-height: 565px;
+     /* scrollbar-width: none;
+    -ms-overflow-style: none; */
 }
 
 .add-term-header{
-    @apply flex justify-between items-center mb-6;
+    @apply flex justify-between items-center -mt-3 mb-6;
 }
 
 .close-btn{
-    @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer rounded-full;
+    @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer;
 }
 
-.close-btn:hover {
-    box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6); /* red glow */
-}
+/* .close-btn:hover {
+    box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.6); 
+} */
   
 .add-term-title{
     @apply font-[Poppins] text-[#FFD41C] font-bold text-[25px]
@@ -32,13 +37,22 @@
 
 
 
-.add-term-contents{
-    @apply space-y-4 mb-6;
+.add-term-contents {
+  @apply space-y-4 -mt-5 mb-2 pl-2 flex-grow overflow-y-auto pr-2;
+  padding-bottom: 10px;
+  scrollbar-width: none;
+}
+
+.add-term-contents::-webkit-scrollbar {
+    display: none;
 }
 
 .add-term-contents h1 {
    @apply block font-bold text-black mb-1;
-  
+}
+
+.add-term-contents h1 span {
+    @apply text-[red];
 }
 
 .add-term-input{
@@ -46,17 +60,16 @@
 }
 
 .add-term-textarea{
-    @apply text-[#000000] w-[400px] h-[350px] max-h-[350px] min-h-[100px] w-full h-40;
+    @apply text-[#000000] w-[400px] h-[100px] max-h-[300px] min-h-[100px] w-full;
 }
 
-
-
-.create-container{
-    @apply flex justify-center mb-6;
+.create-container {
+  @apply flex justify-center mt-auto pt-3;
 }
+
 
 .create-btn{
-    @apply w-[250px] h-[50px] p-0 cursor-pointer; 
+    @apply w-[280px] h-[65px] p-0 cursor-pointer; 
 }
 
 .create-btn:hover{
@@ -64,5 +77,73 @@
 }
 
 .add-term-icon-btn{
-    @apply w-[250px] h-[50px];
+    @apply w-[260px] h-[60px];
+}
+
+
+/* ------------------- TERMINOLOGIES SECTION ---------------- */
+
+.terminologies-container {
+  @apply bg-white rounded-xl p-6 mt-4 shadow-md flex flex-col space-y-4 h-[410px];
+}
+
+.terminologies-title {
+    @apply font-[Poppins] text-[#FFD41C] font-bold text-[25px] -mt-3
+    md:text-[40px];
+}
+
+.terminologies-list {
+  @apply flex-1 overflow-y-auto space-y-3 pr-2 pb-9 -mt-2;
+  scrollbar-width: none;
+}
+
+.terminologies-list::-webkit-scrollbar {
+  display: none;
+}
+
+
+.term-item {
+  border: 1px solid black;
+  @apply p-4 rounded-md shadow-sm hover:bg-gray-100 relative;
+}
+
+.term-name {
+  @apply font-semibold text-lg text-black;
+}
+
+.term-definition {
+  @apply text-gray-700;
+}
+
+.chevron-icon{
+  @apply absolute right-20 top-1/2 transform -translate-y-1/2 w-5 h-5;
+}
+
+
+.save-container{
+  position: sticky;
+  bottom: 0;
+  z-index: 50;
+  background-color: white;
+  height: 55px; 
+  padding-top: 0.5rem;
+  padding-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -2;
+  margin-bottom: 2;
+}
+/*  -mt-2 mb-2 */
+
+.save-button{
+  @apply w-[280px] h-[65px] p-0 cursor-pointer;
+}
+
+.save-button:hover{
+    filter: brightness(1.2);
+}
+
+.save-term-icon-btn{
+  @apply w-[260px] h-[60px];
 }
