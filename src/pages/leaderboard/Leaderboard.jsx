@@ -24,8 +24,8 @@ export default function Leaderboard() {
   const [loadingDataClassic, setLoadingDataClassic] = useState(false);
   const [loadingDataMastery, setLoadingDataMastery] = useState(false);
 
-  const [classicSelectedBranch, setClassicSelectedBranch] = useState('all')
-  const [masterySelectedBranch, setMasterySelectedBranch] = useState('all')
+  const [classicSelectedBranch, setClassicSelectedBranch] = useState('')
+  const [masterySelectedBranch, setMasterySelectedBranch] = useState('')
 
   useEffect(() => {
     fetchTopClassicLeaderboard();
@@ -88,7 +88,7 @@ export default function Leaderboard() {
     );
   }).filter((leader) => {
     if (isAdmin) {
-      return classicSelectedBranch === 'all' || leader.user_id?.branch === classicSelectedBranch;
+      return classicSelectedBranch === 'all'|| classicSelectedBranch === '' || leader.user_id?.branch === classicSelectedBranch;
     } else {
       return leader.user_id?.branch === currentWebUser?.branch;
     }
@@ -112,7 +112,7 @@ export default function Leaderboard() {
     );
   }).filter((leader) => {
     if (isAdmin) {
-      return masterySelectedBranch === 'all' || leader.user_id?.branch === masterySelectedBranch;
+      return masterySelectedBranch === 'all'|| masterySelectedBranch === '' || leader.user_id?.branch === masterySelectedBranch;
     } else {
       return leader.user_id?.branch === currentWebUser?.branch;
     }
@@ -177,6 +177,7 @@ export default function Leaderboard() {
                   className="text-black"
                   onChange={(e) => setClassicSelectedBranch(e.target.value)}
                 >
+                  <option value='' disabled>Sort by:</option>
                   <option value='all'>All Branch</option>
                   {branches.map((branch, index) => (
                     <option value={branch.id} key={index}>
@@ -319,6 +320,7 @@ export default function Leaderboard() {
                   className="text-black"
                   onChange={(e) => setMasterySelectedBranch(e.target.value)}
                 >
+                  <option value='' disabled>Sort by:</option>
                   <option value='all'>All Branch</option>
                   {branches.map((branch, index) => (
                     <option value={branch.id} key={index}>
@@ -403,11 +405,6 @@ export default function Leaderboard() {
                         branches.find(branch => branch.id === leader.user_id?.branch)?.name || "Unknown Branch"
                       }
                     </div>
-
-
-                    {leader.user_id?.branch === "moa"
-                        ? "NU MOA"
-                        : "NU MANILA"}
 
                     <div className="leader-info text-black leaders-content-font">
                       {leader.category === "developmental"
