@@ -1,18 +1,33 @@
 import "../../css/analytics/analytics.css";
 import axios from "axios";
 import { API_URL, categories, modes, levels } from "../../Constants";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AnimatedProgressBar from "../../components/animatedProgressBar/AnimatedProgressBar";
 import PieChartAttempts from "../../components/PieChart/PieChartAttempts";
 import { branches } from "../../Constants";
+import { UserLoggedInContext } from "../../contexts/Contexts";
+
 
 export default function Analytics() {
   const [attempts, setAttempts] = useState([]);
   const [allStudents, setAllStudents] = useState([]);
   const [perfectCount, setPerfectCount] = useState(0);
 
+  const {currentWebUser, isAdmin} = useContext(UserLoggedInContext)
+
   const [branch, setBranch] = useState(null);
-  const [selectedBranch, setSelectedBranch] = useState("default");
+  const [selectedBranch, setSelectedBranch] = useState("all");
+
+  useEffect(() => {
+    if (isAdmin) {
+      setBranch(null);
+      setSelectedBranch('all')
+    } else {
+      setBranch(currentWebUser.branch);
+      setSelectedBranch(currentWebUser.branch)
+    }
+  }, [isAdmin, currentWebUser]);
+
 
   useEffect(() => {
     fetchAttempts();
@@ -133,23 +148,27 @@ export default function Analytics() {
       <div className="main-container-analytics">
         <div className="header-container-analytics flex flex-row">
           <h1 className="header-text-properties-analytics">Analytics</h1>
-          <select
-            value={selectedBranch}
-            className="select-ghost text-black w-[30%] ml-5"
-            onChange={(e) => {
-              setSelectedBranch(e.target.value);
-              setBranch(e.target.value === "all" ? null : e.target.value);
-            }}
-          >
-            <option value="all">All NU Branches</option>
-            {branches.map((branch) => (
-              <option value={branch.id} key={branch.id}>
-                {branch.name}
-              </option>
-            ))}
-          </select>
+          
+          {isAdmin ? 
+            <select
+              value={selectedBranch}
+              className="select-ghost text-black w-[30%] ml-5"
+              onChange={(e) => {
+                setSelectedBranch(e.target.value);
+                setBranch(e.target.value === "all" ? null : e.target.value);
+              }}
+            >
+              <option value="all">All NU Branches</option>
+              {branches.map((branch) => (
+                <option value={branch.id} key={branch.id}>
+                  {branch.name}
+                </option>
+              ))}
+            </select> 
+          : ''}
+          
 
-          {branch && (
+          {isAdmin && branch && (
             <button
               onClick={() => {
                 setSelectedBranch("all");
@@ -160,6 +179,7 @@ export default function Analytics() {
               Reset
             </button>
           )}
+
         </div>
 
         <div className="content-container-analytics">
