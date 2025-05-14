@@ -17,6 +17,8 @@ export default function ManageStudents() {
 
   const [attempts, setAttempts] = useState([]);
 
+  const [sortOrder, setSortOrder] = useState("asc");
+
   useEffect(() => {
     fetchStudents();
     fetchAllProgress();
@@ -27,7 +29,13 @@ export default function ManageStudents() {
     try {
       setLoadingStudents(true);
       const { data } = await axios.get(`${API_URL}/getUsers`);
-      setStudents(data);
+
+      // Sort students alphabetically by last name
+      const sortedStudents = data.sort((a, b) =>
+        a.last_name.localeCompare(b.last_name)
+      );
+
+      setStudents(sortedStudents);
     } catch (error) {
       console.error("Error fetching students:", error);
     } finally {
@@ -71,7 +79,8 @@ export default function ManageStudents() {
 
   const filteredStudents = students.filter(
     (student) =>
-      student.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.student_id?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -80,7 +89,11 @@ export default function ManageStudents() {
 
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = filteredStudents.slice(
+  const sortedFilteredStudents = [...filteredStudents].sort((a, b) => {
+    const compare = a.last_name.localeCompare(b.last_name);
+    return sortOrder === "asc" ? compare : -compare;
+  });
+  const currentStudents = sortedFilteredStudents.slice(
     indexOfFirstStudent,
     indexOfLastStudent
   );
@@ -175,7 +188,17 @@ export default function ManageStudents() {
   return (
     <div className="students-main-container">
       <div className="student-header">
-        <h1 className="student-title">View Students</h1>
+        <h1 className="student-title">
+          View Students{" "}
+          <button
+            onClick={() =>
+              setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+            }
+            className="btn btn-outline ml-4 text-black hover:bg-[#FFD41C]"
+          >
+            Sort by Last Name {sortOrder === "asc" ? "↑" : "↓"}
+          </button>
+        </h1>
         <div className="student-search-bar">
           <img src={search} className="search-icon" alt="search icon" />
           <input
@@ -223,10 +246,12 @@ export default function ManageStudents() {
                 <div className="name-img-container">
                   <img
                     src={samplepic}
-                    alt={student.username}
+                    alt={student.first_name}
                     className="mini-avatar"
                   />
-                  <h1 className="student-info">{student.username}</h1>
+                  <h1 className="student-info">
+                    {student.last_name.toUpperCase()}, {student.first_name}
+                  </h1>
                 </div>
                 <h1 className="student-info">
                   {branches.find((branch) => branch.id === student.branch)

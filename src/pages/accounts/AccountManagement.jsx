@@ -70,7 +70,7 @@ export default function AccountManagement() {
             onClick={() => setSortOrderAsc((prev) => !prev)}
             className="btn btn-outline ml-4 text-black hover:bg-[#FFD41C]"
           >
-            Sort by Surname {sortOrderAsc ? "↑" : "↓"}
+            Sort by Last Name {sortOrderAsc ? "↑" : "↓"}
           </button>
         </h1>
 
@@ -89,12 +89,7 @@ export default function AccountManagement() {
       {/* Column Titles */}
       <div className="titles-container">
         <div className="header-info">
-          <h1
-            className="title-info cursor-pointer"
-            onClick={() => setSortOrderAsc((prev) => !prev)}
-          >
-            Name
-          </h1>
+          <h1 className="title-info">Name</h1>
           <h1 className="title-info">Position</h1>
           <h1 className="title-info">Branch</h1>
           <h1 className="title-info">Action</h1>
@@ -127,7 +122,7 @@ export default function AccountManagement() {
                   className="mini-avatar"
                 />
                 <h1 className="admin-info">
-                  {user.firstName} {user.lastName}
+                   {user.lastName.toUpperCase()}, {user.firstName}
                 </h1>
               </div>
               <h1 className="admin-info">{user.position}</h1>

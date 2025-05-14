@@ -98,13 +98,41 @@ export default function Leaderboard() {
       rank: index + 1,
     }));
 
-  const filteredLeaders = rankedLeaders.filter((leader) =>
-    leader.user_id?.username?.toLowerCase().includes(searchClassic)
-  );
+  const filteredLeaders = rankedLeaders.filter((leader) => {
+    const firstName = leader.user_id?.first_name?.toLowerCase() || "";
+    const lastName = leader.user_id?.last_name?.toLowerCase() || "";
+    const fullName = `${firstName} ${lastName}`;
+    const reversedFullName = `${lastName} ${firstName}`;
+    const search = searchClassic.toLowerCase();
 
-  const filteredLeadersMastery = rankedLeadersMastery.filter((leader) =>
-    leader.user_id?.username?.toLowerCase().includes(searchMastery)
-  );
+    return (
+      firstName.includes(search) ||
+      lastName.includes(search) ||
+      fullName.includes(search) ||
+      reversedFullName.includes(search)
+    );
+  });
+
+  const filteredLeadersMastery = rankedLeadersMastery.filter((leader) => {
+    const firstName = leader.user_id?.first_name?.toLowerCase() || "";
+    const lastName = leader.user_id?.last_name?.toLowerCase() || "";
+    const fullName = `${firstName} ${lastName}`;
+    const reversedFullName = `${lastName} ${firstName}`;
+    const search = searchMastery.toLowerCase();
+
+    return (
+      firstName.includes(search) ||
+      lastName.includes(search) ||
+      fullName.includes(search) ||
+      reversedFullName.includes(search)
+    );
+  });
+
+  // const filteredLeadersMastery = rankedLeadersMastery.filter(
+  //   (leader) =>
+  //     leader.user_id?.first_name?.toLowerCase().includes(searchMastery) ||
+  //     leader.user_id?.last_name?.toLowerCase().includes(searchMastery)
+  // );
 
   //needed for saving as pdf
   //npm install jspdf jspdf-autotable
@@ -115,21 +143,26 @@ export default function Leaderboard() {
   //CSV export
   const exportToCSV = (data, filename) => {
     const headers = ["Rank", "Name", "Campus", "World", "Score", "Time"];
-    const rows = data.map((leader) => [
-      leader.rank,
-      leader.user_id?.username || "Unknown User",
-      leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
-      leader.category,
-      leader.total_items > 0
-        ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
-        : "N/A",
-      leader.time_completion > 60
-        ? `${Math.floor(leader.time_completion / 60)}m ${Math.round(
-            leader.time_completion % 60
-          )}s`
-        : `${Math.round(leader.time_completion)}s`,
-      ,
-    ]);
+    const rows = data.map((leader) => {
+      const firstName = leader.user_id?.first_name || "";
+      const lastName = leader.user_id?.last_name || "";
+      const fullName = `${lastName.toUpperCase()} ${firstName}`.trim();
+
+      return [
+        leader.rank,
+        fullName,
+        leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
+        leader.category,
+        leader.total_items > 0
+          ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
+          : "N/A",
+        leader.time_completion > 60
+          ? `${Math.floor(leader.time_completion / 60)}m ${Math.round(
+              leader.time_completion % 60
+            )}s`
+          : `${Math.round(leader.time_completion)}s`,
+      ];
+    });
 
     const csvContent =
       "data:text/csv;charset=utf-8," +
@@ -163,23 +196,28 @@ export default function Leaderboard() {
       14,
       18
     );
-    doc.text(`Exported on: ${now}`, 14, 26); // ⬅️ new line for date/time
+    doc.text(`Exported on: ${now}`, 14, 26);
 
-    const rows = data.map((leader) => [
-      leader.rank,
-      leader.user_id?.username || "Unknown User",
-      leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
-      leader.category,
-      leader.total_items > 0
-        ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
-        : "N/A",
-      leader.time_completion > 60
-        ? `${Math.floor(leader.time_completion / 60)}m ${Math.round(
-            leader.time_completion % 60
-          )}s`
-        : `${Math.round(leader.time_completion)}s`,
-      ,
-    ]);
+    const rows = data.map((leader) => {
+      const firstName = leader.user_id?.first_name || "";
+      const lastName = leader.user_id?.last_name || "";
+      const reversedFullName = `${lastName} ${firstName}`.trim(); // Reverse first and last name
+
+      return [
+        leader.rank,
+        reversedFullName,
+        leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
+        leader.category,
+        leader.total_items > 0
+          ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
+          : "N/A",
+        leader.time_completion > 60
+          ? `${Math.floor(leader.time_completion / 60)}m ${Math.round(
+              leader.time_completion % 60
+            )}s`
+          : `${Math.round(leader.time_completion)}s`,
+      ];
+    });
 
     autoTable(doc, {
       head: [["Rank", "Name", "Campus", "World", "Score", "Time"]],
@@ -272,7 +310,9 @@ export default function Leaderboard() {
                       className="leader-info font-bold"
                       style={{ color: "#0068DD" }}
                     >
-                      {leader.user_id?.username || "Unknown User"}
+                      {/* {leader.user_id?.first_name || "Unknown User"} */}
+                      {leader.user_id?.last_name.toUpperCase()},{" "}
+                      {leader.user_id?.first_name}
                     </div>
 
                     <div className="leader-info text-black leaders-content-font flex items-center gap-1">
@@ -396,7 +436,8 @@ export default function Leaderboard() {
                       className="leader-info font-bold"
                       style={{ color: "#0068DD" }}
                     >
-                      {leader.user_id?.username || "Unknown User"}
+                      {leader.user_id?.last_name.toUpperCase()},{" "}
+                      {leader.user_id?.first_name}
                     </div>
 
                     <div className="leader-info text-black leaders-content-font">
