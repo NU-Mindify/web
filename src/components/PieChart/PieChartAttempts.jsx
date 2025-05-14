@@ -14,12 +14,12 @@ const PieChartAttempts = ({ allStudents = [], attemptedStudents = [] }) => {
   const notAttemptedCount = allStudents.length - attemptedCount;
 
   const data = {
-    labels: ['Attempted', 'Not Attempted'],
+    labels: ['Takers', 'Non-Takers'],
     datasets: [
       {
         label: 'Students',
         data: [attemptedCount, notAttemptedCount],
-        backgroundColor: ['#00C49F', '#FF8042'],
+        backgroundColor: [' #FFBF1A', '#35408E'],
         borderWidth: 1,
       },
     ],
