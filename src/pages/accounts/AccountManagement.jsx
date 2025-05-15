@@ -183,7 +183,7 @@ export default function AccountManagement() {
                   src={chevronIcon}
                   alt="toggle details"
                   onClick={() => toggleCard(user.employeenum)}
-                  className={`origin-center chevron-icon ${
+                  className={`chevron-icons ${
                     cardActive === user.employeenum ? "rotate-180" : ""
                   }`}
                 />

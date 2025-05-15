@@ -1,25 +1,17 @@
 import { useRef, useState, useEffect } from "react";
 import search from '../../assets/search/search.svg';  
 import edit from '../../assets/glossary/edit.svg';
-import add from '../../assets/glossary/add.png';
 import dropdown from '../../assets/glossary/dropdown.svg';
 import '../../css/glossary/glossary.css';
-import SearchBar from "../../components/searchbar/SearchBar";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { API_URL } from "../../Constants";
-import AddTerm from "./AddTerm";
-import addtermbtn from '../../assets/glossary/add-term btn.svg';
 import EditGlossary from "./EditGlossary";
-
-
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import { Plus } from "lucide-react";
 
-
 export default function ManageGlossary() {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
   const navigate = useNavigate();
   const termRefs = useRef({});
   const glossaryBodyRef = useRef(null);
@@ -30,40 +22,25 @@ export default function ManageGlossary() {
   const [scrollTerms, setScrollTerms] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingTerms, setLoadingTerms] = useState(false);
   const [page, setPage] = useState(0);
-  const pageSize = 20;
-
-<<<<<<< HEAD
-  
-  // const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState(null);
-=======
-  const [loadingTerms, setLoadingTerms] = useState(false);
 
->>>>>>> ed2ff6398ecba8507d81bc1a2dbf59952e442950
+  const pageSize = 20;
 
-
-  //dropdown function
+  // Toggle dropdown
   const handleDropdown = (word) => {
     setActiveTermWord(activeTermWord === word ? null : word);
   };
 
-
-  //edit term function
+  // Edit term
   const handlesEdit = (_id, word, meaning, tags) => {
-  setSelectedTerm({ _id, word, meaning, tags });
-  setShowEditModal(true);
+    setSelectedTerm({ _id, word, meaning, tags });
+    setShowEditModal(true);
   };
 
-  // const handlesEdit = (_id, word, meaning, tags) => {
-  //   navigate('/glossary/edit', {
-  //     state: { _id, word, meaning, tags }
-  //   });
-  // };
-
-
- 
+  // Fetch all terms for search
   const getAllTerms = async () => {
     try {
       setLoadingTerms(true);
@@ -77,7 +54,7 @@ export default function ManageGlossary() {
     }
   };
 
-  //fetching first 20 and more when scroll down
+  // Fetch terms in batches for infinite scroll
   const fetchMoreTerms = async () => {
     if (isLoading || !hasMore) return;
 
@@ -95,19 +72,11 @@ export default function ManageGlossary() {
     }
   };
 
-  //rendering new 20 terms
   useEffect(() => {
     fetchMoreTerms();
-  }, []);
-
-
-  //rendering all terms for search
-  useEffect(() => {
     getAllTerms().then(setAllTerms);
   }, []);
 
-
-  //scrolldown function to load more 20 terms
   useEffect(() => {
     const container = glossaryBodyRef.current;
     const handleScroll = () => {
@@ -121,13 +90,12 @@ export default function ManageGlossary() {
     return () => container?.removeEventListener('scroll', handleScroll);
   }, [hasMore, isLoading]);
 
-
-  //displayed terms when searched
-  const displayedTerms = searchTerm === '' ? scrollTerms : allTerms.filter(term =>
-    !term.is_deleted &&
-    term.word.toLowerCase().startsWith(searchTerm.toLowerCase())
-  );
-
+  const displayedTerms = searchTerm === ''
+    ? scrollTerms
+    : allTerms.filter(term =>
+        !term.is_deleted &&
+        term.word.toLowerCase().startsWith(searchTerm.toLowerCase())
+      );
 
   const groupedTerms = displayedTerms.reduce((acc, term) => {
     const firstLetter = term.word[0].toUpperCase();
@@ -136,10 +104,8 @@ export default function ManageGlossary() {
     return acc;
   }, {});
 
-
   const handleAddTerm = () => {
     navigate('/addterm');
-    // setShowAddModal(true)
   };
 
   return (
@@ -162,23 +128,13 @@ export default function ManageGlossary() {
               className="search-input-glossary"
             />
           </div>
-<<<<<<< HEAD
-            <button onClick={handleAddTerm} style={{ background: 'transparent', border: 'none', paddingRight: 4, paddingLeft:2 }}>
-              <img 
-                src={addtermbtn} 
-                className="add-term-btn"
-                alt="add-term button"
-                style={{ width: 'auto', height: '50px', boxShadow: '1px 1px 5px rgb(99, 97, 97)', borderRadius: '9999px' }}
-              />
-            </button>
-=======
 
           <div className="add-ques-container flex gap-2">
             <button
               className="btn flex items-center gap-2 px-4 py-2 text-sm font-medium"
               onClick={handleAddTerm}
             >
-              <Plus className="w-5 h-5  text-white" />
+              <Plus className="w-5 h-5 text-white" />
               Add Term
             </button>
 
@@ -186,9 +142,7 @@ export default function ManageGlossary() {
               <ExportDropdown />
             </div>
           </div>
->>>>>>> ed2ff6398ecba8507d81bc1a2dbf59952e442950
         </div>
-
 
         <div className="glossary-letters-btn-container">
           {letters.map((letter) => (
@@ -210,15 +164,14 @@ export default function ManageGlossary() {
           <div className="header-title">Action</div>
         </div>
 
-        {loadingTerms ? 
+        {loadingTerms ? (
           <div className="loading-overlay-students">
             <div className="spinner"></div>
             <p>Fetching data...</p>
           </div>
-        : searchTerm === '' && displayedTerms.length === 0 ? (
+        ) : searchTerm === '' && displayedTerms.length === 0 ? (
           <p className="text-gray-400 italic">No terms to show.</p>
-        ) : 
-        (
+        ) : (
           letters.map((letter) =>
             groupedTerms[letter] ? (
               <div key={letter} ref={el => (termRefs.current[letter] = el)} className="per-letter-main-container">
@@ -247,11 +200,9 @@ export default function ManageGlossary() {
                           className={activeTermWord === term.word ? "active-dropdown" : "dropdown"}
                           onClick={() => handleDropdown(term.word)}
                         >
-
                           <img src={dropdown} className="dropdown-icon" alt="dropdown icon" />
                         </div>
                       </div>
-                      
                     </div>
                   ))}
                 </div>
@@ -259,17 +210,6 @@ export default function ManageGlossary() {
             ) : null
           )
         )}
-
-        {/* {showAddModal && (
-          <AddTerm
-            onClose={() => setShowAddModal(false)}
-            onTermAdded={() => {
-              setPage(0);
-              setScrollTerms([]);
-              fetchMoreTerms();
-            }}
-          />
-        )} */}
 
         {showEditModal && selectedTerm && (
           <EditGlossary
@@ -279,28 +219,11 @@ export default function ManageGlossary() {
               setPage(0);
               setScrollTerms([]);
               fetchMoreTerms();
+              getAllTerms().then(setAllTerms);
             }}
           />
         )}
-
-
       </div>
-
-<<<<<<< HEAD
-      <div className="glossary-footer">
-        {/* <button className="add-term-btn" onClick={handleAddTerm}>
-          <img 
-            src={addtermbtn} 
-            alt="add-term button"
-            className="add-term-icon-btn"
-          />
-        </button> */}
-      </div>
-
-      
-=======
-     
->>>>>>> ed2ff6398ecba8507d81bc1a2dbf59952e442950
     </>
   );
 }

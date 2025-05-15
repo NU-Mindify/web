@@ -301,7 +301,7 @@ export default function ManageStudents() {
                       )
                     }
                   >
-                    <img src={chevron} alt="chevron" className="chevron-icon" />
+                    <img src={chevron} alt="chevron" className="chevron-icons" />
                   </button>
                 </div>
 
