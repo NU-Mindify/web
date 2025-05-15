@@ -92,7 +92,7 @@ export default function AccountManagement() {
             onChange={(e) => setSelectedBranch(e.target.value)}
             className="text-black font-[Poppins] border px-3 py-1 rounded-xs ml-3 mt-3 h-[40px] text-sm"
           >
-            <option value="All">All Branches</option>
+            <option value="All" className="font-black font-[Poppins]">All Branches</option>
             {branches.map((branch) => (
               <option key={branch.id} value={branch.id}>
                 {branch.name}
@@ -104,7 +104,7 @@ export default function AccountManagement() {
             onChange={(e) => setSelectedPosition(e.target.value)}
             className="text-black font-[Poppins] border px-3 py-1 rounded-xs ml-3 mt-3 h-[40px] text-sm"
           >
-            <option value="All">All Positions</option>
+            <option value="All" className="font-black font-[Poppins]">All Positions</option>
             {uniquePositions.map((position, idx) => (
               <option key={idx} value={position}>
                 {position}
