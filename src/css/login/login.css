@@ -46,13 +46,11 @@ html, body, #root {
 
 
 /* ------------------- MAIN CONTAINER ---------------------*/
-.login-main-container{
-    background-image: url('../../assets/background/pattern.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    @apply w-screen h-[100svh] p-5 flex flex-row justify-center items-stretch;
+.login-main-container {
+  background: radial-gradient(circle at center, #4A6FB4 0%, #27298F 70%, #273574 100%);
+  @apply w-screen h-[100svh] p-5 flex flex-col lg:flex-row justify-center items-center;
 }
+
 /********************************* END *******************************/
 
 
@@ -60,22 +58,76 @@ html, body, #root {
 
 /* ------------------- LEFT LOGO ---------------------*/
 .logo-container {
-    animation: fadeUp 2s ease-in forwards;
-    animation-delay: 2.6s;
-    animation-fill-mode: both;
-    @apply hidden
-    lg:w-[calc(65vw-20px)] lg:h-full lg:flex lg:flex-col lg:justify-center lg:items-center ;
-  }
-
-
-
-  
-  
-.logo {
-  @apply w-[300px] max-w-[300px] min-w-[100px] h-auto
-  lg:w-[500px] lg:max-w-[500px];
-  
+  animation: fadeUp 2s ease-in forwards;
+  animation-delay: 1.5s;
+  animation-fill-mode: both;
+  @apply flex flex-col justify-center items-center w-full h-full 
+    lg:w-[calc(65vw-20px)] lg:h-full;
 }
+
+@keyframes glowPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.6));
+    transform: translate(-50%, -50%) scale(1.7);
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1));
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.transition-logo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.7);
+  z-index: 50;
+  width: 400px;
+  max-width: 90vw;
+
+  opacity: 0;
+  animation: fadeIn 2s ease forwards, glowPulse 4s ease-in-out infinite;
+  animation-fill-mode: forwards;
+  transition: top 3s ease-in-out, left 1.5s ease-in-out, transform 5s ease-in-out;
+}
+
+.transition-logo.moved {
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%) scale(1.4);
+  animation: none;
+  opacity: 1; /* Ensure visible */
+}
+
+
+.logo-img {
+  width: 100%;  
+  height: auto;
+  display: block;
+}
+  
+.info {
+  @apply w-4/5 text-base opacity-100 text-center mt-4
+    lg:text-xl lg:mt-10;
+}
+
+
+
+/********************************* END *******************************/
+
+
+
+
+/* ------------------- LOGIN FORM RIGHT ---------------------*/
 
 @keyframes fadeUp {
   0% {
@@ -87,78 +139,61 @@ html, body, #root {
     transform: translateY(0);
   }
 }
-  
-.info {
-    @apply w-4/5 h-auto text-base opacity-100 text-justify
-    lg:text-2xl;
+
+.login-form {
+  width: 100%;
+  max-width: 600px;
+  min-width: 320px;
+  height: 60vh;
+  min-height: 600px;
+
+  @apply bg-white flex flex-col items-center rounded-xl overflow-y-auto p-2 opacity-0 mt-30 mr-10 pt-20;
+
+  animation: fadeUp 1.8s ease-in forwards;
+  animation-delay: 1.5s;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.welcome-txt {
+  @apply text-blue-900 text-3xl font-extrabold;
 }
 
-/********************************* END *******************************/
-
-
-
-
-/* ------------------- LOGIN FORM RIGHT ---------------------*/
-.login-form{
-    animation: fadeUp 2s ease-in forwards;
-    animation-delay: 2.5s;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    @apply opacity-0 w-full h-full bg-white flex flex-col items-center rounded-xl overflow-y-auto p-3
-      lg:w-[calc(35vw-20px)];
-}
-
-.welcome-txt{
-  @apply text-blue-600 text-3xl font-semibold;
-}
-
-.mini-txt{
-  @apply text-black text-[14px] mb-3;
-}
-
-
-.nuLogo-container{
-    @apply w-full h-[90px]  flex justify-center mb-3
-    lg:h-[60px]
-}
-
-.nuLogo{
-    @apply h-full;
+.mini-txt {
+  @apply text-black text-[14px] mb-5;
 }
 
 .input-container {
   @apply w-4/5 flex flex-col flex-grow;
 }
 
-
-.inputs{
-    border: 2px solid black;
-    @apply w-full bg-white text-black h-[40px] my-[10px] px-2;
+.inputs {
+  border: 2px solid black;
+  @apply w-full bg-white text-black h-[40px] my-[10px] px-2 
+         focus:outline-none focus:ring-0 focus:border-black;
 }
 
-.spanner{
-    @apply text-lg mt-[10px] bg-white text-black;
+.spanner {
+  @apply text-lg mt-[10px] bg-white text-black;
 }
 
-.remember-container{
-    @apply w-full flex flex-row items-center;
+.remember-container {
+  @apply w-full flex flex-row items-center mt-2 mb-5;
 }
 
-.remember-txt{
-    @apply  w-full text-black pl-2;
+.remember-txt {
+  @apply w-full text-black pl-2 text-sm;
 }
 
-.checkbox{
-    border: 1px solid black;
-    @apply text-[8px] h-[20px] w-[20px] text-black;
+.checkbox {
+  border: 1px solid black;
+  @apply text-[8px] h-[15px] w-[10px] text-black rounded-[3px];
 }
 
-.login-btn{
-    @apply btn rounded-xl mt-[15px] h-[40px] bg-[#2F2F2F] text-white border-black 
-      sm:btn-sm 
-      md:btn-md 
-      lg:btn-lg; 
+.login-btn {
+  @apply btn rounded-xl mt-[15px] h-[40px] bg-[#2F2F2F] text-white border-black 
+         sm:btn-sm md:btn-md lg:btn-lg;
 }
+
 
 /********************************* END *******************************/
 
