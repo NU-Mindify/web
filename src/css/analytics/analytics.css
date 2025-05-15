@@ -21,7 +21,11 @@
 }
 
 .analytics-container-properties{
-    @apply w-full h-[400px] bg-white rounded-xl p-15;
+    @apply w-full h-[400px] bg-white rounded-xl;
+}
+
+.analytics-content-properties{
+    @apply flex flex-col w-[50%] h-[385px] p-10 m-2;
 }
 
 .analytics-title-text-properties {
@@ -37,7 +41,3 @@
     appearance: none; 
     overflow: hidden; 
 }
-
-.progress-yellow::-webkit-progress-value {
-    background-color: #FFBF1A;
-  }

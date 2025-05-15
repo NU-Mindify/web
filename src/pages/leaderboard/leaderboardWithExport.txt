@@ -3,9 +3,8 @@ import search from "../../assets/search/search.svg";
 import download from "../../assets/leaderboard/file-export.svg";
 import dropdown from "../../assets/glossary/dropdown.svg";
 import axios from "axios";
-import { API_URL, branches } from "../../Constants";
+import { API_URL } from "../../Constants";
 import { useEffect, useState, useContext } from "react";
-
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -14,9 +13,9 @@ import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function Leaderboard() {
-  const { currentWebUser, isAdmin } = useContext(UserLoggedInContext);
+  const { currentWebUser } = useContext(UserLoggedInContext);
 
-  const [leaderboardClassic, setClassicLeaderboards] = useState([]);
+  const [leaderboards, setLeaderboards] = useState([]);
   const [leaderboardsMastery, setLeaderboardsMastery] = useState([]);
   const [searchClassic, setSearchClassic] = useState("");
   const [searchMastery, setSearchMastery] = useState("");
@@ -24,17 +23,12 @@ export default function Leaderboard() {
   const [loadingDataClassic, setLoadingDataClassic] = useState(false);
   const [loadingDataMastery, setLoadingDataMastery] = useState(false);
 
-  const [classicSelectedBranch, setClassicSelectedBranch] = useState('')
-  const [masterySelectedBranch, setMasterySelectedBranch] = useState('')
-
   useEffect(() => {
-    fetchTopClassicLeaderboard();
-    fetchTopMasteryLeaderboard();
+    fetchTopLeaderboards();
+    fetchTopLeaderboardsMastery();
   }, []);
 
-
-  // FETCHING CLASSIC LEADERBOARD
-  const fetchTopClassicLeaderboard = async () => {
+  const fetchTopLeaderboards = async () => {
     setLoadingDataClassic(true);
     try {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
@@ -42,7 +36,9 @@ export default function Leaderboard() {
           mode: "classic",
         },
       });
-      setClassicLeaderboards(response.data);
+
+      //   console.log(response.data);
+      setLeaderboards(response.data);
     } catch (error) {
       console.error("Error fetching top leaderboards:", error.message);
     } finally {
@@ -50,9 +46,7 @@ export default function Leaderboard() {
     }
   };
 
-
-  // FETCHING MASTERY LEADERBOARD
-  const fetchTopMasteryLeaderboard = async () => {
+  const fetchTopLeaderboardsMastery = async () => {
     setLoadingDataMastery(true);
     try {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
@@ -61,6 +55,7 @@ export default function Leaderboard() {
         },
       });
 
+      //console.log(response.data);
       setLeaderboardsMastery(response.data);
     } catch (error) {
       console.error("Error fetching top leaderboards:", error.message);
@@ -69,63 +64,8 @@ export default function Leaderboard() {
     }
   };
 
-  
-    
-  // FILTERING CLASSIC LEADERBOARD PER BRANCH OF THE PROFESSOR
-  // IF ADMIN, THE ADMIN CAN FILTER AND VIEW THE TOP MOST LEADERBOARD ON ALL BRANCH
-  const filteredClassicLeaders = leaderboardClassic.filter((leader) => {
-    const firstName = leader.user_id?.first_name?.toLowerCase() || "";
-    const lastName = leader.user_id?.last_name?.toLowerCase() || "";
-    const fullName = `${firstName} ${lastName}`;
-    const reversedFullName = `${lastName} ${firstName}`;
-    const search = searchClassic.toLowerCase();
-
-    return (
-      firstName.includes(search) ||
-      lastName.includes(search) ||
-      fullName.includes(search) ||
-      reversedFullName.includes(search)
-    );
-  }).filter((leader) => {
-    if (isAdmin) {
-      return classicSelectedBranch === 'all'|| classicSelectedBranch === '' || leader.user_id?.branch === classicSelectedBranch;
-    } else {
-      return leader.user_id?.branch === currentWebUser?.branch;
-    }
-  });
-
-
-  // FILTERING MASTERY LEADERBOARD PER BRANCH OF THE PROFESSOR
-  // IF ADMIN, THE ADMIN CAN FILTER AND VIEW THE TOP MOST LEADERBOARD ON ALL BRANCH
-  const filteredMasteryLeaders = leaderboardsMastery.filter((leader) => {
-    const firstName = leader.user_id?.first_name?.toLowerCase() || "";
-    const lastName = leader.user_id?.last_name?.toLowerCase() || "";
-    const fullName = `${firstName} ${lastName}`;
-    const reversedFullName = `${lastName} ${firstName}`;
-    const search = searchMastery.toLowerCase();
-
-    return (
-      firstName.includes(search) ||
-      lastName.includes(search) ||
-      fullName.includes(search) ||
-      reversedFullName.includes(search)
-    );
-  }).filter((leader) => {
-    if (isAdmin) {
-      return masterySelectedBranch === 'all'|| masterySelectedBranch === '' || leader.user_id?.branch === masterySelectedBranch;
-    } else {
-      return leader.user_id?.branch === currentWebUser?.branch;
-    }
-  });
-
-
-
-
-
-
-
-  //AFTER FILTERING THE CLASSIC, THEN SORTING
-  const classicSortingLeaders = [...filteredClassicLeaders]
+  //classic sorting
+  const rankedLeaders = [...leaderboards]
     .sort((a, b) => {
       const aScore = a.correct / a.total_items;
       const bScore = b.correct / b.total_items;
@@ -141,12 +81,8 @@ export default function Leaderboard() {
       rank: index + 1,
     }));
 
-    
-
-
-
-  //AFTER FILTERING THE MASTERY, THEN SORTING
-  const masterySortingLeaders = [...filteredMasteryLeaders]
+  //mastery sorting
+  const rankedLeadersMastery = [...leaderboardsMastery]
     .sort((a, b) => {
       const aScore = a.correct / a.total_items;
       const bScore = b.correct / b.total_items;
@@ -161,9 +97,140 @@ export default function Leaderboard() {
       ...leader,
       rank: index + 1,
     }));
-  
 
-  
+  const filteredLeaders = rankedLeaders.filter((leader) => {
+    const firstName = leader.user_id?.first_name?.toLowerCase() || "";
+    const lastName = leader.user_id?.last_name?.toLowerCase() || "";
+    const fullName = `${firstName} ${lastName}`;
+    const reversedFullName = `${lastName} ${firstName}`;
+    const search = searchClassic.toLowerCase();
+
+    return (
+      firstName.includes(search) ||
+      lastName.includes(search) ||
+      fullName.includes(search) ||
+      reversedFullName.includes(search)
+    );
+  });
+
+  const filteredLeadersMastery = rankedLeadersMastery.filter((leader) => {
+    const firstName = leader.user_id?.first_name?.toLowerCase() || "";
+    const lastName = leader.user_id?.last_name?.toLowerCase() || "";
+    const fullName = `${firstName} ${lastName}`;
+    const reversedFullName = `${lastName} ${firstName}`;
+    const search = searchMastery.toLowerCase();
+
+    return (
+      firstName.includes(search) ||
+      lastName.includes(search) ||
+      fullName.includes(search) ||
+      reversedFullName.includes(search)
+    );
+  });
+
+  // const filteredLeadersMastery = rankedLeadersMastery.filter(
+  //   (leader) =>
+  //     leader.user_id?.first_name?.toLowerCase().includes(searchMastery) ||
+  //     leader.user_id?.last_name?.toLowerCase().includes(searchMastery)
+  // );
+
+  //needed for saving as pdf
+  //npm install jspdf jspdf-autotable
+
+  //get current date
+  const now = new Date().toLocaleString();
+
+  //CSV export
+  const exportToCSV = (data, filename) => {
+    const headers = ["Rank", "Name", "Campus", "World", "Score", "Time"];
+    const rows = data.map((leader) => {
+      const firstName = leader.user_id?.first_name || "";
+      const lastName = leader.user_id?.last_name || "";
+      const fullName = `${lastName.toUpperCase()} ${firstName}`.trim();
+
+      return [
+        leader.rank,
+        fullName,
+        leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
+        leader.category,
+        leader.total_items > 0
+          ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
+          : "N/A",
+        leader.time_completion > 60
+          ? `${Math.floor(leader.time_completion / 60)}m ${Math.round(
+              leader.time_completion % 60
+            )}s`
+          : `${Math.round(leader.time_completion)}s`,
+      ];
+    });
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [
+        `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        `Exported on: ${now}`,
+        "",
+        headers.join(","),
+        ...rows.map((row) => row.join(",")),
+      ].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `${filename}_by_${currentWebUser.firstName} ${currentWebUser.lastName}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // PDF Export
+  const exportToPDF = (data, title) => {
+    const username = currentWebUser.firstName + ' ' + currentWebUser.lastName || "Unknown User";
+    const doc = new jsPDF();
+    doc.text(`${title}`, 14, 10);
+    doc.text(
+      `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+      14,
+      18
+    );
+    doc.text(`Exported on: ${now}`, 14, 26);
+
+    const rows = data.map((leader) => {
+      const firstName = leader.user_id?.first_name || "";
+      const lastName = leader.user_id?.last_name || "";
+      const reversedFullName = `${lastName} ${firstName}`.trim(); // Reverse first and last name
+
+      return [
+        leader.rank,
+        reversedFullName,
+        leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
+        leader.category,
+        leader.total_items > 0
+          ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
+          : "N/A",
+        leader.time_completion > 60
+          ? `${Math.floor(leader.time_completion / 60)}m ${Math.round(
+              leader.time_completion % 60
+            )}s`
+          : `${Math.round(leader.time_completion)}s`,
+      ];
+    });
+
+    autoTable(doc, {
+      head: [["Rank", "Name", "Campus", "World", "Score", "Time"]],
+      body: rows,
+      startY: 30,
+    });
+
+    doc.save(
+      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
+        currentWebUser.lastName
+      }.pdf`
+    );
+  };
 
   return (
     <>
@@ -171,22 +238,15 @@ export default function Leaderboard() {
         <div className="classic-cont">
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title classic-title">Classic</h1>
-              {isAdmin && 
-                <select 
-                  value={classicSelectedBranch} 
-                  className="text-black"
-                  onChange={(e) => setClassicSelectedBranch(e.target.value)}
-                >
-                  <option value='' disabled>Sort by:</option>
-                  <option value='all'>All Branch</option>
-                  {branches.map((branch, index) => (
-                    <option value={branch.id} key={index}>
-                      {branch.name}
-                    </option>
-                  ))}
-
-                </select>
-              }
+            <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportToCSV(filteredLeaders, "Classic_Leaderboard");
+                } else if (format === "pdf") {
+                  exportToPDF(filteredLeaders, "Classic Leaderboard");
+                }
+              }}
+            />
           </div>
 
           <h2 className="leaderboard-subtitle">
@@ -196,7 +256,7 @@ export default function Leaderboard() {
           <div className="search-bar-cont-leaderboards">
             <div className="search-bar-leaderboards">
               <button className="search-btn-leaderboards">
-                <img src={search} alt="search"></img>
+                <img src={search}></img>
               </button>
               <input
                 type="text"
@@ -230,11 +290,9 @@ export default function Leaderboard() {
                 <div className="spinner"></div>
                 <p>Fetching data...</p>
               </div>
-            ) : classicSortingLeaders.length === 0 ? (
-              <h1 className="text-black mt-5 w-full text-3xl text-center">No data Found</h1>
             ) : (
               <div className="leaders-main-container">
-                {classicSortingLeaders.map((leader) => (
+                {filteredLeaders.map((leader) => (
                   <div
                     key={leader._id}
                     className="leaders-container bg-gray-100 rounded-xl mt-2"
@@ -257,10 +315,10 @@ export default function Leaderboard() {
                       {leader.user_id?.first_name}
                     </div>
 
-                    <div className="leader-info text-black leaders-content-font">
-                      {
-                        branches.find(branch => branch.id === leader.user_id?.branch)?.name || "Unknown Branch"
-                      }
+                    <div className="leader-info text-black leaders-content-font flex items-center gap-1">
+                      {leader.user_id?.branch === "moa"
+                        ? "NU MOA"
+                        : "NU MANILA"}
                     </div>
 
                     <div className="leader-info text-black leaders-content-font">
@@ -301,35 +359,19 @@ export default function Leaderboard() {
           </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-
         <div className="mastery-cont">
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title mastery-title">Mastery</h1>
-              {isAdmin && 
-                <select 
-                  value={masterySelectedBranch} 
-                  className="text-black"
-                  onChange={(e) => setMasterySelectedBranch(e.target.value)}
-                >
-                  <option value='' disabled>Sort by:</option>
-                  <option value='all'>All Branch</option>
-                  {branches.map((branch, index) => (
-                    <option value={branch.id} key={index}>
-                      {branch.name}
-                    </option>
-                  ))}
 
-                </select>
-              }
+            <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportToCSV(filteredLeadersMastery, "Mastery_Leaderboard");
+                } else if (format === "pdf") {
+                  exportToPDF(filteredLeadersMastery, "Mastery Leaderboard");
+                }
+              }}
+            />
           </div>
 
           <h2 className="leaderboard-subtitle">
@@ -339,7 +381,7 @@ export default function Leaderboard() {
           <div className="search-bar-cont-leaderboards">
             <div className="search-bar-leaderboards">
               <button className="search-btn-leaderboards">
-                <img src={search} alt="search"></img>
+                <img src={search}></img>
               </button>
               <input
                 type="text"
@@ -374,11 +416,9 @@ export default function Leaderboard() {
                 <div className="spinner"></div>
                 <p>Fetching data...</p>
               </div>
-            ) : masterySortingLeaders.length === 0 ? (
-              <h1 className="text-black mt-5 w-full text-3xl text-center">No data Found</h1>
             ) : (
               <div className="leaders-main-container">
-                {masterySortingLeaders.map((leader) => (
+                {filteredLeadersMastery.map((leader) => (
                   <div
                     key={leader._id}
                     className="leaders-container bg-gray-100 rounded-xl mt-2"
@@ -401,9 +441,9 @@ export default function Leaderboard() {
                     </div>
 
                     <div className="leader-info text-black leaders-content-font">
-                      {
-                        branches.find(branch => branch.id === leader.user_id?.branch)?.name || "Unknown Branch"
-                      }
+                      {leader.user_id?.branch === "moa"
+                        ? "NU MOA"
+                        : "NU MANILA"}
                     </div>
 
                     <div className="leader-info text-black leaders-content-font">

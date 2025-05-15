@@ -13,6 +13,9 @@ import addtermbtn from '../../assets/glossary/add-term btn.svg';
 import EditGlossary from "./EditGlossary";
 
 
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import { Plus } from "lucide-react";
+
 
 export default function ManageGlossary() {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -30,10 +33,15 @@ export default function ManageGlossary() {
   const [page, setPage] = useState(0);
   const pageSize = 20;
 
+<<<<<<< HEAD
   
   // const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState(null);
+=======
+  const [loadingTerms, setLoadingTerms] = useState(false);
+
+>>>>>>> ed2ff6398ecba8507d81bc1a2dbf59952e442950
 
 
   //dropdown function
@@ -55,14 +63,17 @@ export default function ManageGlossary() {
   // };
 
 
-  //fetching all terms
+ 
   const getAllTerms = async () => {
     try {
+      setLoadingTerms(true);
       const response = await axios.get(`${API_URL}/getTerms`);
       return response.data || [];
     } catch (error) {
       console.error(`Error: ${error}`);
       return [];
+    } finally {
+      setLoadingTerms(false);
     }
   };
 
@@ -138,19 +149,20 @@ export default function ManageGlossary() {
           <h1 className="glossary-title">Manage Glossary</h1>
         </div>
 
-        <div className="glossary-search-container">
+        <div className="glossary-search-container flex-1 min-w-[200px] flex justify-between items-center flex-wrap gap-2">
           <div className="search-bar-glossary">
             <button className="search-btn-glossary">
               <img src={search} alt="search icon" />
             </button>
             <input 
               type="text"
-              placeholder="Search here..." 
+              placeholder="Search terms..." 
               onChange={(e) => setSearchTerm(e.target.value)}
               value={searchTerm}
               className="search-input-glossary"
             />
           </div>
+<<<<<<< HEAD
             <button onClick={handleAddTerm} style={{ background: 'transparent', border: 'none', paddingRight: 4, paddingLeft:2 }}>
               <img 
                 src={addtermbtn} 
@@ -159,7 +171,24 @@ export default function ManageGlossary() {
                 style={{ width: 'auto', height: '50px', boxShadow: '1px 1px 5px rgb(99, 97, 97)', borderRadius: '9999px' }}
               />
             </button>
+=======
+
+          <div className="add-ques-container flex gap-2">
+            <button
+              className="btn flex items-center gap-2 px-4 py-2 text-sm font-medium"
+              onClick={handleAddTerm}
+            >
+              <Plus className="w-5 h-5  text-white" />
+              Add Term
+            </button>
+
+            <div className="pt-1 pr-8">
+              <ExportDropdown />
+            </div>
+          </div>
+>>>>>>> ed2ff6398ecba8507d81bc1a2dbf59952e442950
         </div>
+
 
         <div className="glossary-letters-btn-container">
           {letters.map((letter) => (
@@ -181,7 +210,12 @@ export default function ManageGlossary() {
           <div className="header-title">Action</div>
         </div>
 
-        {searchTerm === '' && displayedTerms.length === 0 ? (
+        {loadingTerms ? 
+          <div className="loading-overlay-students">
+            <div className="spinner"></div>
+            <p>Fetching data...</p>
+          </div>
+        : searchTerm === '' && displayedTerms.length === 0 ? (
           <p className="text-gray-400 italic">No terms to show.</p>
         ) : 
         (
@@ -252,6 +286,7 @@ export default function ManageGlossary() {
 
       </div>
 
+<<<<<<< HEAD
       <div className="glossary-footer">
         {/* <button className="add-term-btn" onClick={handleAddTerm}>
           <img 
@@ -263,6 +298,9 @@ export default function ManageGlossary() {
       </div>
 
       
+=======
+     
+>>>>>>> ed2ff6398ecba8507d81bc1a2dbf59952e442950
     </>
   );
 }

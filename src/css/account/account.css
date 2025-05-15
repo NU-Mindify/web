@@ -9,23 +9,22 @@
 
 /*------------------------- FOR HEADER --------------------------*/
 .account-header {
-  @apply w-full h-[150px] p-2;
+  @apply w-full h-[150px] p-1;
 }
 
 .account-title {
-  @apply text-[40px] font-[Poppins] font-bold text-[#FFD41C] h-[50px];
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFD41C] h-[50px] pl-3;
 }
 
 .acc-search-bar {
-  @apply flex text-[#000000] items-center bg-gray-100 px-3 py-2 rounded-full w-10/12 mt-5;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+ @apply w-full h-[44px] bg-white flex items-center px-4 rounded-[10px] shadow-md border-0 m-8;
+  width: 95%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .acc-search-input {
   @apply p-2 rounded-lg px-2 py-1 border-none flex-1 bg-transparent focus:outline-none;
+
 }
 
 /*------------------------- USER TITLES --------------------------*/
@@ -33,7 +32,7 @@
   @apply w-full h-[40px] flex items-center flex-col pt-3;
 }
 .header-info {
-  @apply w-11/12 h-full grid grid-cols-4 px-2;
+  @apply w-11/12 h-full grid grid-cols-[3fr_2fr_2fr_1fr] px-2;
 }
 .title-info {
   @apply text-black text-2xl font-bold;
@@ -47,12 +46,12 @@
   -ms-overflow-style: none;
 }
 .user-card {
-  @apply w-11/12 grid grid-cols-4 bg-white my-2 py-3 rounded-xl px-2 
+  @apply w-11/12 grid grid-cols-[3fr_2fr_2fr_1fr] bg-white my-2 py-3 rounded-xl px-3 
     transition-transform duration-500 ease-in-out;
   border: 1px solid black;
 }
 .active-user-card {
-  @apply w-[95%] grid grid-cols-4 bg-gray-300 my-2 py-5 rounded-xl px-2 
+  @apply w-[95%] grid grid-cols-[3fr_2fr_2fr_1fr] bg-gray-300 my-2 py-5 rounded-xl px-2 
     transition-transform duration-500 ease-in-out;
   border: 1px solid black;
 }

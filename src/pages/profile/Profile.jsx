@@ -39,7 +39,6 @@ export default function Profile(){
     axios
       .get(`${API_URL}/getwebuser/${uid}`)
       .then((response) => {
-        // console.log(response.data);
         setWebUser(response.data);
       })
       .catch((error) => {

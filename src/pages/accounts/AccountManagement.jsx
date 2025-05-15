@@ -5,8 +5,8 @@ import "../../css/account/account.css";
 import { API_URL, branches } from "../../Constants";
 
 import searchIcon from "../../assets/students/search-01.svg";
-import chevronIcon from "../../assets/glossary/dropdown.svg";
-import settingsIcon from "../../assets/students/settings.svg";
+import chevronIcon from "../../assets/forAll/chevron.svg";
+import settingsIcon from "../../assets/forAll/settings.svg";
 
 export default function AccountManagement() {
   const [webUsers, setWebUsers] = useState([]);
@@ -16,6 +16,8 @@ export default function AccountManagement() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [sortOrderAsc, setSortOrderAsc] = useState(true);
+  const [selectedBranch, setSelectedBranch] = useState("All");
+  const [selectedPosition, setSelectedPosition] = useState("All");
 
   const navigate = useNavigate();
   const usersPerPage = 10;
@@ -39,12 +41,25 @@ export default function AccountManagement() {
     setCurrentPage(1);
   }, [searchQuery]);
 
+  const uniquePositions = Array.from(
+    new Set(webUsers.map((user) => user.position))
+  );
+
   const filteredUsers = webUsers
-    .filter((user) =>
-      `${user.firstName} ${user.lastName}`
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-    )
+    .filter((user) => {
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+      const reversedName = `${user.lastName} ${user.firstName}`.toLowerCase();
+      const query = searchQuery.toLowerCase();
+
+      const matchesSearch =
+        fullName.includes(query) || reversedName.includes(query);
+      const matchesBranch =
+        selectedBranch === "All" || user.branch === selectedBranch;
+      const matchesPosition =
+        selectedPosition === "All" || user.position === selectedPosition;
+
+      return matchesSearch && matchesBranch && matchesPosition;
+    })
     .sort((a, b) => {
       const comparison = a.lastName.localeCompare(b.lastName);
       return sortOrderAsc ? comparison : -comparison;
@@ -64,21 +79,49 @@ export default function AccountManagement() {
     <div className="account-main-container">
       {/* Header */}
       <div className="account-header">
-        <h1 className="account-title">
+        <h1 className="account-title flex flex-row">
           Account Management{" "}
           <button
             onClick={() => setSortOrderAsc((prev) => !prev)}
-            className="btn btn-outline ml-4 text-black hover:bg-[#FFD41C]"
+            className="btn btn-outline ml-4 text-black hover:bg-[#FFD41C] mt-3"
           >
-            Sort by Surname {sortOrderAsc ? "↑" : "↓"}
+            Sort by Last Name {sortOrderAsc ? "↑" : "↓"}
           </button>
+          <select
+            value={selectedBranch}
+            onChange={(e) => setSelectedBranch(e.target.value)}
+            className="text-black font-[Poppins] border px-3 py-1 rounded-xs ml-3 mt-3 h-[40px] text-sm"
+          >
+            <option value="All" className="font-black font-[Poppins]">All Branches</option>
+            {branches.map((branch) => (
+              <option key={branch.id} value={branch.id}>
+                {branch.name}
+              </option>
+            ))}
+          </select>
+          <select
+            value={selectedPosition}
+            onChange={(e) => setSelectedPosition(e.target.value)}
+            className="text-black font-[Poppins] border px-3 py-1 rounded-xs ml-3 mt-3 h-[40px] text-sm"
+          >
+            <option value="All" className="font-black font-[Poppins]">All Positions</option>
+            {uniquePositions.map((position, idx) => (
+              <option key={idx} value={position}>
+                {position}
+              </option>
+            ))}
+          </select>
         </h1>
 
         <div className="acc-search-bar">
-          <img src={searchIcon} alt="Search" className="search-icon" />
+          <img
+            src={searchIcon}
+            alt="Search"
+            className="search-icon w-4 h-4 mr-2"
+          />
           <input
             type="text"
-            className="acc-search-input"
+            className="acc-search-input text-black font-[Poppins]"
             placeholder="Search for a user"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -89,12 +132,7 @@ export default function AccountManagement() {
       {/* Column Titles */}
       <div className="titles-container">
         <div className="header-info">
-          <h1
-            className="title-info cursor-pointer"
-            onClick={() => setSortOrderAsc((prev) => !prev)}
-          >
-            Name
-          </h1>
+          <h1 className="title-info">Name</h1>
           <h1 className="title-info">Position</h1>
           <h1 className="title-info">Branch</h1>
           <h1 className="title-info">Action</h1>
@@ -127,7 +165,7 @@ export default function AccountManagement() {
                   className="mini-avatar"
                 />
                 <h1 className="admin-info">
-                  {user.firstName} {user.lastName}
+                  {user.lastName.toUpperCase()}, {user.firstName}
                 </h1>
               </div>
               <h1 className="admin-info">{user.position}</h1>

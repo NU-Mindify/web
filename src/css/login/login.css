@@ -47,10 +47,7 @@ html, body, #root {
 
 /* ------------------- MAIN CONTAINER ---------------------*/
 .login-main-container{
-    background-image: url('../../assets/background/pattern.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
+    background: radial-gradient(#02386E, #00264D);
     @apply w-screen h-[100svh] p-5 flex flex-row justify-center items-stretch;
 }
 /********************************* END *******************************/

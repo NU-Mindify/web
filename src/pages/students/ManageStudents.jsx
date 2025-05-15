@@ -1,14 +1,12 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import search from "../../assets/students/search-01.svg";
-import chevron from "../../assets/glossary/dropdown.svg";
-import settings from "../../assets/students/settings.svg";
+import chevron from "../../assets/forAll/chevron.svg";
 import samplepic from "../../assets/students/sample-minji.svg";
 import "../../css/students/students.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL, branches, categories, modes, levels } from "../../Constants";
 import AnimatedProgressBar from "../../components/animatedProgressBar/AnimatedProgressBar";
+import { Settings } from "lucide-react";
 
 export default function ManageStudents() {
   const [students, setStudents] = useState([]);
@@ -18,6 +16,8 @@ export default function ManageStudents() {
   const [openDropdown, setOpenDropdown] = useState(null);
 
   const [attempts, setAttempts] = useState([]);
+
+  const [sortOrder, setSortOrder] = useState("asc");
 
   useEffect(() => {
     fetchStudents();
@@ -29,7 +29,13 @@ export default function ManageStudents() {
     try {
       setLoadingStudents(true);
       const { data } = await axios.get(`${API_URL}/getUsers`);
-      setStudents(data);
+
+      // Sort students alphabetically by last name
+      const sortedStudents = data.sort((a, b) =>
+        a.last_name.localeCompare(b.last_name)
+      );
+
+      setStudents(sortedStudents);
     } catch (error) {
       console.error("Error fetching students:", error);
     } finally {
@@ -64,7 +70,7 @@ export default function ManageStudents() {
         },
       });
 
-      console.log(response.data);
+      console.log("Fetched Attempts:", response.data); // Log the fetched attempts
       setAttempts(response.data);
     } catch (error) {
       console.error("Error fetching analytics data:", error.message);
@@ -73,7 +79,8 @@ export default function ManageStudents() {
 
   const filteredStudents = students.filter(
     (student) =>
-      student.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.student_id?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -82,7 +89,11 @@ export default function ManageStudents() {
 
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = filteredStudents.slice(
+  const sortedFilteredStudents = [...filteredStudents].sort((a, b) => {
+    const compare = a.last_name.localeCompare(b.last_name);
+    return sortOrder === "asc" ? compare : -compare;
+  });
+  const currentStudents = sortedFilteredStudents.slice(
     indexOfFirstStudent,
     indexOfLastStudent
   );
@@ -126,12 +137,70 @@ export default function ManageStudents() {
     { title: "General Psychology", key: "general", label: "World 5" },
   ];
 
+  const getStudentAttemptsByWorld = (studentId) => {
+    // console.log("StudentId (Type):", studentId, "Type:", typeof studentId);
+
+    const studentData = attempts.filter((attempt) => {
+      // console.log("Attempt Object:", attempt);
+      const attemptUserId = attempt.user_id._id; // Access the _id of the user_id object
+
+      // console.log(
+      //   "Attempt user_id (Type):",
+      //   attemptUserId,
+      //   "Converted to String:",
+      //   attemptUserId.toString()
+      // );
+      // console.log("Comparing:", attemptUserId.toString(), "with", studentId);
+
+      return attemptUserId.toString() === String(studentId); // Compare as strings
+    });
+
+    // console.log("Filtered studentData:", studentData);
+    const result = {};
+
+    studentData.forEach((entry) => {
+      const worldKey = entry.category; // category = world key
+      const score = entry.correct;
+
+      if (!result[worldKey]) {
+        result[worldKey] = {
+          classicScores: [],
+          masteryScores: [],
+          classicAttempts: 0,
+          masteryAttempts: 0,
+        };
+      }
+
+      if (entry.mode === "classic") {
+        result[worldKey].classicScores.push(entry.correct);
+        result[worldKey].classicAttempts += 1;
+      }
+
+      if (entry.mode === "mastery") {
+        result[worldKey].masteryScores.push(entry.correct);
+        result[worldKey].masteryAttempts += 1;
+      }
+    });
+
+    return result;
+  };
+
   return (
     <div className="students-main-container">
       <div className="student-header">
-        <h1 className="student-title">View Students</h1>
+        <h1 className="student-title">
+          View Students{" "}
+          <button
+            onClick={() =>
+              setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+            }
+            className="btn btn-outline ml-4 text-black hover:bg-[#FFD41C]"
+          >
+            Sort by Last Name {sortOrder === "asc" ? "↑" : "↓"}
+          </button>
+        </h1>
         <div className="student-search-bar">
-          <img src={search} className="search-icon" alt="search icon" />
+          <img src={search} className="search-icon w-4 h-4 mr-2" alt="search icon" />
           <input
             type="text"
             className="student-search-input"
@@ -162,93 +231,118 @@ export default function ManageStudents() {
             <p className="text-black mt-10 text-3xl">No student found.</p>
           </div>
         ) : (
-          currentStudents.map((student) => (
-            <div
-              className={
-                openDropdown === student.student_id
-                  ? "active-student-card"
-                  : "student-card"
-              }
-              key={student.student_id}
-            >
-              <h1 className="student-info">{student.student_id}</h1>
-              <div className="name-img-container">
-                <img
-                  src={samplepic}
-                  alt={student.username}
-                  className="mini-avatar"
-                />
-                <h1 className="student-info">{student.username}</h1>
-              </div>
-              <h1 className="student-info">
-                {branches.find((branch) => branch.id === student.branch)
-                  ?.name || "Unknown Branch"}
-              </h1>
-              <div className="student-action-container">
-                <img src={settings} alt="settings" className="setting-icon" />
-                <img
-                  src={chevron}
-                  alt="chevron"
-                  className="chevron-icon"
-                  onClick={() =>
-                    setOpenDropdown(
-                      openDropdown === student.student_id
-                        ? null
-                        : student.student_id
-                    )
-                  }
-                />
-              </div>
-
-              {openDropdown === student.student_id && (
-                <div className="student-progress-container">
-                  {progressWorlds.map((world) =>
-                    renderProgressCard(
-                      student._id,
-                      world.title,
-                      world.key,
-                      world.label
-                    )
-                  )}
+          currentStudents.map((student) => {
+            const studentId = String(student._id); // Ensuring _id is treated as a string
+            return (
+              <div
+                className={
+                  openDropdown === studentId
+                    ? "active-student-card"
+                    : "student-card"
+                }
+                key={student.student_id}
+              >
+                <h1 className="student-info">{student.student_id}</h1>
+                <div className="name-img-container">
+                  <img
+                    src={samplepic}
+                    alt={student.first_name}
+                    className="mini-avatar"
+                  />
+                  <h1 className="student-info">
+                    {student.last_name.toUpperCase()}, {student.first_name}
+                  </h1>
                 </div>
-              )}
-
-              {openDropdown === student.student_id && (
-                <div className="student-progress-container">
-                  <div className="per-world-progress-card">
-                    <h1>Abnormal Psychology</h1>
-                    <h1>Attempts: </h1>
-                    <h1>Classic Average Score: </h1>
-                    <h1>Mastery Average Score: </h1>
-                  </div>
-                  <div className="per-world-progress-card">
-                    <h1>Developmental Psychology</h1>
-                    <h1>Attempts: </h1>
-                    <h1>Classic Average Score: </h1>
-                    <h1>Mastery Average Score: </h1>
-                  </div>
-                  <div className="per-world-progress-card">
-                    <h1>Psychological Psychology</h1>
-                    <h1>Attempts: </h1>
-                    <h1>Classic Average Score: </h1>
-                    <h1>Mastery Average Score: </h1>
-                  </div>
-                  <div className="per-world-progress-card">
-                    <h1>Industrial Psychology</h1>
-                    <h1>Attempts: </h1>
-                    <h1>Classic Average Score: </h1>
-                    <h1>Mastery Average Score: </h1>
-                  </div>
-                  <div className="per-world-progress-card">
-                    <h1>General Psychology</h1>
-                    <h1>Attempts: </h1>
-                    <h1>Classic Average Score: </h1>
-                    <h1>Mastery Average Score: </h1>
-                  </div>
+                <h1 className="student-info">
+                  {branches.find((branch) => branch.id === student.branch)
+                    ?.name || "Unknown Branch"}
+                </h1>
+                <div className="student-action-container">
+                  <Settings className="setting-icon" color="black" />
+                  <button
+                    onClick={() =>
+                      setOpenDropdown(
+                        openDropdown === studentId ? null : studentId
+                      )
+                    }
+                  >
+                    <img src={chevron} alt="chevron" className="chevron-icon" />
+                  </button>
                 </div>
-              )}
-            </div>
-          ))
+
+                {openDropdown === studentId && (
+                  <div className="student-progress-container">
+                    {progressWorlds.map((world) =>
+                      renderProgressCard(
+                        studentId,
+                        world.title,
+                        world.key,
+                        world.label
+                      )
+                    )}
+                  </div>
+                )}
+
+                {openDropdown === studentId &&
+                  (() => {
+                    const studentWorldData =
+                      getStudentAttemptsByWorld(studentId);
+
+                    return (
+                      <div className="student-progress-container">
+                        {progressWorlds.map(({ title, key }) => {
+                          const worldStats = studentWorldData[key] || {
+                            classicScores: [],
+                            masteryScores: [],
+                            attemptCount: 0,
+                          };
+
+                          const avg = (arr) => {
+                            const totalItems = 8;
+                            if (arr.length === 0) return "Not attempted yet";
+
+                            const totalCorrect = arr.reduce(
+                              (sum, score) => sum + score,
+                              0
+                            );
+                            const averageCorrect = totalCorrect / arr.length;
+
+                            return `${averageCorrect.toFixed(2)}/${totalItems}`;
+                          };
+
+                          return (
+                            <div className="per-world-progress-card" key={key}>
+                              <h1>{title}</h1>
+                              <h1>
+                                Classic Attempts:{" "}
+                                {worldStats.classicAttempts > 0
+                                  ? worldStats.classicAttempts
+                                  : "Not attempted yet"}
+                              </h1>
+                              <h1>
+                                Classic Average Score:{" "}
+                                {avg(worldStats.classicScores)}
+                              </h1>
+
+                              <h1>
+                                Mastery Attempts:{" "}
+                                {worldStats.masteryAttempts > 0
+                                  ? worldStats.masteryAttempts
+                                  : "Not attempted yet"}
+                              </h1>
+                              <h1>
+                                Mastery Average Score:{" "}
+                                {avg(worldStats.masteryScores)}
+                              </h1>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+              </div>
+            );
+          })
         )}
       </div>
 
