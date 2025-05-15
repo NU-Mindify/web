@@ -66,7 +66,7 @@
 }
 
 .total-students-container-dashboard {
-  @apply w-full h-[480px] bg-white rounded-xl;
+  @apply w-full h-[480px] bg-white rounded-xl flex justify-center items-center;
 }
 
 .badges-container-dashboard {

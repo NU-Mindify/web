@@ -147,7 +147,10 @@ export default function Analytics() {
     <>
       <div className="main-container-analytics">
         <div className="header-container-analytics flex flex-row">
-          <h1 className="header-text-properties-analytics">Analytics</h1>
+          <h1 className="header-text-properties-analytics">
+            Analytics for {branches.find(branch => branch.id === selectedBranch)?.name || "All"}
+          </h1>
+
           
           {isAdmin ? 
             <select
