@@ -2,11 +2,12 @@ import search from "../../assets/students/search-01.svg";
 import chevron from "../../assets/forAll/chevron.svg";
 import samplepic from "../../assets/students/sample-minji.svg";
 import "../../css/students/students.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { API_URL, branches, categories, modes, levels } from "../../Constants";
 import AnimatedProgressBar from "../../components/animatedProgressBar/AnimatedProgressBar";
 import { Settings } from "lucide-react";
+import { UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function ManageStudents() {
   const [students, setStudents] = useState([]);
@@ -18,6 +19,12 @@ export default function ManageStudents() {
   const [attempts, setAttempts] = useState([]);
 
   const [sortOrder, setSortOrder] = useState("asc");
+
+  const { isAdmin, currentWebUser } = useContext(UserLoggedInContext) 
+
+  const [selectedBranch, setSelectedBranch] = useState("disabled")
+
+  
 
   useEffect(() => {
     fetchStudents();
@@ -77,12 +84,20 @@ export default function ManageStudents() {
     }
   };
 
-  const filteredStudents = students.filter(
-    (student) =>
+  const filteredStudents = students.filter((student) => {
+    const matchesSearch =
       student.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.student_id?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      student.student_id?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesBranch = isAdmin
+      ? selectedBranch === "" || selectedBranch === "disabled" || student.branch === selectedBranch
+      : student.branch === currentWebUser.branch;
+
+    return matchesSearch && matchesBranch;
+  });
+
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const studentsPerPage = 10;
@@ -185,6 +200,7 @@ export default function ManageStudents() {
     return result;
   };
 
+
   return (
     <div className="students-main-container">
       <div className="student-header">
@@ -198,6 +214,25 @@ export default function ManageStudents() {
           >
             Sort by Last Name {sortOrder === "asc" ? "↑" : "↓"}
           </button>
+          
+          {
+            isAdmin && 
+            <select
+              className="w-50 h-10 text-sm text-black"
+              value={selectedBranch}
+              onChange={(e) => setSelectedBranch(e.target.value)}
+            >
+              <option value='disabled' disabled>Filter by:</option>
+              <option value="">All Branches</option>
+              {branches.map((branch) => (
+                <option key={branch.id} value={branch.id} className="text-sm text-black">
+                  {branch.name}
+                </option>
+              ))}
+            </select>
+          }
+          
+
         </h1>
         <div className="student-search-bar">
           <img src={search} className="search-icon w-4 h-4 mr-2" alt="search icon" />

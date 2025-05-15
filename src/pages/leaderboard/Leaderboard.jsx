@@ -161,7 +161,103 @@ export default function Leaderboard() {
       ...leader,
       rank: index + 1,
     }));
-  
+    
+
+    const exportToCSV = (data, filename) => {
+      const now = new Date().toLocaleString(); // 🔧 fix added here
+      const headers = ["Rank", "Name", "Campus", "World", "Score", "Time"];
+      const rows = data.map((leader) => {
+      const firstName = leader.user_id?.first_name || "";
+      const lastName = leader.user_id?.last_name || "";
+      const fullName = `${lastName.toUpperCase()} ${firstName}`.trim();
+
+      return [
+        leader.rank,
+        fullName,
+        leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
+        leader.category,
+        leader.total_items > 0
+          ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
+          : "N/A",
+        leader.time_completion > 60
+          ? `${Math.floor(leader.time_completion / 60)}m ${Math.round(
+              leader.time_completion % 60
+            )}s`
+          : `${Math.round(leader.time_completion)}s`,
+      ];
+    });
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [
+        `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        `Exported on: ${now}`,
+        "",
+        headers.join(","),
+        ...rows.map((row) => row.join(",")),
+      ].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `${filename}_by_${currentWebUser.firstName} ${currentWebUser.lastName}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+
+  // PDF Export
+  const exportToPDF = (data, title) => {
+    const now = new Date().toLocaleString();
+    const username = currentWebUser.firstName + ' ' + currentWebUser.lastName || "Unknown User";
+    const doc = new jsPDF();
+    doc.text(`${title}`, 14, 10);
+    doc.text(
+      `Exported by: ${username}`,
+      14,
+      18
+    );
+    doc.text(`Exported on: ${now}`, 14, 26);
+    
+
+
+    const rows = data.map((leader) => {
+      const firstName = leader.user_id?.first_name || "";
+      const lastName = leader.user_id?.last_name || "";
+      const reversedFullName = `${lastName} ${firstName}`.trim();
+
+      return [
+        leader.rank,
+        reversedFullName,
+        leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
+        leader.category,
+        leader.total_items > 0
+          ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
+          : "N/A",
+        leader.time_completion > 60
+          ? `${Math.floor(leader.time_completion / 60)}m ${Math.round(
+              leader.time_completion % 60
+            )}s`
+          : `${Math.round(leader.time_completion)}s`,
+      ];
+    });
+
+    autoTable(doc, {
+      head: [["Rank", "Name", "Campus", "World", "Score", "Time"]],
+      body: rows,
+      startY: 30,
+    });
+
+    doc.save(
+      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
+        currentWebUser.lastName
+      }.pdf`
+    );
+  };
 
   
 
@@ -177,7 +273,7 @@ export default function Leaderboard() {
                   className="text-black"
                   onChange={(e) => setClassicSelectedBranch(e.target.value)}
                 >
-                  <option value='' disabled>Sort by:</option>
+                  <option value='' disabled>Filter by:</option>
                   <option value='all'>All Branch</option>
                   {branches.map((branch, index) => (
                     <option value={branch.id} key={index}>
@@ -187,6 +283,16 @@ export default function Leaderboard() {
 
                 </select>
               }
+
+            <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportToCSV(classicSortingLeaders, "Classic_Leaderboard");
+                } else if (format === "pdf") {
+                  exportToPDF(classicSortingLeaders, "Classic Leaderboard");
+                }
+              }}
+            />
           </div>
 
           <h2 className="leaderboard-subtitle">
@@ -320,7 +426,7 @@ export default function Leaderboard() {
                   className="text-black"
                   onChange={(e) => setMasterySelectedBranch(e.target.value)}
                 >
-                  <option value='' disabled>Sort by:</option>
+                  <option value='' disabled>Filter by:</option>
                   <option value='all'>All Branch</option>
                   {branches.map((branch, index) => (
                     <option value={branch.id} key={index}>
@@ -330,6 +436,16 @@ export default function Leaderboard() {
 
                 </select>
               }
+              <ExportDropdown
+                onExport={(format) => {
+                  if (format === "csv") {
+                    exportToCSV(masterySortingLeaders, "Mastery_Leaderboard");
+                  } else if (format === "pdf") {
+                    exportToPDF(masterySortingLeaders, "Mastery Leaderboard");
+                  }
+                }}
+
+              />
           </div>
 
           <h2 className="leaderboard-subtitle">

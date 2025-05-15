@@ -331,7 +331,9 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <BarGraph data={branchData} />
+            <div className="w-full h-[300px]">
+              <BarGraph data={branchData} />
+            </div>
           )}
         </div>
         <div className="badges-container-dashboard">
