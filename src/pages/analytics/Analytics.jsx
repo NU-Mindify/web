@@ -13,20 +13,12 @@ export default function Analytics() {
   const [allStudents, setAllStudents] = useState([]);
   const [perfectCount, setPerfectCount] = useState(0);
 
-  const {currentWebUser, isAdmin} = useContext(UserLoggedInContext)
+  const {currentWebUser} = useContext(UserLoggedInContext)
 
   const [branch, setBranch] = useState(null);
   const [selectedBranch, setSelectedBranch] = useState("all");
 
-  useEffect(() => {
-    if (isAdmin) {
-      setBranch(null);
-      setSelectedBranch('all')
-    } else {
-      setBranch(currentWebUser.branch);
-      setSelectedBranch(currentWebUser.branch)
-    }
-  }, [isAdmin, currentWebUser]);
+  
 
 
   useEffect(() => {
@@ -152,7 +144,7 @@ export default function Analytics() {
           </h1>
 
           
-          {isAdmin ? 
+          
             <select
               value={selectedBranch}
               className="select-ghost text-black w-[170px] ml-5 mt-3 select"
@@ -168,10 +160,10 @@ export default function Analytics() {
                 </option>
               ))}
             </select> 
-          : ''}
+          
           
 
-          {isAdmin && branch && (
+          {branch && (
             <button
               onClick={() => {
                 setSelectedBranch("all");

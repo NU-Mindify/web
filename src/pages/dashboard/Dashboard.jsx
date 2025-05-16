@@ -25,8 +25,18 @@ export default function Dashboard() {
     useState(null);
 
   const [bestPerformingWorld, setBestPerformingWorld] = useState(null);
-  const [bestPerformingWorldScore, setBestPerformingWorldScore] =
-    useState(null);
+  const [bestPerformingWorldScore, setBestPerformingWorldScore] = useState(null);
+
+
+
+  
+
+  
+
+
+
+
+
 
   useEffect(() => {
     fetchStudents();
@@ -199,13 +209,35 @@ export default function Dashboard() {
     })
     .sort((a, b) => b.count - a.count); // sort descending by count
 
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
   return (
     <div className="main-container-dashboard">
       <div className="dashboard-header">
         <h1 className="header-text-dashboard">Dashboard</h1>
         <h2 className="header-greeting-dashboard">
-          Hi, {currentWebUser.firstName} {currentWebUser.lastName} from {branch}
-          . Welcome back to NU Mindify!
+          {`Hi, ${currentWebUser.firstName} 
+          ${currentWebUser.position.toLowerCase() === "super admin" ? "My lord" : `from ${currentWebUser.branch}`}. 
+          Welcome back to NU Mindify!`}
+
         </h2>
       </div>
 

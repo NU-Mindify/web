@@ -14,7 +14,7 @@ import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function Leaderboard() {
-  const { currentWebUser, isAdmin } = useContext(UserLoggedInContext);
+  const { currentWebUser } = useContext(UserLoggedInContext);
 
   const [leaderboardClassic, setClassicLeaderboards] = useState([]);
   const [leaderboardsMastery, setLeaderboardsMastery] = useState([]);
@@ -87,13 +87,7 @@ export default function Leaderboard() {
       fullName.includes(search) ||
       reversedFullName.includes(search)
     );
-  }).filter((leader) => {
-    if (isAdmin) {
-      return classicSelectedBranch === 'all'|| classicSelectedBranch === '' || leader.user_id?.branch === classicSelectedBranch;
-    } else {
-      return leader.user_id?.branch === currentWebUser?.branch;
-    }
-  });
+  })
 
 
   // FILTERING MASTERY LEADERBOARD PER BRANCH OF THE PROFESSOR
@@ -111,13 +105,7 @@ export default function Leaderboard() {
       fullName.includes(search) ||
       reversedFullName.includes(search)
     );
-  }).filter((leader) => {
-    if (isAdmin) {
-      return masterySelectedBranch === 'all'|| masterySelectedBranch === '' || leader.user_id?.branch === masterySelectedBranch;
-    } else {
-      return leader.user_id?.branch === currentWebUser?.branch;
-    }
-  });
+  })
 
 
 
@@ -267,7 +255,7 @@ export default function Leaderboard() {
         <div className="classic-cont">
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title classic-title">Classic</h1>
-              {isAdmin && 
+              
                 <select 
                   value={classicSelectedBranch} 
                   className="text-black"
@@ -282,7 +270,7 @@ export default function Leaderboard() {
                   ))}
 
                 </select>
-              }
+              
 
             <ExportDropdown
               onExport={(format) => {
@@ -340,7 +328,13 @@ export default function Leaderboard() {
               <h1 className="text-black mt-5 w-full text-3xl text-center">No data Found</h1>
             ) : (
               <div className="leaders-main-container">
-                {classicSortingLeaders.map((leader) => (
+                {
+                classicSortingLeaders.filter((leader) => 
+                  classicSelectedBranch === 'all' || !classicSelectedBranch 
+                    ? true 
+                    : leader.user_id?.branch === classicSelectedBranch
+                )
+                .map((leader) => (
                   <div
                     key={leader._id}
                     className="leaders-container bg-gray-100 rounded-xl mt-2"
@@ -420,7 +414,7 @@ export default function Leaderboard() {
         <div className="mastery-cont">
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title mastery-title">Mastery</h1>
-              {isAdmin && 
+              
                 <select 
                   value={masterySelectedBranch} 
                   className="text-black"
@@ -435,7 +429,7 @@ export default function Leaderboard() {
                   ))}
 
                 </select>
-              }
+              
               <ExportDropdown
                 onExport={(format) => {
                   if (format === "csv") {
@@ -494,7 +488,14 @@ export default function Leaderboard() {
               <h1 className="text-black mt-5 w-full text-3xl text-center">No data Found</h1>
             ) : (
               <div className="leaders-main-container">
-                {masterySortingLeaders.map((leader) => (
+                {masterySortingLeaders
+                .filter((leader) => 
+                  masterySelectedBranch === 'all' || !masterySelectedBranch 
+                    ? true 
+                    : leader.user_id?.branch === masterySelectedBranch
+                )
+                .map((leader) => (
+
                   <div
                     key={leader._id}
                     className="leaders-container bg-gray-100 rounded-xl mt-2"

@@ -68,7 +68,7 @@ export default function Login(){
 
                 setIsLoading(false)
                 // setSelected('dashboard');
-                // navigate('/dashboard');
+                // navigate('/');
             }
         }catch(error){
             console.log(error.message);

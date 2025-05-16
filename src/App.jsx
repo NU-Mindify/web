@@ -6,7 +6,6 @@ import { ActiveContext } from './contexts/Contexts'
 import { UserLoggedInContext } from './contexts/Contexts'
 import Dashboard from './pages/dashboard/Dashboard'
 import Analytics from './pages/analytics/Analytics'
-import Reports from './pages/reports/Reports'
 import Leaderboard from './pages/leaderboard/Leaderboard'
 import ManageQuestion from './pages/questions/ManageQuestion'
 import ManageStudents from './pages/students/ManageStudents'
@@ -39,7 +38,7 @@ function App() {
 
   const [currentWebUser, setCurrentWebUser] = useState({firstName: '', lastName: '', branch: '', email: '', employeenum: '', position: '', uid: '', useravatar: ''})
   const [currentWebUserUID, setCurrentWebUserUID] = useState('')
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [currentUserBranch, setCurrentUserBranch] = useState(null)
 
   const [isSplash, setIsSplash] = useState(true)
 
@@ -73,7 +72,6 @@ function App() {
   //     const paths = {
   //       '/dashboard': 'dashboard',
   //       '/analytics': 'analytics',
-  //       '/reports': 'reports',
   //       '/leaderboard': 'leaderboard',
   //       '/question': 'question',
   //       '/glossary': 'glossary',
@@ -94,7 +92,7 @@ function App() {
       value={{ isActive, setActive, selected, setSelected, subSelected, setSubSelected }}
     >
     <UserLoggedInContext.Provider
-      value={{ currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID, isAdmin, setIsAdmin }}
+      value={{ currentWebUser, setCurrentWebUser, currentWebUserUID, setCurrentWebUserUID, currentUserBranch, setCurrentUserBranch }}
     >
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
@@ -122,7 +120,6 @@ function App() {
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/analytics" element={<Analytics />} />
-                    <Route path="/reports" element={<Reports />} />
                     <Route path="/leaderboard" element={<Leaderboard />} />
                     <Route path="/question" element={<ManageQuestion />} />
                     <Route path="/question/add" element={<AddQuestion />} />

@@ -168,7 +168,8 @@ export default function AddAccount() {
         >
           <option value="">Select Position</option>
           <option value="Professor">Professor</option>
-          <option value="Accounts Admin">Accounts Admin</option>
+          <option value="Accounts Admin">Sub-Admin</option>
+          <option value="Accounts Admin">Super Admin</option>
         </select>
 
         <label>Profile Pic URL:</label>

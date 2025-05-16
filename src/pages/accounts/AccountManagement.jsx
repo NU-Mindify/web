@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import "../../css/account/account.css";
@@ -7,8 +7,11 @@ import { API_URL, branches } from "../../Constants";
 import searchIcon from "../../assets/students/search-01.svg";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import settingsIcon from "../../assets/forAll/settings.svg";
+import { UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function AccountManagement() {
+
+  
   const [webUsers, setWebUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardActive, setCardActive] = useState(null);
@@ -22,20 +25,28 @@ export default function AccountManagement() {
   const navigate = useNavigate();
   const usersPerPage = 10;
 
+  const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext)
+  
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      setIsLoading(true);
-      try {
-        const res = await axios.get(`${API_URL}/getWebUsers`);
-        setWebUsers(res.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchUsers();
-  }, []);
+  const fetchUsers = async () => {
+    if (!currentUserBranch) return;
+
+    setIsLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/getWebUsers/${currentUserBranch}`);
+      setWebUsers(res.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchUsers();
+}, [currentUserBranch]); 
+
+
 
   useEffect(() => {
     setCurrentPage(1);
@@ -87,18 +98,27 @@ export default function AccountManagement() {
           >
             Sort by Last Name {sortOrderAsc ? "↑" : "↓"}
           </button>
-          <select
-            value={selectedBranch}
-            onChange={(e) => setSelectedBranch(e.target.value)}
-            className="text-black font-[Poppins] border px-3 py-1 rounded-xs mt-3 h-[40px] w-[170px] text-sm bg-white ml-3 select"
-          >
-            <option value="All" className="font-black font-[Poppins] ">All Branches</option>
-            {branches.map((branch) => (
-              <option key={branch.id} value={branch.id}>
-                {branch.name}
-              </option>
-            ))}
-          </select>
+
+
+          {currentWebUser.position.toLowerCase() === 'super admin' &&
+            <select
+              value={selectedBranch}
+              onChange={(e) => setSelectedBranch(e.target.value)}
+              className="text-black font-[Poppins] border px-3 py-1 rounded-xs mt-3 h-[40px] w-[170px] text-sm bg-white ml-3 select"
+            >
+              <option value="All" className="font-black font-[Poppins] ">All Branches</option>
+              {branches.map((branch) => (
+                <option key={branch.id} value={branch.id}>
+                  {branch.name}
+                </option>
+              ))}
+            </select>
+          }
+          
+
+
+
+
           <select
             value={selectedPosition}
             onChange={(e) => setSelectedPosition(e.target.value)}
