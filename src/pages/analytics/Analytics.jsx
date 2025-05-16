@@ -155,7 +155,7 @@ export default function Analytics() {
           {isAdmin ? 
             <select
               value={selectedBranch}
-              className="select-ghost text-black w-[30%] ml-5"
+              className="select-ghost text-black w-[170px] ml-5 mt-3 select"
               onChange={(e) => {
                 setSelectedBranch(e.target.value);
                 setBranch(e.target.value === "all" ? null : e.target.value);
@@ -177,7 +177,7 @@ export default function Analytics() {
                 setSelectedBranch("all");
                 setBranch(null);
               }}
-              className="btn btn-outline text-black border-black hover:bg-black hover:text-white ml-5 mt-2 h-[40px]"
+              className="btn btn-outline text-black border-black hover:bg-black hover:text-white ml-5 mt-3 h-[40px]"
             >
               Reset
             </button>

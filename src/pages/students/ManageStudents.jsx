@@ -39,7 +39,7 @@ export default function ManageStudents() {
 
       // Sort students alphabetically by last name
       const sortedStudents = data.sort((a, b) =>
-        a.last_name.localeCompare(b.last_name)
+        a.last_name.localeCompare(b.last_name)  
       );
 
       setStudents(sortedStudents);

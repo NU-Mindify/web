@@ -52,7 +52,7 @@
 }
 
 .active-student-card{
-  @apply w-[95%] grid grid-cols-[3fr_4fr_2fr_1fr] bg-blue-500 my-2 py-3 rounded-xl px-2 transition-transform duration-500;
+  @apply w-[95%] grid grid-cols-[3fr_4fr_2fr_1fr] my-2 py-3 rounded-xl px-2 transition-transform duration-500;
     border: 1px solid black;
 }
 .student-info{

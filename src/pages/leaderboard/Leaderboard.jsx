@@ -58,6 +58,7 @@ export default function Leaderboard() {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
         params: {
           mode: "mastery",
+          
         },
       });
 
