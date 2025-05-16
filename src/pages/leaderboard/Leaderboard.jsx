@@ -213,11 +213,10 @@ export default function Leaderboard() {
   // PDF Export
   const exportToPDF = (data, title) => {
     const now = new Date().toLocaleString();
-    const username = currentWebUser.firstName + ' ' + currentWebUser.lastName || "Unknown User";
     const doc = new jsPDF();
     doc.text(`${title}`, 14, 10);
     doc.text(
-      `Exported by: ${username}`,
+      `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
       14,
       18
     );

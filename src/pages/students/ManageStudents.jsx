@@ -218,7 +218,7 @@ export default function ManageStudents() {
           {
             isAdmin && 
             <select
-              className="w-50 h-10 text-sm text-black"
+              className="w-50 h-10 text-sm text-black bg-white ml-3 select"
               value={selectedBranch}
               onChange={(e) => setSelectedBranch(e.target.value)}
             >

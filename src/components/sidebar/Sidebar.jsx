@@ -98,12 +98,14 @@ export default function Sidebar() {
           setSelected(currentKey);
         }
       }, [location.pathname, setSelected]);
+
+    //   const currentPath = window.location
         
-      useEffect(() => {
-        if (location.pathname === '/' && currentWebUserUID) {
-          navigate('/dashboard');
-        }
-      }, [location.pathname, currentWebUserUID, navigate]);
+    //   useEffect(() => {
+    //     if (location.pathname === '/' && currentWebUserUID) {
+    //       navigate('/dashboard');
+    //     }
+    //   }, [location.pathname, currentWebUserUID, navigate]);
       
       
     
