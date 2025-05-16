@@ -99,7 +99,10 @@ export default function Sidebar() {
         }
       }, [location.pathname, setSelected]);
 
-    //   const currentPath = window.location
+      const currentPath = window.location.pathname
+
+      console.log('The current path is' + currentPath);
+      
         
     //   useEffect(() => {
     //     if (location.pathname === '/' && currentWebUserUID) {
@@ -191,7 +194,7 @@ export default function Sidebar() {
                             icons={dashboard}
                             active={isActive}
                             text='Dashboard'
-                            isSelected={selected === 'dashboard'}
+                            isSelected={['/dashboard', "/"].includes(currentPath)}
                             onPress={() => {
                                 setSelected('dashboard');
                                 setSubSelected('');
@@ -206,7 +209,7 @@ export default function Sidebar() {
                             icons={analytics}
                             active={isActive}
                             text='Analytics'
-                            isSelected={selected === 'analytics'}
+                            isSelected={['/analytics'].includes(currentPath)}
                             onPress={() => {
                                 setSelected('analytics');
                                 setSubSelected('');

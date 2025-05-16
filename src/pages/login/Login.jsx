@@ -67,8 +67,8 @@ export default function Login(){
                 localStorage.setItem('userUID', user.uid);
 
                 setIsLoading(false)
-                setSelected('dashboard');
-                navigate('/dashboard');
+                // setSelected('dashboard');
+                // navigate('/dashboard');
             }
         }catch(error){
             console.log(error.message);

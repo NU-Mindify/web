@@ -16,7 +16,7 @@ import AccountManagement from './pages/accounts/AccountManagement'
 import Login from './pages/login/Login'
 import EditProfile from './pages/profile/EditProfile'
 import EditGlossary from './pages/glossary/EditGlossary'
-import { onAuthStateChanged } from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { firebaseAuth } from './Firebase'
 import {
   QueryClient,
@@ -41,19 +41,21 @@ function App() {
   const [currentWebUserUID, setCurrentWebUserUID] = useState('')
   const [isAdmin, setIsAdmin] = useState(false)
 
-  
+  const [isSplash, setIsSplash] = useState(true)
 
   useEffect(()=>{
     onAuthStateChanged(firebaseAuth, user => {
+      setIsSplash(true)
       if (user) {
         // console.log(user);
         localStorage.setItem('userUID', user.uid);
         setCurrentWebUserUID(user.uid);
         console.log("current web user uid: "+currentWebUserUID);
-        
+        setIsSplash(false)
       } else {
         localStorage.removeItem('userUID');
         setCurrentWebUserUID(null);
+        setIsSplash(false)
       }
     });
   }, [])
@@ -61,29 +63,29 @@ function App() {
   
 
 
-  useEffect(() => {
-    const currentPath = window.location.pathname
+  // useEffect(() => {
+  //   const currentPath = window.location.pathname
 
 
-    if (currentPath === '/' || currentPath === '') {
-      setSelected('login')
-    } else {
-      const paths = {
-        '/dashboard': 'dashboard',
-        '/analytics': 'analytics',
-        '/reports': 'reports',
-        '/leaderboard': 'leaderboard',
-        '/question': 'question',
-        '/glossary': 'glossary',
-        '/students': 'students',
-        '/profile' : 'profile',
-        '/account': 'account'
-      }
+  //   if (currentPath === '/' || currentPath === '') {
+  //     setSelected('login')
+  //   } else {
+  //     const paths = {
+  //       '/dashboard': 'dashboard',
+  //       '/analytics': 'analytics',
+  //       '/reports': 'reports',
+  //       '/leaderboard': 'leaderboard',
+  //       '/question': 'question',
+  //       '/glossary': 'glossary',
+  //       '/students': 'students',
+  //       '/profile' : 'profile',
+  //       '/account': 'account'
+  //     }
 
-      const newSelected = paths[currentPath] || 'login'
-      setSelected(newSelected)
-    }
-  }, [])
+  //     const newSelected = paths[currentPath] || 'login'
+  //     setSelected(newSelected)
+  //   }
+  // }, [])
   
 
   return (
@@ -98,7 +100,7 @@ function App() {
           <BrowserRouter>
             {/* Checks whether the user is logged in or not */}
             {/* if false, only login route will be available */}
-            {!currentWebUserUID ? (
+            {!currentWebUserUID && !isSplash ? (
               <Routes>
                 <Route 
                   path="/" 
@@ -107,9 +109,9 @@ function App() {
                 <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
-            ) : (
+            ) : !isSplash ? (
               <div className="main-container">
-                <SessionTimeout timeout={15 * 60 * 1000} /> {/* 15 minutes */}
+                <SessionTimeout timeout={5 * 60 * 1000} /> {/* 5 minutes */}
                 <Sidebar />
                 <div
                   className={
@@ -138,6 +140,14 @@ function App() {
 
                 </div>
               </div>
+            )
+              :(
+              <Routes>
+              <Route 
+                  path="*" 
+                  element={<Login />} 
+                />
+              </Routes>
             )}
           </BrowserRouter>
         </QueryClientProvider>
