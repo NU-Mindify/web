@@ -1,26 +1,28 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SessionTimeout.css";
-import { getAuth, signOut } from "firebase/auth"
+import { getAuth, signOut } from "firebase/auth";
 
 export default function SessionTimeout({ timeout = 5 * 60 * 1000 }) {
   const navigate = useNavigate();
   const timerRef = useRef(null);
-  const countdownRef = useRef(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(() => {
+    return localStorage.getItem("sessionTimedOut") === "true";
+  });
 
   const logoutUser = () => {
     const auth = getAuth();
     signOut(auth)
       .then(() => {
-        setCurrentWebUser(null);
-        setCurrentWebUserUID(null);
         localStorage.removeItem("webUser");
         localStorage.removeItem("userUID");
+        localStorage.removeItem("sessionTimedOut");
         document.cookie =
           "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
         setSelected("login");
         setActive(false);
+        setCurrentWebUser(null);
+        setCurrentWebUserUID(null);
         navigate("/");
       })
       .catch((error) => {
@@ -29,49 +31,41 @@ export default function SessionTimeout({ timeout = 5 * 60 * 1000 }) {
   };
 
   const resetTimer = () => {
-    // Clear any existing timer and interval before resetting
     clearTimeout(timerRef.current);
-    clearInterval(countdownRef.current);
+    localStorage.removeItem("sessionTimedOut");
 
-    // Start the inactivity timer and show the modal after the specified timeout
     timerRef.current = setTimeout(() => {
+      localStorage.setItem("sessionTimedOut", "true");
       setShowModal(true);
     }, timeout);
   };
 
-  // const stayLoggedIn = () => {
-  //   clearInterval(countdownRef.current);
-  //   setShowModal(false);
-  //   resetTimer(); // Reset the inactivity timer
-  // };
-
   useEffect(() => {
-    resetTimer();
+    if (!showModal) {
+      resetTimer();
+      const events = ["mousemove", "keydown", "click", "scroll"];
+      events.forEach((event) => window.addEventListener(event, resetTimer));
 
-    const events = ["mousemove", "keydown", "click", "scroll"];
-    events.forEach((event) => window.addEventListener(event, resetTimer));
-
-    return () => {
-      clearTimeout(timerRef.current);
-      clearInterval(countdownRef.current);
-      events.forEach((event) => window.removeEventListener(event, resetTimer));
-    };
-  }, []);
+      return () => {
+        clearTimeout(timerRef.current);
+        events.forEach((event) =>
+          window.removeEventListener(event, resetTimer)
+        );
+      };
+    }
+  }, [showModal]);
 
   return (
     <>
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content text-black">
-            <h2>Session Expiring</h2>
+            <h2>Session Expired</h2>
             <p>You've been inactive for 5 minutes.</p>
             <div className="modal-btn-group">
               <button className="modal-close-btn" onClick={logoutUser}>
                 Logout
               </button>
-              {/* <button className="modal-stay-btn" onClick={stayLoggedIn}>
-                Stay Logged In
-              </button> */}
             </div>
           </div>
         </div>
