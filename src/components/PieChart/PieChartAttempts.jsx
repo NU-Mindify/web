@@ -14,7 +14,7 @@ const PieChartAttempts = ({ allStudents = [], attemptedStudents = [] }) => {
   const notAttemptedCount = allStudents.length - attemptedCount;
 
   const data = {
-    labels: ['Takers', 'Non-Takers'],
+    labels: [`Takers: ${attemptedCount}`, `Non-Takers: ${notAttemptedCount}`],
     datasets: [
       {
         label: 'Students',
