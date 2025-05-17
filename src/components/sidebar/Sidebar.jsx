@@ -307,7 +307,7 @@ export default function Sidebar() {
           </li>
 
           {(currentWebUser?.position?.toLowerCase() === "super admin" ||
-            currentWebUser?.position?.toLowerCase() === "sub-admin") && (
+            currentWebUser?.position?.toLowerCase() === "sub admin") && (
             <li>
               <MenuBtn
                 icons={account}

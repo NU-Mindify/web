@@ -3,12 +3,11 @@ import { useNavigate } from "react-router-dom";
 import "./SessionTimeout.css";
 import { getAuth, signOut } from "firebase/auth"
 
-export default function SessionTimeout({ timeout = 15 * 60 * 1000 }) {
+export default function SessionTimeout({ timeout = 5 * 60 * 1000 }) {
   const navigate = useNavigate();
   const timerRef = useRef(null);
   const countdownRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
-  const [countdown, setCountdown] = useState(30);
 
   const logoutUser = () => {
     const auth = getAuth();
@@ -40,11 +39,11 @@ export default function SessionTimeout({ timeout = 15 * 60 * 1000 }) {
     }, timeout);
   };
 
-  const stayLoggedIn = () => {
-    clearInterval(countdownRef.current);
-    setShowModal(false);
-    resetTimer(); // Reset the inactivity timer
-  };
+  // const stayLoggedIn = () => {
+  //   clearInterval(countdownRef.current);
+  //   setShowModal(false);
+  //   resetTimer(); // Reset the inactivity timer
+  // };
 
   useEffect(() => {
     resetTimer();
@@ -65,14 +64,14 @@ export default function SessionTimeout({ timeout = 15 * 60 * 1000 }) {
         <div className="modal-overlay">
           <div className="modal-content text-black">
             <h2>Session Expiring</h2>
-            <p>You've been inactive for 15 minutes.</p>
+            <p>You've been inactive for 5 minutes.</p>
             <div className="modal-btn-group">
               <button className="modal-close-btn" onClick={logoutUser}>
-                Logout Now
+                Logout
               </button>
-              <button className="modal-stay-btn" onClick={stayLoggedIn}>
+              {/* <button className="modal-stay-btn" onClick={stayLoggedIn}>
                 Stay Logged In
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
