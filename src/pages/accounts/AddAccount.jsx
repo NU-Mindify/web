@@ -1,10 +1,12 @@
-import { useState } from "react";
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import { useContext, useEffect, useState } from "react";
 import "../../css/account/account.css";
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { secondaryAuth } from "../../Firebase";
 import axios from "axios";
-import { API_URL } from "../../Constants";
+import { API_URL, branches } from "../../Constants";
 import { useNavigate } from "react-router-dom";
+import { UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function AddAccount() {
   const [password, setPassword] = useState("");
@@ -23,6 +25,7 @@ export default function AddAccount() {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
   const navigate = useNavigate();
 
   const handleReset = () => {
@@ -43,8 +46,17 @@ export default function AddAccount() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    const { firstName, lastName, branch, email, employeenum, position } =
-      newWebUser;
+    const { firstName, lastName, email, employeenum, useravatar } = newWebUser;
+
+    const branch =
+      currentWebUser.position.toLowerCase() === "super admin"
+        ? newWebUser.branch
+        : currentUserBranch;
+
+    const position =
+      currentWebUser.position.toLowerCase() === "super admin"
+        ? newWebUser.position
+        : "Professor";
 
     if (
       !firstName ||
@@ -65,23 +77,32 @@ export default function AddAccount() {
       return;
     }
 
+    const finalWebUser = {
+      firstName,
+      lastName,
+      branch,
+      email,
+      employeenum,
+      position,
+      useravatar,
+      uid: "",
+    };
+
     try {
       setIsLoading(true);
       const userCredential = await createUserWithEmailAndPassword(
         secondaryAuth,
-        newWebUser.email,
+        finalWebUser.email,
         password
       );
       const user = userCredential.user;
-      const uidWebUser = { ...newWebUser, uid: user.uid };
+      const uidWebUser = { ...finalWebUser, uid: user.uid };
 
       await axios.post(`${API_URL}/createWebUser`, uidWebUser);
-
       await signOut(secondaryAuth);
 
       setShowModal(true);
       handleReset();
-
     } catch (error) {
       console.error("Registration Error:", error.message);
       alert("Error: " + error.message);
@@ -89,6 +110,21 @@ export default function AddAccount() {
       setIsLoading(false);
     }
   };
+  
+
+  useEffect(() => {
+    if (currentWebUser.position.toLowerCase() !== "super admin") {
+      const currentBranch = branches.find((b) => b.id === currentUserBranch);
+      if (currentBranch && currentBranch.extension) {
+        setNewWebUser((prev) => ({
+          ...prev,
+          branch: currentUserBranch,
+          email: currentBranch.extension,
+        }));
+      }
+    }
+  }, [currentUserBranch, currentWebUser.position]);
+
 
   return (
     <>
@@ -113,31 +149,39 @@ export default function AddAccount() {
           }
         />
 
+      
         <label>Branch:</label>
-        <select
-          value={newWebUser.branch}
-          onChange={(e) =>
-            setNewWebUser({ ...newWebUser, branch: e.target.value })
-          }
-        >
-          <option value="">-- Select Branch --</option>
-          {[
-            "manila",
-            "moa",
-            "laguna",
-            "fairview",
-            "baliwag",
-            "dasmarinas",
-            "lipa",
-            "clark",
-            "bacolod",
-            "eastortigas",
-          ].map((branch) => (
-            <option key={branch} value={branch}>
-              NU {branch.charAt(0).toUpperCase() + branch.slice(1)}
-            </option>
-          ))}
-        </select>
+        {currentWebUser.position.toLowerCase() === "super admin" ? (
+          <select
+            value={newWebUser.branch}
+            onChange={(e) => {
+              const branchId = e.target.value;
+              const branch = branches.find((b) => b.id === branchId);
+              const extension = branch?.extension || "";
+              setNewWebUser((prev) => ({
+                ...prev,
+                branch: branchId,
+                email: extension,
+              }));
+            }}
+
+          >
+            <option value="">-- Select Branch --</option>
+            {branches.map((branch) => (
+              <option key={branch.id} value={branch.id}>
+                {branch.name}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            type="text"
+            disabled
+            value={
+              branches.find((b) => b.id === currentUserBranch)?.name || ""
+            }
+          />
+        )}
 
         <label>Email:</label>
         <input
@@ -149,6 +193,7 @@ export default function AddAccount() {
           }
         />
 
+
         <label>Employee No:</label>
         <input
           type="text"
@@ -159,18 +204,22 @@ export default function AddAccount() {
           }
         />
 
+        {/* Position */}
         <label>Position:</label>
-        <select
-          value={newWebUser.position}
-          onChange={(e) =>
-            setNewWebUser({ ...newWebUser, position: e.target.value })
-          }
-        >
-          <option value="">Select Position</option>
-          <option value="Professor">Professor</option>
-          <option value="Sub Admin">Sub Admin</option>
-          <option value="Super Admin">Super Admin</option>
-        </select>
+        {currentWebUser.position.toLowerCase() === "super admin" ? (
+          <select
+            value={newWebUser.position}
+            onChange={(e) =>
+              setNewWebUser({ ...newWebUser, position: e.target.value })
+            }
+          >
+            <option value="">Select Position</option>
+            <option value="Professor">Professor</option>
+            <option value="Sub Admin">Sub Admin</option>
+          </select>
+        ) : (
+          <input type="text" disabled value="Professor" />
+        )}
 
         <label>Profile Pic URL:</label>
         <input

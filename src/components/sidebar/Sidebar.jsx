@@ -333,7 +333,6 @@ export default function Sidebar() {
               text="Logout"
               isSelected={false}
               onPress={handleLogout}
-              goTo="/"
             />
           </li>
         </ul>

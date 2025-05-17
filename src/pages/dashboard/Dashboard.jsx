@@ -207,7 +207,7 @@ export default function Dashboard() {
         count: studentCount,
       };
     })
-    .sort((a, b) => b.count - a.count); // sort descending by count
+    .sort((a, b) => b.count - a.count); 
 
 
 
@@ -235,7 +235,7 @@ export default function Dashboard() {
         <h1 className="header-text-dashboard">Dashboard</h1>
         <h2 className="header-greeting-dashboard">
           {`Hi, ${currentWebUser.firstName} 
-          ${currentWebUser.position.toLowerCase() === "super admin" ? "My lord" : `from ${currentWebUser.branch}`}. 
+          ${currentWebUser.position.toLowerCase() === "super admin" ? "My lord" : `from ${branch}`}. 
           Welcome back to NU Mindify!`}
 
         </h2>

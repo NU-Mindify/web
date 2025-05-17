@@ -48,7 +48,7 @@ export default function Login() {
                 alert("Please enter your password");
                 return;
             }
-            if (!email.endsWith(`@${matchedBranch.extension}`)) {
+            if (!email.endsWith(`${matchedBranch.extension}`)) {
                 alert(`Account: ${email} not found at NU ${branch.toUpperCase()}`);
                 return;
             }
