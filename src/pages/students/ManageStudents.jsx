@@ -9,8 +9,6 @@ import AnimatedProgressBar from "../../components/animatedProgressBar/AnimatedPr
 import { Settings } from "lucide-react";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 
-const studentsPerPage = 10;
-
 export default function ManageStudents() {
   const { currentWebUser } = useContext(UserLoggedInContext);
 
@@ -30,6 +28,8 @@ export default function ManageStudents() {
     fetchAttempts();
   }, []);
 
+  // FETCH STUDENTS DATA
+  // name, email, stud number, ID, branch
   const fetchStudents = async () => {
     try {
       setLoadingStudents(true);
@@ -45,6 +45,8 @@ export default function ManageStudents() {
     }
   };
 
+  // FETCH PROGRESS DATA
+  // user ID, kung anong stage na sya
   const fetchAllProgress = async () => {
     try {
       const { data } = await axios.get(`${API_URL}/getAllProgress`);
@@ -58,6 +60,8 @@ export default function ManageStudents() {
     }
   };
 
+  // FETCH ATTEMPTS DATA
+  // user ID, level ng attempt nya, category non, correct and wrong, time completion, mode non, tas kung kelan nya nasagotan
   const fetchAttempts = async () => {
     try {
       const categoryList = categories.map((c) => c.category).join(",");
@@ -68,11 +72,16 @@ export default function ManageStudents() {
         params: { categories: categoryList, levels: levelList, mode: modeList },
       });
       setAttempts(data);
+
+      
+     
+      
     } catch (error) {
       console.error("Error fetching analytics data:", error.message);
     }
   };
 
+  // Filter students based on search term and selected branch
   const filteredStudents = students.filter((student) => {
     const matchesSearch =
       student.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -87,11 +96,14 @@ export default function ManageStudents() {
     return matchesSearch && matchesBranch;
   });
 
+  // Sort filtered students by last name in ascending or descending order
   const sortedFilteredStudents = [...filteredStudents].sort((a, b) => {
     const compare = a.last_name.localeCompare(b.last_name);
     return sortOrder === "asc" ? compare : -compare;
   });
 
+  // Handle pagination logic
+  const studentsPerPage = 10;
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
   const currentStudents = sortedFilteredStudents.slice(
@@ -100,27 +112,62 @@ export default function ManageStudents() {
   );
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
 
-  const renderProgressCard = (studentId, worldTitle, worldKey, label) => (
-    <div className="per-world-progress-card" key={worldKey}>
-      <h1 className="text-black font-bold">{worldTitle}</h1>
-      <p className="text-black">{label}</p>
-      <AnimatedProgressBar
-        label="Classic"
-        percent={
-          ((progressData[studentId]?.classic?.[worldKey] || 0) / 10) * 100
+  // Render progress card (per world) for each student
+  const renderProgressCard = (
+    studentId,
+    worldTitle,
+    worldKey,
+    label,
+    stageScores = []
+  ) => {
+    const masteryProgress = progressData[studentId]?.mastery?.[worldKey] || 0;
+    
+    const renderStageBoxes = () => {
+      return stageScores.map((score, index) => {
+        const itemsPerStage = attempts[index].total_items
+        let color = "bg-white";
+        if (score === itemsPerStage) {
+          color = "bg-green-500";
+        } else if (score >= itemsPerStage*.8) {
+          color = "bg-orange-300";
+        } else if (score < itemsPerStage*.8 && score > 0) {
+          color = "bg-gray-300";
         }
-        color="bg-[#FFBF1A]"
-      />
-      <AnimatedProgressBar
-        label="Mastery"
-        percent={
-          ((progressData[studentId]?.mastery?.[worldKey] || 0) / 10) * 100
-        }
-        color="bg-[#FFBF1A]"
-      />
-    </div>
-  );
 
+        return (
+          <div
+            key={index}
+            className={`w-6 h-6 rounded-md mx-0.5 ${color} text-xs text-center text-black flex items-center justify-center`}
+            title={`Stage ${index + 1} - Score: ${score}/${attempts[index].total_items}`}
+          >
+            {score === 0 ? "-" : ''}
+          </div>
+        );
+      });
+    };
+
+    return (
+      <div className="per-world-progress-card" key={worldKey}>
+        <h1 className="text-black font-bold">{worldTitle}</h1>
+        <p className="text-black">{label}</p>
+
+        <div className="mb-1">
+          <h2 className="text-black text-sm font-semibold">Classic</h2>
+          <div className="flex">{renderStageBoxes()}</div>
+        </div>
+
+        <div>
+          <AnimatedProgressBar
+            label="Mastery"
+            percent={(masteryProgress / 10) * 100}
+            color="bg-yellow-400"
+          />
+        </div>
+      </div>
+    );
+  };
+
+  // Configuration of worlds
   const progressWorlds = [
     { title: "Abnormal Psychology", key: "abnormal", label: "World 1" },
     { title: "Developmental Psychology", key: "developmental", label: "World 2" },
@@ -129,6 +176,7 @@ export default function ManageStudents() {
     { title: "General Psychology", key: "general", label: "World 5" },
   ];
 
+  // Get attempts data grouped by category for a student
   const getStudentAttemptsByWorld = (studentId) => {
     const studentData = attempts.filter(
       (attempt) => String(attempt.user_id._id) === String(studentId)
@@ -138,23 +186,35 @@ export default function ManageStudents() {
 
     studentData.forEach((entry) => {
       const worldKey = entry.category;
+      const stage = entry.level - 1;
+
       if (!result[worldKey]) {
         result[worldKey] = {
-          classicScores: [],
+          classicStageScores: Array(10).fill(0),
           masteryScores: [],
+          classicScores: [],
           classicAttempts: 0,
           masteryAttempts: 0,
+          highestMasteryScore: 0,
         };
       }
 
       if (entry.mode === "classic") {
-        result[worldKey].classicScores.push(entry.correct);
         result[worldKey].classicAttempts += 1;
+        result[worldKey].classicStageScores[stage] = Math.max(
+          result[worldKey].classicStageScores[stage],
+          entry.correct
+        );
+        result[worldKey].classicScores.push(entry.correct);
       }
 
       if (entry.mode === "mastery") {
         result[worldKey].masteryScores.push(entry.correct);
         result[worldKey].masteryAttempts += 1;
+        result[worldKey].highestMasteryScore = Math.max(
+          result[worldKey].highestMasteryScore,
+          entry.correct
+        );
       }
     });
 
@@ -179,10 +239,12 @@ export default function ManageStudents() {
             value={selectedBranch}
             onChange={(e) => setSelectedBranch(e.target.value)}
           >
-            <option value="disabled" disabled>Filter by:</option>
+            <option value="disabled" disabled>
+              Filter by:
+            </option>
             <option value="">All Branches</option>
             {branches.map((branch) => (
-              <option key={branch.id} value={branch.id} className="text-sm text-black">
+              <option key={branch.id} value={branch.id}>
                 {branch.name}
               </option>
             ))}
@@ -190,7 +252,11 @@ export default function ManageStudents() {
         </h1>
 
         <div className="student-search-bar">
-          <img src={search} className="search-icon w-4 h-4 mr-2" alt="search icon" />
+          <img
+            src={search}
+            className="search-icon w-4 h-4 mr-2"
+            alt="search icon"
+          />
           <input
             type="text"
             className="student-search-input"
@@ -246,13 +312,21 @@ export default function ManageStudents() {
                   </h1>
                 </div>
                 <h1 className="student-info">
-                  {branches.find((branch) => branch.id === student.branch)?.name || "Unknown Branch"}
+                  {
+                    branches.find((branch) => branch.id === student.branch)
+                      ?.name || "Unknown Branch"
+                  }
                 </h1>
+
                 <div className="student-action-container">
                   <Settings className="setting-icon" color="black" />
-                  <button onClick={() =>
-                    setOpenDropdown(openDropdown === studentId ? null : studentId)
-                  }>
+                  <button
+                    onClick={() =>
+                      setOpenDropdown(
+                        openDropdown === studentId ? null : studentId
+                      )
+                    }
+                  >
                     <img src={chevron} alt="chevron" className="chevron-icons" />
                   </button>
                 </div>
@@ -260,10 +334,21 @@ export default function ManageStudents() {
                 {openDropdown === studentId && (
                   <>
                     <div className="student-progress-container">
-                      {progressWorlds.map((world) =>
-                        renderProgressCard(studentId, world.title, world.key, world.label)
-                      )}
+                      {progressWorlds.map((world) => {
+                        const worldStats = studentWorldData[world.key] || {};
+                        const stageScores =
+                          worldStats.classicStageScores || Array(10).fill(0);
+                        return renderProgressCard(
+                          studentId,
+                          world.title,
+                          world.key,
+                          world.label,
+                          stageScores,
+
+                        );
+                      })}
                     </div>
+
                     <div className="student-progress-container">
                       {progressWorlds.map(({ title, key }) => {
                         const worldStats = studentWorldData[key] || {
@@ -276,15 +361,27 @@ export default function ManageStudents() {
                         const avg = (arr) =>
                           arr.length === 0
                             ? "Not attempted yet"
-                            : `${(arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(2)}/8`;
+                            : `${(
+                                arr.reduce((a, b) => a + b, 0) / arr.length
+                              ).toFixed(2)}/8`;
 
                         return (
                           <div className="per-world-progress-card" key={key}>
                             <h1>{title}</h1>
-                            <h1>Classic Attempts: {worldStats.classicAttempts || "Not attempted yet"}</h1>
-                            <h1>Classic Average Score: {avg(worldStats.classicScores)}</h1>
-                            <h1>Mastery Attempts: {worldStats.masteryAttempts || "Not attempted yet"}</h1>
-                            <h1>Mastery Average Score: {avg(worldStats.masteryScores)}</h1>
+                            <h1>
+                              Classic Attempts:{" "}
+                              {worldStats.classicAttempts || "Not attempted yet"}
+                            </h1>
+                            <h1>
+                              Classic Average Score: {avg(worldStats.classicScores)}
+                            </h1>
+                            <h1>
+                              Mastery Attempts:{" "}
+                              {worldStats.masteryAttempts || "Not attempted yet"}
+                            </h1>
+                            <h1>
+                              Mastery Average Score: {avg(worldStats.masteryScores)}
+                            </h1>
                           </div>
                         );
                       })}
@@ -320,7 +417,9 @@ export default function ManageStudents() {
               onClick={() =>
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
-              disabled={currentPage === totalPages || filteredStudents.length === 0}
+              disabled={
+                currentPage === totalPages || filteredStudents.length === 0
+              }
             >
               »
             </button>
