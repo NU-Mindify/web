@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import "../../css/account/account.css";
-import { API_URL, branches } from "../../Constants";
+import { API_URL, fetchBranches } from "../../Constants";
 
 import searchIcon from "../../assets/students/search-01.svg";
 import chevronIcon from "../../assets/forAll/chevron.svg";
@@ -11,6 +11,7 @@ import { UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function AccountManagement() {
   const [webUsers, setWebUsers] = useState([]);
+  const [branches, setBranches] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardActive, setCardActive] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,8 +22,19 @@ export default function AccountManagement() {
 
   const navigate = useNavigate();
   const usersPerPage = 10;
-
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
+
+  useEffect(() => {
+    const loadBranches = async () => {
+      try {
+        const { data } = await axios.get(`${API_URL}/getbranches`);
+        setBranches(data);
+      } catch (error) {
+        console.error("Failed to load branches:", error);
+      }
+    };
+    loadBranches();
+  }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -38,7 +50,6 @@ export default function AccountManagement() {
         setIsLoading(false);
       }
     };
-
     fetchUsers();
   }, [currentUserBranch]);
 
@@ -47,21 +58,19 @@ export default function AccountManagement() {
   }, [searchQuery, selectedBranch, selectedPosition]);
 
   const uniquePositions = Array.from(
-    new Set(webUsers
-      .map((user) => user.position)
-      .filter((position) => position.toLowerCase() !== "super admin"))
+    new Set(
+      webUsers.map((user) => user.position).filter((pos) => pos?.toLowerCase() !== "super admin")
+    )
   );
 
   const filteredUsers = webUsers
     .filter((user) => {
+      const query = searchQuery.toLowerCase();
       const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
       const reversedName = `${user.lastName} ${user.firstName}`.toLowerCase();
-      const query = searchQuery.toLowerCase();
-
       const matchesSearch = fullName.includes(query) || reversedName.includes(query);
       const matchesBranch = selectedBranch === "All" || user.branch === selectedBranch;
       const matchesPosition = selectedPosition === "All" || user.position === selectedPosition;
-
       return matchesSearch && matchesBranch && matchesPosition;
     })
     .sort((a, b) => {
@@ -79,11 +88,13 @@ export default function AccountManagement() {
     setCardActive((prev) => (prev === id ? null : id));
   };
 
+  const getBranchName = (branchId) =>
+    branches.find((b) => b.id === branchId)?.name || "Unknown Branch";
+
   return (
     <div className="account-main-container">
-      {/* Header */}
       <div className="account-header">
-        <h1 className="account-title flex flex-row">
+        <h1 className="account-title flex flex-row items-center">
           Account Management
           <button
             onClick={() => setSortOrderAsc((prev) => !prev)}
@@ -96,7 +107,7 @@ export default function AccountManagement() {
             <select
               value={selectedBranch}
               onChange={(e) => setSelectedBranch(e.target.value)}
-              className="text-black font-[Poppins] border px-3 py-1 rounded-xs mt-3 h-[40px] w-[170px] text-sm bg-white ml-3 select"
+              className="text-black font-[Poppins] border px-3 py-1 rounded-xs mt-3 h-[40px] w-[170px] text-sm bg-white ml-3"
             >
               <option value="All">All Branches</option>
               {branches.map((branch) => (
@@ -107,22 +118,20 @@ export default function AccountManagement() {
             </select>
           )}
 
-          {/* Position Filter */}
           <select
             value={selectedPosition}
             onChange={(e) => setSelectedPosition(e.target.value)}
-            className="text-black font-[Poppins] border px-3 py-1 rounded-xs mt-3 h-[40px] w-[170px] text-sm bg-white ml-3 select"
+            className="text-black font-[Poppins] border px-3 py-1 rounded-xs mt-3 h-[40px] w-[170px] text-sm bg-white ml-3"
           >
             <option value="All">All Positions</option>
-            {uniquePositions.map((position, idx) => (
-              <option key={idx} value={position}>
-                {position}
+            {uniquePositions.map((pos, i) => (
+              <option key={i} value={pos}>
+                {pos}
               </option>
             ))}
           </select>
         </h1>
 
-        {/* Search Bar */}
         <div className="acc-search-bar">
           <img src={searchIcon} alt="Search" className="search-icon w-4 h-4 mr-2" />
           <input
@@ -135,7 +144,6 @@ export default function AccountManagement() {
         </div>
       </div>
 
-      {/* Column Titles */}
       <div className="titles-container">
         <div className="header-info">
           <h1 className="title-info">Name</h1>
@@ -145,7 +153,6 @@ export default function AccountManagement() {
         </div>
       </div>
 
-      {/* User List */}
       <div className="users-container">
         {isLoading ? (
           <div className="loading-overlay-accounts">
@@ -167,9 +174,7 @@ export default function AccountManagement() {
                 </h1>
               </div>
               <h1 className="admin-info">{user.position}</h1>
-              <h1 className="admin-info">
-                {branches.find((b) => b.id === user.branch)?.name || "Unknown Branch"}
-              </h1>
+              <h1 className="admin-info">{getBranchName(user.branch)}</h1>
               <div className="action-container">
                 <img src={settingsIcon} alt="settings" className="setting-icon" />
                 <img
@@ -190,7 +195,6 @@ export default function AccountManagement() {
         )}
       </div>
 
-      {/* Footer Pagination and Add Button */}
       <div className="acc-footer">
         <div className="pagination-container">
           <h1 className="text-black">
