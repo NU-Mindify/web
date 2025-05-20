@@ -24,12 +24,13 @@ html, body{
 }
 
 .back-btn {
-    @apply cursor-pointer transition-shadow duration-200 rounded-full w-[50px] h-[50px];
+    @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer;
 }
   
-.back-btn:hover {
-box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6); /* red glow */
-}
+
+/* .back-btn:hover {
+box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6);
+} */
 
 
 .edit-title {
@@ -69,9 +70,17 @@ box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6); /* red glow */
 }
 
 .save-btn{
-    @apply w-[150px] h-[50px] min-h-[50px] min-w-[100px] btn btn-success cursor-pointer mt-3;
+    @apply w-[150px] h-[50px] min-h-[50px] min-w-[100px] cursor-pointer mt-3;
+}
+
+.save-btn:hover{
+    filter: brightness(1.1);
 }
 
 .delete-btn{
-    @apply w-[150px] h-[50px] btn btn-error mt-3;
+    @apply w-[150px] h-[50px] min-h-[50px] min-w-[100px] cursor-pointer mt-3;
+}
+
+.delete-btn:hover{
+    filter: brightness(1.6);
 }

@@ -3,7 +3,10 @@ import { useState } from 'react';
 import '../../css/glossary/editGlossary.css'
 import axios from 'axios';
 import { API_URL } from '../../Constants';
-import close from '../../assets/glossary/close btn.svg'
+// import close from '../../assets/glossary/close btn.svg'
+import savebtn from '../../assets/glossary/save-term-btn.svg'
+import deletebtn from '../../assets/glossary/delete-term-btn.svg'
+import closebtn from '../../assets/glossary/close-btn.svg';
 
 
 export default function EditGlossary({ onClose, term, onTermUpdated }) {
@@ -65,7 +68,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
                         className='back-btn' 
                         onClick={onClose}
                     >
-                        <img src={close} alt='close btn' />
+                        <img src={closebtn} alt='close btn' />
                     </button>
                 </div>
 
@@ -106,13 +109,13 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
                         onClick={() => handleSave()}
                         className='save-btn'
                         >
-                            Save
+                            <img src={savebtn} alt='save btn' className="save-icon"/>
                     </button>
                     <button 
                         onClick={() => handleDelete()}
                         className='delete-btn'
                         >
-                            Delete
+                            <img src={deletebtn} alt='delete btn' className="delete-icon"/>
                     </button>
                 </div>
 
