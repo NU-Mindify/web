@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import "../../css/account/account.css";
 import { API_URL, fetchBranches } from "../../Constants";
-
 import searchIcon from "../../assets/students/search-01.svg";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import settingsIcon from "../../assets/forAll/settings.svg";
@@ -27,7 +26,7 @@ export default function AccountManagement() {
   useEffect(() => {
     const loadBranches = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/getbranches`);
+        const data = await fetchBranches();
         setBranches(data);
       } catch (error) {
         console.error("Failed to load branches:", error);

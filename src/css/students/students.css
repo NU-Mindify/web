@@ -52,7 +52,7 @@
 }
 
 .active-student-card{
-  @apply w-[95%] grid grid-cols-[3fr_4fr_2fr_1fr] my-2 py-3 rounded-xl px-2 transition-transform duration-500;
+  @apply w-[95%] grid grid-cols-[3fr_4fr_2fr_1fr] my-2 py-3 rounded-xl px-2 transition-transform duration-500 bg-blue-500;
     border: 1px solid black;
 }
 .student-info{
@@ -68,11 +68,11 @@
 }
 
 .student-progress-container{
-  @apply w-full h-[220px] bg-red-400 col-span-4 mt-4 grid grid-cols-5 gap-3 px-3;
+  @apply w-full h-[220px] col-span-4 mt-4 grid grid-cols-5 gap-3 px-3;
 }
 
 .per-world-progress-card{
-  @apply w-full h-full bg-green-400 flex flex-col px-2 py-2;
+  @apply w-full h-full flex flex-col px-2 py-2;
 }
 
 
