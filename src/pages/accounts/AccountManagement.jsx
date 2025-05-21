@@ -7,6 +7,7 @@ import searchIcon from "../../assets/students/search-01.svg";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import settingsIcon from "../../assets/forAll/settings.svg";
 import { UserLoggedInContext } from "../../contexts/Contexts";
+import download from "../../assets/leaderboard/file-export.svg";
 
 export default function AccountManagement() {
   const [webUsers, setWebUsers] = useState([]);
@@ -93,20 +94,42 @@ export default function AccountManagement() {
   return (
     <div className="account-main-container">
       <div className="account-header">
+
         <h1 className="account-title flex flex-row items-center">
           Account Management
-          <button
-            onClick={() => setSortOrderAsc((prev) => !prev)}
-            className="btn btn-outline ml-4 text-black hover:bg-[#FFD41C] mt-3"
+        </h1>
+        
+        <div className="acc-sub-header-container">
+           <div className="acc-search-bar">
+            <img src={searchIcon} alt="Search" className="search-icon w-4 h-4 mr-2" />
+            <input
+              type="text"
+              className="acc-search-input text-black font-[Poppins]"
+              placeholder="Search for a user"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <select
+            value={selectedPosition}
+            onChange={(e) => setSelectedPosition(e.target.value)}
+            className="acc-position-select"
           >
-            Sort by Last Name {sortOrderAsc ? "↑" : "↓"}
-          </button>
+            <option value="All">All Positions</option>
+            {uniquePositions.map((pos, i) => (
+              <option key={i} value={pos}>
+                {pos}
+              </option>
+            ))}
+          </select>
+
 
           {currentWebUser?.position?.toLowerCase() === "super admin" && (
             <select
               value={selectedBranch}
               onChange={(e) => setSelectedBranch(e.target.value)}
-              className="text-black font-[Poppins] border px-3 py-1 rounded-xs mt-3 h-[40px] w-[170px] text-sm bg-white ml-3"
+              className="acc-branch-select"
             >
               <option value="All">All Branches</option>
               {branches.map((branch) => (
@@ -117,40 +140,31 @@ export default function AccountManagement() {
             </select>
           )}
 
-          <select
-            value={selectedPosition}
-            onChange={(e) => setSelectedPosition(e.target.value)}
-            className="text-black font-[Poppins] border px-3 py-1 rounded-xs mt-3 h-[40px] w-[170px] text-sm bg-white ml-3"
-          >
-            <option value="All">All Positions</option>
-            {uniquePositions.map((pos, i) => (
-              <option key={i} value={pos}>
-                {pos}
-              </option>
-            ))}
-          </select>
-        </h1>
-
-        <div className="acc-search-bar">
-          <img src={searchIcon} alt="Search" className="search-icon w-4 h-4 mr-2" />
-          <input
-            type="text"
-            className="acc-search-input text-black font-[Poppins]"
-            placeholder="Search for a user"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+          <img src={download} alt="export" className="acc-export-icon" />
         </div>
+       
       </div>
 
+      
       <div className="titles-container">
-        <div className="header-info">
-          <h1 className="title-info">Name</h1>
-          <h1 className="title-info">Position</h1>
-          <h1 className="title-info">Branch</h1>
-          <h1 className="title-info">Action</h1>
-        </div>
+        <table className="titles-table">
+          <tr>
+            <th>
+              Name 
+              <button
+                onClick={() => setSortOrderAsc((prev) => !prev)}
+                className="text-black hover:bg-[#FFD41C] ml-2"
+              >
+                {sortOrderAsc ? "U" : "D"}
+              </button>
+            </th>
+            <th className="title-pos-cell">Position</th>
+            <th className="title-branch-cell">Branch</th>
+            <th className="title-action-cell">Action</th>
+          </tr>
+        </table>
       </div>
+      
 
       <div className="users-container">
         {isLoading ? (
@@ -165,24 +179,36 @@ export default function AccountManagement() {
             <div
               key={user.employeenum}
               className={cardActive === user.employeenum ? "active-user-card" : "user-card"}
-            >
-              <div className="name-img-container">
-                <img src={user.useravatar} alt={user.firstName} className="mini-avatar" />
-                <h1 className="admin-info">
-                  {user.lastName.toUpperCase()}, {user.firstName}
-                </h1>
-              </div>
-              <h1 className="admin-info">{user.position}</h1>
-              <h1 className="admin-info">{getBranchName(user.branch)}</h1>
-              <div className="action-container">
-                <img src={settingsIcon} alt="settings" className="setting-icon" />
-                <img
-                  src={chevronIcon}
-                  alt="toggle details"
-                  onClick={() => toggleCard(user.employeenum)}
-                  className={`chevron-icons ${cardActive === user.employeenum ? "rotate-180" : ""}`}
-                />
-              </div>
+            > 
+              <table className="user-table">
+                <tr>
+                  <td className="user-name-cell">
+                    <img src={user.useravatar} alt={user.firstName} className="mini-avatar" />
+                    {user.lastName.toUpperCase()}, {user.firstName}
+                  </td>
+                  <td className="user-pos-cell">{user.position}</td>
+                  <td className="user-branch-cell">{getBranchName(user.branch)}</td>
+                  <td className="user-action-cell">
+                    <div className="action-holder">
+                      <button
+                        type="button"
+                        className="setting-icon bg-transparent border-none p-0"
+                      >
+                        <img src={settingsIcon} alt="settings" className="w-[35px] h-[35px]" />
+                      </button>
+                      <button
+                        type="button"
+                        className={`chevron-icons bg-transparent border-none p-0 ${cardActive === user.employeenum ? "rotate-180" : ""}`}
+                        aria-label="Toggle details"
+                        onClick={() => toggleCard(user.employeenum)}
+                      >
+                        <img src={chevronIcon} alt="toggle details" className="w-[35px] h-[35px]" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+              </table>
               {cardActive === user.employeenum && (
                 <div className="user-details-card">
                   <p><strong>Email:</strong> {user.email}</p>

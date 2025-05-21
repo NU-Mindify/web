@@ -4,72 +4,131 @@
 
 /*------------------------- MAIN CONTAINER --------------------------*/
 .account-main-container {
-  @apply p-3 flex flex-col h-full w-full bg-white;
+  @apply p-3 flex flex-col h-full w-full bg-pink-300;
 }
 
 /*------------------------- FOR HEADER --------------------------*/
 .account-header {
-  @apply w-full h-[150px] p-1;
+  @apply w-full h-[150px] p-1 bg-green-400;
 }
 
 .account-title {
-  @apply text-[40px] font-[Poppins] font-bold text-[#FFD41C] h-[50px] pl-3;
+  @apply text-[40px] font-[Poppins] font-bold text-black h-[50px] pl-3 mt-3;
+}
+
+.acc-sub-header-container{
+  @apply w-full h-auto flex flex-row justify-evenly items-center mt-5;
 }
 
 .acc-search-bar {
- @apply w-full h-[44px] bg-white flex items-center px-4 rounded-[10px] shadow-md border-0 m-8;
-  width: 95%;
+ @apply w-[60%] min-w-[300px] h-[50px] bg-white flex items-center px-4 rounded-md shadow-md border-0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .acc-search-input {
-  @apply p-2 rounded-lg px-2 py-1 border-none flex-1 bg-transparent focus:outline-none;
+  @apply rounded-lg border-none flex-1 bg-transparent focus:outline-none;
 
+}
+
+.acc-position-select{
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  @apply text-black font-[Poppins] h-[50px] w-[200px] text-sm bg-white border-none rounded-md;
+}
+
+.acc-branch-select{
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  @apply text-black font-[Poppins] h-[50px] w-[200px] text-sm bg-white border rounded-md;
+}
+
+
+
+
+
+.acc-export-icon{
+  @apply w-8 h-8;
 }
 
 /*------------------------- USER TITLES --------------------------*/
-.titles-container {
-  @apply w-full h-[40px] flex items-center flex-col pt-3;
+
+.titles-container{
+  @apply w-full flex justify-center;
 }
-.header-info {
-  @apply w-11/12 h-full grid grid-cols-[3fr_2fr_2fr_1fr] px-2;
+
+.titles-table {
+  @apply w-11/12 h-[50px] bg-blue-400 text-left table-fixed;
 }
-.title-info {
-  @apply text-black text-2xl font-bold;
+
+.titles-table th{
+  @apply text-xl text-black;
 }
+
+.title-name-cell{
+  @apply flex flex-row items-center;
+}
+
+.title-pos-cell, .title-branch-cell{
+  @apply w-1/4;
+}
+
+.title-action-cell{
+  @apply w-1/5;
+}
+
+
 
 /*------------------------- USER CONTENTS --------------------------*/
 .users-container {
-  @apply w-full h-full overflow-hidden overflow-y-auto flex flex-col items-center 
-    transition-transform duration-500 ease-in-out;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  @apply w-full flex-1 overflow-hidden overflow-y-auto flex flex-col items-center 
+    transition-transform duration-500 ease-in-out bg-red-500;
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
+}
+.users-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.users-container::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 8px;
+}
+
+.users-container::-webkit-scrollbar-track {
+  background: black;
 }
 .user-card {
-  @apply w-11/12 grid grid-cols-[3fr_2fr_2fr_1fr] bg-white my-2 py-3 rounded-xl px-3 
+  @apply w-11/12 bg-violet-500 my-2 py-3 rounded-xl px-3 
     transition-transform duration-500 ease-in-out;
   border: 1px solid black;
 }
 .active-user-card {
-  @apply w-[95%] grid grid-cols-[3fr_2fr_2fr_1fr] bg-gray-300 my-2 py-5 rounded-xl px-2 
+  @apply w-[95%] bg-gray-300 my-2 py-5 rounded-xl px-2 
     transition-transform duration-500 ease-in-out;
   border: 1px solid black;
 }
-.name-img-container {
-  @apply flex flex-row items-center;
+
+.user-table{
+  @apply w-full table-fixed;
 }
 
-.admin-info {
-  @apply text-xl text-black flex items-center;
+.user-name-cell{
+  @apply flex items-center ;
 }
-
 .mini-avatar {
   @apply w-[40px] h-[40px] rounded-full mr-2;
 }
 
-.action-container {
-  @apply flex flex-row justify-between w-1/2;
+.user-branch-cell, .user-pos-cell{
+    @apply w-1/4; 
 }
+
+.user-action-cell{
+  @apply w-1/5;
+}
+
+.action-holder{
+  @apply flex flex-row items-center;
+}
+
 
 .setting-icon,
 .chevron-icon {
@@ -82,7 +141,7 @@
 
 /*------------------------- FOOTER PAGINATION AND ADD USER --------------------------*/
 .acc-footer {
-  @apply w-full h-[80px] flex flex-col;
+  @apply w-full h-[100px] flex flex-col bg-amber-500;
 }
 
 .pagination-container {
