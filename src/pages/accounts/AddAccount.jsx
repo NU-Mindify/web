@@ -128,152 +128,257 @@ export default function AddAccount() {
 
   return (
     <>
-      <form className="add-account-form" onSubmit={handleRegister}>
-        <label>First Name:</label>
-        <input
-          type="text"
-          placeholder="First Name"
-          value={newWebUser.firstName}
-          onChange={(e) =>
-            setNewWebUser({ ...newWebUser, firstName: e.target.value })
-          }
-        />
+    <div className="add-account-container">
+      <div className="add-account-header">
+      <h1 className="add-account-title">Add Account</h1>
+      <button
+        type="button"
+        onClick={() => navigate("/account")}
+        className="view-acc-btn"
+        disabled={isLoading}
+      >
+        View Accounts
+      </button>
+    </div>
 
-        <label>Last Name:</label>
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={newWebUser.lastName}
-          onChange={(e) =>
-            setNewWebUser({ ...newWebUser, lastName: e.target.value })
-          }
-        />
+
+    <form className="add-account-form" onSubmit={handleRegister}>
+    <table className="form-table">
+      <tr>
+        <td className="user-headers">Full name</td>
+        <td className="user-details">
+          <div className="details-holder">
+            <input
+              className="add-input-properties"
+              type="text"
+              value={newWebUser.firstName}
+              onChange={(e) =>
+                setNewWebUser({ ...newWebUser, firstName: e.target.value })
+              }
+            />
+            <label>First Name</label>
+          </div>
+          
+        </td>
+        <td  className="user-details">
+          <div className="details-holder">
+            <input
+              className="add-input-properties"
+              type="text"
+              value={newWebUser.lastName}
+              onChange={(e) =>
+                setNewWebUser({ ...newWebUser, lastName: e.target.value })
+              }
+            />
+            <label>Last Name</label>
+          </div>
+          
+        </td>
+      </tr>
+      <tr>
+        <td  className="user-headers">Branch</td>
+        <td colSpan={2} className="user-details">
+          <div className="details-holder">
+            {currentWebUser.position.toLowerCase() === "super admin" ? (
+            <select
+              className="add-input-properties"
+              value={newWebUser.branch}
+              onChange={(e) => {
+                const branchId = e.target.value;
+                const branch = branches.find((b) => b.id === branchId);
+                const extension = branch?.extension || "";
+                setNewWebUser((prev) => ({
+                  ...prev,
+                  branch: branchId,
+                  email: extension,
+                }));
+              }}
+
+            >
+              <option value="">-- Select Branch --</option>
+              {branches.map((branch) => (
+                <option key={branch.id} value={branch.id}>
+                  {branch.name}
+                </option>
+              ))}
+            </select>
+            ) : (
+              <input
+                className="add-input-properties"
+                type="text"
+                disabled
+                value={
+                  branches.find((b) => b.id === currentUserBranch)?.name || ""
+                }
+              />
+            )}
+          </div>
+          
+        </td>
+      </tr>
+      <tr>
+        <td  className="user-headers">
+          Email
+        </td>
+        <td colSpan={2} className="user-details">
+          <div className="details-holder">
+            <input
+              className="add-input-properties"
+              type="email"
+              value={newWebUser.email}
+              onChange={(e) =>
+                setNewWebUser({ ...newWebUser, email: e.target.value })
+              }
+            />
+          </div>
+
+        </td>
+      </tr>
+
+      <tr>
+        <td  className="user-headers">
+          Employee Number
+        </td>
+        <td colSpan={2} className="user-details">
+          <div className="details-holder">
+            <input
+              className="add-input-properties"
+              type="text"
+              value={newWebUser.employeenum}
+              onChange={(e) =>
+                setNewWebUser({ ...newWebUser, employeenum: e.target.value })
+              }
+            />
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td  className="user-headers">
+          Position
+        </td>
+        <td colSpan={2} className="user-details">
+          <div className="details-holder">
+            {currentWebUser.position.toLowerCase() === "super admin" ? (
+              <select
+                className="add-input-properties"
+                value={newWebUser.position}
+                onChange={(e) =>
+                  setNewWebUser({ ...newWebUser, position: e.target.value })
+                }
+              >
+                <option value="">Select Position</option>
+                <option value="Professor">Professor</option>
+                <option value="Sub Admin">Sub Admin</option>
+              </select>
+            ) : (
+              <input type="text" disabled value="Professor" className="add-input-properties" />
+            )}
+          </div>
+          
+        </td>
+      </tr>
+
+      <tr>
+        <td  className="user-headers">
+          Upload Profile
+        </td>
+        <td colSpan={2} className="user-details">
+          <div className="details-holder">
+            <input
+              className="add-input-properties"
+              type="text"
+              value={newWebUser.useravatar}
+              onChange={(e) =>
+                setNewWebUser({ ...newWebUser, useravatar: e.target.value })
+              }
+            />
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td  className="user-headers">
+          Password
+        </td>
+        <td className="user-details">
+          <div className="details-holder">
+            <input
+              className="add-input-properties"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <label>Create Password</label>
+          </div>
+            
+        </td>
+        <td className="user-details">
+          <div className="details-holder">
+            
+            <input
+              className="add-input-properties"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <label>Confirm Password:</label>
+          </div>
+          
+        </td>
+      </tr>
+
+      <tr>
+        <td colSpan={3}>
+          <div className="btn-holder">
+            <button
+              type="submit"
+              className="submit-btn"
+              disabled={isLoading}
+            >
+              {isLoading ? "Submitting..." : "Submit"}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleReset}
+              className="reset-btn"
+              disabled={isLoading}
+            >
+              Reset
+            </button>
+          </div>
+        </td>
+      </tr>
+      
+        
+
+        
 
       
-        <label>Branch:</label>
-        {currentWebUser.position.toLowerCase() === "super admin" ? (
-          <select
-            value={newWebUser.branch}
-            onChange={(e) => {
-              const branchId = e.target.value;
-              const branch = branches.find((b) => b.id === branchId);
-              const extension = branch?.extension || "";
-              setNewWebUser((prev) => ({
-                ...prev,
-                branch: branchId,
-                email: extension,
-              }));
-            }}
+        
 
-          >
-            <option value="">-- Select Branch --</option>
-            {branches.map((branch) => (
-              <option key={branch.id} value={branch.id}>
-                {branch.name}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <input
-            type="text"
-            disabled
-            value={
-              branches.find((b) => b.id === currentUserBranch)?.name || ""
-            }
-          />
-        )}
-
-        <label>Email:</label>
-        <input
-          type="email"
-          placeholder="Email"
-          value={newWebUser.email}
-          onChange={(e) =>
-            setNewWebUser({ ...newWebUser, email: e.target.value })
-          }
-        />
+        
 
 
-        <label>Employee No:</label>
-        <input
-          type="text"
-          placeholder="Employee No."
-          value={newWebUser.employeenum}
-          onChange={(e) =>
-            setNewWebUser({ ...newWebUser, employeenum: e.target.value })
-          }
-        />
+        
 
-        {/* Position */}
-        <label>Position:</label>
-        {currentWebUser.position.toLowerCase() === "super admin" ? (
-          <select
-            value={newWebUser.position}
-            onChange={(e) =>
-              setNewWebUser({ ...newWebUser, position: e.target.value })
-            }
-          >
-            <option value="">Select Position</option>
-            <option value="Professor">Professor</option>
-            <option value="Sub Admin">Sub Admin</option>
-          </select>
-        ) : (
-          <input type="text" disabled value="Professor" />
-        )}
 
-        <label>Profile Pic URL:</label>
-        <input
-          type="text"
-          placeholder="Profile Pic URL"
-          value={newWebUser.useravatar}
-          onChange={(e) =>
-            setNewWebUser({ ...newWebUser, useravatar: e.target.value })
-          }
-        />
+        
 
-        <label>Password:</label>
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        
 
-        <label>Confirm Password:</label>
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
+       
 
-        <div className="form-actions">
-          <button
-            type="submit"
-            className="btn btn-success"
-            disabled={isLoading}
-          >
-            {isLoading ? "Submitting..." : "Submit"}
-          </button>
+        
 
-          <button
-            type="button"
-            onClick={handleReset}
-            className="btn btn-warning"
-            disabled={isLoading}
-          >
-            Reset
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate("/account")}
-            className="btn btn-secondary"
-            disabled={isLoading}
-          >
-            View Accounts
-          </button>
-        </div>
+        </table>
       </form>
+    </div>
+
+    
+    
+      
 
       {/* Success Modal */}
       {showModal && (
