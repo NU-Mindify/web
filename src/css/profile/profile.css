@@ -59,12 +59,12 @@ body,
 }
 
 .edit-btn-properties {
-  @apply w-[250px] h-[40px] rounded-md border border-black bg-[#FFC300] px-6 font-medium text-black transition-all [box-shadow:0px_4px_1px_#000000] active:translate-y-[2px] active:shadow-none cursor-pointer font-[Poppins]
+  @apply w-[250px] h-[40px] focus:outline-none text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-lg px-5 py-2 me-2 mb-2 dark:focus:ring-yellow-900 cursor-pointer font-[Poppins]
     md:w-[250px]
     lg:w-[250px];
 }
 .edit-btn-properties-disabled {
-  @apply w-[250px] h-[40px] rounded-md border border-black bg-gray-300 px-6 font-medium text-black [box-shadow:0px_4px_1px_#000000]  cursor-not-allowed
+  @apply w-[250px] h-[40px] focus:outline-none text-black bg-yellow-400  focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-lg px-5 py-2 me-2 mb-2 dark:focus:ring-yellow-900 cursor-not-allowed font-[Poppins]
     md:w-[250px]
     lg:w-[250px];
 }

@@ -229,7 +229,7 @@ export default function EditProfile() {
               Save Profile
             </button>
             <button
-              className="edit-btn-properties mt-3"
+              className="edit-btn-properties mt-1"
               onClick={handleCancelEdit}
             >
               Cancel

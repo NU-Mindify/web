@@ -249,11 +249,11 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <div className="">
-              <h1 className="dashboard-title font-[Poppins]">
-                Total Students:
+            <div className="flex items-center justify-center flex-col p-8">
+              <h1 className="dashboard-title font-[Poppins] text-[30px]">
+                Total Students
               </h1>
-              <h1 className="dashboard-title font-[Poppins] font-bold text-[50px]">
+              <h1 className="dashboard-title font-[Poppins] font-bold text-[50px] mt-3">
                 <CountUp end={studentCount} />
               </h1>
             </div>
@@ -267,12 +267,12 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <div>
-              <h1 className="dashboard-title mb-2 font-[Poppins]">
+            <div className="flex items-center justify-center flex-col p-8">
+              <h1 className="dashboard-title mb-2 font-[Poppins] text-[23px]">
                 Overall Average Score
               </h1>
 
-              <h2 className="text-3xl font-bold font-[Poppins] text-[50px] text-black">
+              <h2 className="text-3xl font-bold font-[Poppins] text-[50px] text-black mt-4">
                 {avgScoresByWorld.overall === "N/A" ? (
                   "No Data"
                 ) : (
@@ -297,7 +297,7 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <div>
+            <div className="flex items-center justify-center flex-col p-3"> 
               <h1 className="dashboard-title mb-2 font-[Poppins]">
                 Most Challenging World
               </h1>
@@ -327,7 +327,7 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <div>
+            <div className="flex items-center justify-center flex-col p-3">
               <h1 className="dashboard-title mb-2 text-black font-[Poppins]">
                 Best Performing World
               </h1>
