@@ -4,12 +4,12 @@
 
 /*------------------------- MAIN CONTAINER --------------------------*/
 .account-main-container {
-  @apply p-3 flex flex-col h-full w-full bg-pink-300;
+  @apply p-3 flex flex-col h-full w-full bg-white;
 }
 
 /*------------------------- FOR HEADER --------------------------*/
 .account-header {
-  @apply w-full h-[150px] p-1 bg-green-400;
+  @apply w-full h-[200px] p-1;
 }
 
 .account-title {
@@ -17,18 +17,33 @@
 }
 
 .acc-sub-header-container{
-  @apply w-full h-auto flex flex-row justify-evenly items-center mt-5;
+  @apply w-full h-auto flex flex-row justify-evenly items-center mt-3;
 }
 
 .acc-search-bar {
- @apply w-[60%] min-w-[300px] h-[50px] bg-white flex items-center px-4 rounded-md shadow-md border-0;
+ @apply w-[80%] min-w-[300px] h-[50px] bg-white flex items-center px-4 rounded-md shadow-md border-0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
+.filter-container{
+  @apply w-full mt-3 px-6;
+}
 .acc-search-input {
   @apply rounded-lg border-none flex-1 bg-transparent focus:outline-none;
 
 }
+
+
+.add-acc-btn{
+  @apply btn btn-warning w-[200px] h-[50px] text-white font-[Poppins] text-2xl;
+  text-shadow:
+    1px 1px 0 #b0b0b0,
+    2px 2px 0 #888888,
+    3px 3px 2px #666666;
+}
+
+
+
 
 .acc-position-select{
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
@@ -37,7 +52,7 @@
 
 .acc-branch-select{
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  @apply text-black font-[Poppins] h-[50px] w-[200px] text-sm bg-white border rounded-md;
+  @apply text-black font-[Poppins] h-[50px] w-[200px] text-sm bg-white border rounded-md ml-4;
 }
 
 
@@ -55,7 +70,7 @@
 }
 
 .titles-table {
-  @apply w-11/12 h-[50px] bg-blue-400 text-left table-fixed;
+  @apply w-11/12 h-[50px] text-left table-fixed;
 }
 
 .titles-table th{
@@ -79,7 +94,7 @@
 /*------------------------- USER CONTENTS --------------------------*/
 .users-container {
   @apply w-full flex-1 overflow-hidden overflow-y-auto flex flex-col items-center 
-    transition-transform duration-500 ease-in-out bg-red-500;
+    transition-transform duration-500 ease-in-out;
   scrollbar-width: thin;
   scrollbar-color: black transparent;
 }
@@ -96,7 +111,7 @@
   background: black;
 }
 .user-card {
-  @apply w-11/12 bg-violet-500 my-2 py-3 rounded-xl px-3 
+  @apply w-11/12 my-2 py-3 rounded-xl px-3 
     transition-transform duration-500 ease-in-out;
   border: 1px solid black;
 }
@@ -108,6 +123,10 @@
 
 .user-table{
   @apply w-full table-fixed;
+}
+
+.user-table td{
+  @apply  text-black;
 }
 
 .user-name-cell{
@@ -126,31 +145,30 @@
 }
 
 .action-holder{
-  @apply flex flex-row items-center;
+  @apply flex flex-row items-center px-10 justify-between ;
 }
 
 
-.setting-icon,
-.chevron-icon {
-  @apply w-[35px] h-[35px] transition-transform duration-500 cursor-pointer bg-transparent;
+.acc-setting,
+.acc-chevron {
+  @apply w-[25px] h-[25px] transition-transform duration-500 cursor-pointer bg-transparent;
 }
 
-.active-user-card .chevron-icon {
-  @apply w-[35px] h-[35px] transition-transform duration-500 cursor-pointer rotate-180;
+
+.active-user-card .acc-chevron {
+  @apply w-[25px] h-[25px] transition-transform duration-500 cursor-pointer;
 }
 
 /*------------------------- FOOTER PAGINATION AND ADD USER --------------------------*/
 .acc-footer {
-  @apply w-full h-[100px] flex flex-col bg-amber-500;
+  @apply w-full h-[50px] flex flex-col justify-center items-center;
 }
 
 .pagination-container {
   @apply w-full h-1/2 flex flex-row justify-between items-center px-5;
 }
 
-.add-user-container {
-  @apply w-full h-1/2 flex justify-center items-center;
-}
+
 
 /* modal css */
 

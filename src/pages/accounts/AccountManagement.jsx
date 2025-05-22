@@ -111,6 +111,16 @@ export default function AccountManagement() {
             />
           </div>
 
+         
+          <button onClick={() => navigate("/addaccount")} className="add-acc-btn">
+            Add Account
+          </button>
+          
+          <img src={download} alt="export" className="acc-export-icon" />
+        </div>
+
+
+        <div className="filter-container">
           <select
             value={selectedPosition}
             onChange={(e) => setSelectedPosition(e.target.value)}
@@ -139,9 +149,9 @@ export default function AccountManagement() {
               ))}
             </select>
           )}
-
-          <img src={download} alt="export" className="acc-export-icon" />
         </div>
+        
+        
        
       </div>
 
@@ -194,20 +204,19 @@ export default function AccountManagement() {
                         type="button"
                         className="setting-icon bg-transparent border-none p-0"
                       >
-                        <img src={settingsIcon} alt="settings" className="w-[35px] h-[35px]" />
+                        <img src={settingsIcon} alt="settings" className="acc-setting" />
                       </button>
                       <button
                         type="button"
-                        className={`chevron-icons bg-transparent border-none p-0 ${cardActive === user.employeenum ? "rotate-180" : ""}`}
+                        className={`acc-chevron ${cardActive === user.employeenum ? "rotate-180" : ""}`}
                         aria-label="Toggle details"
                         onClick={() => toggleCard(user.employeenum)}
                       >
-                        <img src={chevronIcon} alt="toggle details" className="w-[35px] h-[35px]" />
+                        <img src={chevronIcon} alt="toggle details" className="acc-chevron" />
                       </button>
                     </div>
                   </td>
                 </tr>
-
               </table>
               {cardActive === user.employeenum && (
                 <div className="user-details-card">
@@ -251,11 +260,7 @@ export default function AccountManagement() {
           </div>
         </div>
 
-        <div className="add-user-container">
-          <button onClick={() => navigate("/addaccount")} className="btn btn-success">
-            Add Account
-          </button>
-        </div>
+        
       </div>
     </div>
   );
