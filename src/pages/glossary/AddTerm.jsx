@@ -3,193 +3,149 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "../../Constants";
 import '../../css/glossary/addGlossary.css';
-import { XCircle } from "lucide-react";
-import addtermsbtn from '../../assets/glossary/add-terms-btn.svg';
-import savetermsbtn from '../../assets/glossary/save-terms-btn.svg';
 import closebtn from '../../assets/glossary/close-btn.svg';
-import chevron from "../../assets/glossary/dropdown.svg";
+import addtermsbtn from '../../assets/glossary/add-terms-btn.svg';
+import deletebtn from '../../assets/glossary/delete-icon.svg';
 
-export default function AddTerm(){
-
-    const [newTerm, setNewTerm] = useState({word: '', meaning: '', tags: [], is_deleted: false})
+export default function AddTerm() {
+    const [newTerm, setNewTerm] = useState([
+        { word: '', meaning: '', tags: [], is_deleted: false }
+    ]);
     const [tagInput, setTagInput] = useState('');
-
-
     const navigate = useNavigate();
+
+    const handleInputChange = (index, field, value) => {
+        const updatedTerms = [...newTerm];
+        updatedTerms[index][field] = value;
+        setNewTerm(updatedTerms);
+    };
+
+    //for buttoons
+    const handleAddMoreTerm = () => {
+        setNewTerm([...newTerm, { word: '', meaning: '', tags: [], is_deleted: false }]);
+    };
+
+    const handleDeleteTerm = (index) => {
+        const updatedTerms = newTerm.filter((_, i) => i !== index);
+        setNewTerm(updatedTerms);
+    };
 
 
     const handleCreateNewTerm = () => {
-    const { word, meaning, tags } = newTerm;
-
-    if (!word.trim() || !meaning.trim() || tags.length === 0) {
+    for (const term of newTerm) {
+        if (!term.word.trim() || !term.meaning.trim() || !term.tags) {
         alert("Please fill out all required fields.");
         return;
+        }
     }
 
-    axios.post(`${API_URL}/addTerm`, newTerm)
-        .then(() => {
-            alert("Added successfully!");
-            setNewTerm({ word: '', meaning: '', tags: [], is_deleted: false });
-        })
-        .catch((error) => {
-            console.error("Error adding term:", error);
-            alert("Failed to add term. Please try again.");
-        });
-};
+    Promise.all(
+        newTerm.map(term =>
+        axios.post(`${API_URL}/addTerm`, term)
+        )
+    )
+    .then(() => {
+        alert("Added successfully!");
+        setNewTerm([{ word: '', meaning: '', tags: [], is_deleted: false }]);
+    })
+    .catch((error) => {
+        console.error("Error adding term:", error);
+        alert("Failed to add term. Please try again.");
+    });
+    };
+
 
     const handleBack = () => {
         // if (onClose) onClose();
-        navigate('/glossary')
-      };
-      
+        navigate('/glossary');
+    };
 
-    return(
-        <>
-        <div className="add-term-page-wrapper">
-            <div className="add-term-main-container">
-                <div className="add-term-header">
-                    <h1 className="add-term-title">Add Terminology</h1>
+return (
+    <div className="add-term-page-wrapper">
+      <div className="add-term-main-container">
+        <div className="add-term-header">
+          <h1 className="add-term-title">Add Terminology</h1>
+          <button className="close-btn" onClick={handleBack}>
+            <img src={closebtn} alt="close btn" />
+          </button>
+        </div>
 
-                    <button className="close-btn" onClick={handleBack}>
-                        <img src={closebtn} alt="close btn" />
+        <div className="add-term-contents">
+          {newTerm.map((term, index) => (
+            <div className="term-section" key={index}>
+              <div className="term-header">
+                <select
+                  value={term.tags}
+                  onChange={(e) => handleInputChange(index, 'tags', e.target.value)}
+                >
+                  <option value="">Choose Category</option>
+                  <option value="AbPsych">Abnormal Psychology</option>
+                  <option value="DevPsych">Developmental Psychology</option>
+                  <option value="PsychoPsych">Psychological Psychology</option>
+                  <option value="IndPsych">Industrial Psychology</option>
+                  <option value="GenPsych">General Psychology</option>
+                </select>
+              </div>
+
+              <div className="term-input-row">
+                <div className="term-input-column">
+                  <input
+                    type="text"
+                    placeholder="Enter Term"
+                    value={term.word}
+                    onChange={(e) => handleInputChange(index, 'word', e.target.value)}
+                  />
+                  <div className="term-label">Term</div>
+                </div>
+
+                <div className="term-input-column">
+                  <input
+                    type="text"
+                    placeholder="Enter Definition"
+                    value={term.meaning}
+                    onChange={(e) => handleInputChange(index, 'meaning', e.target.value)}
+                  />
+                  <div className="term-label">Definition</div>
+                </div>
+              </div>
+
+              {newTerm.length > 1 && (
+                <button type="button" className="delete-term-btn" onClick={() => handleDeleteTerm(index)}>
+                  <img
+                    src={deletebtn}
+                    alt="delete-button"
+                    className="delete-icon-btn"
+                  />
+                </button>
+              )}
+            </div>
+          ))}
+
+                    <button
+                    type="button"
+                    className="add-more-term-btn"
+                    onClick={handleAddMoreTerm}
+                    >
+                    + Add more term
                     </button>
+
                 </div>
 
-                <div className="add-term-contents">
-                    <div>
-                        <h1>Terminology <span>*</span></h1>
-                        <input 
-                            type="text"
-                            placeholder="Type Here."
-                            className="add-term-input"
-                            value={newTerm.word}
-                            onChange={(e) => setNewTerm({...newTerm, word: e.target.value})}
-                        />
-
-                        <h1>Tags <span>*</span></h1>
-                        <div className="flex justify-start gap-4">
-                        {newTerm.tags.map(tag=> (
-                            <button 
-                                className="text-black border bg-black/5 p-2 py-1 rounded flex gap-2 hover:cursor-pointer hover:bg-black/15" 
-                                onClick={() => {
-                                    setNewTerm(prev => ({...prev, tags: prev.tags.filter(tagName => tagName != tag)}))
-                                }}
-                            >
-                                {tag} <XCircle />
-                            </button>
-                        ))}
-                        </div>
-                        <input 
-                            type="text"
-                            placeholder="Add a tag."
-                            className="add-term-input"
-                            value={tagInput}
-                            onChange={(e) => setTagInput(e.target.value)}
-                        />
-
-                        <button 
-                            className="btn btn-success" 
-                            type="button"
-                            onClick={() => {
-                                if (tagInput.trim() !== '') {
-                                    setNewTerm(prev => ({
-                                        ...prev,
-                                        tags: [...prev.tags, tagInput.trim()]
-                                    }));
-                                    setTagInput('');
-                                }
-                                else{
-                                    alert('Please have an input')
-                                }
-                            }}
-                        >
-                            Add Tag
-                        </button>
-
-                    </div>
-
-
-                    <div>
-                        <h1>Definition <span>*</span></h1>
-                        <textarea 
-                            className="add-term-textarea"
-                            rows={10}
-                            value={newTerm.meaning}
-                            placeholder="Type Here."
-                            onChange={(e) => setNewTerm({...newTerm, meaning: e.target.value})}
-                        >
-                        </textarea>
-                    </div>
-                </div>
+                
                 <div className="create-container">
                     <button className="create-btn" onClick={handleCreateNewTerm}>
-                        <img 
-                            src={addtermsbtn} 
-                            alt="add-term button"
-                            className="add-term-icon-btn"
-                        />
-                    </button>
-                </div>
-                
-            </div>
-
-            <div className="terminologies-container"> 
-                <h1 className="terminologies-title">Terminolgies</h1>
-                <div className="terminologies-list">
-                    <div className="term-item">
-                        <h3 className="term-name">New Term#1</h3>
-                        <p className="term-definition">Defintion</p>
-                            <img
-                            src={chevron}
-                            alt="chevron"
-                            className="chevron-icon"
-                            />
-                    </div>
-
-                    <div className="term-item">
-                        <h3 className="term-name">New Term #2</h3>
-                        <p className="term-definition">Defintion</p>
-                            <img
-                            src={chevron}
-                            alt="chevron"
-                            className="chevron-icon"
-                            />
-                    </div>
-
-                    <div className="term-item">
-                        <h3 className="term-name">New Term #3</h3>
-                        <p className="term-definition">Defintion</p>
-                            <img
-                            src={chevron}
-                            alt="chevron"
-                            className="chevron-icon"
-                            />
-                    </div>
-
-                    <div className="term-item">
-                        <h3 className="term-name">New Term #4</h3>
-                        <p className="term-definition">Defintion</p>
-                            <img
-                            src={chevron}
-                            alt="chevron"
-                            className="chevron-icon"
-                            />
-                    </div>
-                </div>
-
-                <div className="save-container">
-                    <button className="save-button">
                         <img
-                            src={savetermsbtn}
-                            alt="save-term"
-                            className="save-term-icon-btn"
+                        src={addtermsbtn}
+                        alt="add-term button"
+                        className="add-term-icon-btn"
                         />
                     </button>
                 </div>
-            </div>
 
+            </div>
         </div>
-             
-        </>
-    )
-}
+    );
+};
+
+  
+
