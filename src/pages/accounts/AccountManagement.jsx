@@ -19,6 +19,7 @@ export default function AccountManagement() {
   const [sortOrderAsc, setSortOrderAsc] = useState(true);
   const [selectedBranch, setSelectedBranch] = useState("All");
   const [selectedPosition, setSelectedPosition] = useState("All");
+  const [showSuggestions, setShowSuggestions] = useState(true);
 
   const navigate = useNavigate();
   const usersPerPage = 10;
@@ -42,7 +43,9 @@ export default function AccountManagement() {
 
       setIsLoading(true);
       try {
-        const res = await axios.get(`${API_URL}/getWebUsers/${currentUserBranch}`);
+        const res = await axios.get(
+          `${API_URL}/getWebUsers/${currentUserBranch}`
+        );
         setWebUsers(res.data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -59,18 +62,23 @@ export default function AccountManagement() {
 
   const uniquePositions = Array.from(
     new Set(
-      webUsers.map((user) => user.position).filter((pos) => pos?.toLowerCase() !== "super admin")
+      webUsers
+        .map((user) => user.position)
+        .filter((pos) => pos?.toLowerCase() !== "super admin")
     )
   );
 
   const filteredUsers = webUsers
     .filter((user) => {
-      const query = searchQuery.toLowerCase();
+      const query = searchQuery.toLowerCase().replace(",", "").trim();
       const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
       const reversedName = `${user.lastName} ${user.firstName}`.toLowerCase();
-      const matchesSearch = fullName.includes(query) || reversedName.includes(query);
-      const matchesBranch = selectedBranch === "All" || user.branch === selectedBranch;
-      const matchesPosition = selectedPosition === "All" || user.position === selectedPosition;
+      const matchesSearch =
+        fullName.includes(query) || reversedName.includes(query);
+      const matchesBranch =
+        selectedBranch === "All" || user.branch === selectedBranch;
+      const matchesPosition =
+        selectedPosition === "All" || user.position === selectedPosition;
       return matchesSearch && matchesBranch && matchesPosition;
     })
     .sort((a, b) => {
@@ -91,34 +99,74 @@ export default function AccountManagement() {
   const getBranchName = (branchId) =>
     branches.find((b) => b.id === branchId)?.name || "Unknown Branch";
 
+  const searchSuggestions = searchQuery
+    ? filteredUsers
+        .filter((user) => {
+          const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+          const reversedName =
+            `${user.lastName} ${user.firstName}`.toLowerCase();
+          return (
+            fullName.includes(searchQuery.toLowerCase()) ||
+            reversedName.includes(searchQuery.toLowerCase())
+          );
+        })
+        .slice(0, 5) // limit to 5 suggestions
+    : [];
+
   return (
     <div className="account-main-container">
       <div className="account-header">
-
         <h1 className="account-title flex flex-row items-center">
           Account Management
         </h1>
-        
+
         <div className="acc-sub-header-container">
-           <div className="acc-search-bar">
-            <img src={searchIcon} alt="Search" className="search-icon w-4 h-4 mr-2" />
+          <div className="acc-search-bar">
+            <img
+              src={searchIcon}
+              alt="Search"
+              className="search-icon w-4 h-4 mr-2"
+            />
             <input
               type="text"
               className="acc-search-input text-black font-[Poppins]"
               placeholder="Search for a user"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setShowSuggestions(true); // Re-enable suggestions when typing again
+              }}
             />
+            {searchSuggestions.length > 0 && showSuggestions && (
+              <ul className="search-suggestion-dropdown text-black">
+                {searchSuggestions.map((user) => (
+                  <li
+                    key={user.employeenum}
+                    className="search-suggestion-item"
+                    onMouseDown={(e) => {
+                      e.preventDefault(); // prevent blur
+                      setSearchQuery(
+                        `${user.lastName.toUpperCase()}, ${user.firstName}`
+                      );
+                      setShowSuggestions(false); // hide suggestions after selection
+                    }}
+                  >
+                    {user.lastName.toUpperCase()}, {user.firstName}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
-         
-          <button onClick={() => navigate("/addaccount")} className="add-acc-btn">
+          <button
+            onClick={() => navigate("/addaccount")}
+            className="add-acc-btn"
+          >
             Add Account
           </button>
-          
+
           <img src={download} alt="export" className="acc-export-icon" />
         </div>
-
 
         <div className="filter-container">
           <select
@@ -133,7 +181,6 @@ export default function AccountManagement() {
               </option>
             ))}
           </select>
-
 
           {currentWebUser?.position?.toLowerCase() === "super admin" && (
             <select
@@ -150,17 +197,13 @@ export default function AccountManagement() {
             </select>
           )}
         </div>
-        
-        
-       
       </div>
 
-      
       <div className="titles-container">
         <table className="titles-table">
           <tr>
             <th>
-              Name 
+              Name
               <button
                 onClick={() => setSortOrderAsc((prev) => !prev)}
                 className="text-black hover:bg-[#FFD41C] ml-2"
@@ -174,7 +217,6 @@ export default function AccountManagement() {
           </tr>
         </table>
       </div>
-      
 
       <div className="users-container">
         {isLoading ? (
@@ -188,31 +230,51 @@ export default function AccountManagement() {
           currentUsers.map((user) => (
             <div
               key={user.employeenum}
-              className={cardActive === user.employeenum ? "active-user-card" : "user-card"}
-            > 
+              className={
+                cardActive === user.employeenum
+                  ? "active-user-card"
+                  : "user-card"
+              }
+            >
               <table className="user-table">
                 <tr>
                   <td className="user-name-cell">
-                    <img src={user.useravatar} alt={user.firstName} className="mini-avatar" />
+                    <img
+                      src={user.useravatar}
+                      alt={user.firstName}
+                      className="mini-avatar"
+                    />
                     {user.lastName.toUpperCase()}, {user.firstName}
                   </td>
                   <td className="user-pos-cell">{user.position}</td>
-                  <td className="user-branch-cell">{getBranchName(user.branch)}</td>
+                  <td className="user-branch-cell">
+                    {getBranchName(user.branch)}
+                  </td>
                   <td className="user-action-cell">
                     <div className="action-holder">
                       <button
                         type="button"
                         className="setting-icon bg-transparent border-none p-0"
                       >
-                        <img src={settingsIcon} alt="settings" className="acc-setting" />
+                        <img
+                          src={settingsIcon}
+                          alt="settings"
+                          className="acc-setting"
+                        />
                       </button>
                       <button
                         type="button"
-                        className={`acc-chevron ${cardActive === user.employeenum ? "rotate-180" : ""}`}
+                        className={`acc-chevron ${
+                          cardActive === user.employeenum ? "rotate-180" : ""
+                        }`}
                         aria-label="Toggle details"
                         onClick={() => toggleCard(user.employeenum)}
                       >
-                        <img src={chevronIcon} alt="toggle details" className="acc-chevron" />
+                        <img
+                          src={chevronIcon}
+                          alt="toggle details"
+                          className="acc-chevron"
+                        />
                       </button>
                     </div>
                   </td>
@@ -220,8 +282,12 @@ export default function AccountManagement() {
               </table>
               {cardActive === user.employeenum && (
                 <div className="user-details-card">
-                  <p><strong>Email:</strong> {user.email}</p>
-                  <p><strong>Employee Number:</strong> {user.employeenum}</p>
+                  <p>
+                    <strong>Email:</strong> {user.email}
+                  </p>
+                  <p>
+                    <strong>Employee Number:</strong> {user.employeenum}
+                  </p>
                 </div>
               )}
             </div>
@@ -252,15 +318,15 @@ export default function AccountManagement() {
             </button>
             <button
               className="join-item btn bg-white text-black"
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
               disabled={currentPage >= totalPages}
             >
               »
             </button>
           </div>
         </div>
-
-        
       </div>
     </div>
   );
