@@ -6,7 +6,6 @@ import axios from "axios";
 import { API_URL, branches } from "../../Constants";
 import { useEffect, useState, useContext } from "react";
 
-
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
@@ -21,17 +20,24 @@ export default function Leaderboard() {
   const [searchClassic, setSearchClassic] = useState("");
   const [searchMastery, setSearchMastery] = useState("");
 
+  const [classicSuggestions, setClassicSuggestions] = useState([]);
+  const [masterySuggestions, setMasterySuggestions] = useState([]);
+
   const [loadingDataClassic, setLoadingDataClassic] = useState(false);
   const [loadingDataMastery, setLoadingDataMastery] = useState(false);
 
-  const [classicSelectedBranch, setClassicSelectedBranch] = useState('')
-  const [masterySelectedBranch, setMasterySelectedBranch] = useState('')
+  const [classicSelectedBranch, setClassicSelectedBranch] = useState("");
+  const [masterySelectedBranch, setMasterySelectedBranch] = useState("");
 
   useEffect(() => {
     fetchTopClassicLeaderboard();
     fetchTopMasteryLeaderboard();
   }, []);
 
+  //function to normalize names for search (remove commas, trim, lowercase)
+  const normalizeName = (name) => {
+    return name.replace(/,/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+  };
 
   // FETCHING CLASSIC LEADERBOARD
   const fetchTopClassicLeaderboard = async () => {
@@ -50,7 +56,6 @@ export default function Leaderboard() {
     }
   };
 
-
   // FETCHING MASTERY LEADERBOARD
   const fetchTopMasteryLeaderboard = async () => {
     setLoadingDataMastery(true);
@@ -58,7 +63,6 @@ export default function Leaderboard() {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
         params: {
           mode: "mastery",
-          
         },
       });
 
@@ -70,54 +74,133 @@ export default function Leaderboard() {
     }
   };
 
-  
-    
+  // Function to handle classic search input changes and generate suggestions
+  const handleClassicSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchClassic(value);
+
+    if (value.length > 0) {
+      const normalizedSearchValue = normalizeName(value);
+      const uniqueSuggestionsMap = new Map(); 
+
+      leaderboardClassic.forEach((leader) => {
+        const firstName = leader.user_id?.first_name || "";
+        const lastName = leader.user_id?.last_name || "";
+        const fullNameNormalized = normalizeName(`${firstName} ${lastName}`);
+        const reversedFullNameNormalized = normalizeName(
+          `${lastName} ${firstName}`
+        );
+
+        if (
+          fullNameNormalized.includes(normalizedSearchValue) ||
+          reversedFullNameNormalized.includes(normalizedSearchValue)
+        ) {
+          const userId = leader.user_id?._id;
+          if (userId && !uniqueSuggestionsMap.has(userId)) {
+            uniqueSuggestionsMap.set(userId, {
+              id: userId,
+              name: `${lastName.toUpperCase()}, ${firstName}`.trim(),
+            });
+          }
+        }
+      });
+      setClassicSuggestions(
+        Array.from(uniqueSuggestionsMap.values()).slice(0, 10)
+      );
+    } else {
+      setClassicSuggestions([]);
+    }
+  };
+
+  // Function to handle mastery search input changes and generate suggestions
+  const handleMasterySearchChange = (e) => {
+    const value = e.target.value;
+    setSearchMastery(value);
+
+    if (value.length > 0) {
+      const normalizedSearchValue = normalizeName(value);
+      const uniqueSuggestionsMap = new Map();
+
+      leaderboardsMastery.forEach((leader) => {
+        const firstName = leader.user_id?.first_name || "";
+        const lastName = leader.user_id?.last_name || "";
+        const fullNameNormalized = normalizeName(`${firstName} ${lastName}`);
+        const reversedFullNameNormalized = normalizeName(
+          `${lastName} ${firstName}`
+        );
+
+        if (
+          fullNameNormalized.includes(normalizedSearchValue) ||
+          reversedFullNameNormalized.includes(normalizedSearchValue)
+        ) {
+          const userId = leader.user_id?._id;
+          if (userId && !uniqueSuggestionsMap.has(userId)) {
+            uniqueSuggestionsMap.set(userId, {
+              id: userId,
+              name: `${lastName.toUpperCase()}, ${firstName}`.trim(),
+            });
+          }
+        }
+      });
+      setMasterySuggestions(
+        Array.from(uniqueSuggestionsMap.values()).slice(0, 10)
+      );
+    } else {
+      setMasterySuggestions([]);
+    }
+  };
+
   // FILTERING CLASSIC LEADERBOARD PER BRANCH OF THE PROFESSOR
-  // IF ADMIN, THE ADMIN CAN FILTER AND VIEW THE TOP MOST LEADERBOARD ON ALL BRANCH
   const filteredClassicLeaders = leaderboardClassic.filter((leader) => {
-    const firstName = leader.user_id?.first_name?.toLowerCase() || "";
-    const lastName = leader.user_id?.last_name?.toLowerCase() || "";
-    const fullName = `${firstName} ${lastName}`;
-    const reversedFullName = `${lastName} ${firstName}`;
-    const search = searchClassic.toLowerCase();
+    const normalizedSearch = normalizeName(searchClassic);
 
-    return (
-      firstName.includes(search) ||
-      lastName.includes(search) ||
-      fullName.includes(search) ||
-      reversedFullName.includes(search)
+    const firstName = leader.user_id?.first_name || "";
+    const lastName = leader.user_id?.last_name || "";
+    const fullNameNormalized = normalizeName(`${firstName} ${lastName}`);
+    const reversedFullNameNormalized = normalizeName(
+      `${lastName} ${firstName}`
     );
-  })
 
+    const matchesSearch =
+      fullNameNormalized.includes(normalizedSearch) ||
+      reversedFullNameNormalized.includes(normalizedSearch);
+
+    const matchesBranch =
+      classicSelectedBranch === "all" ||
+      !classicSelectedBranch ||
+      leader.user_id?.branch === classicSelectedBranch;
+
+    return matchesSearch && matchesBranch;
+  });
 
   // FILTERING MASTERY LEADERBOARD PER BRANCH OF THE PROFESSOR
-  // IF ADMIN, THE ADMIN CAN FILTER AND VIEW THE TOP MOST LEADERBOARD ON ALL BRANCH
   const filteredMasteryLeaders = leaderboardsMastery.filter((leader) => {
-    const firstName = leader.user_id?.first_name?.toLowerCase() || "";
-    const lastName = leader.user_id?.last_name?.toLowerCase() || "";
-    const fullName = `${firstName} ${lastName}`;
-    const reversedFullName = `${lastName} ${firstName}`;
-    const search = searchMastery.toLowerCase();
+    const normalizedSearch = normalizeName(searchMastery);
 
-    return (
-      firstName.includes(search) ||
-      lastName.includes(search) ||
-      fullName.includes(search) ||
-      reversedFullName.includes(search)
+    const firstName = leader.user_id?.first_name || "";
+    const lastName = leader.user_id?.last_name || "";
+    const fullNameNormalized = normalizeName(`${firstName} ${lastName}`);
+    const reversedFullNameNormalized = normalizeName(
+      `${lastName} ${firstName}`
     );
-  })
 
+    const matchesSearch =
+      fullNameNormalized.includes(normalizedSearch) ||
+      reversedFullNameNormalized.includes(normalizedSearch);
 
+    const matchesBranch =
+      masterySelectedBranch === "all" ||
+      !masterySelectedBranch ||
+      leader.user_id?.branch === masterySelectedBranch;
 
-
-
-
+    return matchesSearch && matchesBranch;
+  });
 
   //AFTER FILTERING THE CLASSIC, THEN SORTING
   const classicSortingLeaders = [...filteredClassicLeaders]
     .sort((a, b) => {
-      const aScore = a.correct / a.total_items;
-      const bScore = b.correct / b.total_items;
+      const aScore = a.total_items > 0 ? a.correct / a.total_items : 0;
+      const bScore = b.total_items > 0 ? b.correct / b.total_items : 0;
 
       if (bScore !== aScore) {
         return bScore - aScore; // Higher score ranks higher
@@ -130,15 +213,11 @@ export default function Leaderboard() {
       rank: index + 1,
     }));
 
-    
-
-
-
   //AFTER FILTERING THE MASTERY, THEN SORTING
   const masterySortingLeaders = [...filteredMasteryLeaders]
     .sort((a, b) => {
-      const aScore = a.correct / a.total_items;
-      const bScore = b.correct / b.total_items;
+      const aScore = a.total_items > 0 ? a.correct / a.total_items : 0;
+      const bScore = b.total_items > 0 ? b.correct / b.total_items : 0;
 
       if (bScore !== aScore) {
         return bScore - aScore;
@@ -150,12 +229,11 @@ export default function Leaderboard() {
       ...leader,
       rank: index + 1,
     }));
-    
 
-    const exportToCSV = (data, filename) => {
-      const now = new Date().toLocaleString(); // 🔧 fix added here
-      const headers = ["Rank", "Name", "Campus", "World", "Score", "Time"];
-      const rows = data.map((leader) => {
+  const exportToCSV = (data, filename) => {
+    const now = new Date().toLocaleString();
+    const headers = ["Rank", "Name", "Campus", "World", "Score", "Time"];
+    const rows = data.map((leader) => {
       const firstName = leader.user_id?.first_name || "";
       const lastName = leader.user_id?.last_name || "";
       const fullName = `${lastName.toUpperCase()} ${firstName}`.trim();
@@ -163,8 +241,19 @@ export default function Leaderboard() {
       return [
         leader.rank,
         fullName,
-        leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
-        leader.category,
+        branches.find((branch) => branch.id === leader.user_id?.branch)?.name ||
+          "N/A",
+        leader.category === "developmental"
+          ? "Developmental Psychology"
+          : leader.category === "abnormal"
+          ? "Abnormal Psychology"
+          : leader.category === "psychological"
+          ? "Psychological Psychology"
+          : leader.category === "industrial"
+          ? "Industrial Psychology"
+          : leader.category === "general"
+          ? "General Psychology"
+          : leader.category,
         leader.total_items > 0
           ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
           : "N/A",
@@ -198,7 +287,6 @@ export default function Leaderboard() {
     document.body.removeChild(link);
   };
 
-
   // PDF Export
   const exportToPDF = (data, title) => {
     const now = new Date().toLocaleString();
@@ -210,19 +298,28 @@ export default function Leaderboard() {
       18
     );
     doc.text(`Exported on: ${now}`, 14, 26);
-    
-
 
     const rows = data.map((leader) => {
       const firstName = leader.user_id?.first_name || "";
       const lastName = leader.user_id?.last_name || "";
-      const reversedFullName = `${lastName} ${firstName}`.trim();
+      const reversedFullName = `${lastName.toUpperCase()} ${firstName}`.trim();
 
       return [
         leader.rank,
         reversedFullName,
-        leader.user_id?.branch === "moa" ? "NU MOA" : "NU MANILA",
-        leader.category,
+        branches.find((branch) => branch.id === leader.user_id?.branch)?.name ||
+          "N/A",
+        leader.category === "developmental"
+          ? "Developmental Psychology"
+          : leader.category === "abnormal"
+          ? "Abnormal Psychology"
+          : leader.category === "psychological"
+          ? "Psychological Psychology"
+          : leader.category === "industrial"
+          ? "Industrial Psychology"
+          : leader.category === "general"
+          ? "General Psychology"
+          : leader.category,
         leader.total_items > 0
           ? `${((leader.correct / leader.total_items) * 100).toFixed(0)}%`
           : "N/A",
@@ -247,30 +344,28 @@ export default function Leaderboard() {
     );
   };
 
-  
-
   return (
     <>
       <div className="leaderboard-body">
         <div className="classic-cont">
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title classic-title">Classic</h1>
-              
-                <select 
-                  value={classicSelectedBranch} 
-                  className="text-black"
-                  onChange={(e) => setClassicSelectedBranch(e.target.value)}
-                >
-                  <option value='' disabled>Filter by:</option>
-                  <option value='all'>All Branch</option>
-                  {branches.map((branch, index) => (
-                    <option value={branch.id} key={index}>
-                      {branch.name}
-                    </option>
-                  ))}
 
-                </select>
-              
+            <select
+              value={classicSelectedBranch}
+              className="text-black"
+              onChange={(e) => setClassicSelectedBranch(e.target.value)}
+            >
+              <option value="" disabled>
+                Filter by:
+              </option>
+              <option value="all">All Branch</option>
+              {branches.map((branch, index) => (
+                <option value={branch.id} key={index}>
+                  {branch.name}
+                </option>
+              ))}
+            </select>
 
             <ExportDropdown
               onExport={(format) => {
@@ -297,9 +392,24 @@ export default function Leaderboard() {
                 placeholder="Search for a student"
                 className="search-input-leaderboards"
                 value={searchClassic}
-                onChange={(e) => setSearchClassic(e.target.value.toLowerCase())}
+                onChange={handleClassicSearchChange}
               />
             </div>
+            {classicSuggestions.length > 0 && searchClassic.length > 0 && (
+              <ul className="suggestions-dropdown text-black font-[Poppins]">
+                {classicSuggestions.map((suggestion) => (
+                  <li
+                    key={suggestion.id} // Use the unique ID from the suggestion
+                    onClick={() => {
+                      setSearchClassic(suggestion.name);
+                      setClassicSuggestions([]); // Clear suggestions after selection
+                    }}
+                  >
+                    {suggestion.name}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="leaderboard-contents-container">
@@ -325,121 +435,111 @@ export default function Leaderboard() {
                 <p>Fetching data...</p>
               </div>
             ) : classicSortingLeaders.length === 0 ? (
-              <h1 className="text-black mt-5 w-full text-3xl text-center">No data Found</h1>
+              <h1 className="text-black mt-5 w-full text-3xl text-center">
+                No data Found
+              </h1>
             ) : (
               <div className="leaders-main-container">
-                {
-                classicSortingLeaders.filter((leader) => 
-                  classicSelectedBranch === 'all' || !classicSelectedBranch 
-                    ? true 
-                    : leader.user_id?.branch === classicSelectedBranch
-                )
-                .map((leader) => (
-                  <div
-                    key={leader._id}
-                    className="leaders-container bg-gray-100 rounded-xl mt-2"
-                  >
-                    <div className="leader-info text-black leaders-content-font">
-                      {leader.rank === 1
-                        ? "🥇"
-                        : leader.rank === 2
-                        ? "🥈"
-                        : leader.rank === 3
-                        ? "🥉"
-                        : leader.rank}
-                    </div>
+                {classicSortingLeaders
+                  .filter((leader) =>
+                    classicSelectedBranch === "all" || !classicSelectedBranch
+                      ? true
+                      : leader.user_id?.branch === classicSelectedBranch
+                  )
+                  .map((leader) => (
                     <div
-                      className="leader-info font-bold"
-                      style={{ color: "#0068DD" }}
+                      key={leader._id}
+                      className="leaders-container bg-gray-100 rounded-xl mt-2"
                     >
-                      {/* {leader.user_id?.first_name || "Unknown User"} */}
-                      {leader.user_id?.last_name.toUpperCase()},{" "}
-                      {leader.user_id?.first_name}
-                    </div>
+                      <div className="leader-info text-black leaders-content-font">
+                        {leader.rank === 1
+                          ? "🥇"
+                          : leader.rank === 2
+                          ? "🥈"
+                          : leader.rank === 3
+                          ? "🥉"
+                          : leader.rank}
+                      </div>
+                      <div
+                        className="leader-info font-bold"
+                        style={{ color: "#0068DD" }}
+                      >
+                        {leader.user_id?.last_name.toUpperCase()},{" "}
+                        {leader.user_id?.first_name}
+                      </div>
 
-                    <div className="leader-info text-black leaders-content-font">
-                      {
-                        branches.find(branch => branch.id === leader.user_id?.branch)?.name || "Unknown Branch"
-                      }
-                    </div>
+                      <div className="leader-info text-black leaders-content-font">
+                        {branches.find(
+                          (branch) => branch.id === leader.user_id?.branch
+                        )?.name || "Unknown Branch"}
+                      </div>
 
-                    <div className="leader-info text-black leaders-content-font">
-                      {leader.category === "developmental"
-                        ? "Developmental Psychology"
-                        : leader.category === "abnormal"
-                        ? "Abnormal Psychology"
-                        : leader.category === "psychological"
-                        ? "Psychological Psychology"
-                        : leader.category === "industrial"
-                        ? "Industrial Psychology"
-                        : leader.category === "general"
-                        ? "General Psychology"
-                        : leader.category}
-                    </div>
+                      <div className="leader-info text-black leaders-content-font">
+                        {leader.category === "developmental"
+                          ? "Developmental Psychology"
+                          : leader.category === "abnormal"
+                          ? "Abnormal Psychology"
+                          : leader.category === "psychological"
+                          ? "Psychological Psychology"
+                          : leader.category === "industrial"
+                          ? "Industrial Psychology"
+                          : leader.category === "general"
+                          ? "General Psychology"
+                          : leader.category}
+                      </div>
 
-                    <div className="leader-info text-black font-bold leaders-content-font">
-                      {leader.total_items > 0
-                        ? `${(
-                            (leader.correct / leader.total_items) *
-                            100
-                          ).toFixed(0)}%` //rounds up para whole num
-                        : "N/A"}
-                    </div>
+                      <div className="leader-info text-black font-bold leaders-content-font">
+                        {leader.total_items > 0
+                          ? `${(
+                              (leader.correct / leader.total_items) *
+                              100
+                            ).toFixed(0)}%`
+                          : "N/A"}
+                      </div>
 
-                    <div className="leader-info text-black leaders-content-font">
-                      {/* {new Date(leader.date).toLocaleDateString() || "N/A"} */}
-                      {leader.time_completion > 60
-                        ? `${Math.floor(
-                            leader.time_completion / 60
-                          )}m ${Math.round(leader.time_completion % 60)}s`
-                        : `${Math.round(leader.time_completion)}s`}
+                      <div className="leader-info text-black leaders-content-font">
+                        {leader.time_completion > 60
+                          ? `${Math.floor(
+                              leader.time_completion / 60
+                            )}m ${Math.round(leader.time_completion % 60)}s`
+                          : `${Math.round(leader.time_completion)}s`}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             )}
           </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-
         <div className="mastery-cont">
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title mastery-title">Mastery</h1>
-              
-                <select 
-                  value={masterySelectedBranch} 
-                  className="text-black"
-                  onChange={(e) => setMasterySelectedBranch(e.target.value)}
-                >
-                  <option value='' disabled>Filter by:</option>
-                  <option value='all'>All Branch</option>
-                  {branches.map((branch, index) => (
-                    <option value={branch.id} key={index}>
-                      {branch.name}
-                    </option>
-                  ))}
 
-                </select>
-              
-              <ExportDropdown
-                onExport={(format) => {
-                  if (format === "csv") {
-                    exportToCSV(masterySortingLeaders, "Mastery_Leaderboard");
-                  } else if (format === "pdf") {
-                    exportToPDF(masterySortingLeaders, "Mastery Leaderboard");
-                  }
-                }}
+            <select
+              value={masterySelectedBranch}
+              className="text-black"
+              onChange={(e) => setMasterySelectedBranch(e.target.value)}
+            >
+              <option value="" disabled>
+                Filter by:
+              </option>
+              <option value="all">All Branch</option>
+              {branches.map((branch, index) => (
+                <option value={branch.id} key={index}>
+                  {branch.name}
+                </option>
+              ))}
+            </select>
 
-              />
+            <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportToCSV(masterySortingLeaders, "Mastery_Leaderboard");
+                } else if (format === "pdf") {
+                  exportToPDF(masterySortingLeaders, "Mastery Leaderboard");
+                }
+              }}
+            />
           </div>
 
           <h2 className="leaderboard-subtitle">
@@ -456,9 +556,24 @@ export default function Leaderboard() {
                 placeholder="Search for a student"
                 className="search-input-leaderboards"
                 value={searchMastery}
-                onChange={(e) => setSearchMastery(e.target.value.toLowerCase())}
+                onChange={handleMasterySearchChange}
               />
             </div>
+            {masterySuggestions.length > 0 && searchMastery.length > 0 && (
+              <ul className="suggestions-dropdown text-black font-[Poppins]">
+                {masterySuggestions.map((suggestion) => (
+                  <li
+                    key={suggestion.id} // Use the unique ID from the suggestion
+                    onClick={() => {
+                      setSearchMastery(suggestion.name);
+                      setMasterySuggestions([]);
+                    }}
+                  >
+                    {suggestion.name}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="leaderboard-contents-container">
@@ -485,76 +600,76 @@ export default function Leaderboard() {
                 <p>Fetching data...</p>
               </div>
             ) : masterySortingLeaders.length === 0 ? (
-              <h1 className="text-black mt-5 w-full text-3xl text-center">No data Found</h1>
+              <h1 className="text-black mt-5 w-full text-3xl text-center">
+                No data Found
+              </h1>
             ) : (
               <div className="leaders-main-container">
                 {masterySortingLeaders
-                .filter((leader) => 
-                  masterySelectedBranch === 'all' || !masterySelectedBranch 
-                    ? true 
-                    : leader.user_id?.branch === masterySelectedBranch
-                )
-                .map((leader) => (
-
-                  <div
-                    key={leader._id}
-                    className="leaders-container bg-gray-100 rounded-xl mt-2"
-                  >
-                    <div className="leader-info text-black leaders-content-font">
-                      {leader.rank === 1
-                        ? "🥇"
-                        : leader.rank === 2
-                        ? "🥈"
-                        : leader.rank === 3
-                        ? "🥉"
-                        : leader.rank}
-                    </div>
+                  .filter((leader) =>
+                    masterySelectedBranch === "all" || !masterySelectedBranch
+                      ? true
+                      : leader.user_id?.branch === masterySelectedBranch
+                  )
+                  .map((leader) => (
                     <div
-                      className="leader-info font-bold"
-                      style={{ color: "#0068DD" }}
+                      key={leader._id}
+                      className="leaders-container bg-gray-100 rounded-xl mt-2"
                     >
-                      {leader.user_id?.last_name.toUpperCase()},{" "}
-                      {leader.user_id?.first_name}
-                    </div>
+                      <div className="leader-info text-black leaders-content-font">
+                        {leader.rank === 1
+                          ? "🥇"
+                          : leader.rank === 2
+                          ? "🥈"
+                          : leader.rank === 3
+                          ? "🥉"
+                          : leader.rank}
+                      </div>
+                      <div
+                        className="leader-info font-bold"
+                        style={{ color: "#0068DD" }}
+                      >
+                        {leader.user_id?.last_name.toUpperCase()},{" "}
+                        {leader.user_id?.first_name}
+                      </div>
 
-                    <div className="leader-info text-black leaders-content-font">
-                      {
-                        branches.find(branch => branch.id === leader.user_id?.branch)?.name || "Unknown Branch"
-                      }
-                    </div>
+                      <div className="leader-info text-black leaders-content-font">
+                        {branches.find(
+                          (branch) => branch.id === leader.user_id?.branch
+                        )?.name || "Unknown Branch"}
+                      </div>
 
-                    <div className="leader-info text-black leaders-content-font">
-                      {leader.category === "developmental"
-                        ? "Developmental Psychology"
-                        : leader.category === "abnormal"
-                        ? "Abnormal Psychology"
-                        : leader.category === "psychological"
-                        ? "Psychological Psychology"
-                        : leader.category === "industrial"
-                        ? "Industrial Psychology"
-                        : leader.category === "general"
-                        ? "General Psychology"
-                        : leader.category}
-                    </div>
-                    <div className="leader-info text-black font-bold leaders-content-font">
-                      {leader.total_items > 0
-                        ? `${(
-                            (leader.correct / leader.total_items) *
-                            100
-                          ).toFixed(0)}%` //rounds up para whole num
-                        : "N/A"}
-                    </div>
+                      <div className="leader-info text-black leaders-content-font">
+                        {leader.category === "developmental"
+                          ? "Developmental Psychology"
+                          : leader.category === "abnormal"
+                          ? "Abnormal Psychology"
+                          : leader.category === "psychological"
+                          ? "Psychological Psychology"
+                          : leader.category === "industrial"
+                          ? "Industrial Psychology"
+                          : leader.category === "general"
+                          ? "General Psychology"
+                          : leader.category}
+                      </div>
+                      <div className="leader-info text-black font-bold leaders-content-font">
+                        {leader.total_items > 0
+                          ? `${(
+                              (leader.correct / leader.total_items) *
+                              100
+                            ).toFixed(0)}%`
+                          : "N/A"}
+                      </div>
 
-                    <div className="leader-info text-black leaders-content-font">
-                      {/* {new Date(leader.date).toLocaleDateString() || "N/A"} */}
-                      {leader.time_completion > 60
-                        ? `${Math.floor(
-                            leader.time_completion / 60
-                          )}m ${Math.round(leader.time_completion % 60)}s`
-                        : `${Math.round(leader.time_completion)}s`}
+                      <div className="leader-info text-black leaders-content-font">
+                        {leader.time_completion > 60
+                          ? `${Math.floor(
+                              leader.time_completion / 60
+                            )}m ${Math.round(leader.time_completion % 60)}s`
+                          : `${Math.round(leader.time_completion)}s`}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             )}
           </div>
