@@ -7,19 +7,29 @@
 } */
 
 .add-term-page-wrapper {
-  @apply relative;
+  @apply w-full h-full relative;
 }
 
 .add-term-main-container{
-    @apply w-full h-full bg-white rounded-xl p-5 flex flex-col ;
-     max-height: 565px;
+  @apply w-full  bg-white rounded-xl p-5 flex flex-col;
+  height: 100vh;
      /* scrollbar-width: none;
     -ms-overflow-style: none; */
 }
 
+.add-term-contents::-webkit-scrollbar {
+  width: 6px;
+}
+.add-term-contents::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+}
+
+
 .add-term-header{
     @apply flex justify-between items-center -mt-3 mb-6;
 }
+
 
 .close-btn{
     @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer;
@@ -30,120 +40,114 @@
 } */
   
 .add-term-title{
-    @apply font-[Poppins] text-[#FFD41C] font-bold text-[25px]
+    @apply -mb-2 mt-3 font-[Poppins] text-[#FFD41C] font-bold text-[25px]
         md:text-[40px];
 }
 
 
 
-
 .add-term-contents {
-  @apply space-y-4 -mt-5 mb-2 pl-2 flex-grow overflow-y-auto pr-2;
-  padding-bottom: 10px;
-  scrollbar-width: none;
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-right: 4px; 
+  scroll-behavior: smooth;
+  scrollbar-width: none; 
+  -ms-overflow-style: none;  
 }
 
 .add-term-contents::-webkit-scrollbar {
-    display: none;
-}
-
-.add-term-contents h1 {
-   @apply block font-bold text-black mb-1;
-}
-
-.add-term-contents h1 span {
-    @apply text-[red];
-}
-
-.add-term-input{
-    @apply text-[#000000] w-[400px] h-[50px] my-3 w-full;
-}
-
-.add-term-textarea{
-    @apply text-[#000000] w-[400px] h-[100px] max-h-[300px] min-h-[100px] w-full;
-}
-
-.create-container {
-  @apply flex justify-center mt-auto pt-3;
-}
-
-
-.create-btn{
-    @apply w-[280px] h-[65px] p-0 cursor-pointer; 
-}
-
-.create-btn:hover{
-    filter: brightness(1.2);
-}
-
-.add-term-icon-btn{
-    @apply w-[260px] h-[60px];
-}
-
-
-/* ------------------- TERMINOLOGIES SECTION ---------------- */
-
-.terminologies-container {
-  @apply bg-white rounded-xl p-6 mt-4 shadow-md flex flex-col space-y-4 h-[410px];
-}
-
-.terminologies-title {
-    @apply font-[Poppins] text-[#FFD41C] font-bold text-[25px] -mt-3
-    md:text-[40px];
-}
-
-.terminologies-list {
-  @apply flex-1 overflow-y-auto space-y-3 pr-2 pb-9 -mt-2;
-  scrollbar-width: none;
-}
-
-.terminologies-list::-webkit-scrollbar {
   display: none;
 }
 
-
-.term-item {
-  border: 1px solid black;
-  @apply p-4 rounded-md shadow-sm hover:bg-gray-100 relative;
-}
-
-.term-name {
-  @apply font-semibold text-lg text-black;
-}
-
-.term-definition {
-  @apply text-gray-700;
-}
-
-.chevron-icon{
-  @apply absolute right-20 top-1/2 transform -translate-y-1/2 w-5 h-5;
-}
-
-
-.save-container{
-  position: sticky;
-  bottom: 0;
-  z-index: 50;
+.term-section {
   background-color: white;
-  height: 55px; 
-  padding-top: 0.5rem;
-  padding-bottom: 1.5rem;
+  font-family: Poppins;
+  border: 1px solid #000000;
+  border-radius: 8px;
+  padding: 1rem;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  color: #000000;
+}
+
+.term-header {
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 0.75rem;
+}
+
+.term-input-column select {
+  border: none;
+  border-bottom: none;
+  outline: none;
+  background-color: transparent;
+}
+
+.term-input-row {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: -2;
-  margin-bottom: 2;
-}
-/*  -mt-2 mb-2 */
-
-.save-button{
-  @apply w-[280px] h-[65px] p-0 cursor-pointer;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
 }
 
-.save-button:hover{
-    filter: brightness(1.2);
+.term-input-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  color: #000000;
 }
 
-.save-term-icon-btn{
-  @apply w-[260px] h-[60px];
+.term-input-column input,
+.term-input-column select {
+  border: none;
+  border-radius: 0.5px;
+  border-bottom: 1px solid #151616;
+  padding: 0.5rem 0;
+  font-size: 14px;
+  outline: none;
+}
+
+
+.term-label {
+  margin-top: 0.25rem;
+  font-size: 13px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.delete-term-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.add-more-term-btn {
+  margin-top: 0.5rem;
+  color: #000000;
+  font-size: 15px;
+  text-decoration: underline;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.add-more-term-btn:hover{
+  color: #4f46e5;
+}
+
+.create-container{
+  @apply flex justify-center mt-4 sticky bottom-0 bg-white pt-2
+}
+
+
+@media (max-width: 600px) {
+  .term-input-row {
+    flex-direction: column;
+  }
 }
