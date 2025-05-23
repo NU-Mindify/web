@@ -4,9 +4,13 @@ import "../../css/account/account.css";
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { secondaryAuth } from "../../Firebase";
 import axios from "axios";
+import chevronIcon from "../../assets/forAll/chevron.svg";
 import { API_URL, branches } from "../../Constants";
 import { useNavigate } from "react-router-dom";
 import { UserLoggedInContext } from "../../contexts/Contexts";
+import No_Profile from "../../assets/profile/noProfile.jpg";
+import Buttons from "../../components/buttons/Buttons";
+
 
 export default function AddAccount() {
   const [password, setPassword] = useState("");
@@ -129,251 +133,216 @@ export default function AddAccount() {
   return (
     <>
     <div className="add-account-container">
+      
       <div className="add-account-header">
-      <h1 className="add-account-title">Add Account</h1>
-      <button
-        type="button"
-        onClick={() => navigate("/account")}
-        className="view-acc-btn"
-        disabled={isLoading}
-      >
-        View Accounts
-      </button>
-    </div>
+        <button
+          type="button"
+          onClick={() => navigate("/account")}
+          className="view-acc-btn"
+          disabled={isLoading}
+        >
+          <img src={chevronIcon} alt="chevron" />
+        </button>
+        <h1 className="add-account-title">Add Account</h1>
+        
+      </div>
 
-
-    <form className="add-account-form" onSubmit={handleRegister}>
-    <table className="form-table">
-      <tr>
-        <td className="user-headers">Full name</td>
-        <td className="user-details">
-          <div className="details-holder">
-            <input
-              className="add-input-properties"
-              type="text"
-              value={newWebUser.firstName}
-              onChange={(e) =>
-                setNewWebUser({ ...newWebUser, firstName: e.target.value })
-              }
-            />
-            <label>First Name</label>
+      {/* <form onSubmit={handleRegister}> */}
+        <div className="add-account-content">
+          <div className="profile-pic-container">
+            <table className="profile-pic-table">
+              <tr>
+                <td className="profile-pic-cell">
+                  <div className="img-container">
+                    <img
+                      src={newWebUser.useravatar || No_Profile}
+                      alt="Profile"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = No_Profile;
+                      }}
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div className="upload-photo-container">
+                    <div className="upload-btn-holder">
+                      <input
+                        className="w-[400px] h-[50px] text-black"
+                        type="text"
+                        value={newWebUser.useravatar}
+                        onChange={(e) =>
+                          setNewWebUser({ ...newWebUser, useravatar: e.target.value })
+                        }
+                      />
+                      {/* <button>
+                        Upload Photo
+                      </button> */}
+                      <label>At least 256 x 256 px PNG or JPG file.</label>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
           </div>
-          
-        </td>
-        <td  className="user-details">
-          <div className="details-holder">
-            <input
-              className="add-input-properties"
-              type="text"
-              value={newWebUser.lastName}
-              onChange={(e) =>
-                setNewWebUser({ ...newWebUser, lastName: e.target.value })
-              }
-            />
-            <label>Last Name</label>
-          </div>
-          
-        </td>
-      </tr>
-      <tr>
-        <td  className="user-headers">Branch</td>
-        <td colSpan={2} className="user-details">
-          <div className="details-holder">
-            {currentWebUser.position.toLowerCase() === "super admin" ? (
-            <select
-              className="add-input-properties"
-              value={newWebUser.branch}
-              onChange={(e) => {
-                const branchId = e.target.value;
-                const branch = branches.find((b) => b.id === branchId);
-                const extension = branch?.extension || "";
-                setNewWebUser((prev) => ({
-                  ...prev,
-                  branch: branchId,
-                  email: extension,
-                }));
-              }}
 
-            >
-              <option value="">-- Select Branch --</option>
-              {branches.map((branch) => (
-                <option key={branch.id} value={branch.id}>
-                  {branch.name}
-                </option>
-              ))}
-            </select>
-            ) : (
+
+
+          <div className="user-details-container">
+            <div className="input-holder">
+              <h1>First Name</h1>
               <input
-                className="add-input-properties"
                 type="text"
-                disabled
-                value={
-                  branches.find((b) => b.id === currentUserBranch)?.name || ""
-                }
-              />
-            )}
-          </div>
-          
-        </td>
-      </tr>
-      <tr>
-        <td  className="user-headers">
-          Email
-        </td>
-        <td colSpan={2} className="user-details">
-          <div className="details-holder">
-            <input
-              className="add-input-properties"
-              type="email"
-              value={newWebUser.email}
-              onChange={(e) =>
-                setNewWebUser({ ...newWebUser, email: e.target.value })
-              }
-            />
-          </div>
-
-        </td>
-      </tr>
-
-      <tr>
-        <td  className="user-headers">
-          Employee Number
-        </td>
-        <td colSpan={2} className="user-details">
-          <div className="details-holder">
-            <input
-              className="add-input-properties"
-              type="text"
-              value={newWebUser.employeenum}
-              onChange={(e) =>
-                setNewWebUser({ ...newWebUser, employeenum: e.target.value })
-              }
-            />
-          </div>
-        </td>
-      </tr>
-
-      <tr>
-        <td  className="user-headers">
-          Position
-        </td>
-        <td colSpan={2} className="user-details">
-          <div className="details-holder">
-            {currentWebUser.position.toLowerCase() === "super admin" ? (
-              <select
-                className="add-input-properties"
-                value={newWebUser.position}
+                value={newWebUser.firstName}
                 onChange={(e) =>
-                  setNewWebUser({ ...newWebUser, position: e.target.value })
+                  setNewWebUser({ ...newWebUser, firstName: e.target.value })
                 }
               >
-                <option value="">Select Position</option>
-                <option value="Professor">Professor</option>
-                <option value="Sub Admin">Sub Admin</option>
-              </select>
-            ) : (
-              <input type="text" disabled value="Professor" className="add-input-properties" />
-            )}
+              </input>
+            </div>
+
+            <div className="input-holder">
+              <h1>Last Name</h1>
+              <input
+                type="text"
+                value={newWebUser.lastName}
+                onChange={(e) =>
+                  setNewWebUser({ ...newWebUser, lastName: e.target.value })
+                }
+              >
+              </input>
+            </div>
+
+
+            <div className="input-holder">
+              <h1>NU Campus</h1>
+              {
+                currentWebUser.position.toLowerCase() === "super admin" ? (
+                <select
+                  className="add-input-properties"
+                  value={newWebUser.branch}
+                  onChange={(e) => {
+                    const branchId = e.target.value;
+                    const branch = branches.find((b) => b.id === branchId);
+                    const extension = branch?.extension || "";
+                    setNewWebUser((prev) => ({
+                      ...prev,
+                      branch: branchId,
+                      email: extension,
+                    }));
+                  }}
+
+                >
+                  <option value="">-- Select Branch --</option>
+                  {branches.map((branch) => (
+                    <option key={branch.id} value={branch.id}>
+                      {branch.name}
+                    </option>
+                  ))}
+                </select>
+                ) : (
+                <input
+                  className="add-input-properties"
+                  type="text"
+                  disabled
+                  value={
+                    branches.find((b) => b.id === currentUserBranch)?.name || ""
+                  }
+                />
+              )}
+            </div>
+
+
+            <div className="input-holder">
+              <h1>Email</h1>
+              <input
+                type="email"
+                value={newWebUser.email}
+                onChange={(e) =>
+                  setNewWebUser({ ...newWebUser, email: e.target.value })
+                }
+              >
+              </input>
+            </div>
+
+
+            <div className="input-holder">
+              <h1>Employee Nubmer</h1>
+              <input
+                type="text"
+                value={newWebUser.employeenum}
+                onChange={(e) =>
+                  setNewWebUser({ ...newWebUser, employeenum: e.target.value })
+                }
+              >
+              </input>
+            </div>
+
+            <div className="input-holder">
+              <h1>Position</h1>
+              {
+                currentWebUser.position.toLowerCase() === "super admin" ? (
+                <select
+                  className="add-input-properties"
+                  value={newWebUser.position}
+                  onChange={(e) =>
+                    setNewWebUser({ ...newWebUser, position: e.target.value })
+                  }
+                >
+                  <option value="">Select Position</option>
+                  <option value="Professor">Professor</option>
+                  <option value="Sub Admin">Sub Admin</option>
+                </select>
+              ) : (
+                <input type="text" disabled value="Professor" className="add-input-properties" />
+              )}
+            </div>
+
+            <div className="input-holder">
+              <h1>Password</h1>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              >
+              </input>
+            </div>
+
+            <div className="input-holder">
+              <h1>Re-type Password</h1>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                >
+              </input>
+            </div>
           </div>
-          
-        </td>
-      </tr>
 
-      <tr>
-        <td  className="user-headers">
-          Upload Profile
-        </td>
-        <td colSpan={2} className="user-details">
-          <div className="details-holder">
-            <input
-              className="add-input-properties"
-              type="text"
-              value={newWebUser.useravatar}
-              onChange={(e) =>
-                setNewWebUser({ ...newWebUser, useravatar: e.target.value })
-              }
-            />
-          </div>
-        </td>
-      </tr>
+        </div>
 
-      <tr>
-        <td  className="user-headers">
-          Password
-        </td>
-        <td className="user-details">
-          <div className="details-holder">
-            <input
-              className="add-input-properties"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <label>Create Password</label>
-          </div>
-            
-        </td>
-        <td className="user-details">
-          <div className="details-holder">
-            
-            <input
-              className="add-input-properties"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <label>Confirm Password:</label>
-          </div>
-          
-        </td>
-      </tr>
+        <div className="buttons-container">
+          <Buttons 
+            onClick={handleRegister}
+            text={isLoading ? "Submitting..." : "Submit"}
+            disabled={isLoading}
+            addedClassName="btn btn-success"
+          />
 
-      <tr>
-        <td colSpan={3}>
-          <div className="btn-holder">
-            <button
-              type="submit"
-              className="submit-btn"
-              disabled={isLoading}
-            >
-              {isLoading ? "Submitting..." : "Submit"}
-            </button>
+          <Buttons 
+            onClick={handleReset}
+            text={"Reset"}
+            disabled={isLoading}
+            addedClassName="btn btn-warning ml-5"
+          />
 
-            <button
-              type="button"
-              onClick={handleReset}
-              className="reset-btn"
-              disabled={isLoading}
-            >
-              Reset
-            </button>
-          </div>
-        </td>
-      </tr>
-      
-        
-
-        
-
-      
-        
-
-        
+        </div>
 
 
-        
 
 
-        
 
-        
 
-       
-
-        
-
-        </table>
-      </form>
     </div>
 
     

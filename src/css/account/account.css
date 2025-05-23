@@ -58,7 +58,7 @@
 }
 
 .titles-table {
-  @apply w-11/12 h-[50px] text-left table-fixed;
+  @apply w-7/12 h-[50px] text-left table-fixed;
 }
 
 .titles-table th {
@@ -98,14 +98,22 @@
   background: black;
 }
 .user-card {
-  @apply w-11/12 my-2 py-3 rounded-xl px-3 
-    transition-transform duration-500 ease-in-out;
+  @apply w-7/12 my-2 py-2 rounded-xl px-2 ml-2
+    transition-transform duration-500 ease-in-out transform scale-100;
   border: 1px solid black;
 }
+
 .active-user-card {
-  @apply w-[95%] bg-gray-300 my-2 py-5 rounded-xl px-2 
-    transition-transform duration-500 ease-in-out;
+  @apply w-8/12 bg-[#35408E] my-2 py-2 rounded-xl px-2
+    transition-transform duration-500 ease-in-out transform scale-105;
   border: 1px solid black;
+}
+
+.active-user-card .user-table td{
+  @apply text-white;
+}
+.active-user-card .user-table .user-action-cell{
+  filter: invert(1) brightness(2) contrast(100);
 }
 
 .user-table {
@@ -113,7 +121,7 @@
 }
 
 .user-table td {
-  @apply text-black;
+  @apply text-black text-[20px];
 }
 
 .user-name-cell {
@@ -151,7 +159,7 @@
 }
 
 .pagination-container {
-  @apply w-full h-1/2 flex flex-row justify-between items-center px-5;
+  @apply w-7/12 h-1/2 flex flex-row justify-between items-center px-5;
 }
 
 /* modal css */
@@ -174,7 +182,7 @@
 
 /* test */
 .user-details-card {
-  @apply bg-slate-100 p-4 mx-8 mt-[10px] mb-4 border-l-4 border-yellow-400 rounded-md text-base text-[#333];
+  @apply bg-slate-100 border-l-4 border-yellow-400 rounded-md text-base text-[#333] mx-5 mt-3 pl-4 py-2;
 }
 /* loading spinner */
 
@@ -250,82 +258,87 @@
 
 
 .add-account-header{
-  @apply w-full h-[100px] flex flex-row justify-between px-5 items-center;
+  @apply w-full h-[100px] flex flex-row px-5 items-center pt-4 pl-7;
 }
 
 .add-account-title{
-  @apply text-[40px] font-[Poppins] font-bold text-black;
+  @apply text-[40px] font-[Poppins] font-bold text-black ml-5;
 }
 
 .view-acc-btn{
-  @apply btn btn-secondary w-[250px] h-[50px] text-white font-[Poppins] text-2xl;
-  text-shadow: 1px 1px 0 #b0b0b0, 2px 2px 0 #888888, 3px 3px 2px #666666;
+  @apply w-[50px] h-[50px] text-white font-[Poppins] flex justify-center items-center rotate-90;
+}
+
+.view-acc-btn img{
+  @apply w-2/5 cursor-pointer;
+}
+
+.add-account-content{
+  @apply flex-1 w-full;
+}
+
+.add-account-content h1{
+  @apply text-black;
+}
+
+.profile-pic-container{
+  @apply w-full h-1/2;
+}
+
+.profile-pic-table{
+  @apply w-full h-full;
+}
+
+
+.profile-pic-cell{
+  @apply w-4/12;
+}
+
+.img-container{
+  @apply w-full h-full flex justify-center items-center;
+}
+.profile-pic-table img {
+  @apply w-6/12 max-w-[320px] h-auto rounded-full border-amber-300 border-2;
+}
+
+.profile-pic-table img {
+  @apply w-6/12 h-auto max-h-[300px] aspect-square rounded-full border-amber-300 border-2 object-cover;
+}
+
+.upload-photo-container{
+  @apply flex flex-col w-full h-full justify-center;
+}
+
+.upload-btn-holder{
+  @apply w-[300px] flex justify-center items-center flex-col;
+}
+
+.upload-photo-container label{
+  @apply text-black text-sm mt-3 font-medium;
+}
+
+
+
+.user-details-container {
+  @apply w-full h-1/2 gap-5 grid px-5;
+  grid-template-columns: repeat(4, 1fr); /* fixed 4 columns */
+}
+
+
+
+.input-holder {
+  @apply flex flex-col w-full;
+}
+
+.input-holder input, select {
+  @apply w-full h-1/2 px-3 rounded-md border border-gray-300 
+         focus:outline-none focus:ring-2 focus:ring-yellow-400 text-black;
 }
 
 
 
 
-.add-account-form{
-  @apply flex flex-col h-full w-10/12;
+.buttons-container{
+  @apply h-[100px] w-full flex flex-row items-center justify-start pl-10;
 }
-.form-table{
-  @apply w-full h-full table-fixed text-black;
-}
-
-.user-headers{
-  @apply text-right pr-3;
-}
-
-.user-details{
-  @apply w-[40%];
-}
-
-.details-holder{
-  @apply flex flex-col;
-}
-
-
-.details-holder input, select {
-  @apply self-center;
-}
-
-.details-holder label{
-  @apply pl-10;
-}
-
-.add-input-properties{
-  @apply w-11/12 h-[50px] bg-white text-black;
-}
-
-.form-table tr {
-  height: calc((100% / 7) - 200px);
-}
-
-.form-table tr:last-child {
-  height: auto;
-}
-
-
-.btn-holder{
-  @apply w-full flex flex-row justify-center;
-}
-
-
-.submit-btn{
-  @apply btn btn-success w-[250px] h-[50px] text-white font-[Poppins] text-2xl;
-  text-shadow: 1px 1px 0 #b0b0b0, 2px 2px 0 #888888, 3px 3px 2px #666666;
-}
-
-
-.reset-btn{
-  @apply btn btn-warning w-[250px] h-[50px] text-white font-[Poppins] text-2xl ml-10;
-  text-shadow: 1px 1px 0 #b0b0b0, 2px 2px 0 #888888, 3px 3px 2px #666666;
-}
-
-
-
-.reset-btn, .submit-btn{
-  @apply w-[200px] h-[50px];
-}
-
 

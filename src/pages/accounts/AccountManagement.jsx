@@ -8,6 +8,7 @@ import chevronIcon from "../../assets/forAll/chevron.svg";
 import settingsIcon from "../../assets/forAll/settings.svg";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import download from "../../assets/leaderboard/file-export.svg";
+import Buttons from "../../components/buttons/Buttons";
 
 export default function AccountManagement() {
   const [webUsers, setWebUsers] = useState([]);
@@ -158,12 +159,13 @@ export default function AccountManagement() {
             )}
           </div>
 
-          <button
+
+          <Buttons
+            text="Add Account"
             onClick={() => navigate("/addaccount")}
-            className="add-acc-btn"
-          >
-            Add Account
-          </button>
+            addedClassName="btn btn-warning"
+          />
+
 
           <img src={download} alt="export" className="acc-export-icon" />
         </div>
@@ -208,7 +210,11 @@ export default function AccountManagement() {
                 onClick={() => setSortOrderAsc((prev) => !prev)}
                 className="text-black hover:bg-[#FFD41C] ml-2"
               >
-                {sortOrderAsc ? "U" : "D"}
+                {sortOrderAsc ? 
+                  <img src={chevronIcon} alt="chevron" className="w-4" />
+                  : 
+                  <img src={chevronIcon} alt="chevron" className="rotate-180 w-4" />
+                }
               </button>
             </th>
             <th className="title-pos-cell">Position</th>
