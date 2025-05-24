@@ -1,4 +1,4 @@
-import "./selectFilter.css";
+import "./selectfilter.css";
 
 export default function SelectFilter({ 
   value, 
