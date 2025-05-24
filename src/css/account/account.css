@@ -7,7 +7,7 @@
   @apply p-3 flex flex-col h-full w-full bg-white;
 }
 
-/*------------------------- FOR HEADER --------------------------*/
+/*------------------------- HEADER --------------------------*/
 .account-header {
   @apply w-full h-[200px] p-1;
 }
@@ -20,138 +20,22 @@
   @apply w-full h-auto flex flex-row justify-evenly items-center mt-3;
 }
 
-.acc-search-bar {
-  @apply w-[80%] min-w-[300px] h-[50px] bg-white flex items-center px-4 rounded-md shadow-md border-0 relative;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-}
-
 .filter-container {
   @apply w-full mt-3 px-6;
 }
-.acc-search-input {
-  @apply rounded-lg border-none flex-1 bg-transparent focus:outline-none;
-}
+
 
 .add-acc-btn {
   @apply btn btn-warning w-[200px] h-[50px] text-white font-[Poppins] text-2xl;
   text-shadow: 1px 1px 0 #b0b0b0, 2px 2px 0 #888888, 3px 3px 2px #666666;
 }
 
-.acc-position-select {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  @apply text-black font-[Poppins] h-[50px] w-[200px] text-sm bg-white border-none rounded-md;
-}
-
-.acc-branch-select {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  @apply text-black font-[Poppins] h-[50px] w-[200px] text-sm bg-white border rounded-md ml-4;
-}
-
 .acc-export-icon {
   @apply w-8 h-8;
 }
 
-/*------------------------- USER TITLES --------------------------*/
 
-.titles-container {
-  @apply w-full flex justify-center;
-}
 
-.titles-table {
-  @apply w-7/12 h-[50px] text-left table-fixed;
-}
-
-.titles-table th {
-  @apply text-xl text-black;
-}
-
-.title-name-cell {
-  @apply flex flex-row items-center;
-}
-
-.title-pos-cell,
-.title-branch-cell {
-  @apply w-1/4;
-}
-
-.title-action-cell {
-  @apply w-1/5;
-}
-
-/*------------------------- USER CONTENTS --------------------------*/
-.users-container {
-  @apply w-full flex-1 overflow-hidden overflow-y-auto flex flex-col items-center 
-    transition-transform duration-500 ease-in-out;
-  scrollbar-width: thin;
-  scrollbar-color: black transparent;
-}
-.users-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.users-container::-webkit-scrollbar-thumb {
-  background: black;
-  border-radius: 8px;
-}
-
-.users-container::-webkit-scrollbar-track {
-  background: black;
-}
-.user-card {
-  @apply w-7/12 my-2 py-2 rounded-xl px-2 ml-2
-    transition-transform duration-500 ease-in-out transform scale-100;
-  border: 1px solid black;
-}
-
-.active-user-card {
-  @apply w-8/12 bg-[#35408E] my-2 py-2 rounded-xl px-2
-    transition-transform duration-500 ease-in-out transform scale-105;
-  border: 1px solid black;
-}
-
-.active-user-card .user-table td{
-  @apply text-white;
-}
-.active-user-card .user-table .user-action-cell{
-  filter: invert(1) brightness(2) contrast(100);
-}
-
-.user-table {
-  @apply w-full table-fixed;
-}
-
-.user-table td {
-  @apply text-black text-[20px];
-}
-
-.user-name-cell {
-  @apply flex items-center;
-}
-.mini-avatar {
-  @apply w-[40px] h-[40px] rounded-full mr-2;
-}
-
-.user-branch-cell,
-.user-pos-cell {
-  @apply w-1/4;
-}
-
-.user-action-cell {
-  @apply w-1/5;
-}
-
-.action-holder {
-  @apply flex flex-row items-center px-10 justify-between;
-}
-
-.acc-setting,
-.acc-chevron {
-  @apply w-[25px] h-[25px] transition-transform duration-500 cursor-pointer bg-transparent;
-}
-
-.active-user-card .acc-chevron {
-  @apply w-[25px] h-[25px] transition-transform duration-500 cursor-pointer;
-}
 
 /*------------------------- FOOTER PAGINATION AND ADD USER --------------------------*/
 .acc-footer {
@@ -162,7 +46,10 @@
   @apply w-7/12 h-1/2 flex flex-row justify-between items-center px-5;
 }
 
-/* modal css */
+
+
+
+/*------------------------- FOR MODAL --------------------------*/
 .modal-overlay {
   background-color: rgba(0, 0, 0, 0.4);
   @apply fixed inset-0 flex justify-center items-center z-[1000];
@@ -180,61 +67,6 @@
   @apply py-2 px-5;
 }
 
-/* test */
-.user-details-card {
-  @apply bg-slate-100 border-l-4 border-yellow-400 rounded-md text-base text-[#333] mx-5 mt-3 pl-4 py-2;
-}
-/* loading spinner */
-
-.loading-overlay-accounts {
-  @apply flex flex-col items-center justify-center pt-50;
-}
-
-.spinner {
-  @apply w-14 h-14 border-4 border-[#FFBF1A]/30 border-t-[#FFBF1A] rounded-full animate-spin mb-4;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.loading-overlay-accounts p {
-  @apply text-black text-lg font-medium font-[Poppins];
-}
-
-/* loading spinner */
-
-.search-suggestion-dropdown {
-  position: absolute;
-  top: 100%; /* directly below the input */
-  left: 0;
-  right: 0;
-  background: white; /* or whatever bg you want */
-  border: 1px solid #ccc;
-  max-height: 200px; /* optional, limit height */
-  overflow-y: auto; /* scroll if too tall */
-  z-index: 1000; /* high enough to appear above other elements */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.search-suggestion-item {
-  padding: 8px 12px;
-  cursor: pointer;
-  background: white;
-}
-
-.search-suggestion-item:hover {
-  background: #f0f0f0;
-}
-
-.acc-search-bar input {
-  padding-bottom: 8px; /* if dropdown is tight */
-}
 
 
 
@@ -245,39 +77,44 @@
 
 
 
+/*------------------------- FOR ADD ACCOUNT --------------------------*/
 
 
-
-
-
-
-
+/*------------------------- MAIN CONTAINER --------------------------*/
 .add-account-container {
-  @apply w-full h-full flex flex-col items-center bg-white justify-center;
+  @apply w-full h-full flex flex-col items-center bg-white justify-center ;
 }
 
 
+
+
+/*------------------------- HEADER CONTAINER --------------------------*/
 .add-account-header{
   @apply w-full h-[100px] flex flex-row px-5 items-center pt-4 pl-7;
 }
 
+
+/*------------------------- TITLE AND BACK BUTTON --------------------------*/
 .add-account-title{
   @apply text-[40px] font-[Poppins] font-bold text-black ml-5;
 }
-
 .view-acc-btn{
   @apply w-[50px] h-[50px] text-white font-[Poppins] flex justify-center items-center rotate-90;
 }
-
 .view-acc-btn img{
   @apply w-2/5 cursor-pointer;
 }
 
+
+
+/*------------------------- CONTENTS CONTAINER --------------------------*/
 .add-account-content{
   @apply flex-1 w-full;
 }
 
-.add-account-content h1{
+
+
+.user-details-container h1{
   @apply text-black;
 }
 
@@ -320,8 +157,8 @@
 
 
 .user-details-container {
-  @apply w-full h-1/2 gap-5 grid px-5;
-  grid-template-columns: repeat(4, 1fr); /* fixed 4 columns */
+  @apply w-full h-1/2 gap-5 grid grid-cols-3 px-5;
+  
 }
 
 

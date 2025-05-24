@@ -8,6 +8,14 @@ import { API_URL, branches, categories, modes, levels } from "../../Constants";
 import AnimatedProgressBar from "../../components/animatedProgressBar/AnimatedProgressBar";
 import { Settings } from "lucide-react";
 import { UserLoggedInContext } from "../../contexts/Contexts";
+import SearchBar from "../../components/searchbar/SearchBar";
+import download from "../../assets/leaderboard/file-export.svg";
+import SelectFilter from "../../components/selectFilter/SelectFilter";
+import searchIcon from "../../assets/students/search-01.svg";
+import StudentsContentsTable from "../../components/tableForContents/StudentsContentsTable";
+
+
+
 
 export default function ManageStudents() {
   const { currentWebUser } = useContext(UserLoggedInContext);
@@ -18,7 +26,7 @@ export default function ManageStudents() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loadingStudents, setLoadingStudents] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortOrder, setSortOrder] = useState(true);
   const [selectedBranch, setSelectedBranch] = useState("disabled");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -99,7 +107,7 @@ export default function ManageStudents() {
   // Sort filtered students by last name in ascending or descending order
   const sortedFilteredStudents = [...filteredStudents].sort((a, b) => {
     const compare = a.last_name.localeCompare(b.last_name);
-    return sortOrder === "asc" ? compare : -compare;
+    return sortOrder ? compare : -compare;
   });
 
   // Handle pagination logic
@@ -125,6 +133,8 @@ export default function ManageStudents() {
     const renderStageBoxes = () => {
       return stageScores.map((score, index) => {
         const itemsPerStage = attempts[index].total_items
+        console.log(itemsPerStage);
+        
         let color = "bg-white";
         if (score === itemsPerStage) {
           color = "bg-green-500";
@@ -221,63 +231,96 @@ export default function ManageStudents() {
     return result;
   };
 
+
+  const titles = [
+      { key: "name", label: "Name", className: "" },
+      { key: "stud_id", label: "Student ID", className: "w-1/4" },
+      { key: "branch", label: "Branch", className: "w-1/4" },
+      { key: "action", label: "Action", className: "w-1/5" }
+    ];
+
+    const getBranchName = (branchId) =>
+    branches.find((b) => b.id === branchId)?.name || "Unknown Branch";
+
   return (
     <div className="students-main-container">
       <div className="student-header">
-        <h1 className="student-title">
+        <h1 className="account-title flex flex-row items-center">
           View Students
-          <button
-            onClick={() =>
-              setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
-            }
-            className="btn btn-outline ml-4 text-black hover:bg-[#FFD41C]"
-          >
-            Sort by Last Name {sortOrder === "asc" ? "↑" : "↓"}
-          </button>
-          <select
-            className="w-50 h-10 text-sm text-black bg-white ml-3 select"
-            value={selectedBranch}
-            onChange={(e) => setSelectedBranch(e.target.value)}
-          >
-            <option value="disabled" disabled>
-              Filter by:
-            </option>
-            <option value="">All Branches</option>
-            {branches.map((branch) => (
-              <option key={branch.id} value={branch.id}>
-                {branch.name}
-              </option>
-            ))}
-          </select>
         </h1>
 
-        <div className="student-search-bar">
-          <img
-            src={search}
-            className="search-icon w-4 h-4 mr-2"
-            alt="search icon"
-          />
-          <input
-            type="text"
-            className="student-search-input"
-            placeholder="Search for a student"
+        <div className="acc-sub-header-container">
+          <SearchBar
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            handleChange={(e) => {
+              setSearchTerm(e.target.value)}
+              // setShowSuggestions(true);
+            }
+            placeholder="Search for a student"
+            icon={searchIcon}
+            // suggestions={searchSuggestions}
+            // showSuggestions={showSuggestions}
+            // onSuggestionSelect={(user) => {
+            //   setSearchQuery(`${user.lastName.toUpperCase()}, ${user.firstName}`);
+            //   setShowSuggestions(false);
+            // }}
+            addedClassName="w-[80%] h-[50px] bg-violet-300"
           />
+
+
+
+          <SelectFilter 
+            value={selectedBranch}
+            onChange={(e) => setSelectedBranch(e.target.value)}
+            disabledOption="Select Branch"
+            fixOption="All Branches"
+            mainOptions={branches}
+            getOptionValue={(branch) => branch.id}
+            getOptionLabel={(branch) => branch.name}
+            addedClassName="ml-3"
+          />
+
+
+          <img src={download} alt="export" className="acc-export-icon" />
         </div>
+        
+
+
       </div>
 
-      <div className="student-titles-container">
-        <div className="student-header-info">
-          <h1 className="student-title-info">Student ID</h1>
-          <h1 className="student-title-info">Name</h1>
-          <h1 className="student-title-info">Branch</h1>
-          <h1 className="student-title-info">Action</h1>
-        </div>
-      </div>
 
-      <div className="student-users-container">
-        {loadingStudents ? (
+      {/* <AccountContentsTable
+          columns={4}
+          titles={titles}
+          data={currentUsers}
+          isLoading={isLoading}
+          cardActive={cardActive}
+          toggleCard={toggleCard}
+          sortOrderAsc={sortOrderAsc}
+          setSortOrderAsc={setSortOrderAsc}
+          getBranchName={getBranchName}
+        /> */}
+
+      
+       <StudentsContentsTable
+          columns={4}
+          titles={titles}
+          students={currentStudents}
+          openDropdown={openDropdown}
+          setOpenDropdown={setOpenDropdown}
+          branches={branches}
+          progressData={progressData}
+          attempts={attempts}
+          progressWorlds={progressWorlds}
+          getStudentAttemptsByWorld={getStudentAttemptsByWorld}
+          renderProgressCard={renderProgressCard}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          isLoading={loadingStudents}
+          getBranchName={getBranchName}
+        />
+
+        {/* {loadingStudents ? (
           <div className="loading-overlay-students">
             <div className="spinner"></div>
             <p>Fetching data...</p>
@@ -312,10 +355,7 @@ export default function ManageStudents() {
                   </h1>
                 </div>
                 <h1 className="student-info">
-                  {
-                    branches.find((branch) => branch.id === student.branch)
-                      ?.name || "Unknown Branch"
-                  }
+                  {getBranchName(student.branch)}
                 </h1>
 
                 <div className="student-action-container">
@@ -391,8 +431,26 @@ export default function ManageStudents() {
               </div>
             );
           })
-        )}
-      </div>
+        )} */}
+
+
+
+
+
+
+
+
+
+{/* <button
+            onClick={() =>
+              setSortOrder((prev) => (!prev))
+            }
+            className="btn btn-outline ml-4 text-black hover:bg-[#FFD41C]"
+          >
+            Sort by Last Name {sortOrder ? "↑" : "↓"}
+          </button> */}
+
+      
 
       <div className="student-footer">
         <div className="student-pagination-container">

@@ -1,0 +1,152 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+@reference "tailwindcss";
+@plugin "daisyui";
+
+
+/* Main Container */
+.users-main-container {
+  @apply w-full flex-1 overflow-hidden overflow-y-auto flex flex-col items-center 
+    transition-transform duration-500 ease-in-out;
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
+}
+
+.users-main-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.users-main-container::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 8px;
+}
+
+.users-main-container::-webkit-scrollbar-track {
+  background: black;
+}
+
+
+
+/* For Title */
+.titles-table {
+  @apply w-7/12 h-[50px] text-left table-fixed;
+}
+
+.titles-table th {
+  @apply text-xl text-black;
+}
+
+thead tr{
+    @apply sticky top-0 z-10 bg-white;
+}
+
+
+
+
+/* For Loading */
+.loading-overlay-accounts {
+  @apply flex flex-col items-center justify-center pt-50;
+}
+
+.spinner {
+  @apply w-14 h-14 border-4 border-[#FFBF1A]/30 border-t-[#FFBF1A] rounded-full animate-spin mb-4;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-overlay-accounts p {
+  @apply text-black text-lg font-medium font-[Poppins];
+}
+
+
+
+
+/* All user table, excluding the titles */
+.user-table {
+  @apply w-full table-fixed;
+}
+
+.user-table td {
+  @apply text-black text-[20px];
+}
+
+
+
+/* User Card Container */
+.user-card {
+  @apply w-full my-2 py-2 rounded-xl px-2 
+    transition-transform duration-500 ease-in-out transform scale-100;
+  border: 1px solid black;
+}
+
+.active-user-card {
+  @apply w-full bg-[#35408E] my-4 py-2 rounded-xl px-2
+    transition-transform duration-500 ease-in-out transform scale-110;
+  border: 1px solid black;
+}
+
+.active-user-card .user-table td{
+  @apply text-white;
+}
+.active-user-card .user-table .user-action-cell{
+  filter: invert(1) brightness(2) contrast(100);
+}
+
+
+
+/* Name Cell */
+.user-name-cell {
+  @apply flex items-center;
+}
+.mini-avatar {
+  @apply w-[40px] h-[40px] rounded-full mr-2;
+}
+
+
+/* Branch and Position Cell */
+.user-branch-cell,
+.user-pos-cell {
+  @apply w-1/4;
+}
+
+
+/* Action Cell */
+.user-action-cell {
+  @apply w-1/5;
+}
+
+.action-holder {
+  @apply flex flex-row items-center px-5 justify-between;
+}
+
+
+
+/* Setting and Chevron Icon */
+.setting-icon,
+.chevron-icon {
+  @apply w-[25px] h-[25px] transition-transform duration-500 cursor-pointer bg-transparent;
+}
+
+.active-user-card .acc-chevron {
+  @apply w-[25px] h-[25px] transition-transform duration-500 cursor-pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+.user-details-card {
+  @apply bg-slate-100 border-l-4 border-yellow-400 rounded-md text-base text-[#333] mx-5 mt-3 pl-4 py-2;
+}

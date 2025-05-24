@@ -167,7 +167,7 @@ export default function AddAccount() {
           <h1 className="add-account-title">Add Account</h1>
         </div>
 
-        {/* <form onSubmit={handleRegister}> */}
+
         <div className="add-account-content">
           <div className="profile-pic-container">
             <table className="profile-pic-table">
