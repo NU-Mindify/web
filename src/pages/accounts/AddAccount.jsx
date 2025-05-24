@@ -1,7 +1,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useContext, useEffect, useState } from "react";
 import "../../css/account/account.css";
-import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signOut,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import { secondaryAuth } from "../../Firebase";
 import axios from "axios";
 import chevronIcon from "../../assets/forAll/chevron.svg";
@@ -11,10 +15,9 @@ import { UserLoggedInContext } from "../../contexts/Contexts";
 import No_Profile from "../../assets/profile/noProfile.jpg";
 import Buttons from "../../components/buttons/Buttons";
 
-
 export default function AddAccount() {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
   const [newWebUser, setNewWebUser] = useState({
     firstName: "",
     lastName: "",
@@ -43,8 +46,8 @@ export default function AddAccount() {
       uid: "",
       useravatar: "",
     });
-    setPassword("");
-    setConfirmPassword("");
+    // setPassword("");
+    // setConfirmPassword("");
   };
 
   const handleRegister = async (e) => {
@@ -68,16 +71,9 @@ export default function AddAccount() {
       !branch ||
       !email ||
       !employeenum ||
-      !position ||
-      !password ||
-      !confirmPassword
+      !position
     ) {
       alert("Please fill in all required fields.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      alert("Passwords do not match.");
       return;
     }
 
@@ -94,17 +90,38 @@ export default function AddAccount() {
 
     try {
       setIsLoading(true);
+
+      function generateTemporaryPassword(length = 10) {
+        const chars =
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+        return Array.from(
+          { length },
+          () => chars[Math.floor(Math.random() * chars.length)]
+        ).join("");
+      }
+
+      const tempPassword = generateTemporaryPassword();
+      console.log(tempPassword);
+      
+      // 1. Create user
       const userCredential = await createUserWithEmailAndPassword(
         secondaryAuth,
         finalWebUser.email,
-        password
+        tempPassword
       );
       const user = userCredential.user;
       const uidWebUser = { ...finalWebUser, uid: user.uid };
 
+      // 2. Send reset email
+      await sendPasswordResetEmail(secondaryAuth, finalWebUser.email);
+
+      // 3. Store user data in database
       await axios.post(`${API_URL}/createWebUser`, uidWebUser);
+
+      // 4. Sign out the new user's account
       await signOut(secondaryAuth);
 
+      // 5. Reset and show modal
       setShowModal(true);
       handleReset();
     } catch (error) {
@@ -114,40 +131,43 @@ export default function AddAccount() {
       setIsLoading(false);
     }
   };
-  
 
   useEffect(() => {
     if (currentWebUser.position.toLowerCase() !== "super admin") {
       const currentBranch = branches.find((b) => b.id === currentUserBranch);
       if (currentBranch && currentBranch.extension) {
-        setNewWebUser((prev) => ({
-          ...prev,
-          branch: currentUserBranch,
-          email: currentBranch.extension,
-        }));
+        setNewWebUser((prev) => {
+          const email = prev.email;
+
+          // Allow exception for emails with extention: `students.nu-moa.edu.ph`
+          const isException = email.includes("@students.");
+
+          return {
+            ...prev,
+            branch: currentUserBranch,
+            email: isException ? email : currentBranch.extension,
+          };
+        });
       }
     }
   }, [currentUserBranch, currentWebUser.position]);
 
-
   return (
     <>
-    <div className="add-account-container">
-      
-      <div className="add-account-header">
-        <button
-          type="button"
-          onClick={() => navigate("/account")}
-          className="view-acc-btn"
-          disabled={isLoading}
-        >
-          <img src={chevronIcon} alt="chevron" />
-        </button>
-        <h1 className="add-account-title">Add Account</h1>
-        
-      </div>
+      <div className="add-account-container">
+        <div className="add-account-header">
+          <button
+            type="button"
+            onClick={() => navigate("/account")}
+            className="view-acc-btn"
+            disabled={isLoading}
+          >
+            <img src={chevronIcon} alt="chevron" />
+          </button>
+          <h1 className="add-account-title">Add Account</h1>
+        </div>
 
-      {/* <form onSubmit={handleRegister}> */}
+        {/* <form onSubmit={handleRegister}> */}
         <div className="add-account-content">
           <div className="profile-pic-container">
             <table className="profile-pic-table">
@@ -172,7 +192,10 @@ export default function AddAccount() {
                         type="text"
                         value={newWebUser.useravatar}
                         onChange={(e) =>
-                          setNewWebUser({ ...newWebUser, useravatar: e.target.value })
+                          setNewWebUser({
+                            ...newWebUser,
+                            useravatar: e.target.value,
+                          })
                         }
                       />
                       {/* <button>
@@ -186,8 +209,6 @@ export default function AddAccount() {
             </table>
           </div>
 
-
-
           <div className="user-details-container">
             <div className="input-holder">
               <h1>First Name</h1>
@@ -197,8 +218,7 @@ export default function AddAccount() {
                 onChange={(e) =>
                   setNewWebUser({ ...newWebUser, firstName: e.target.value })
                 }
-              >
-              </input>
+              ></input>
             </div>
 
             <div className="input-holder">
@@ -209,15 +229,12 @@ export default function AddAccount() {
                 onChange={(e) =>
                   setNewWebUser({ ...newWebUser, lastName: e.target.value })
                 }
-              >
-              </input>
+              ></input>
             </div>
-
 
             <div className="input-holder">
               <h1>NU Campus</h1>
-              {
-                currentWebUser.position.toLowerCase() === "super admin" ? (
+              {currentWebUser.position.toLowerCase() === "super admin" ? (
                 <select
                   className="add-input-properties"
                   value={newWebUser.branch}
@@ -231,7 +248,6 @@ export default function AddAccount() {
                       email: extension,
                     }));
                   }}
-
                 >
                   <option value="">-- Select Branch --</option>
                   {branches.map((branch) => (
@@ -240,7 +256,7 @@ export default function AddAccount() {
                     </option>
                   ))}
                 </select>
-                ) : (
+              ) : (
                 <input
                   className="add-input-properties"
                   type="text"
@@ -252,7 +268,6 @@ export default function AddAccount() {
               )}
             </div>
 
-
             <div className="input-holder">
               <h1>Email</h1>
               <input
@@ -261,27 +276,23 @@ export default function AddAccount() {
                 onChange={(e) =>
                   setNewWebUser({ ...newWebUser, email: e.target.value })
                 }
-              >
-              </input>
+              ></input>
             </div>
 
-
             <div className="input-holder">
-              <h1>Employee Nubmer</h1>
+              <h1>Employee Number</h1>
               <input
                 type="text"
                 value={newWebUser.employeenum}
                 onChange={(e) =>
                   setNewWebUser({ ...newWebUser, employeenum: e.target.value })
                 }
-              >
-              </input>
+              ></input>
             </div>
 
             <div className="input-holder">
               <h1>Position</h1>
-              {
-                currentWebUser.position.toLowerCase() === "super admin" ? (
+              {currentWebUser.position.toLowerCase() === "super admin" ? (
                 <select
                   className="add-input-properties"
                   value={newWebUser.position}
@@ -294,60 +305,51 @@ export default function AddAccount() {
                   <option value="Sub Admin">Sub Admin</option>
                 </select>
               ) : (
-                <input type="text" disabled value="Professor" className="add-input-properties" />
+                <input
+                  type="text"
+                  disabled
+                  value="Professor"
+                  className="add-input-properties"
+                />
               )}
             </div>
 
-            <div className="input-holder">
+            {/* <div className="input-holder">
               <h1>Password</h1>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-              >
-              </input>
-            </div>
+              ></input>
+            </div> */}
 
-            <div className="input-holder">
+            {/* <div className="input-holder">
               <h1>Re-type Password</h1>
               <input
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                >
-              </input>
-            </div>
+              ></input>
+            </div> */}
           </div>
-
         </div>
 
         <div className="buttons-container">
-          <Buttons 
+          <Buttons
             onClick={handleRegister}
             text={isLoading ? "Submitting..." : "Submit"}
             disabled={isLoading}
             addedClassName="btn btn-success"
           />
 
-          <Buttons 
+          <Buttons
             onClick={handleReset}
             text={"Reset"}
             disabled={isLoading}
             addedClassName="btn btn-warning ml-5"
           />
-
         </div>
-
-
-
-
-
-
-    </div>
-
-    
-    
-      
+      </div>
 
       {/* Success Modal */}
       {showModal && (

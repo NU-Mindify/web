@@ -47,10 +47,17 @@ export default function Login() {
         alert("Please enter your password");
         return;
       }
-      if (!email.endsWith(`${matchedBranch.extension}`)) {
+      
+      const allowedExceptionDomain = "@students.nu-moa.edu.ph";
+
+      if (
+        !email.endsWith(matchedBranch.extension) &&
+        !email.endsWith(allowedExceptionDomain)
+      ) {
         alert(`Account: ${email} not found at NU ${branch.toUpperCase()}`);
         return;
       }
+
       if (password.length < 5) {
         alert("Password too short!");
         return;
@@ -99,7 +106,7 @@ export default function Login() {
           message = "An unexpected error occurred. Please try again.";
           console.error("Unhandled auth error:", error);
       }
-      alert(message); // or use a toast/snackbar in UI
+      alert(message);
     } finally {
       setIsLoading(false);
     }
@@ -185,7 +192,6 @@ export default function Login() {
                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                 title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
                 onChange={(e) => setPassword(e.target.value)}
-                
               />
             </label>
 
@@ -194,7 +200,7 @@ export default function Login() {
               <p className="remember-txt">Remember me</p>
             </div>
 
-            <button className="login-btn" onClick={handelLoginFirebase} >
+            <button className="login-btn" onClick={handelLoginFirebase}>
               Sign In
             </button>
 
