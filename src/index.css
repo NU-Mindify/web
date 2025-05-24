@@ -18,10 +18,15 @@ body{
 /*----- CONTAINER GOD -----*/
 
 .main-container {
-    background: radial-gradient(#02386E, #00264D);
-    @apply w-[100svw] h-[100svh] p-3 flex flex-col overflow-hidden
-    lg:flex-row;
+  position: relative;
+  background:
+    url('./assets/forAll/pattern.svg') no-repeat center center / cover,
+    radial-gradient(circle at center, #4A6FB4 0%, #27298F 70%, #273574 100%);
+  background-blend-mode: soft-light;
+  @apply w-[100svw] h-[100svh] p-3 flex flex-col overflow-hidden lg:flex-row;
 }
+
+
   
 /********************************/
 
