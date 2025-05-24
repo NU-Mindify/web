@@ -29,6 +29,7 @@ import SessionTimeout from './components/SessionTimeout/SessionTimeout'
 
 
 
+
 const queryClient = new QueryClient();
 
 function App() {
@@ -109,6 +110,7 @@ function App() {
               </Routes>
             ) : !isSplash ? (
               <div className="main-container">
+
                 <SessionTimeout timeout={5 * 60 * 1000} /> {/* 5 minutes */}
                 <Sidebar />
                 <div
@@ -136,6 +138,7 @@ function App() {
                   </Routes>
 
                 </div>
+
               </div>
             )
               :(
