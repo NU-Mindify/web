@@ -208,7 +208,7 @@ export default function AccountManagement() {
               Name
               <button
                 onClick={() => setSortOrderAsc((prev) => !prev)}
-                className="text-black hover:bg-[#FFD41C] ml-2"
+                className="text-black cursor-pointer ml-2"
               >
                 {sortOrderAsc ? 
                   <img src={chevronIcon} alt="chevron" className="w-4" />
