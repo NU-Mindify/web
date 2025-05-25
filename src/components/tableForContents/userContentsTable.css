@@ -28,7 +28,7 @@
 
 /* For Title */
 .titles-table {
-  @apply w-7/12 h-[50px] text-left table-fixed;
+  @apply w-10/12 h-[50px] text-left table-fixed;
 }
 
 .titles-table th {

@@ -43,7 +43,7 @@
 }
 
 .pagination-container {
-  @apply w-7/12 h-1/2 flex flex-row justify-between items-center px-5;
+  @apply w-10/12 h-1/2 flex flex-row justify-between items-center px-5;
 }
 
 

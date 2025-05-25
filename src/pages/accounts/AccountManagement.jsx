@@ -4,16 +4,12 @@ import axios from "axios";
 import "../../css/account/account.css";
 import { API_URL, fetchBranches } from "../../Constants";
 import searchIcon from "../../assets/students/search-01.svg";
-import chevronIcon from "../../assets/forAll/chevron.svg";
-import settingsIcon from "../../assets/forAll/settings.svg";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import download from "../../assets/leaderboard/file-export.svg";
 import Buttons from "../../components/buttons/Buttons";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
 import SearchBar from "../../components/searchbar/SearchBar";
-import AccountContentsTable from "../../components/tableForContents/AccountContentsTable";
-
-
+import UserContentsTable from "../../components/tableForContents/UserContentsTable";
 
 
 export default function AccountManagement() {
@@ -100,7 +96,6 @@ export default function AccountManagement() {
       return sortOrderAsc ? comparison : -comparison;
     });
 
-
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
   const currentUsers = filteredUsers.slice(
     (currentPage - 1) * usersPerPage,
@@ -128,12 +123,12 @@ export default function AccountManagement() {
         .slice(0, 5)
     : [];
 
-    const titles = [
-      { key: "name", label: "Name", className: "flex flex-row items-center" },
-      { key: "position", label: "Position", className: "w-1/4" },
-      { key: "branch", label: "Campus", className: "w-1/4" },
-      { key: "action", label: "Action", className: "w-1/5" }
-    ];
+  const titles = [
+    { key: "name", label: "Name", className: "flex flex-row items-center" },
+    { key: "position", label: "Position", className: "w-1/4" },
+    { key: "branch", label: "Campus", className: "w-1/4" },
+    { key: "action", label: "Action", className: "w-1/5" },
+  ];
 
   return (
     <div className="account-main-container">
@@ -154,13 +149,13 @@ export default function AccountManagement() {
             suggestions={searchSuggestions}
             showSuggestions={showSuggestions}
             onSuggestionSelect={(user) => {
-              setSearchQuery(`${user.lastName.toUpperCase()}, ${user.firstName}`);
+              setSearchQuery(
+                `${user.lastName.toUpperCase()}, ${user.firstName}`
+              );
               setShowSuggestions(false);
             }}
             addedClassName="w-[80%] h-[50px]"
           />
-
-
 
           <Buttons
             text="Add Account"
@@ -168,12 +163,10 @@ export default function AccountManagement() {
             addedClassName="btn btn-warning"
           />
 
-
           <img src={download} alt="export" className="acc-export-icon" />
         </div>
 
         <div className="filter-container">
-
           <SelectFilter
             value={selectedPosition}
             onChange={(e) => setSelectedPosition(e.target.value)}
@@ -197,9 +190,7 @@ export default function AccountManagement() {
         </div>
       </div>
 
-          
-
-      <AccountContentsTable
+      <UserContentsTable
         columns={4}
         titles={titles}
         data={currentUsers}
