@@ -5,6 +5,8 @@ import axios from "axios";
 import { API_URL } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 
+import { supabase } from "../../supabase";
+
 export default function EditProfile() {
   const { setCurrentWebUser, setCurrentWebUserUID } =
     useContext(UserLoggedInContext);
@@ -31,13 +33,15 @@ export default function EditProfile() {
 
   const validateFirstName = (value) => {
     if (!value.trim()) return "First name is required.";
-    if (value.trim().length < 2) return "First name must be at least 2 characters.";
+    if (value.trim().length < 2)
+      return "First name must be at least 2 characters.";
     return "";
   };
 
   const validateLastName = (value) => {
     if (!value.trim()) return "Last name is required.";
-    if (value.trim().length < 2) return "Last name must be at least 2 characters.";
+    if (value.trim().length < 2)
+      return "Last name must be at least 2 characters.";
     return "";
   };
 
@@ -76,6 +80,37 @@ export default function EditProfile() {
     navigate("/profile");
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !editWebUser?.uid) return;
+
+    const fileExt = file.name.split(".").pop().toLowerCase();
+    const fileName = `${editWebUser.uid}.${fileExt}`;
+    const filePath = `pics/${fileName}`;
+
+    const { error } = await supabase.storage
+      .from("profile")
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+    if (error) {
+      console.error("Upload error:", error.message, error);
+      alert("Image upload failed.");
+      return;
+    }
+
+    const { data } = supabase.storage.from("profile").getPublicUrl(filePath);
+    setEditWebUser({ ...editWebUser, useravatar: data.publicUrl });
+
+    const timestamp = new Date().getTime();
+    setEditWebUser({
+      ...editWebUser,
+      useravatar: `${data.publicUrl}?t=${timestamp}`,
+    });
+  };
+
   return (
     <>
       <div className="main-cont-prof-settings">
@@ -110,6 +145,16 @@ export default function EditProfile() {
                   setEditWebUser({ ...editWebUser, useravatar: e.target.value })
                 }
               />
+
+              <label className="forms-label-properties mt-2">
+                Upload Image File
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="btn btn-warning text-black"
+              />
             </div>
           </div>
 
@@ -128,7 +173,9 @@ export default function EditProfile() {
                 }}
               />
               {firstNameError && (
-                <span className="error-text text-red-700">{firstNameError}</span>
+                <span className="error-text text-red-700">
+                  {firstNameError}
+                </span>
               )}
             </div>
 
