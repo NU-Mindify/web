@@ -52,10 +52,10 @@ body,
 }
 
 .disabled-btn {
-    background-color: #d3d3d3; /* Light gray background */
-    color: #a9a9a9; /* Light gray text */
-    border: 1px solid #a9a9a9; /* Light gray border */
-    cursor: not-allowed; /* Change cursor to indicate the button is disabled */
+  background-color: #d3d3d3; /* Light gray background */
+  color: #a9a9a9; /* Light gray text */
+  border: 1px solid #a9a9a9; /* Light gray border */
+  cursor: not-allowed; /* Change cursor to indicate the button is disabled */
 }
 
 .edit-btn-properties {
@@ -118,7 +118,6 @@ body,
     lg:w-10/12 lg:h-1/6;
 }
 
-
 /* modal css */
 
 .modal-overlay {
@@ -144,9 +143,33 @@ body,
 .modal-close-btn {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+//loading
+.spinner-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px; /* match avatar size */
+  height: 140px;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid #ff9800;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

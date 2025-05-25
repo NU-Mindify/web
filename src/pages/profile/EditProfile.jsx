@@ -24,6 +24,8 @@ export default function EditProfile() {
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
 
+  const [isUploading, setIsUploading] = useState(false);
+
   useEffect(() => {
     if (location.state?.webUser) {
       setEditWebUser(location.state.webUser);
@@ -84,6 +86,8 @@ export default function EditProfile() {
     const file = e.target.files[0];
     if (!file || !editWebUser?.uid) return;
 
+    setIsUploading(true);
+
     const fileExt = file.name.split(".").pop().toLowerCase();
     const fileName = `${editWebUser.uid}.${fileExt}`;
     const filePath = `pics/${fileName}`;
@@ -98,17 +102,19 @@ export default function EditProfile() {
     if (error) {
       console.error("Upload error:", error.message, error);
       alert("Image upload failed.");
+      setIsUploading(false);
       return;
     }
 
     const { data } = supabase.storage.from("profile").getPublicUrl(filePath);
-    setEditWebUser({ ...editWebUser, useravatar: data.publicUrl });
-
     const timestamp = new Date().getTime();
+
     setEditWebUser({
       ...editWebUser,
       useravatar: `${data.publicUrl}?t=${timestamp}`,
     });
+
+    setIsUploading(false);
   };
 
   return (
@@ -121,17 +127,17 @@ export default function EditProfile() {
         <div className="content-container-prof-settings">
           <div className="avatar-edit-container-prof-settings">
             <div className="avatar-container-prof-settings">
-              <img
-                className="avatar-dimensions"
-                src={editWebUser.useravatar}
-                alt=""
-              />
-              <h1
-                className="username-properties"
-                style={{ visibility: "hidden" }}
-              >
-                dontremove
-              </h1>
+              {isUploading ? (
+                <div className="avatar-dimensions bg-white flex align-center justify-center p-23">
+                  <div className="spinner" />
+                </div>
+              ) : (
+                <img
+                  className="avatar-dimensions"
+                  src={editWebUser.useravatar}
+                  alt="User Avatar"
+                />
+              )}
             </div>
 
             <div className="edit-btn-container-prof-settings">
