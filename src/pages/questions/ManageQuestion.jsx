@@ -98,7 +98,12 @@ export default function ManageQuestion() {
   });
 
   const addQuestion = () => {
-    navigate("/question/add");
+    navigate("/question/add", {
+      state: {
+        category,
+        categoryName: selectedCat,
+      },
+    });
   };
 
   if (isPending) return <div>Loading</div>;

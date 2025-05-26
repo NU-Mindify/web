@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Style from "./addQuestion.module.css";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
 import { CheckCircle2Icon, XCircle } from "lucide-react";
 import { API_URL } from "../../Constants";
@@ -27,6 +27,8 @@ const categoriesObj = [
     name: "General Psychology",
   },
 ];
+
+
 
 function AddQuestion() {
   const [isFormDisabled, setIsFormDisabled] = useState(false)
@@ -90,6 +92,23 @@ function AddQuestion() {
     });
     setQuestion({...question, choices: newChoices, answer: e.target.value})
   }
+
+  const location = useLocation();
+  const [category, setCategory] = useState(null);
+  const [categoryName, setCategoryName] = useState(null);
+
+  useEffect(() => {
+    const categoryFromState = location.state?.category;
+    const categoryNameFromState = location.state?.categoryName;
+
+    if (categoryFromState) {
+      setCategory(categoryFromState);
+    }
+
+    if (categoryNameFromState) {
+      setCategoryName(categoryNameFromState);
+    }
+  }, [location.state]);
 
   return (
     <div
@@ -244,7 +263,13 @@ function AddQuestion() {
           <button
             className="btn btn-neutral btn-outline grow"
             onClick={() => {
-              nav(-1);
+              nav("/question", {
+              state: {
+                category: category,
+                categoryName: categoryName,
+                catSelected: true,
+              },
+            });
             }}
           >
             Back
