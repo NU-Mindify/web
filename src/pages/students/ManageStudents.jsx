@@ -12,6 +12,7 @@ import SelectFilter from "../../components/selectFilter/SelectFilter";
 import searchIcon from "../../assets/students/search-01.svg";
 import UserContentsTable from "../../components/tableForContents/UserContentsTable";
 import Buttons from "../../components/buttons/Buttons";
+import { useNavigate } from "react-router";
 
 
 export default function ManageStudents() {
@@ -23,6 +24,8 @@ export default function ManageStudents() {
   const [sortOrder, setSortOrder] = useState(true);
   const [selectedBranch, setSelectedBranch] = useState("disabled");
   const [currentPage, setCurrentPage] = useState(1);
+
+  
 
   useEffect(() => {
     fetchStudents();
@@ -239,6 +242,8 @@ function CardActiveContent(student) {
 
   const highestMasteryScores = getHighestMasteryScores();
 
+  const navigate = useNavigate();
+
   return (
     <div className="text-black p-2">
       <h2 className="font-bold mb-2 text-white">Student Attempt Summary</h2>
@@ -332,7 +337,7 @@ function CardActiveContent(student) {
                 <div className="w-full flex items-center justify-center">
                   <Buttons 
                     text="Show More Details"
-                    onClick={() => alert("More details coming soon!")}
+                    onClick={() => navigate("/students/overall")}
                     addedClassName="btn btn-warning !w-[250px]"
                     disabled={loadingData}
                   />
