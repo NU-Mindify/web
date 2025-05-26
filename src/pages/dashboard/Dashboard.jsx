@@ -465,13 +465,20 @@ export default function Dashboard() {
                   ? classicLeaderboards
                   : leaderboardsMastery
                 )
+                  .map((item) => ({
+                    ...item,
+                    calculatedScore: item.total_items
+                      ? (item.correct / item.total_items) * 100
+                      : 0,
+                  }))
+                  .sort((a, b) => b.calculatedScore - a.calculatedScore)
                   .slice(0, 10)
                   .map((item, index) => {
                     const user = item.user_id || {};
                     const scorePercent = item.total_items
-                      ? ((item.correct / item.total_items) * 100).toFixed(0) +
-                        "%"
+                      ? item.calculatedScore.toFixed(0) + "%"
                       : "N/A";
+
                     return (
                       <tr
                         key={item._id}
