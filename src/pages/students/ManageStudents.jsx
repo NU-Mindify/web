@@ -165,7 +165,6 @@ export default function ManageStudents() {
 }
 
 function CardActiveContent(student) {
-  const [attempts, setAttempts] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
   const [competitionModeData, setCompetitionModeData] = useState([]);
   const [masteryModeData, setMasteryModeData] = useState([]);
@@ -180,7 +179,6 @@ function CardActiveContent(student) {
         const { data } = await axios.get(
           `${API_URL}/getUserAttempts?user_id=${studentId}`
         );
-        setAttempts(data);
         setCompetitionModeData(
           data.filter((data) => data.mode === "competition")
         );
@@ -240,17 +238,17 @@ function CardActiveContent(student) {
   const highestMasteryScores = getHighestMasteryScores();
 
   const navigate = useNavigate();
+  const [masteryPercentage, setMasteryPercentage] = useState(0);
 
   return (
     <div className="text-black p-2">
-      <h2 className="font-bold mb-2 text-white">Student Attempt Summary</h2>
       {loadingData ? (
         <div className="loading-overlay-accounts">
           <div className="spinner"></div>
           <p>Fetching data...</p>
         </div>
       ) : (
-        <table className="w-full bg-transparent border-collapse">
+        <table className="w-full border-collapse mt-2 bg-transparent">
           <thead>
             <tr className="!bg-transparent border-0">
               {categories.map((category) => (
@@ -267,7 +265,7 @@ function CardActiveContent(student) {
             <tr>
               {categories.map((category) => (
                 <td key={category.id}>
-                  <h1>Competition</h1>
+                  <h1 className="mt-4">Competition</h1>
                   <div className="flex justify-center items-center">
                     {levels.map((level) => {
                       const attemptKey = `${category.id}-${level}`;
@@ -287,7 +285,13 @@ function CardActiveContent(student) {
                     })}
                   </div>
 
-                  <h1 className="mt-2">Mastery</h1>
+                  <div className="w-full flex justify-between items-center pr-4 mt-4">
+                    <h1>Mastery</h1>
+                    <h1>
+                      {highestMasteryScores[category.id]?.percentage ?? 0}%
+                    </h1>
+                  </div>
+
                   <div className="mt-1">
                     {(() => {
                       const masteryAttempt = highestMasteryScores[category.id];
@@ -296,20 +300,18 @@ function CardActiveContent(student) {
                       const total = masteryAttempt?.total_items ?? 0;
                       const correct = masteryAttempt?.correct ?? 0;
 
-                      let color = "bg-gray-500";
+                      let color = "bg-white";
                       if (percentage === 100) {
                         color = "bg-green-500";
                       } else if (percentage >= 80) {
                         color = "bg-orange-300";
                       } else if (percentage > 0) {
                         color = "bg-gray-500 text-white";
-                      } else {
-                        color = "bg-white";
                       }
 
                       return (
                         <div className="w-full flex items-center justify-center">
-                          <div className="w-11/12 h-5 bg-gray-200 rounded-md overflow-hidden">
+                          <div className="w-11/12 h-5 bg-gray-200 rounded-md overflow-hidden  border border-black">
                             <div
                               className={`h-full ${color} text-sm text-black text-center`}
                               style={{ width: `${percentage}%` }}
@@ -327,9 +329,9 @@ function CardActiveContent(student) {
             </tr>
             <tr>
               <td colSpan={5} className="pt-3">
-                <div className="w-full flex items-center justify-center">
+                <div className="w-full flex items-center justify-center mt-3">
                   <Buttons
-                    text="Show More Details"
+                    text="View Student Details"
                     onClick={() =>
                       navigate("/students/overall", {
                         state: {

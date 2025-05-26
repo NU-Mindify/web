@@ -1,64 +1,64 @@
-// src/components/barGraph/BarGraph.jsx
-import React, { useEffect, useRef } from "react";
-import Chart from "chart.js/auto";
+import React from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Label,
+} from "recharts";
 
-export default function BarGraph({ data }) {
-  const chartRef = useRef(null);
-  const chartInstanceRef = useRef(null);
-
-  useEffect(() => {
-    if (chartInstanceRef.current) {
-      chartInstanceRef.current.destroy();
-    }
-
-    const ctx = chartRef.current.getContext("2d");
-
-    chartInstanceRef.current = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: data.map((item) => item.label),
-        datasets: [
-          {
-            label: "Students",
-            data: data.map((item) => item.count),
-            backgroundColor: "#4F46E5",
-            borderRadius: 8,
-            barThickness: 40,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              stepSize: 1,
-            },
-            title: {
-              display: true,
-              text: "Number of Students",
-            },
-          },
-          x: {
-            title: {
-              display: true,
-              text: "Branch",
-            },
-          },
-        },
-      },
-    });
-  }, [data]);
-
+const BarGraph = ({ data }) => {
   return (
-    <div className="w-full h-full">
-      <canvas ref={chartRef} />
-    </div>
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart
+        data={data}
+        margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+        barCategoryGap="20%"
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+
+        <XAxis
+          dataKey="label"
+          angle={-45}
+          textAnchor="end"
+          interval={0}
+          height={80}
+          tick={{ fontSize: 12 }}
+        >
+          <Label value="NU Campus" offset={-10} position="insideBottom" />
+        </XAxis>
+
+        <YAxis>
+          <Label
+            value="Number of Students"
+            angle={-90}
+            position="insideLeft"
+            offset={20}
+            style={{ textAnchor: "middle" }}
+          />
+        </YAxis>
+
+        <Tooltip />
+        <Legend
+          verticalAlign="bottom"
+          wrapperStyle={{
+            position: "relative",
+          }}
+        />
+        <Bar
+          dataKey="count"
+          fill="#FACC15"
+          name="Students"
+          stroke="#000"
+          strokeWidth={1}
+        />
+      </BarChart>
+    </ResponsiveContainer>
   );
-}
+};
+
+export default BarGraph;

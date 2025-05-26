@@ -235,6 +235,8 @@ export default function Dashboard() {
     })
     .sort((a, b) => b.count - a.count);
 
+  console.log(branchData);
+
   const formatTime = (seconds) => {
     if (seconds < 60) {
       return `${seconds.toFixed(2)}s`;
@@ -382,7 +384,11 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <div className="w-full h-[300px]">
+            <div className="w-full h-10/12 flex flex-col justify-center items-center p-4">
+              <div className="w-full flex flex-col mb-4">
+                <h1 className="text-black text-2xl font-bold font-[poppins]">Total Students</h1>
+                <p className="text-black font-[poppins]">per campus</p>
+              </div>
               <BarGraph data={branchData} />
             </div>
           )}

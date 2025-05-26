@@ -24,10 +24,7 @@
 
 /* ANALYTICS */
 .analytics-container-dashboard {
-  @apply w-full grid grid-cols-1 gap-4 place-items-center 
-    md:grid-cols-2
-    lg:grid-cols-3
-    xl:grid-cols-5;
+  @apply w-full grid grid-cols-1 gap-4 place-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5;
 }
 
 .analytics-properties-dashboard {
@@ -37,6 +34,7 @@
 .dashboard-title {
   @apply text-black;
 }
+
 .dashboard-sub-title {
   @apply text-black text-[14px];
 }
@@ -55,14 +53,13 @@
 .reports-title-container-dashboard {
   @apply w-full h-[100px] flex items-center;
 }
+
 .reports-title-properties-dashboard {
   @apply text-white font-[Poppins] font-bold text-[40px];
 }
 
 .reports-content-container-dashboard {
-  @apply w-full grid grid-cols-1 gap-4 mt-2
-    md:grid-cols-2
-    xl:grid-cols-3;
+  @apply w-full grid grid-cols-1 gap-4 mt-2 md:grid-cols-2 xl:grid-cols-3;
 }
 
 .total-students-container-dashboard {
@@ -95,6 +92,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
