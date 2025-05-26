@@ -14,7 +14,6 @@ import UserContentsTable from "../../components/tableForContents/UserContentsTab
 import Buttons from "../../components/buttons/Buttons";
 import { useNavigate } from "react-router";
 
-
 export default function ManageStudents() {
   const { currentWebUser } = useContext(UserLoggedInContext);
   const [students, setStudents] = useState([]);
@@ -24,8 +23,6 @@ export default function ManageStudents() {
   const [sortOrder, setSortOrder] = useState(true);
   const [selectedBranch, setSelectedBranch] = useState("disabled");
   const [currentPage, setCurrentPage] = useState(1);
-
-  
 
   useEffect(() => {
     fetchStudents();
@@ -252,10 +249,6 @@ function CardActiveContent(student) {
           <div className="spinner"></div>
           <p>Fetching data...</p>
         </div>
-      ) : attempts.length === 0 ? (
-        <div className="w-full flex justify-center items-center">
-          <p>No attempts yet.</p>
-        </div>
       ) : (
         <table className="w-full bg-transparent border-collapse">
           <thead>
@@ -274,8 +267,8 @@ function CardActiveContent(student) {
             <tr>
               {categories.map((category) => (
                 <td key={category.id}>
-                  <h1>Classic</h1>
-                  <div className="flex">
+                  <h1>Competition</h1>
+                  <div className="flex justify-center items-center">
                     {levels.map((level) => {
                       const attemptKey = `${category.id}-${level}`;
                       const attempt = classicHighestScores[attemptKey];
@@ -285,10 +278,10 @@ function CardActiveContent(student) {
                       return (
                         <div
                           key={level}
-                          className={`w-[20px] h-[20px] mr-1 rounded-md ${color} text-xs text-center text-black flex items-center justify-center mt-2`}
+                          className={`w-[20px] h-[20px] mr-1 rounded-md ${color} text-xs text-center text-black flex items-center justify-center mt-2 border border-black`}
                           title={`Stage ${level} - Score: ${score}/${total}`}
                         >
-                          {score > 0 ? score : "-"}
+                          {score > 0 ? score : ""}
                         </div>
                       );
                     })}
@@ -335,9 +328,21 @@ function CardActiveContent(student) {
             <tr>
               <td colSpan={5} className="pt-3">
                 <div className="w-full flex items-center justify-center">
-                  <Buttons 
+                  <Buttons
                     text="Show More Details"
-                    onClick={() => navigate("/students/overall")}
+                    onClick={() =>
+                      navigate("/students/overall", {
+                        state: {
+                          competitionData: competitionModeData,
+                          masteryData: masteryModeData,
+                          reviewData: reviewModeData,
+                          studentFirstName: student.first_name,
+                          studentLastName: student.last_name,
+                          studentId: student.student_id,
+                          studentBranch: student.branch,
+                        },
+                      })
+                    }
                     addedClassName="btn btn-warning !w-[250px]"
                     disabled={loadingData}
                   />

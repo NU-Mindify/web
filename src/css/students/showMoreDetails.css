@@ -3,6 +3,43 @@
 @plugin "daisyui";
 
 
-.more-details-container{
-    @apply w-full h-full bg-pink-300;
+.more-details-container {
+  @apply w-full h-full bg-white overflow-hidden overflow-y-auto p-2 pb-4;
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
+}
+
+.more-details-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.more-details-container::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 8px;
+}
+
+.more-details-container::-webkit-scrollbar-track {
+  background: black;
+}
+
+.profile-pic-details-container {
+  @apply w-full h-[150px] pl-10;
+}
+
+.profile-pic-details-table {
+  @apply w-[400px] h-full;
+}
+
+.competition-mode-container {
+  @apply w-full;
+}
+
+
+
+.competition-mode-table {
+  @apply w-full;
+}
+
+.per-level-stats-container {
+  @apply w-11/12 h-full p-3 rounded-2xl mt-3;
 }

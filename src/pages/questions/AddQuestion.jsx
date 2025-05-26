@@ -28,60 +28,58 @@ const categoriesObj = [
   },
 ];
 
-
-
 function AddQuestion() {
-  const [isFormDisabled, setIsFormDisabled] = useState(false)
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
   const [question, setQuestion] = useState({
     question: "",
     choices: [
       {
         letter: "a",
         text: "",
-        isCorrect: true
+        isCorrect: true,
       },
       {
         letter: "b",
         text: "",
-        isCorrect: false
+        isCorrect: false,
       },
       {
         letter: "c",
         text: "",
-        isCorrect: false
+        isCorrect: false,
       },
       {
         letter: "d",
         text: "",
-        isCorrect: false
+        isCorrect: false,
       },
     ],
-    rationale:"",
+    rationale: "",
     category: "developmental",
     level: 1,
-    answer:"a",
+    answer: "a",
   });
   const nav = useNavigate();
 
   const addToDB = async () => {
-    setIsFormDisabled(true)
+    setIsFormDisabled(true);
     try {
       const { data } = await axios.post(`${API_URL}/addQuestion`, question);
       console.log(data);
       alert("Added Successfully");
-      nav(-1)
+      nav(-1);
     } catch (error) {
       console.error(error);
-      alert(error.response.data.error.name)
+      alert(error.response.data.error.name);
     }
-    setIsFormDisabled(false)
-  }
+    setIsFormDisabled(false);
+  };
 
   const onChoiceChange = (e, index) => {
     const newChoices = [...question.choices];
     newChoices[index].text = e.target.value;
-    setQuestion({...question, choices: newChoices})
-  }
+    setQuestion({ ...question, choices: newChoices });
+  };
   const onAnswerChange = (e) => {
     const choices = [...question.choices];
     const newChoices = choices.map((choice) => {
@@ -90,8 +88,8 @@ function AddQuestion() {
       }
       return { ...choice, isCorrect: false };
     });
-    setQuestion({...question, choices: newChoices, answer: e.target.value})
-  }
+    setQuestion({ ...question, choices: newChoices, answer: e.target.value });
+  };
 
   const location = useLocation();
   const [category, setCategory] = useState(null);
@@ -264,12 +262,12 @@ function AddQuestion() {
             className="btn btn-neutral btn-outline grow"
             onClick={() => {
               nav("/question", {
-              state: {
-                category: category,
-                categoryName: categoryName,
-                catSelected: true,
-              },
-            });
+                state: {
+                  category: category,
+                  categoryName: categoryName,
+                  catSelected: true,
+                },
+              });
             }}
           >
             Back

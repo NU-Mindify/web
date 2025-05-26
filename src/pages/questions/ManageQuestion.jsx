@@ -4,74 +4,66 @@ import search from "../../assets/search/search.svg";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router";
-import '../../css/questions/questions.css'
+import "../../css/questions/questions.css";
 import SearchBar from "../../components/searchbar/SearchBar";
 import { API_URL } from "../../Constants";
-import abnormal from '../../assets/questions/abnormalBG.png'
-import developmental from '../../assets/questions/developmentalBG.png'
-import general from '../../assets/questions/generalBG.png'
-import industrial from '../../assets/questions/industrialBG.png'
-import psychological from '../../assets/questions/psychologicalBG.png'
-import back from '../../assets/questions/angle-left.svg'
+import abnormal from "../../assets/questions/abnormalBG.png";
+import developmental from "../../assets/questions/developmentalBG.png";
+import general from "../../assets/questions/generalBG.png";
+import industrial from "../../assets/questions/industrialBG.png";
+import psychological from "../../assets/questions/psychologicalBG.png";
+import back from "../../assets/questions/angle-left.svg";
 import { Plus } from "lucide-react";
 
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
-
-
-
 
 const categoriesObj = [
   {
     id: "abnormal",
     name: "Abnormal Psychology",
-    bg: abnormal
+    bg: abnormal,
   },
   {
     id: "developmental",
     name: "Developmental Psychology",
-    bg: developmental
+    bg: developmental,
   },
   {
     id: "psychological",
     name: "Psychological Assessment",
-    bg: psychological
+    bg: psychological,
   },
   {
     id: "industrial",
     name: "Industrial Psychology",
-    bg: industrial
+    bg: industrial,
   },
   {
     id: "general",
     name: "General Psychology",
-    bg: general
+    bg: general,
   },
 ];
 
 export default function ManageQuestion() {
-
-
   const location = useLocation();
   useEffect(() => {
     const category = location.state?.category;
     const categoryName = location.state?.categoryName;
     const catSelected = location.state?.catSelected;
-  
+
     if (category && catSelected) {
       setCategory(category);
       setGotSelected(true);
       setSelectedCat(categoryName);
     }
   }, [location.state]);
-  
+
   const navigate = useNavigate();
 
-
   const [category, setCategory] = useState(null);
-  const [gotSelected, setGotSelected] = useState(false)
-  const [selectedCat, setSelectedCat] = useState(null)
-
-  
+  const [gotSelected, setGotSelected] = useState(false);
+  const [selectedCat, setSelectedCat] = useState(null);
 
   const getData = async () => {
     try {
@@ -110,81 +102,81 @@ export default function ManageQuestion() {
 
   if (error) return <div>Error: {error}</div>;
 
-
-  function handleBack(){
-    setGotSelected(false)
+  function handleBack() {
+    setGotSelected(false);
   }
 
   function Category_Choices({ text, id, onClick, bgImage }) {
     return (
-      
       // eslint-disable-next-line jsx-a11y/click-events-have-key-events
       <div className="category-container" onClick={onClick} key={id}>
         <img src={bgImage} className="category-bg" alt="bgImages" />
         <h1 className="category-text">{text}</h1>
         <p className="category-quantity">Questions: 2022</p>
-      </div> 
+      </div>
     );
   }
-  
-const QuestionCard = ({ data, index }) => {
-  return (
-    <div className="collapse collapse-arrow question-card">
-      <input type="checkbox" name="question-accordion" />
 
-      <div className="collapse-title question-details">
-        <div className="question-summary">
-          {index + 1}. {data.question}
-        </div>
-      </div>
+  const QuestionCard = ({ data, index }) => {
+    return (
+      <div className="collapse collapse-arrow question-card">
+        <input type="checkbox" name="question-accordion" />
 
-      <div className="collapse-content question-content">
-        {data.choices.map((choice) => (
-          <label
-            key={choice.letter}
-            className={`choice ${choice.isCorrect ? "choice-correct" : ""}`}
-          >
-            <span className="choice-indicator">
-              {choice.isCorrect && <span className="choice-fill"></span>}
-            </span>
-            <span>
-              <strong>{choice.letter}.</strong> {choice.text}
-            </span>
-          </label>
-        ))}
-
-        <div className="rationale-box">
-          <p><strong>Rationale:</strong></p>
-          <p>{data.rationale}</p>
-        </div>
-
-        <div className="question-meta">
-          <div>
-            <div>
-              <strong>Category:</strong> {categoriesObj.find(categ => categ.id === data.category)?.name}
-            </div>
-            <div>
-              <strong>LEVEL:</strong> {data.level}
-            </div>
+        <div className="collapse-title question-details">
+          <div className="question-summary">
+            {index + 1}. {data.question}
           </div>
         </div>
 
+        <div className="collapse-content question-content">
+          {data.choices.map((choice) => (
+            <label
+              key={choice.letter}
+              className={`choice ${choice.isCorrect ? "choice-correct" : ""}`}
+            >
+              <span className="choice-indicator">
+                {choice.isCorrect && <span className="choice-fill"></span>}
+              </span>
+              <span>
+                <strong>{choice.letter}.</strong> {choice.text}
+              </span>
+            </label>
+          ))}
 
-        <div className="question-actions">
-          <button className="btn-action">EDIT</button>
-          <button className="btn-action">ARCHIVE</button>
+          <div className="rationale-box">
+            <p>
+              <strong>Rationale:</strong>
+            </p>
+            <p>{data.rationale}</p>
+          </div>
+
+          <div className="question-meta">
+            <div>
+              <div>
+                <strong>Category:</strong>{" "}
+                {
+                  categoriesObj.find((categ) => categ.id === data.category)
+                    ?.name
+                }
+              </div>
+              <div>
+                <strong>LEVEL:</strong> {data.level}
+              </div>
+            </div>
+          </div>
+
+          <div className="question-actions">
+            <button className="btn-action">EDIT</button>
+            <button className="btn-action">ARCHIVE</button>
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
-
+    );
+  };
 
   return (
-   
     <div className="question-main-container">
       <div className="question-header">
-
         <div className="title-header">
           {gotSelected ? (
             <div className="title-content">
@@ -194,98 +186,104 @@ const QuestionCard = ({ data, index }) => {
                 </button>
                 <h1 className="question-title">{selectedCat}</h1>
               </div>
-              <p className="question-count">Total Questions: {questions.length}</p>
+              <p className="question-count">
+                Total Questions: {questions.length}
+              </p>
             </div>
           ) : (
             <h1 className="question-title">Select Category</h1>
           )}
         </div>
-          
-      {gotSelected && (
-        <div className="question-controls-container flex flex-col gap-4 pt-4 mb-4">
 
+        {gotSelected && (
+          <div className="question-controls-container flex flex-col gap-4 pt-4 mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-4 w-full">
+              <div className="question-search-container flex-1 min-w-[200px]">
+                <div className="search-bar-question border">
+                  <button className="search-btn-question">
+                    <img src={search} alt="search icon" className="w-4 h-4" />
+                  </button>
+                  <input
+                    type="text"
+                    placeholder="Search questions..."
+                    className="search-input-question"
+                  />
+                </div>
+              </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 w-full">
-
-            <div className="question-search-container flex-1 min-w-[200px]">
-              <div className="search-bar-question border">
-                <button className="search-btn-question">
-                  <img src={search} alt="search icon" className="w-4 h-4" />
+              <div className="add-ques-container flex gap-2">
+                <button
+                  className="btn flex items-center gap-2 px-4 py-2 text-sm font-medium"
+                  onClick={addQuestion}
+                >
+                  <Plus className="w-5 h-5  text-white" />
+                  Add Question
                 </button>
-                <input 
-                  type="text"
-                  placeholder="Search questions..." 
-                  className="search-input-question"
-                />
+
+                <div className="pt-1">
+                  <ExportDropdown />
+                </div>
               </div>
             </div>
 
-          
-            <div className="add-ques-container flex gap-2">
-              <button
-                className="btn flex items-center gap-2 px-4 py-2 text-sm font-medium"
-                onClick={addQuestion}>
-                <Plus className="w-5 h-5  text-white" />
-                Add Question
-              </button>
+            <div className="flex flex-wrap items-center gap-4 w-full justify-start">
+              <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
+                <button className="all-archive-btn active w-1/2">
+                  All Questions
+                </button>
+                <button className="all-archive-btn w-1/2">Archive</button>
+              </div>
 
-              <div className="pt-1">
-                <ExportDropdown />
+              <div className="sort-container relative">
+                <select id="sort" className="sort-select pl-8">
+                  <option value="" disabled selected hidden>
+                    Sort by:
+                  </option>
+                  <option value="level-asc">ALL</option>
+                  <option value="level-asc">Level (1 → 10)</option>
+                  <option value="level-desc">Level (10 → 1)</option>
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                </select>
+              </div>
+
+              <div className="sort-container relative">
+                <select id="filter" className="sort-select pl-8">
+                  <option value="" disabled selected hidden>
+                    Filter Level:
+                  </option>
+                  <option value="1">Level 1</option>
+                  <option value="2">Level 2</option>
+                  <option value="3">Level 3</option>
+                  <option value="4">Level 4</option>
+                  <option value="5">Level 5</option>
+                </select>
               </div>
             </div>
           </div>
-
-          <div className="flex flex-wrap items-center gap-4 w-full justify-start">
-            <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
-              <button className="all-archive-btn active w-1/2">All Questions</button>
-              <button className="all-archive-btn w-1/2">Archive</button>
-            </div>
-
-            <div className="sort-container relative">
-              <select id="sort" className="sort-select pl-8">
-                <option value="" disabled selected hidden>Sort by:</option>
-                <option value="level-asc">ALL</option>
-                <option value="level-asc">Level (1 → 10)</option>
-                <option value="level-desc">Level (10 → 1)</option>
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-              </select>
-            </div>
-
-            <div className="sort-container relative">
-              <select id="filter" className="sort-select pl-8">
-                <option value="" disabled selected hidden>Filter Level:</option>
-                <option value="1">Level 1</option>
-                <option value="2">Level 2</option>
-                <option value="3">Level 3</option>
-                <option value="4">Level 4</option>
-                <option value="5">Level 5</option>
-              </select>
-            </div>
-          </div>
-
-
-
-        </div>
-      )}
-
-
-        </div>
-      {gotSelected ? 
+        )}
+      </div>
+      {gotSelected ? (
         <div className="allquesitons-container">
           <div className="ques-sub-container">
             <div className="allques-main-holder">
               {questions.length === 0 ? (
-                <div className="text-center text-gray-500 text-xl">No questions found.</div>
+                <div className="text-center text-gray-500 text-xl">
+                  No questions found.
+                </div>
               ) : (
                 questions.map((question, index) => (
-                  <QuestionCard data={question} key={question._id} index={index} />
+                  <QuestionCard
+                    data={question}
+                    key={question._id}
+                    index={index}
+                  />
                 ))
               )}
             </div>
           </div>
         </div>
-        : 
+      ) : (
         <div className="question-body">
           {categoriesObj.map((elem) => (
             <Category_Choices
@@ -301,11 +299,7 @@ const QuestionCard = ({ data, index }) => {
             />
           ))}
         </div>
-        
-      
-      }
+      )}
     </div>
-    
-    
   );
 }

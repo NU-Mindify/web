@@ -170,13 +170,14 @@ export default function EditProfile() {
               <input
                 type="text"
                 placeholder="First Name"
-                className="input input-properties"
+                className="input input-properties-disabled"
                 value={editWebUser.firstName}
                 onChange={(e) => {
                   const value = e.target.value;
                   setEditWebUser({ ...editWebUser, firstName: value });
                   setFirstNameError(validateFirstName(value));
                 }}
+                disabled
               />
               {firstNameError && (
                 <span className="error-text text-red-700">
@@ -190,13 +191,14 @@ export default function EditProfile() {
               <input
                 type="text"
                 placeholder="Last Name"
-                className="input input-properties"
+                className="input input-properties-disabled"
                 value={editWebUser.lastName}
                 onChange={(e) => {
                   const value = e.target.value;
                   setEditWebUser({ ...editWebUser, lastName: value });
                   setLastNameError(validateLastName(value));
                 }}
+                disabled
               />
               {lastNameError && (
                 <span className="error-text text-red-700">{lastNameError}</span>
@@ -206,11 +208,12 @@ export default function EditProfile() {
             <div className="forms-properties">
               <label className="forms-label-properties">NU Branch</label>
               <select
-                className="input input-bordered cursor-pointer input-properties"
+                className="input input-properties-disabled"
                 value={editWebUser.branch}
                 onChange={(e) =>
                   setEditWebUser({ ...editWebUser, branch: e.target.value })
                 }
+                disabled
               >
                 <option value="manila">NU Manila</option>
                 <option value="moa">NU MOA</option>
