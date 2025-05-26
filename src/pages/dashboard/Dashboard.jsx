@@ -25,23 +25,49 @@ export default function Dashboard() {
     useState(null);
 
   const [bestPerformingWorld, setBestPerformingWorld] = useState(null);
-  const [bestPerformingWorldScore, setBestPerformingWorldScore] = useState(null);
+  const [bestPerformingWorldScore, setBestPerformingWorldScore] =
+    useState(null);
 
-
-
-  
-
-  
-
-
-
-
-
+  const [classicLeaderboards, setClassicLeaderboards] = useState([]);
+  const [leaderboardsMastery, setLeaderboardsMastery] = useState([]);
+  const [loadingDataClassic, setLoadingDataClassic] = useState(false);
+  const [loadingDataMastery, setLoadingDataMastery] = useState(false);
+  const [leaderboardMode, setLeaderboardMode] = useState("classic");
 
   useEffect(() => {
     fetchStudents();
     fetchAttempts();
+    fetchTopClassicLeaderboard();
+    fetchTopMasteryLeaderboard();
   }, []);
+
+  const fetchTopClassicLeaderboard = async () => {
+    setLoadingDataClassic(true);
+    try {
+      const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
+        params: { mode: "classic" },
+      });
+      setClassicLeaderboards(response.data);
+    } catch (error) {
+      console.error("Error fetching top leaderboards:", error.message);
+    } finally {
+      setLoadingDataClassic(false);
+    }
+  };
+
+  const fetchTopMasteryLeaderboard = async () => {
+    setLoadingDataMastery(true);
+    try {
+      const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
+        params: { mode: "mastery" },
+      });
+      setLeaderboardsMastery(response.data);
+    } catch (error) {
+      console.error("Error fetching top leaderboards:", error.message);
+    } finally {
+      setLoadingDataMastery(false);
+    }
+  };
 
   //set amount of students
   useEffect(() => {
@@ -207,27 +233,17 @@ export default function Dashboard() {
         count: studentCount,
       };
     })
-    .sort((a, b) => b.count - a.count); 
+    .sort((a, b) => b.count - a.count);
 
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
+  const formatTime = (seconds) => {
+    if (seconds < 60) {
+      return `${seconds.toFixed(2)}s`;
+    } else {
+      const mins = Math.floor(seconds / 60);
+      const secs = (seconds % 60).toFixed(0);
+      return `${mins}m ${secs}s`;
+    }
+  };
 
   return (
     <div className="main-container-dashboard">
@@ -235,9 +251,12 @@ export default function Dashboard() {
         <h1 className="header-text-dashboard">Dashboard</h1>
         <h2 className="header-greeting-dashboard">
           {`Hi, ${currentWebUser.firstName} 
-          ${currentWebUser.position.toLowerCase() === "super admin" ? "My lord" : `from ${branch}`}. 
+          ${
+            currentWebUser.position.toLowerCase() === "super admin"
+              ? "My lord"
+              : `from ${branch}`
+          }. 
           Welcome back to NU Mindify!`}
-
         </h2>
       </div>
 
@@ -297,7 +316,7 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <div className="flex items-center justify-center flex-col p-3"> 
+            <div className="flex items-center justify-center flex-col p-3">
               <h1 className="dashboard-title mb-2 font-[Poppins]">
                 Most Challenging World
               </h1>
@@ -371,10 +390,126 @@ export default function Dashboard() {
         <div className="badges-container-dashboard">
           <h1 className="text-black">Badges Placeholder</h1>
         </div>
-        <div className="leaderboards-container-dashboard">
-          <h1 className="text-black">
-            Leaderboards per Branch (only top 10) placeholder
-          </h1>
+        <div
+          className="leaderboards-container-dashboard"
+          style={{
+            maxWidth: "600px",
+            overflowX: "auto",
+            padding: "1rem",
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+          }}
+        >
+          <div className="flex gap-4 mb-4">
+            <button
+              onClick={() => setLeaderboardMode("classic")}
+              disabled={leaderboardMode === "classic"}
+              className={`px-4 py-2 rounded-md font-semibold transition-colors duration-200
+      ${
+        leaderboardMode === "classic"
+          ? "bg-[#35408E] text-black cursor-pointer"
+          : "bg-[#FFD41C] text-black  hover:bg-[#FFD41C] cursor-pointer"
+      }`}
+            >
+              Classic
+            </button>
+
+            <button
+              onClick={() => setLeaderboardMode("mastery")}
+              disabled={leaderboardMode === "mastery"}
+              className={`px-4 py-2 rounded-md font-semibold transition-colors duration-200
+      ${
+        leaderboardMode === "mastery"
+          ? "bg-[#35408E] text-black cursor-pointer"
+          : "bg-[#FFD41C] text-black  hover:bg-[#FFD41C] cursor-pointer"
+      }`}
+            >
+              Mastery
+            </button>
+          </div>
+
+          {(
+            leaderboardMode === "classic"
+              ? loadingDataClassic
+              : loadingDataMastery
+          ) ? (
+            <div
+              className="loading-overlay-dashboard"
+              style={{ height: "150px" }}
+            >
+              <div className="spinner"></div>
+              <p>Loading {leaderboardMode} leaderboard...</p>
+            </div>
+          ) : (
+            <table
+              style={{
+                width: "100%",
+                fontSize: "0.85rem",
+                borderCollapse: "collapse",
+              }}
+            >
+              <thead>
+                <tr
+                  className="text-black"
+                  style={{ borderBottom: "1px solid #ddd" }}
+                >
+                  <th style={{ padding: "6px" }}>Username</th>
+                  <th style={{ padding: "6px" }}>Branch</th>
+                  <th style={{ padding: "6px" }}>World</th>
+                  <th style={{ padding: "6px" }}>Score (%)</th>
+                  <th style={{ padding: "6px" }}>Time (s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(leaderboardMode === "classic"
+                  ? classicLeaderboards
+                  : leaderboardsMastery
+                )
+                  .slice(0, 10)
+                  .map((item, index) => {
+                    const user = item.user_id || {};
+                    const scorePercent = item.total_items
+                      ? ((item.correct / item.total_items) * 100).toFixed(0) +
+                        "%"
+                      : "N/A";
+                    return (
+                      <tr
+                        key={item._id}
+                        style={{
+                          borderBottom: "1px solid #eee",
+                          textAlign: "center",
+                        }}
+                      >
+                        <td className="text-black" style={{ padding: "6px" }}>
+                          {index + 1}. {user.username || "Unknown"}
+                        </td>
+                        <td
+                          className="text-black"
+                          style={{ padding: "6px", textTransform: "uppercase" }}
+                        >
+                          {user.branch || item.branch || "N/A"}
+                        </td>
+                        <td
+                          className="text-black"
+                          style={{
+                            padding: "6px",
+                            textTransform: "capitalize",
+                          }}
+                        >
+                          {item.category || "N/A"}
+                        </td>
+                        <td className="text-black" style={{ padding: "6px" }}>
+                          {scorePercent}
+                        </td>
+                        <td className="text-black px-2 py-1 text-center text-sm">
+                          {formatTime(item.time_completion)}
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
