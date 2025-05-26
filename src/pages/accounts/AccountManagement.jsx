@@ -200,6 +200,7 @@ export default function AccountManagement() {
         sortOrderAsc={sortOrderAsc}
         setSortOrderAsc={setSortOrderAsc}
         getBranchName={getBranchName}
+        cardActiveContent={CardActiveContent}
       />
 
       <div className="acc-footer">
@@ -238,3 +239,18 @@ export default function AccountManagement() {
     </div>
   );
 }
+
+
+function CardActiveContent(user) {
+  return (
+    <div className="user-details-card">
+      <p>
+        <strong>Email:</strong> {user.email}
+      </p>
+      <p>
+        <strong>Employee Number:</strong> {user.employeenum}
+      </p>
+    </div>
+  );
+}
+

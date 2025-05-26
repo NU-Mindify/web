@@ -13,6 +13,7 @@ export default function UserContentsTable({
   sortOrderAsc,
   setSortOrderAsc,
   getBranchName,
+  cardActiveContent,
 }) {
   return (
     <div className="users-main-container">
@@ -116,10 +117,8 @@ export default function UserContentsTable({
                                         </button>
                                         <button
                                           type="button"
-                                          className={`acc-chevron ${
-                                            cardActive === userId
-                                              ? "rotate-180"
-                                              : ""
+                                          className={`acc-chevron transition-transform duration-300 ${
+                                            cardActive === userId ? "rotate-180" : "rotate-0"
                                           }`}
                                           aria-label="Toggle details"
                                           onClick={() => toggleCard(userId)}
@@ -130,6 +129,7 @@ export default function UserContentsTable({
                                             className="chevron-icon"
                                           />
                                         </button>
+
                                       </div>
                                     </td>
                                   );
@@ -143,6 +143,17 @@ export default function UserContentsTable({
                                   return <td key={key}>N/A</td>;
                               }
                             })}
+
+                            
+                            
+                          </tr>
+                          <tr>
+                            <td colSpan={columns}>
+                              {
+                                cardActive === userId && 
+                                cardActiveContent(user)
+                              }
+                            </td>
                           </tr>
                         </tbody>
                       </table>
