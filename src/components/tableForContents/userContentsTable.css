@@ -5,8 +5,7 @@
 
 /* Main Container */
 .users-main-container {
-  @apply w-full flex-1 overflow-hidden overflow-y-auto flex flex-col items-center 
-    transition-transform duration-500 ease-in-out;
+  @apply w-full flex-1 overflow-hidden overflow-y-auto flex flex-col items-center transition-transform duration-500 ease-in-out;
   scrollbar-width: thin;
   scrollbar-color: black transparent;
 }
@@ -35,8 +34,8 @@
   @apply text-xl text-black;
 }
 
-thead tr{
-    @apply sticky top-0 z-10 bg-white;
+thead tr {
+  @apply sticky top-0 z-10 bg-white;
 }
 
 
@@ -44,7 +43,7 @@ thead tr{
 
 /* For Loading */
 .loading-overlay-accounts {
-  @apply flex flex-col items-center justify-center pt-50;
+  @apply flex flex-col items-center justify-center;
 }
 
 .spinner {
@@ -55,6 +54,7 @@ thead tr{
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -80,21 +80,20 @@ thead tr{
 
 /* User Card Container */
 .user-card {
-  @apply w-full my-2 py-2 rounded-xl px-2 
-    transition-transform duration-500 ease-in-out transform scale-100;
+  @apply w-full my-2 py-2 rounded-xl px-2 transition-transform duration-500 ease-in-out transform scale-100;
   border: 1px solid black;
 }
 
 .active-user-card {
-  @apply w-full bg-[#35408E] my-4 py-2 rounded-xl px-2
-    transition-transform duration-500 ease-in-out transform scale-110;
+  @apply w-full bg-[#35408E] my-4 py-2 rounded-xl px-2 transition-transform duration-500 ease-in-out transform scale-110;
   border: 1px solid black;
 }
 
-.active-user-card .user-table td{
+.active-user-card .user-table td {
   @apply text-white;
 }
-.active-user-card .user-table .user-action-cell{
+
+.active-user-card .user-table .user-action-cell {
   filter: invert(1) brightness(2) contrast(100);
 }
 
@@ -104,6 +103,7 @@ thead tr{
 .user-name-cell {
   @apply flex items-center;
 }
+
 .mini-avatar {
   @apply w-[40px] h-[40px] rounded-full mr-2;
 }
@@ -132,15 +132,6 @@ thead tr{
 .chevron-icon {
   @apply w-[25px] h-[25px] bg-transparent cursor-pointer;
 }
-
-
-
-
-
-
-
-
-
 
 
 

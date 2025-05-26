@@ -20,8 +20,8 @@ export default function UserContentsTable({
       <table className="titles-table">
         <thead>
           <tr>
-            {titles.map(({ key, label, className }, idx) => (
-              <th key={idx} className={className}>
+            {titles.map(({ key, label, className }) => (
+              <th key={key} className={className}>
                 {label}
                 {key === "name" && (
                   <button
@@ -53,7 +53,9 @@ export default function UserContentsTable({
                   <p>Fetching data...</p>
                 </div>
               ) : data.length === 0 ? (
-                <p className="text-black mt-10 text-3xl">No user found.</p>
+                <div className="w-full flex justify-center items-center">
+                  <p className="text-black mt-10 text-3xl">No user found.</p>
+                </div>
               ) : (
                 data.map((user) => {
                   const userId = user.employeenum || user.student_id;
@@ -81,10 +83,7 @@ export default function UserContentsTable({
                                       {(
                                         user.lastName || user.last_name
                                       )?.toUpperCase()}
-                                      ,{" "}
-                                      {(
-                                        user.firstName || user.first_name
-                                      )?.toUpperCase()}
+                                      , {user.firstName || user.first_name}
                                     </td>
                                   );
                                 case "position":
@@ -118,7 +117,9 @@ export default function UserContentsTable({
                                         <button
                                           type="button"
                                           className={`acc-chevron transition-transform duration-300 ${
-                                            cardActive === userId ? "rotate-180" : "rotate-0"
+                                            cardActive === userId
+                                              ? "rotate-180"
+                                              : "rotate-0"
                                           }`}
                                           aria-label="Toggle details"
                                           onClick={() => toggleCard(userId)}
@@ -129,7 +130,6 @@ export default function UserContentsTable({
                                             className="chevron-icon"
                                           />
                                         </button>
-
                                       </div>
                                     </td>
                                   );
@@ -143,16 +143,10 @@ export default function UserContentsTable({
                                   return <td key={key}>N/A</td>;
                               }
                             })}
-
-                            
-                            
                           </tr>
                           <tr>
                             <td colSpan={columns}>
-                              {
-                                cardActive === userId && 
-                                cardActiveContent(user)
-                              }
+                              {cardActive === userId && cardActiveContent(user)}
                             </td>
                           </tr>
                         </tbody>
@@ -163,7 +157,6 @@ export default function UserContentsTable({
               )}
             </td>
           </tr>
-          
         </tbody>
       </table>
     </div>

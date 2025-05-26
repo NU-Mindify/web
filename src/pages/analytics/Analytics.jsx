@@ -28,7 +28,7 @@ export default function Analytics() {
 
   const fetchAttempts = async () => {
     try {
-      const categoryList = categories.map((c) => c.category).join(",");
+      const categoryList = categories.map((c) => c.id).join(",");
       const levelList = levels.join(",");
       const modeList = modes.map((m) => m.mode).join(",");
 

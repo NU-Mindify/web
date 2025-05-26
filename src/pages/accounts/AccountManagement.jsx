@@ -25,7 +25,7 @@ export default function AccountManagement() {
   const [showSuggestions, setShowSuggestions] = useState(true);
 
   const navigate = useNavigate();
-  const usersPerPage = 10;
+  const usersPerPage = 15;
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
 
   useEffect(() => {

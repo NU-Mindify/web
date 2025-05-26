@@ -69,7 +69,7 @@ export default function Dashboard() {
   const fetchAttempts = async () => {
     setIsLoadingAttempts(true);
     try {
-      const categoryList = categories.map((c) => c.category).join(",");
+      const categoryList = categories.map((c) => c.id).join(",");
       const levelList = levels.join(",");
       const modeList = modes.map((m) => m.mode).join(",");
 

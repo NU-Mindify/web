@@ -24,19 +24,24 @@ fetchBranches()
 
 export const categories = [
   {
-    category: "abnormal"
+    id: "abnormal",
+    name: "Abnormal Psychology",
   },
   {
-    category: "developmental"
+    id: "developmental",
+    name: "Developmetal Psychology",
   },
   {
-    category: "psychological"
+    id: "psychological",
+    name: "Psychological Assessment ",
   },
   {
-    category: "industrial"
+    id: "industrial",
+    name: "Industrial Psychology",
   },
   {
-    category: "general"
+    id: "general",
+    name: "General Psychology",
   }
 ]
 
