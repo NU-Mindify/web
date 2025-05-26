@@ -131,7 +131,7 @@ export default function Login() {
       <img
         src={pattern}
         alt="pattern"
-        className="absolute top-0 left-0 w-full h-full object-cover opacity-20 pointer-events-none z-0"
+        className="absolute top-0 left-0 w-full h-full object-cover opacity-50 pointer-events-none z-0"
       />
 
       {/* Transitioning Logo */}
