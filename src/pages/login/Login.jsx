@@ -29,6 +29,9 @@ export default function Login() {
   const [resetEmail, setResetEmail] = useState("");
   const [resetLoading, setResetLoading] = useState(false);
 
+  const [showValidationModal, setShowValidationModal] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setLogoTransitioned(true);
@@ -36,22 +39,23 @@ export default function Login() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handelLoginFirebase = async (e) => {
+  const handleLoginFirebase = async (e) => {
     e.preventDefault();
+    setIsLoading(true)
 
     const matchedBranch = branches.find((item) => item.id === branch);
 
     try {
       if (!matchedBranch) {
-        alert("Please select a campus");
+        showValidationError("Please select a campus");
         return;
       }
       if (!email) {
-        alert("Please enter a valid email");
+        showValidationError("Please enter a valid email");
         return;
       }
       if (!password) {
-        alert("Please enter your password");
+        showValidationError("Please enter your password");
         return;
       }
 
@@ -61,12 +65,14 @@ export default function Login() {
         !email.endsWith(matchedBranch.extension) &&
         !email.endsWith(allowedExceptionDomain)
       ) {
-        alert(`Account: ${email} not found at NU ${branch.toUpperCase()}`);
+        showValidationError(
+          `Account: ${email} not found at NU ${branch.toUpperCase()}`
+        );
         return;
       }
 
       if (password.length < 5) {
-        alert("Password too short!");
+        showValidationError("Password too short!");
         return;
       }
 
@@ -81,8 +87,6 @@ export default function Login() {
 
         setCurrentWebUserUID(user.uid);
         localStorage.setItem("userUID", user.uid);
-
-        setIsLoading(false);
         // setSelected('dashboard');
         // navigate('/');
       }
@@ -111,9 +115,8 @@ export default function Login() {
           break;
         default:
           message = "An unexpected error occurred. Please try again.";
-          console.error("Unhandled auth error:", error);
       }
-      alert(message);
+      showValidationError(message);
     } finally {
       setIsLoading(false);
     }
@@ -121,38 +124,31 @@ export default function Login() {
 
   const handlePasswordReset = async () => {
     if (!resetEmail) {
-      alert("Please enter your email address.");
+      showValidationError("Please enter your email address.");
       return;
     }
 
     setResetLoading(true);
     try {
       await sendPasswordResetEmail(firebaseAuth, resetEmail);
-      alert("Password reset email sent! Check your inbox.");
+      showValidationError("Password reset email sent! Check your inbox.");
       setShowResetModal(false);
       setResetEmail("");
     } catch (error) {
-      console.error("Reset error:", error);
-      alert("Error sending password reset email. Please try again.");
+      // console.error("Reset error:", error);
+      showValidationError(
+        "Error sending password reset email. Please try again."
+      );
     } finally {
       setResetLoading(false);
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="loading-overlay">
-        <img
-          src={logo}
-          alt="Mindify Logo"
-          style={{ width: "80px", marginBottom: "20px" }}
-        />
-        <div className="spinner"></div>
-        <p>Signing you in...</p>
-      </div>
-    );
-  }
-
+  const showValidationError = (message) => {
+    setValidationMessage(message);
+    setShowValidationModal(true);
+  };
+  
   return (
     <div className="login-main-container relative">
       <img
@@ -233,8 +229,12 @@ export default function Login() {
               </p>
             </div>
 
-            <button className="login-btn" onClick={handelLoginFirebase}>
-              Sign In
+            <button
+              className="login-btn"
+              onClick={handleLoginFirebase}
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing you in..." : "Sign In"}
             </button>
 
             <div className="flex items-center w-full mt-5">
@@ -264,7 +264,9 @@ export default function Login() {
       {showResetModal && (
         <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-            <h2 className="text-lg font-semibold mb-4 text-black font-[Poppins">Reset Password</h2>
+            <h2 className="text-lg font-semibold mb-4 text-black font-[Poppins">
+              Reset Password
+            </h2>
             <input
               type="email"
               placeholder="Enter your email"
@@ -285,6 +287,27 @@ export default function Login() {
                 disabled={resetLoading}
               >
                 {resetLoading ? "Sending..." : "Send Email"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showValidationModal && (
+        <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-90">
+            <h2 className="text-lg font-semibold mb-4 text-black font-[Poppins]">
+              Error!
+            </h2>
+            <p className="text-black font-[Poppins] mb-6">
+              {validationMessage}
+            </p>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowValidationModal(false)}
+                className="px-4 py-2 btn bg-[#35408E] hover:bg-blue-700 text-white"
+              >
+                OK
               </button>
             </div>
           </div>
