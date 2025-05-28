@@ -9,7 +9,7 @@
 
 /*------------------------- HEADER --------------------------*/
 .account-header {
-  @apply w-full h-[200px] p-1;
+  @apply w-full h-[200px] p-1 bg-red-400;
 }
 
 .account-title {

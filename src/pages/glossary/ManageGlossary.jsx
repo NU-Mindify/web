@@ -1,23 +1,27 @@
 import { useRef, useState, useEffect } from "react";
-import search from '../../assets/search/search.svg';  
-import edit from '../../assets/glossary/edit.svg';
-import dropdown from '../../assets/glossary/dropdown.svg';
-import '../../css/glossary/glossary.css';
+import search from "../../assets/search/search.svg";
+import edit from "../../assets/glossary/edit.svg";
+import dropdown from "../../assets/glossary/dropdown.svg";
+import "../../css/glossary/glossary.css";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { API_URL } from "../../Constants";
 import EditGlossary from "./EditGlossary";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import { Plus } from "lucide-react";
+import SearchBar from "../../components/searchbar/SearchBar";
+import searchIcon from "../../assets/students/search-01.svg";
+import download from "../../assets/leaderboard/file-export.svg";
+import Buttons from "../../components/buttons/Buttons";
 
 export default function ManageGlossary() {
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const navigate = useNavigate();
   const termRefs = useRef({});
   const glossaryBodyRef = useRef(null);
 
   const [activeTermWord, setActiveTermWord] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [allTerms, setAllTerms] = useState([]);
   const [scrollTerms, setScrollTerms] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -60,13 +64,15 @@ export default function ManageGlossary() {
 
     setIsLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/getLimitedTerms/${page * pageSize}/${(page + 1) * pageSize}`);
+      const res = await axios.get(
+        `${API_URL}/getLimitedTerms/${page * pageSize}/${(page + 1) * pageSize}`
+      );
       const newTerms = res.data;
       if (newTerms.length < pageSize) setHasMore(false);
-      setScrollTerms(prev => [...prev, ...newTerms]);
-      setPage(prev => prev + 1);
+      setScrollTerms((prev) => [...prev, ...newTerms]);
+      setPage((prev) => prev + 1);
     } catch (err) {
-      console.error('Error fetching terms:', err);
+      console.error("Error fetching terms:", err);
     } finally {
       setIsLoading(false);
     }
@@ -86,16 +92,18 @@ export default function ManageGlossary() {
         fetchMoreTerms();
       }
     };
-    container?.addEventListener('scroll', handleScroll);
-    return () => container?.removeEventListener('scroll', handleScroll);
+    container?.addEventListener("scroll", handleScroll);
+    return () => container?.removeEventListener("scroll", handleScroll);
   }, [hasMore, isLoading]);
 
-  const displayedTerms = searchTerm === ''
-    ? scrollTerms
-    : allTerms.filter(term =>
-        !term.is_deleted &&
-        term.word.toLowerCase().startsWith(searchTerm.toLowerCase())
-      );
+  const displayedTerms =
+    searchTerm === ""
+      ? scrollTerms
+      : allTerms.filter(
+          (term) =>
+            !term.is_deleted &&
+            term.word.toLowerCase().startsWith(searchTerm.toLowerCase())
+        );
 
   const groupedTerms = displayedTerms.reduce((acc, term) => {
     const firstLetter = term.word[0].toUpperCase();
@@ -105,43 +113,49 @@ export default function ManageGlossary() {
   }, {});
 
   const handleAddTerm = () => {
-    navigate('/addterm');
+    navigate("/addterm");
   };
+
+  const titles = [
+    { key: "term", label: "Terninology", className: "2/5" },
+    { key: "definition", label: "Definition", className: "flex flex-1" },
+    { key: "action", label: "Action", className: "w-1/5" },
+  ];
 
   return (
     <>
       <div className="header">
         <div className="glossary-title-container">
-          <h1 className="glossary-title">Manage Glossary</h1>
+          <h1>Manage Glossary</h1>
         </div>
 
-        <div className="glossary-search-container flex-1 min-w-[200px] flex justify-between items-center flex-wrap gap-2">
-          <div className="search-bar-glossary">
-            <button className="search-btn-glossary">
-              <img src={search} alt="search icon" />
-            </button>
-            <input 
-              type="text"
-              placeholder="Search terms..." 
-              onChange={(e) => setSearchTerm(e.target.value)}
-              value={searchTerm}
-              className="search-input-glossary"
-            />
-          </div>
+        <div className="glossary-sub-header-container">
+          <SearchBar
+            value={searchTerm}
+            handleChange={(e) => {
+              setSearchTerm(e.target.value);
+              // setShowSuggestions(true);
+            }}
+            placeholder="Search for a user"
+            icon={searchIcon}
+            // suggestions={searchSuggestions}
+            // showSuggestions={showSuggestions}
+            // onSuggestionSelect={(user) => {
+            //   setSearchQuery(
+            //     `${user.lastName.toUpperCase()}, ${user.firstName}`
+            //   );
+            //   setShowSuggestions(false);
+            // }}
+            addedClassName="w-[80%] h-[50px]"
+          />
 
-          <div className="add-ques-container flex gap-2">
-            <button
-              className="btn flex items-center gap-2 px-4 py-2 text-sm font-medium"
-              onClick={handleAddTerm}
-            >
-              <Plus className="w-5 h-5 text-white" />
-              Add Term
-            </button>
+          <Buttons
+            text="Add Term"
+            onClick={() => navigate("/addterm")}
+            addedClassName="btn btn-warning"
+          />
 
-            <div className="pt-1 pr-8">
-              <ExportDropdown />
-            </div>
-          </div>
+          <img src={download} alt="export" className="acc-export-icon" />
         </div>
 
         <div className="glossary-letters-btn-container">
@@ -158,55 +172,33 @@ export default function ManageGlossary() {
       </div>
 
       <div className="glossary-body" ref={glossaryBodyRef}>
-        <div className="header-details">
-          <div className="header-title">Terminology</div>
-          <div className="header-title">Definition</div>
-          <div className="header-title">Action</div>
+        <div className="header-details-container">
+          <div className="header-details">
+            <div className="header-title">Terminology</div>
+            <div className="header-title">Definition</div>
+            <div className="header-title">Action</div>
+          </div>
         </div>
 
         {loadingTerms ? (
-          <div className="loading-overlay-students">
+          <div className="loading-overlay-accounts !mt-10">
             <div className="spinner"></div>
             <p>Fetching data...</p>
           </div>
-        ) : searchTerm === '' && displayedTerms.length === 0 ? (
+        ) : searchTerm === "" && displayedTerms.length === 0 ? (
           <p className="text-gray-400 italic">No terms to show.</p>
         ) : (
           letters.map((letter) =>
             groupedTerms[letter] ? (
-              <div key={letter} ref={el => (termRefs.current[letter] = el)} className="per-letter-main-container">
-                <h2 className="letter-title">{letter}</h2>
-                <div className="all-word-def-container">
-                  {groupedTerms[letter].map((term, idx) => (
-                    <div
-                      key={idx}
-                      className={activeTermWord === term.word ? "active-per-word-container" : "per-word-container"}
-                    >
-                      <div className="word-container">{term.word}</div>
-                      <div className={activeTermWord === term.word ? "active-meaning-container" : "meaning-container"}>
-                        {term.meaning}
-                      </div>
-
-                      <div className="action-container">
-                        <div className="icon-group">
-                          <img 
-                            src={edit} 
-                            className="editIcon"
-                            alt="edit icon" 
-                            onClick={() => handlesEdit(term._id, term.word, term.meaning, term.tags)}
-                          />
-                        </div>
-                        <div
-                          className={activeTermWord === term.word ? "active-dropdown" : "dropdown"}
-                          onClick={() => handleDropdown(term.word)}
-                        >
-                          <img src={dropdown} className="dropdown-icon" alt="dropdown icon" />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <GlossaryLetterSection
+                key={letter}
+                letter={letter}
+                terms={groupedTerms[letter]}
+                activeTermWord={activeTermWord}
+                onEdit={handlesEdit}
+                onToggleDropdown={handleDropdown}
+                termRefs={termRefs}
+              />
             ) : null
           )
         )}
@@ -225,5 +217,72 @@ export default function ManageGlossary() {
         )}
       </div>
     </>
+  );
+}
+
+export function GlossaryLetterSection({
+  letter,
+  terms,
+  activeTermWord,
+  onEdit,
+  onToggleDropdown,
+  termRefs,
+}) {
+  return (
+    <div
+      key={letter}
+      ref={(el) => (termRefs.current[letter] = el)}
+      className="per-letter-main-container"
+    >
+      <div className="all-word-def-container">
+        <div className="w-11/12">
+          <h2 className="letter-title">{letter}</h2>
+        </div>
+
+        {terms.map((term, idx) => (
+          <div
+            key={idx}
+            className={
+              activeTermWord === term.word
+                ? "active-per-word-container"
+                : "per-word-container"
+            }
+          >
+            <div className="word-container">{term.word}</div>
+            <div
+              className={
+                activeTermWord === term.word
+                  ? "active-meaning-container"
+                  : "meaning-container"
+              }
+            >
+              {term.meaning}
+            </div>
+
+            <div className="action-container">
+              <button
+                type="button"
+                className="editIcon"
+                onClick={() =>
+                  onEdit(term._id, term.word, term.meaning, term.tags)
+                }
+              >
+                <img src={edit} alt="edit icon" />
+              </button>
+
+              <button
+                type="button"
+                className={
+                  activeTermWord === term.word ? "active-dropdown" : "dropdown"
+                }
+                onClick={() => onToggleDropdown(term.word)}
+              >
+                <img src={dropdown} alt="dropdown icon" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
