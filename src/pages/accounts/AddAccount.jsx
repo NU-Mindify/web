@@ -14,10 +14,9 @@ import { useNavigate } from "react-router-dom";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import No_Profile from "../../assets/profile/noProfile.jpg";
 import Buttons from "../../components/buttons/Buttons";
+import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 
 export default function AddAccount() {
-  // const [password, setPassword] = useState("");
-  // const [confirmPassword, setConfirmPassword] = useState("");
   const [newWebUser, setNewWebUser] = useState({
     firstName: "",
     lastName: "",
@@ -31,6 +30,9 @@ export default function AddAccount() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const [validationMessage, setValidationMessage] = useState("");
+  const [showValidationModal, setShowValidationModal] = useState(false);
 
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
   const navigate = useNavigate();
@@ -73,7 +75,8 @@ export default function AddAccount() {
       !employeenum ||
       !position
     ) {
-      alert("Please fill in all required fields.");
+      setValidationMessage("Please fill in all required fields.");
+      setShowValidationModal(true);
       return;
     }
 
@@ -102,7 +105,7 @@ export default function AddAccount() {
 
       const tempPassword = generateTemporaryPassword();
       console.log(tempPassword);
-      
+
       // 1. Create user
       const userCredential = await createUserWithEmailAndPassword(
         secondaryAuth,
@@ -126,7 +129,8 @@ export default function AddAccount() {
       handleReset();
     } catch (error) {
       console.error("Registration Error:", error.message);
-      alert("Error: " + error.message);
+      setValidationMessage("Error: " + error.message);
+      setShowValidationModal(true);
     } finally {
       setIsLoading(false);
     }
@@ -166,7 +170,6 @@ export default function AddAccount() {
           </button>
           <h1 className="add-account-title">Add Account</h1>
         </div>
-
 
         <div className="add-account-content">
           <div className="profile-pic-container">
@@ -211,7 +214,7 @@ export default function AddAccount() {
 
           <div className="user-details-container">
             <div className="input-holder">
-              <h1>First Name</h1>
+              <h1>First Name*</h1>
               <input
                 type="text"
                 value={newWebUser.firstName}
@@ -222,7 +225,7 @@ export default function AddAccount() {
             </div>
 
             <div className="input-holder">
-              <h1>Last Name</h1>
+              <h1>Last Name*</h1>
               <input
                 type="text"
                 value={newWebUser.lastName}
@@ -233,7 +236,7 @@ export default function AddAccount() {
             </div>
 
             <div className="input-holder">
-              <h1>NU Campus</h1>
+              <h1>NU Campus*</h1>
               {currentWebUser.position.toLowerCase() === "super admin" ? (
                 <select
                   className="add-input-properties"
@@ -269,7 +272,7 @@ export default function AddAccount() {
             </div>
 
             <div className="input-holder">
-              <h1>Email</h1>
+              <h1>Email*</h1>
               <input
                 type="email"
                 value={newWebUser.email}
@@ -280,7 +283,7 @@ export default function AddAccount() {
             </div>
 
             <div className="input-holder">
-              <h1>Employee Number</h1>
+              <h1>Employee Number*</h1>
               <input
                 type="text"
                 value={newWebUser.employeenum}
@@ -291,7 +294,7 @@ export default function AddAccount() {
             </div>
 
             <div className="input-holder">
-              <h1>Position</h1>
+              <h1>Position*</h1>
               {currentWebUser.position.toLowerCase() === "super admin" ? (
                 <select
                   className="add-input-properties"
@@ -364,6 +367,13 @@ export default function AddAccount() {
             </button>
           </div>
         </div>
+      )}
+
+      {showValidationModal && (
+        <ValidationModal
+          message={validationMessage}
+          onClose={() => setShowValidationModal(false)}
+        />
       )}
     </>
   );

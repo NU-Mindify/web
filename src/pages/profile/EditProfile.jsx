@@ -6,6 +6,7 @@ import { API_URL } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 
 import { supabase } from "../../supabase";
+import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 
 export default function EditProfile() {
   const { setCurrentWebUser, setCurrentWebUserUID } =
@@ -25,6 +26,9 @@ export default function EditProfile() {
   const [lastNameError, setLastNameError] = useState("");
 
   const [isUploading, setIsUploading] = useState(false);
+
+  const [validationMessage, setValidationMessage] = useState("");
+  const [showValidationModal, setShowValidationModal] = useState(false);
 
   useEffect(() => {
     if (location.state?.webUser) {
@@ -74,7 +78,8 @@ export default function EditProfile() {
       setShowModal(true);
     } catch (error) {
       console.error(error);
-      alert("Update Unsuccessful!");
+      setValidationMessage("Update Unsuccessful!");
+      setShowValidationModal(true);
     }
   };
 
@@ -101,7 +106,8 @@ export default function EditProfile() {
 
     if (error) {
       console.error("Upload error:", error.message, error);
-      alert("Image upload failed.");
+      setValidationMessage("Image upload failed");
+      setShowValidationModal(true);
       setIsUploading(false);
       return;
     }
@@ -292,22 +298,11 @@ export default function EditProfile() {
             </button>
           </div>
         </div>
-
-        {showModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h2>Profile Updated Successfully!</h2>
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  navigate("/profile");
-                }}
-                className="modal-close-btn"
-              >
-                Close
-              </button>
-            </div>
-          </div>
+        {showValidationModal && (
+          <ValidationModal
+            message={validationMessage}
+            onClose={() => setShowValidationModal(false)}
+          />
         )}
       </div>
     </>

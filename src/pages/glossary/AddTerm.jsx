@@ -6,6 +6,7 @@ import "../../css/glossary/addGlossary.css";
 import closebtn from "../../assets/glossary/close-btn.svg";
 import deletebtn from "../../assets/glossary/delete-icon.svg";
 import Buttons from "../../components/buttons/Buttons";
+import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 
 export default function AddTerm() {
   const [newTerm, setNewTerm] = useState([
@@ -13,6 +14,9 @@ export default function AddTerm() {
   ]);
   const [tagInput, setTagInput] = useState("");
   const navigate = useNavigate();
+
+  const [validationMessage, setValidationMessage] = useState("");
+  const [showValidationModal, setShowValidationModal] = useState(false);
 
   const handleInputChange = (index, field, value) => {
     const updatedTerms = [...newTerm];
@@ -36,19 +40,22 @@ export default function AddTerm() {
   const handleCreateNewTerm = () => {
     for (const term of newTerm) {
       if (!term.word.trim() || !term.meaning.trim() || !term.tags) {
-        alert("Please fill out all required fields.");
+        setValidationMessage("Please fill out all required fields.");
+        setShowValidationModal(true);
         return;
       }
     }
 
     Promise.all(newTerm.map((term) => axios.post(`${API_URL}/addTerm`, term)))
       .then(() => {
-        alert("Added successfully!");
+        setValidationMessage("Added successfully!");
+        setShowValidationModal(true);
         setNewTerm([{ word: "", meaning: "", tags: [], is_deleted: false }]);
       })
       .catch((error) => {
         console.error("Error adding term:", error);
-        alert("Failed to add term. Please try again.");
+        setValidationMessage("Failed to add term. Please try again.");
+        setShowValidationModal(true);
       });
   };
 
@@ -145,6 +152,12 @@ export default function AddTerm() {
           />
         </div>
       </div>
+      {showValidationModal && (
+        <ValidationModal
+          message={validationMessage}
+          onClose={() => setShowValidationModal(false)}
+        />
+      )}
     </div>
   );
 }

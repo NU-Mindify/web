@@ -4,6 +4,10 @@ import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
 import { CheckCircle2Icon, XCircle } from "lucide-react";
 import { API_URL } from "../../Constants";
+import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+
+const [validationMessage, setValidationMessage] = useState("");
+const [showValidationModal, setShowValidationModal] = useState(false);
 
 const categoriesObj = [
   {
@@ -66,11 +70,14 @@ function AddQuestion() {
     try {
       const { data } = await axios.post(`${API_URL}/addQuestion`, question);
       console.log(data);
-      alert("Added Successfully");
+      setValidationMessage("Added Successfully");
+      setShowValidationModal(true);
+
       nav(-1);
     } catch (error) {
       console.error(error);
-      alert(error.response.data.error.name);
+      setValidationMessage(error.response.data.error.name);
+      setShowValidationModal(true);
     }
     setIsFormDisabled(false);
   };
@@ -274,6 +281,12 @@ function AddQuestion() {
           </button>
         </div>
       </div>
+      {showValidationModal && (
+        <ValidationModal
+          message={validationMessage}
+          onClose={() => setShowValidationModal(false)}
+        />
+      )}
     </div>
   );
 }

@@ -14,6 +14,9 @@ import {
 import { branches } from "../../Constants";
 import pattern from "../../assets/forAll/pattern.svg";
 
+import { Eye, EyeOff } from "lucide-react";
+import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+
 export default function Login() {
   const { setSelected } = useContext(ActiveContext);
   const { setCurrentWebUserUID } = useContext(UserLoggedInContext);
@@ -29,8 +32,10 @@ export default function Login() {
   const [resetEmail, setResetEmail] = useState("");
   const [resetLoading, setResetLoading] = useState(false);
 
-  const [showValidationModal, setShowValidationModal] = useState(false);
   const [validationMessage, setValidationMessage] = useState("");
+  const [showValidationModal, setShowValidationModal] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -41,21 +46,24 @@ export default function Login() {
 
   const handleLoginFirebase = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
+    setIsLoading(true);
 
     const matchedBranch = branches.find((item) => item.id === branch);
 
     try {
       if (!matchedBranch) {
-        showValidationError("Please select a campus");
+        setValidationMessage("Please select a campus");
+        setShowValidationModal(true);
         return;
       }
       if (!email) {
-        showValidationError("Please enter a valid email");
+        setValidationMessage("Please enter a valid email");
+        setShowValidationModal(true);
         return;
       }
       if (!password) {
-        showValidationError("Please enter your password");
+        setValidationMessage("Please enter your password");
+        setShowValidationModal(true);
         return;
       }
 
@@ -65,14 +73,14 @@ export default function Login() {
         !email.endsWith(matchedBranch.extension) &&
         !email.endsWith(allowedExceptionDomain)
       ) {
-        showValidationError(
-          `Account: ${email} not found at NU ${branch.toUpperCase()}`
-        );
+        setValidationMessage(`Account not found at NU ${branch.toUpperCase()}`);
+        setShowValidationModal(true);
         return;
       }
 
       if (password.length < 5) {
-        showValidationError("Password too short!");
+        setValidationMessage("Password too short!");
+        setShowValidationModal(true);
         return;
       }
 
@@ -116,7 +124,8 @@ export default function Login() {
         default:
           message = "An unexpected error occurred. Please try again.";
       }
-      showValidationError(message);
+      setValidationMessage(message);
+      setShowValidationModal(true);
     } finally {
       setIsLoading(false);
     }
@@ -124,31 +133,29 @@ export default function Login() {
 
   const handlePasswordReset = async () => {
     if (!resetEmail) {
-      showValidationError("Please enter your email address.");
+      setValidationMessage("Please enter your email address.");
+      setShowValidationModal(true);
       return;
     }
 
     setResetLoading(true);
     try {
       await sendPasswordResetEmail(firebaseAuth, resetEmail);
-      showValidationError("Password reset email sent! Check your inbox.");
+      setValidationMessage("Password reset email sent! Check your inbox.");
+      setShowValidationModal(true);
       setShowResetModal(false);
       setResetEmail("");
     } catch (error) {
       // console.error("Reset error:", error);
-      showValidationError(
+      setValidationMessage(
         "Error sending password reset email. Please try again."
       );
+      setShowValidationModal(true);
     } finally {
       setResetLoading(false);
     }
   };
 
-  const showValidationError = (message) => {
-    setValidationMessage(message);
-    setShowValidationModal(true);
-  };
-  
   return (
     <div className="login-main-container relative">
       <img
@@ -204,11 +211,11 @@ export default function Login() {
               />
             </label>
 
-            <label className="floating-label">
+            <label className="floating-label relative">
               <span className="spanner">Password</span>
               <input
-                type="password"
-                className="input validator inputs"
+                type={showPassword ? "text" : "password"}
+                className="input validator inputs pr-10"
                 required
                 placeholder="Password"
                 minLength="8"
@@ -216,6 +223,13 @@ export default function Login() {
                 title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-5 top-[22px] text-gray-600 text-sm"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </label>
 
             <div className="remember-container">
@@ -294,24 +308,10 @@ export default function Login() {
       )}
 
       {showValidationModal && (
-        <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-90">
-            <h2 className="text-lg font-semibold mb-4 text-black font-[Poppins]">
-              Error!
-            </h2>
-            <p className="text-black font-[Poppins] mb-6">
-              {validationMessage}
-            </p>
-            <div className="flex justify-end">
-              <button
-                onClick={() => setShowValidationModal(false)}
-                className="px-4 py-2 btn bg-[#35408E] hover:bg-blue-700 text-white"
-              >
-                OK
-              </button>
-            </div>
-          </div>
-        </div>
+        <ValidationModal
+          message={validationMessage}
+          onClose={() => setShowValidationModal(false)}
+        />
       )}
     </div>
   );
