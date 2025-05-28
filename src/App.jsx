@@ -24,7 +24,7 @@ import AddTerm from "./pages/glossary/AddTerm";
 import AddAccount from "./pages/accounts/AddAccount";
 import SessionTimeout from "./components/SessionTimeout/SessionTimeout";
 import ShowMoreDetails from "./pages/students/ShowMoreDetails";
-import ActivityLogs from "./pages/activityLogs/activitylogs";
+import ActivityLogs from "./pages/activityLogs/ActivityLogs";
 
 
 const queryClient = new QueryClient();
