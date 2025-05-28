@@ -1,0 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+@reference "tailwindcss";
+@plugin "daisyui";
+
+.logs-main-container{
+    @apply w-full h-full bg-white overflow-y-auto;
+    scrollbar-width: thin;
+    scrollbar-color: black transparent;
+}
+
+.logs-main-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.logs-main-container::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 8px;
+}
+
+.logs-main-container::-webkit-scrollbar-track {
+  background: black;
+}

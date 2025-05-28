@@ -9,7 +9,7 @@ import { supabase } from "../../supabase";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 
 export default function EditProfile() {
-  const { setCurrentWebUser, setCurrentWebUserUID } =
+  const { currentWebUser, setCurrentWebUser, setCurrentWebUserUID } =
     useContext(UserLoggedInContext);
 
   const navigate = useNavigate();
@@ -53,35 +53,44 @@ export default function EditProfile() {
 
   const hasChanges = () => {
     return (
-      initialWebUser.firstName !== editWebUser.firstName ||
-      initialWebUser.lastName !== editWebUser.lastName ||
-      initialWebUser.branch !== editWebUser.branch ||
       initialWebUser.useravatar !== editWebUser.useravatar
     );
   };
 
   const handleUpdateProfile = async () => {
-    try {
-      const response = await axios.put(
-        `${API_URL}/updateWebUsers/${editWebUser._id}`,
-        editWebUser
-      );
+  try {
+    const response = await axios.put(
+      `${API_URL}/updateWebUsers/${editWebUser._id}`,
+      editWebUser
+    );
 
-      const updatedUser = await axios.get(
-        `${API_URL}/getwebuser/${editWebUser.uid}`
-      );
+    const updatedUser = await axios.get(
+      `${API_URL}/getwebuser/${editWebUser.uid}`
+    );
 
-      setCurrentWebUser(updatedUser.data);
-      setCurrentWebUserUID(updatedUser.data.uid);
-      localStorage.setItem("userUID", updatedUser.data.uid);
+    setCurrentWebUser(updatedUser.data);
+    setCurrentWebUserUID(updatedUser.data.uid);
+    localStorage.setItem("userUID", updatedUser.data.uid);
 
-      setShowModal(true);
-    } catch (error) {
-      console.error(error);
-      setValidationMessage("Update Unsuccessful!");
-      setShowValidationModal(true);
-    }
-  };
+    await axios.post(`${API_URL}/addLogs`, {
+      uid: editWebUser.uid,
+      action: "Edit Profile",
+      description: "Updated profile information.",
+    });
+
+    setInitialWebUser(updatedUser.data);
+    setEditWebUser(updatedUser.data);
+
+    setShowModal(true);
+    navigate("/profile");
+  } catch (error) {
+    console.error(error);
+    setValidationMessage("Update Unsuccessful!");
+    setShowValidationModal(true);
+  }
+};
+
+
 
   const handleCancelEdit = () => {
     navigate("/profile");
@@ -272,20 +281,14 @@ export default function EditProfile() {
             <button
               className={
                 !hasChanges() ||
-                !!firstNameError ||
-                !!lastNameError ||
-                !editWebUser.firstName ||
-                !editWebUser.lastName
+                !editWebUser.useravatar
                   ? "edit-btn-properties-disabled"
                   : "edit-btn-properties"
               }
               onClick={handleUpdateProfile}
               disabled={
                 !hasChanges() ||
-                !!firstNameError ||
-                !!lastNameError ||
-                !editWebUser.firstName ||
-                !editWebUser.lastName
+                !editWebUser.useravatar
               }
             >
               Save Profile

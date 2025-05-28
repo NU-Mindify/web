@@ -6,6 +6,7 @@ import AnimatedProgressBar from "../../components/animatedProgressBar/AnimatedPr
 import PieChartAttempts from "../../components/PieChart/PieChartAttempts";
 import { branches } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts";
+import SelectFilter from "../../components/selectFilter/SelectFilter";
 
 
 export default function Analytics() {
@@ -138,28 +139,23 @@ export default function Analytics() {
   return (
     <>
       <div className="main-container-analytics">
-        <div className="header-container-analytics flex flex-row">
-          <h1 className="header-text-properties-analytics">
+        <div className="header-container-analytics flex flex-row justify-between">
+          <h1>
             Analytics for {branches.find(branch => branch.id === selectedBranch)?.name || "All"}
           </h1>
 
           
           
-            <select
+          <SelectFilter
               value={selectedBranch}
-              className="select-ghost text-black w-[170px] ml-5 mt-3 select"
-              onChange={(e) => {
-                setSelectedBranch(e.target.value);
-                setBranch(e.target.value === "all" ? null : e.target.value);
-              }}
-            >
-              <option value="all">All NU Branches</option>
-              {branches.map((branch) => (
-                <option value={branch.id} key={branch.id}>
-                  {branch.name}
-                </option>
-              ))}
-            </select> 
+              onChange={(e) => setSelectedBranch(e.target.value)}
+              disabledOption="Select Branch"
+              fixOption="All Branches"
+              mainOptions={branches}
+              getOptionValue={(branch) => branch.id}
+              getOptionLabel={(branch) => branch.name}
+              addedClassName="ml-3 !w-[300px]"
+            />
           
           
 
@@ -186,20 +182,12 @@ export default function Analytics() {
               </h1>
 
               <div className="progress-bar-container">
-                <p className="text-black font-bold">Total Attempts</p>
-                <div className="flex items-center gap-2 w-[100%]">
-                  <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
-                    <div
-                      className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
-                      style={{
-                        width: `${Math.min(filteredAttempts.length, 100)}%`,
-                      }}
-                    ></div>
-                  </div>
-                  <span className="text-black font-bold min-w-[40px] text-right">
-                    {filteredAttempts.length}
-                  </span>
-                </div>
+                <AnimatedProgressBar
+                  label="Total Attempts"
+                  percent={filteredAttempts.length}
+                  color="bg-[#FFBF1A]"
+                />
+                
 
                 <AnimatedProgressBar
                   label="Completion Rate"
@@ -239,29 +227,15 @@ export default function Analytics() {
               </h1>
 
               <div className="progress-bar-container">
-                <p className="text-black font-bold">Total Attempts</p>
-                <div className="flex items-center gap-2 w-[95%]">
-                  <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
-                    <div
-                      className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
-                      style={{
-                        width: `${Math.min(
-                          filteredAttempts.filter(
-                            (attempt) => attempt.category === "abnormal"
-                          ).length,
-                          100
-                        )}%`,
-                      }}
-                    ></div>
-                  </div>
-                  <span className="text-black font-bold min-w-[40px] text-right">
-                    {
+                <AnimatedProgressBar
+                  label="Total Attempts"
+                  percent={
                       filteredAttempts.filter(
                         (attempt) => attempt.category === "abnormal"
                       ).length
                     }
-                  </span>
-                </div>
+                  color="bg-[#FFBF1A]"
+                />
               </div>
 
               <AnimatedProgressBar
@@ -303,29 +277,16 @@ export default function Analytics() {
               </h1>
 
               <div className="progress-bar-container">
-                <p className="text-black font-bold">Total Attempts</p>
-                <div className="flex items-center gap-2 w-[95%]">
-                  <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
-                    <div
-                      className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
-                      style={{
-                        width: `${Math.min(
-                          filteredAttempts.filter(
-                            (attempt) => attempt.category === "developmental"
-                          ).length,
-                          100
-                        )}%`,
-                      }}
-                    ></div>
-                  </div>
-                  <span className="text-black font-bold min-w-[40px] text-right">
-                    {
+                <AnimatedProgressBar
+                  label="Total Attempts"
+                  percent={
                       filteredAttempts.filter(
                         (attempt) => attempt.category === "developmental"
                       ).length
                     }
-                  </span>
-                </div>
+                  color="bg-[#FFBF1A]"
+                />
+                
               </div>
 
               <AnimatedProgressBar
@@ -358,6 +319,7 @@ export default function Analytics() {
                   />
                 </div>
               </div>
+              
             </div>
           </div>
 
@@ -369,29 +331,15 @@ export default function Analytics() {
               </h1>
 
               <div className="progress-bar-container">
-                <p className="text-black font-bold">Total Attempts</p>
-                <div className="flex items-center gap-2 w-[95%]">
-                  <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
-                    <div
-                      className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
-                      style={{
-                        width: `${Math.min(
-                          filteredAttempts.filter(
-                            (attempt) => attempt.category === "psychological"
-                          ).length,
-                          100
-                        )}%`,
-                      }}
-                    ></div>
-                  </div>
-                  <span className="text-black font-bold min-w-[40px] text-right">
-                    {
+                <AnimatedProgressBar
+                  label="Total Attempts"
+                  percent={
                       filteredAttempts.filter(
                         (attempt) => attempt.category === "psychological"
                       ).length
                     }
-                  </span>
-                </div>
+                  color="bg-[#FFBF1A]"
+                />
               </div>
 
               <AnimatedProgressBar
@@ -435,29 +383,15 @@ export default function Analytics() {
               </h1>
 
               <div className="progress-bar-container">
-                <p className="text-black font-bold">Total Attempts</p>
-                <div className="flex items-center gap-2 w-[95%]">
-                  <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
-                    <div
-                      className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
-                      style={{
-                        width: `${Math.min(
-                          filteredAttempts.filter(
-                            (attempt) => attempt.category === "industrial"
-                          ).length,
-                          100
-                        )}%`,
-                      }}
-                    ></div>
-                  </div>
-                  <span className="text-black font-bold min-w-[40px] text-right">
-                    {
+                <AnimatedProgressBar
+                  label="Total Attempts"
+                  percent={
                       filteredAttempts.filter(
                         (attempt) => attempt.category === "industrial"
                       ).length
                     }
-                  </span>
-                </div>
+                  color="bg-[#FFBF1A]"
+                />
               </div>
 
               <AnimatedProgressBar
@@ -501,29 +435,16 @@ export default function Analytics() {
               </h1>
 
               <div className="progress-bar-container">
-                <p className="text-black font-bold">Total Attempts</p>
-                <div className="flex items-center gap-2 w-[95%]">
-                  <div className="flex-1 bg-gray-300 rounded-full h-5 overflow-hidden">
-                    <div
-                      className="h-full bg-[#FFBF1A] transition-all duration-700 ease-in-out"
-                      style={{
-                        width: `${Math.min(
-                          filteredAttempts.filter(
-                            (attempt) => attempt.category === "general"
-                          ).length,
-                          100
-                        )}%`,
-                      }}
-                    ></div>
-                  </div>
-                  <span className="text-black font-bold min-w-[40px] text-right">
-                    {
+                <AnimatedProgressBar
+                  label="Total Attempts"
+                  percent={
                       filteredAttempts.filter(
                         (attempt) => attempt.category === "general"
                       ).length
                     }
-                  </span>
-                </div>
+                  color="bg-[#FFBF1A]"
+                />
+
               </div>
 
               <AnimatedProgressBar

@@ -10,7 +10,12 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 
+
+
 import { UserLoggedInContext } from "../../contexts/Contexts";
+import SelectFilter from "../../components/selectFilter/SelectFilter";
+import SearchBar from "../../components/searchbar/SearchBar";
+import searchIcon from "../../assets/students/search-01.svg";
 
 export default function Leaderboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);
@@ -350,22 +355,9 @@ export default function Leaderboard() {
         <div className="classic-cont">
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title classic-title">Classic</h1>
-
-            <select
-              value={classicSelectedBranch}
-              className="text-black"
-              onChange={(e) => setClassicSelectedBranch(e.target.value)}
-            >
-              <option value="" disabled>
-                Filter by:
-              </option>
-              <option value="all">All Branch</option>
-              {branches.map((branch, index) => (
-                <option value={branch.id} key={index}>
-                  {branch.name}
-                </option>
-              ))}
-            </select>
+            
+            
+              
 
             <ExportDropdown
               onExport={(format) => {
@@ -376,6 +368,8 @@ export default function Leaderboard() {
                 }
               }}
             />
+            
+            
           </div>
 
           <h2 className="leaderboard-subtitle">
@@ -410,6 +404,36 @@ export default function Leaderboard() {
                 ))}
               </ul>
             )}
+
+            {/* <SearchBar
+              value={searchClassic}
+              handleChange={(e) => {
+                handleClassicSearchChange(e.target.value);
+                // setShowSuggestions(true);
+              }}
+              placeholder="Search for a user"
+              icon={searchIcon}
+              // suggestions={searchSuggestions}
+              // showSuggestions={showSuggestions}
+              onSuggestionSelect={(user) => {
+                setSearchQuery(
+                  `${user.lastName.toUpperCase()}, ${user.firstName}`
+                );
+                setShowSuggestions(false);
+              }}
+              addedClassName="w-[80%] h-[50px]"
+            /> */}
+
+            <SelectFilter
+                value={classicSelectedBranch}
+                onChange={(e) => setClassicSelectedBranch(e.target.value)}
+                disabledOption="Select Branch"
+                fixOption="All Branches"
+                mainOptions={branches}
+                getOptionValue={(branch) => branch.id}
+                getOptionLabel={(branch) => branch.name}
+                addedClassName=""
+              />
           </div>
 
           <div className="leaderboard-contents-container">

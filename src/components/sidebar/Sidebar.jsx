@@ -131,7 +131,6 @@ export default function Sidebar() {
       });
   }, [currentWebUserUID, setCurrentWebUser, setCurrentUserBranch]);
 
-
   const menuItems = [
     {
       id: "dashboard",
@@ -181,7 +180,7 @@ export default function Sidebar() {
       text: "Manage Accounts",
       icon: account,
       path: "/account",
-      bothAdmin: true
+      bothAdmin: true,
     },
     {
       id: "logs",
@@ -231,14 +230,14 @@ export default function Sidebar() {
         <ul className="menu-list">
           {menuItems.map((item) => {
             if (
-              item.superAdmin  &&
-              !["super admin"].includes(
-                currentWebUser?.position?.toLowerCase()
-              ) || 
-              item.bothAdmin  &&
-              !["sub admin", "super admin"].includes(
-                currentWebUser?.position?.toLowerCase()
-              )
+              (item.superAdmin &&
+                !["super admin"].includes(
+                  currentWebUser?.position?.toLowerCase()
+                )) ||
+              (item.bothAdmin &&
+                !["sub admin", "super admin"].includes(
+                  currentWebUser?.position?.toLowerCase()
+                ))
             ) {
               return null;
             }
@@ -338,7 +337,15 @@ export default function Sidebar() {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={confirmLogout}
+              onClick={async () => {
+                await axios.post(`${API_URL}/addLogs`, {
+                  uid: currentWebUser.uid,
+                  action: "Logged Out",
+                  description: "-",
+                });
+
+                confirmLogout(); // make sure to CALL it
+              }}
             >
               Confirm
             </button>

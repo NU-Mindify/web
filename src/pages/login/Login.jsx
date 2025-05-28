@@ -1,32 +1,26 @@
 import "../../css/login/login.css";
 import logo from "../../assets/logo/logo.svg";
-import nuLogo from "../../assets/logo/nuLogo.svg";
-import { useNavigate } from "react-router-dom";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import { useContext, useState, useEffect } from "react";
-
 import { firebaseAuth } from "../../Firebase";
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-
-import { branches } from "../../Constants";
+import { API_URL, branches } from "../../Constants";
 import pattern from "../../assets/forAll/pattern.svg";
-
 import { Eye, EyeOff } from "lucide-react";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+import axios from "axios";
 
 export default function Login() {
-  const { setSelected } = useContext(ActiveContext);
   const { setCurrentWebUserUID } = useContext(UserLoggedInContext);
-  const navigate = useNavigate();
 
   const [logoTransitioned, setLogoTransitioned] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [branch, setBranch] = useState("");
+  const [branch, setBranch] = useState("default");
 
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
@@ -56,13 +50,19 @@ export default function Login() {
         setShowValidationModal(true);
         return;
       }
-      if (!email) {
+      if (!email || !email.endsWith(matchedBranch.extension)) {
         setValidationMessage("Please enter a valid email");
         setShowValidationModal(true);
         return;
       }
       if (!password) {
         setValidationMessage("Please enter your password");
+        setShowValidationModal(true);
+        return;
+      }
+
+      if (password.length < 5) {
+        setValidationMessage("Password too short!");
         setShowValidationModal(true);
         return;
       }
@@ -75,12 +75,9 @@ export default function Login() {
       ) {
         setValidationMessage(`Account not found at NU ${branch.toUpperCase()}`);
         setShowValidationModal(true);
-        return;
-      }
-
-      if (password.length < 5) {
-        setValidationMessage("Password too short!");
-        setShowValidationModal(true);
+        setEmail("");
+        setPassword("");
+        setBranch("default");
         return;
       }
 
@@ -95,8 +92,12 @@ export default function Login() {
 
         setCurrentWebUserUID(user.uid);
         localStorage.setItem("userUID", user.uid);
-        // setSelected('dashboard');
-        // navigate('/');
+
+        await axios.post(`${API_URL}/addLogs`, {
+          uid: user.uid.toString(),
+          action: "Logged In",
+          description: "-",
+        });
       }
     } catch (error) {
       let message;
@@ -185,11 +186,11 @@ export default function Login() {
             <label className="floating-label">
               <span className="spanner">Campus</span>
               <select
-                defaultValue="default"
                 className="select select-ghost inputs"
+                value={branch}
                 onChange={(e) => setBranch(e.target.value)}
               >
-                <option disabled={true} value="default">
+                <option disabled value="default">
                   Select a Campus
                 </option>
                 {branches.map((branch) => (
@@ -207,7 +208,13 @@ export default function Login() {
                 type="email"
                 required
                 placeholder="Email"
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleLoginFirebase(e);
+                  }
+                }}
               />
             </label>
 
@@ -215,13 +222,19 @@ export default function Login() {
               <span className="spanner">Password</span>
               <input
                 type={showPassword ? "text" : "password"}
-                className="input validator inputs pr-10"
+                className="input validator inputs !pr-12"
                 required
                 placeholder="Password"
                 minLength="8"
+                value={password}
                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                 title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleLoginFirebase(e);
+                  }
+                }}
               />
               <button
                 type="button"
@@ -235,12 +248,12 @@ export default function Login() {
             <div className="remember-container">
               <input type="checkbox" className="checkbox" />
               <p className="remember-txt">Remember me</p>
-              <p
+              <button
                 className="ml-50 underline text-blue-700 cursor-pointer pl-2 text-sm w-full"
                 onClick={() => setShowResetModal(true)}
               >
                 Forgot password?
-              </p>
+              </button>
             </div>
 
             <button

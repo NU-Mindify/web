@@ -169,6 +169,7 @@ function CardActiveContent(student) {
   const [competitionModeData, setCompetitionModeData] = useState([]);
   const [masteryModeData, setMasteryModeData] = useState([]);
   const [reviewModeData, setReviewModeData] = useState([]);
+  const { currentWebUser } = useContext(UserLoggedInContext);
 
   const studentId = student._id;
 
@@ -332,7 +333,13 @@ function CardActiveContent(student) {
                 <div className="w-full flex items-center justify-center mt-3">
                   <Buttons
                     text="View Student Details"
-                    onClick={() =>
+                    onClick={async () => {
+                      await axios.post(`${API_URL}/addLogs`, {
+                        uid: currentWebUser.uid,
+                        action: "View Student Details",
+                        description: `${currentWebUser.firstName} viewed the details of ${student.last_name}, ${student.first_name}`,
+                      });
+
                       navigate("/students/overall", {
                         state: {
                           competitionData: competitionModeData,
@@ -343,8 +350,9 @@ function CardActiveContent(student) {
                           studentId: student.student_id,
                           studentBranch: student.branch,
                         },
-                      })
-                    }
+                      });
+                    }}
+
                     addedClassName="btn btn-warning !w-[250px]"
                     disabled={loadingData}
                   />
