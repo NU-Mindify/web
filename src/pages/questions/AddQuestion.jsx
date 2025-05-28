@@ -6,8 +6,7 @@ import { CheckCircle2Icon, XCircle } from "lucide-react";
 import { API_URL } from "../../Constants";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 
-const [validationMessage, setValidationMessage] = useState("");
-const [showValidationModal, setShowValidationModal] = useState(false);
+
 
 const categoriesObj = [
   {
@@ -64,8 +63,12 @@ function AddQuestion() {
     answer: "a",
   });
   const nav = useNavigate();
+  
+  const [validationMessage, setValidationMessage] = useState("");
+  const [showValidationModal, setShowValidationModal] = useState(false);
 
   const addToDB = async () => {
+    
     setIsFormDisabled(true);
     try {
       const { data } = await axios.post(`${API_URL}/addQuestion`, question);
