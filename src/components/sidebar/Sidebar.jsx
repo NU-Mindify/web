@@ -1,39 +1,45 @@
-import { useContext } from "react"
-import { ActiveContext } from "../../contexts/Contexts"
-import MenuBtn from "./MenuBtn"
-import hamburger from '../../assets/sidebar/hamburger.svg'
-import dashboard from '../../assets/sidebar/dashboard.svg'
-import analytics from '../../assets/sidebar/analytic.svg'
-import leaderboard from '../../assets/sidebar/leaderboard.svg'
-import question from '../../assets/sidebar/question.svg'
-import glossary from '../../assets/sidebar/glossary.svg'
-import student from '../../assets/sidebar/student.svg'
-import profile from '../../assets/sidebar/profile.svg'
-import account from '../../assets/sidebar/account.svg'
-import logout from '../../assets/sidebar/logout.svg'
-import '../../index.css'
-import { useLocation, useNavigate } from "react-router"
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { API_URL } from '../../Constants';
-import close from '../../assets/sidebar/close.svg'
+import { useContext } from "react";
+import { ActiveContext } from "../../contexts/Contexts";
+import MenuBtn from "./MenuBtn";
+import hamburger from "../../assets/sidebar/hamburger.svg";
+import dashboard from "../../assets/sidebar/dashboard.svg";
+import analytics from "../../assets/sidebar/analytic.svg";
+import leaderboard from "../../assets/sidebar/leaderboard.svg";
+import question from "../../assets/sidebar/question.svg";
+import glossary from "../../assets/sidebar/glossary.svg";
+import student from "../../assets/sidebar/student.svg";
+import profile from "../../assets/sidebar/profile.svg";
+import account from "../../assets/sidebar/account.svg";
+import logout from "../../assets/sidebar/logout.svg";
+import "../../index.css";
+import { useLocation, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { API_URL } from "../../Constants";
+import close from "../../assets/sidebar/close.svg";
+import logs from "../../assets/sidebar/logs.svg";
 
+import { UserLoggedInContext } from "../../contexts/Contexts";
 
-
-
-import { UserLoggedInContext } from "../../contexts/Contexts"
-
-import { getAuth, signOut } from "firebase/auth"
-
+import { getAuth, signOut } from "firebase/auth";
 
 export default function Sidebar() {
-  const { isActive, setActive, selected, setSelected, subSelected, setSubSelected } =
-    useContext(ActiveContext);
+  const {
+    isActive,
+    setActive,
+    selected,
+    setSelected,
+    subSelected,
+    setSubSelected,
+  } = useContext(ActiveContext);
 
   const {
-    currentWebUser, setCurrentWebUser,
-    currentWebUserUID, setCurrentWebUserUID,
-    currentUserBranch, setCurrentUserBranch,
+    currentWebUser,
+    setCurrentWebUser,
+    currentWebUserUID,
+    setCurrentWebUserUID,
+    currentUserBranch,
+    setCurrentUserBranch,
   } = useContext(UserLoggedInContext);
 
   const navigate = useNavigate();
@@ -61,7 +67,8 @@ export default function Sidebar() {
       "/students": "students",
       "/profile": "profile",
       "/account": "account",
-      "/": "dashboard", // treat root as dashboard or login depending on your routing
+      "/logs": "logs",
+      "/": "dashboard",
     };
 
     const currentKey = pathToKeyMap[location.pathname];
@@ -88,7 +95,8 @@ export default function Sidebar() {
         setCurrentWebUserUID(null);
         localStorage.removeItem("webUser");
         localStorage.removeItem("userUID");
-        document.cookie = "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+        document.cookie =
+          "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
         setSelected("login");
         setActive(false);
         navigate("/");
@@ -123,10 +131,81 @@ export default function Sidebar() {
       });
   }, [currentWebUserUID, setCurrentWebUser, setCurrentUserBranch]);
 
+
+  const menuItems = [
+    {
+      id: "dashboard",
+      text: "Dashboard",
+      icon: dashboard,
+      path: "/dashboard",
+    },
+    {
+      id: "analytics",
+      text: "Analytics",
+      icon: analytics,
+      path: "/analytics",
+    },
+    {
+      id: "leaderboard",
+      text: "Leaderboard",
+      icon: leaderboard,
+      path: "/leaderboard",
+    },
+    {
+      id: "question",
+      text: "Manage Questions",
+      icon: question,
+      path: "/question",
+      hasSub: true,
+    },
+    {
+      id: "glossary",
+      text: "Manage Glossary",
+      icon: glossary,
+      path: "/glossary",
+    },
+    {
+      id: "students",
+      text: "View Students",
+      icon: student,
+      path: "/students",
+    },
+    {
+      id: "profile",
+      text: "Profile Settings",
+      icon: profile,
+      path: "/profile",
+    },
+    {
+      id: "account",
+      text: "Manage Accounts",
+      icon: account,
+      path: "/account",
+      bothAdmin: true
+    },
+    {
+      id: "logs",
+      text: "Activity Logs",
+      icon: logs,
+      path: "/logs",
+      superAdmin: true,
+    },
+    {
+      id: "logout",
+      text: "Logout",
+      icon: logout,
+      isLogout: true,
+    },
+  ];
+
   return (
     <div className={isActive ? "active-side-menu" : "side-menu"}>
       <button className="btn-icon" onClick={handleSideMenu}>
-        <img src={isActive ? close : hamburger} className="mainIcon" alt="menu" />
+        <img
+          src={isActive ? close : hamburger}
+          className="mainIcon"
+          alt="menu"
+        />
       </button>
 
       {isActive && currentWebUser && (
@@ -150,197 +229,104 @@ export default function Sidebar() {
 
       <div className="menu-list-container">
         <ul className="menu-list">
-          <li>
-            <MenuBtn
-              icons={dashboard}
-              active={isActive}
-              text="Dashboard"
-              isSelected={selected === "dashboard" || currentPath === "/"}
-              onPress={() => {
-                setSelected("dashboard");
-                setSubSelected("");
-                setActiveQuestion(false);
-                if (isMobile) setActive(false);
-                navigate("/dashboard");
-              }}
-              goTo="/dashboard"
-            />
-          </li>
+          {menuItems.map((item) => {
+            if (
+              item.superAdmin  &&
+              !["super admin"].includes(
+                currentWebUser?.position?.toLowerCase()
+              ) || 
+              item.bothAdmin  &&
+              !["sub admin", "super admin"].includes(
+                currentWebUser?.position?.toLowerCase()
+              )
+            ) {
+              return null;
+            }
 
-          <li>
-            <MenuBtn
-              icons={analytics}
-              active={isActive}
-              text="Analytics"
-              isSelected={selected === "analytics"}
-              onPress={() => {
-                setSelected("analytics");
-                setSubSelected("");
-                setActiveQuestion(false);
-                if (isMobile) setActive(false);
-                navigate("/analytics");
-              }}
-              goTo="/analytics"
-            />
-          </li>
+            return (
+              <li key={item.id}>
+                <MenuBtn
+                  icons={item.icon}
+                  active={isActive}
+                  text={item.text}
+                  isSelected={
+                    item.id === selected ||
+                    (item.id === "dashboard" && currentPath === "/")
+                  }
+                  onPress={() => {
+                    if (item.isLogout) return handleLogout();
 
-          <li>
-            <MenuBtn
-              icons={leaderboard}
-              active={isActive}
-              text="Leaderboard"
-              isSelected={selected === "leaderboard"}
-              onPress={() => {
-                setSelected("leaderboard");
-                setSubSelected("");
-                setActiveQuestion(false);
-                if (isMobile) setActive(false);
-                navigate("/leaderboard");
-              }}
-              goTo="/leaderboard"
-            />
-          </li>
+                    setSelected(item.id);
+                    setSubSelected("");
+                    setActiveQuestion(false);
+                    if (isMobile) setActive(false);
 
-          <li>
-            <MenuBtn
-              icons={question}
-              active={isActive}
-              text="Manage Questions"
-              isSelected={selected === "question"}
-              onPress={() => {
-                setSelected("question");
-                setActiveQuestion(!activeQuestion);
-                if (isMobile) setActive(false);
-                navigate("/question");
-              }}
-              goTo="/question"
-            />
-            {selected === "question" && isActive && activeQuestion && (
-              <ul className="question-category-container">
-                {[
-                  { id: "abnormal", label: "Abnormal Psychology" },
-                  { id: "developmental", label: "Developmental Psychology" },
-                  { id: "psychological", label: "Psychological Assessment" },
-                  { id: "industrial", label: "Industrial Psychology" },
-                  { id: "general", label: "General Psychology" },
-                ].map(({ id, label }) => (
-                  <li key={id}>
-                    <div
-                      className={
-                        subSelected === id
-                          ? "active-sub-selected"
-                          : "active-sub-btn-container"
-                      }
-                    >
-                      <button
-                        className="active-btn-icon"
-                        onClick={() => {
-                          navigate("/question", {
-                            state: {
-                              category: id,
-                              categoryName: label,
-                              catSelected: true,
-                            },
-                          });
-                          setSelected("question");
-                          setSubSelected(id);
-                        }}
-                      >
-                        <h1 className="active-btn-txt">{label}</h1>
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
+                    if (item.id === "question") {
+                      setActiveQuestion(!activeQuestion);
+                    }
 
-          <li>
-            <MenuBtn
-              icons={glossary}
-              active={isActive}
-              text="Manage Glossary"
-              isSelected={selected === "glossary"}
-              onPress={() => {
-                setSelected("glossary");
-                setSubSelected("");
-                setActiveQuestion(false);
-                if (isMobile) setActive(false);
-                navigate("/glossary");
-              }}
-              goTo="/glossary"
-            />
-          </li>
+                    if (!item.isLogout) {
+                      navigate(item.path);
+                    }
+                  }}
+                  goTo={item.path}
+                />
 
-          <li>
-            <MenuBtn
-              icons={student}
-              active={isActive}
-              text="View Students"
-              isSelected={selected === "students"}
-              onPress={() => {
-                setSelected("students");
-                setSubSelected("");
-                setActiveQuestion(false);
-                if (isMobile) setActive(false);
-                navigate("/students");
-              }}
-              goTo="/students"
-            />
-          </li>
-
-          <li>
-            <MenuBtn
-              icons={profile}
-              active={isActive}
-              text="Profile Settings"
-              isSelected={selected === "profile"}
-              onPress={() => {
-                setSelected("profile");
-                setSubSelected("");
-                setActiveQuestion(false);
-                if (isMobile) setActive(false);
-                navigate("/profile");
-              }}
-              goTo="/profile"
-            />
-          </li>
-
-          {(currentWebUser?.position?.toLowerCase() === "super admin" ||
-            currentWebUser?.position?.toLowerCase() === "sub admin") && (
-            <li>
-              <MenuBtn
-                icons={account}
-                active={isActive}
-                text="Manage Accounts"
-                isSelected={selected === "account"}
-                onPress={() => {
-                  setSelected("account");
-                  setSubSelected("");
-                  setActiveQuestion(false);
-                  if (isMobile) setActive(false);
-                  navigate("/account");
-                }}
-                goTo="/account"
-              />
-            </li>
-          )}
-
-          <li>
-            <MenuBtn
-              icons={logout}
-              active={isActive}
-              text="Logout"
-              isSelected={false}
-              onPress={handleLogout}
-            />
-          </li>
+                {item.id === "question" && isActive && activeQuestion && (
+                  <ul className="question-category-container">
+                    {[
+                      { id: "abnormal", label: "Abnormal Psychology" },
+                      {
+                        id: "developmental",
+                        label: "Developmental Psychology",
+                      },
+                      {
+                        id: "psychological",
+                        label: "Psychological Assessment",
+                      },
+                      { id: "industrial", label: "Industrial Psychology" },
+                      { id: "general", label: "General Psychology" },
+                    ].map(({ id, label }) => (
+                      <li key={id}>
+                        <div
+                          className={
+                            subSelected === id
+                              ? "active-sub-selected"
+                              : "active-sub-btn-container"
+                          }
+                        >
+                          <button
+                            className="active-btn-icon"
+                            onClick={() => {
+                              navigate("/question", {
+                                state: {
+                                  category: id,
+                                  categoryName: label,
+                                  catSelected: true,
+                                },
+                              });
+                              setSelected("question");
+                              setSubSelected(id);
+                            }}
+                          >
+                            <h1 className="active-btn-txt">{label}</h1>
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
 
       <dialog id="logout_modal" className="modal">
         <form method="dialog" className="modal-box text-center">
-          <h3 className="font-bold text-lg mb-4">Are you sure you want to logout?</h3>
+          <h3 className="font-bold text-lg mb-4">
+            Are you sure you want to logout?
+          </h3>
           <div className="flex justify-center gap-4">
             <button
               type="button"

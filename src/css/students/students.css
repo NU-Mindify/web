@@ -25,7 +25,7 @@
 }
 
 .student-pagination-container{
-  @apply w-10/12 h-full flex flex-row items-center justify-between px-5;
+  @apply w-11/12 h-full flex flex-row items-center justify-between px-5;
 }
 
 

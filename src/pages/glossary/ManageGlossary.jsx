@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from "react";
-import search from "../../assets/search/search.svg";
 import edit from "../../assets/glossary/edit.svg";
 import dropdown from "../../assets/glossary/dropdown.svg";
 import "../../css/glossary/glossary.css";
@@ -7,8 +6,6 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import { API_URL } from "../../Constants";
 import EditGlossary from "./EditGlossary";
-import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
-import { Plus } from "lucide-react";
 import SearchBar from "../../components/searchbar/SearchBar";
 import searchIcon from "../../assets/students/search-01.svg";
 import download from "../../assets/leaderboard/file-export.svg";
@@ -112,15 +109,8 @@ export default function ManageGlossary() {
     return acc;
   }, {});
 
-  const handleAddTerm = () => {
-    navigate("/addterm");
-  };
 
-  const titles = [
-    { key: "term", label: "Terninology", className: "2/5" },
-    { key: "definition", label: "Definition", className: "flex flex-1" },
-    { key: "action", label: "Action", className: "w-1/5" },
-  ];
+
 
   return (
     <>

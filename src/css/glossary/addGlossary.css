@@ -2,46 +2,40 @@
 @plugin "daisyui";
 
 
-/* .modal-overlay {
-    @apply fixed inset-0 bg-black flex justify-center items-center z-[1000];
-} */
 
-.add-term-page-wrapper {
-  @apply w-full h-full relative;
-}
 
-.add-term-main-container{
-  @apply w-full  bg-white rounded-xl p-5 flex flex-col;
+.add-term-main-container {
+  @apply w-full bg-white rounded-xl p-5 flex flex-col;
   height: 100vh;
-     /* scrollbar-width: none;
+  /* scrollbar-width: none;
     -ms-overflow-style: none; */
 }
 
 .add-term-contents::-webkit-scrollbar {
   width: 6px;
 }
+
 .add-term-contents::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 6px;
 }
 
 
-.add-term-header{
-    @apply flex justify-between items-center -mt-3 mb-6;
+.add-term-header {
+  @apply flex justify-between items-center -mt-3 mb-6;
 }
 
 
-.close-btn{
-    @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer;
+.close-btn {
+  @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer;
 }
 
 /* .close-btn:hover {
     box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.6); 
 } */
-  
-.add-term-title{
-    @apply -mb-2 mt-3 font-[Poppins] text-[#FFD41C] font-bold text-[25px]
-        md:text-[40px];
+
+.add-term-title {
+  @apply -mb-2 mt-3 font-[Poppins] text-black font-bold text-[25px] md:text-[40px];
 }
 
 
@@ -49,14 +43,15 @@
 .add-term-contents {
   flex: 1;
   overflow-y: auto;
-  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-right: 4px; 
+  padding-right: 4px;
   scroll-behavior: smooth;
-  scrollbar-width: none; 
-  -ms-overflow-style: none;  
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  justify-content: center;
+  align-items: center;
 }
 
 .add-term-contents::-webkit-scrollbar {
@@ -70,22 +65,29 @@
   border-radius: 8px;
   padding: 1rem;
   position: relative;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   color: #000000;
+  width: 100%;
 }
 
 .term-header {
   font-weight: 500;
   font-size: 14px;
   margin-bottom: 0.75rem;
+  @apply w-full flex flex-row justify-center items-center;
 }
 
-.term-input-column select {
-  border: none;
-  border-bottom: none;
-  outline: none;
-  background-color: transparent;
+.term-header select {
+  @apply w-full h-[40px];
 }
+
+.delete-term-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  @apply ml-5;
+}
+
 
 .term-input-row {
   display: flex;
@@ -119,14 +121,7 @@
   color: #000000;
 }
 
-.delete-term-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
+
 
 .add-more-term-btn {
   margin-top: 0.5rem;
@@ -137,12 +132,12 @@
   align-self: flex-start;
 }
 
-.add-more-term-btn:hover{
+.add-more-term-btn:hover {
   color: #4f46e5;
 }
 
-.create-container{
-  @apply flex justify-center mt-4 sticky bottom-0 bg-white pt-2
+.create-container {
+  @apply flex justify-center sticky mb-2 w-full pt-2;
 }
 
 

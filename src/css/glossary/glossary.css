@@ -59,7 +59,7 @@
 
 .header-details {
   @apply grid grid-cols-[1.5fr_3fr_1fr] text-2xl font-medium text-black 
-  bg-white h-[60px] items-center border-b-2 border-black w-11/12;
+  bg-white h-[60px] items-center border-b-2 border-black w-11/12 ;
 }
 
 .header-title {
@@ -76,7 +76,7 @@
 
 /* Non-active word container */
 .per-word-container {
-  @apply w-11/12 grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-600 border-2 border-black;
+  @apply w-11/12 grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-300 border-2 border-black;
     @apply transform scale-100 transition-transform duration-300 ease-in-out;
 }
 .active-per-word-container {
@@ -84,19 +84,6 @@
   @apply transition-transform duration-300 ease-in-out transform scale-108;
 
 }
-
-.per-word-container:hover .word-container,
-.per-word-container:hover .meaning-container {
-  @apply text-white;
-}
-
-.per-word-container:hover .action-container{
-  filter: invert(1) brightness(2) contrast(100);
-}
-
-
-
-
 
 
 .word-container {

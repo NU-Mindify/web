@@ -270,7 +270,7 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <div className="flex items-center justify-center flex-col p-8">
+            <div className="w-full h-full flex items-center justify-center flex-col">
               <h1 className="dashboard-title font-[Poppins] text-[30px]">
                 Total Students
               </h1>
@@ -288,7 +288,7 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <div className="flex items-center justify-center flex-col p-8">
+            <div className="w-full h-full flex items-center justify-center flex-col">
               <h1 className="dashboard-title mb-2 font-[Poppins] text-[23px]">
                 Overall Average Score
               </h1>
@@ -318,7 +318,7 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <div className="flex items-center justify-center flex-col p-3">
+            <div className="w-full h-full flex items-center justify-center flex-col">
               <h1 className="dashboard-title mb-2 font-[Poppins]">
                 Most Challenging World
               </h1>
@@ -348,7 +348,7 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <div className="flex items-center justify-center flex-col p-3">
+            <div className="w-full h-full flex items-center justify-center flex-col">
               <h1 className="dashboard-title mb-2 text-black font-[Poppins]">
                 Best Performing World
               </h1>
@@ -417,7 +417,7 @@ export default function Dashboard() {
           : "bg-[#FFD41C] text-black  hover:bg-[#FFD41C] cursor-pointer"
       }`}
             >
-              Classic
+              Competition
             </button>
 
             <button

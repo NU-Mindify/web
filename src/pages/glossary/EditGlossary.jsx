@@ -1,17 +1,14 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useState } from 'react';
 import '../../css/glossary/editGlossary.css'
 import axios from 'axios';
 import { API_URL } from '../../Constants';
 // import close from '../../assets/glossary/close btn.svg'
-import savebtn from '../../assets/glossary/save-term-btn.svg'
-import deletebtn from '../../assets/glossary/delete-term-btn.svg'
 import closebtn from '../../assets/glossary/close-btn.svg';
+import Buttons from '../../components/buttons/Buttons';
 
 
 export default function EditGlossary({ onClose, term, onTermUpdated }) {
-    const location = useLocation();
-    const navigate = useNavigate();
 
     const { _id, word, meaning, tags } = term;
 
@@ -35,10 +32,6 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
             console.error("Error updating term:", error);
           }
     };
-
-    // function handleBack(){
-    //     navigate('/glossary');
-    // }
 
 
     const handleDelete = async () => {
@@ -105,18 +98,16 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
                 </div>
             
                 <div className="buttons">
-                    <button 
-                        onClick={() => handleSave()}
-                        className='save-btn'
-                        >
-                            <img src={savebtn} alt='save btn' className="save-icon"/>
-                    </button>
-                    <button 
+                    <Buttons
+                        text="Save"
+                        onClick={handleSave}
+                        addedClassName="btn btn-success"
+                    />
+                    <Buttons
+                        text="Delete"
                         onClick={() => handleDelete()}
-                        className='delete-btn'
-                        >
-                            <img src={deletebtn} alt='delete btn' className="delete-icon"/>
-                    </button>
+                        addedClassName="btn btn-error"
+                    />
                 </div>
 
                 {/* <div className="create-container">

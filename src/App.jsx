@@ -24,6 +24,8 @@ import AddTerm from "./pages/glossary/AddTerm";
 import AddAccount from "./pages/accounts/AddAccount";
 import SessionTimeout from "./components/SessionTimeout/SessionTimeout";
 import ShowMoreDetails from "./pages/students/ShowMoreDetails";
+import ActivityLogs from "./pages/activityLogs/activitylogs";
+
 
 const queryClient = new QueryClient();
 
@@ -141,6 +143,7 @@ function App() {
                     <Route path="/profile/edit/:id" element={<EditProfile />} />
                     <Route path="/glossary/edit" element={<EditGlossary />} />
                     <Route path="/addterm" element={<AddTerm />} />
+                    <Route path="/logs" element={<ActivityLogs />} />
                     <Route path="/addaccount" element={<AddAccount />} />
                     <Route path="/students/overall" element={<ShowMoreDetails />} />
                     <Route path="*" element={<Navigate to="/" />} />

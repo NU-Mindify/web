@@ -9,7 +9,7 @@
 
 /*------------------------- HEADER --------------------------*/
 .account-header {
-  @apply w-full h-[200px] p-1 bg-red-400;
+  @apply w-full h-[200px] p-1;
 }
 
 .account-title {
@@ -43,7 +43,7 @@
 }
 
 .pagination-container {
-  @apply w-10/12 h-1/2 flex flex-row justify-between items-center px-5;
+  @apply w-11/12 h-1/2 flex flex-row justify-between items-center px-5;
 }
 
 

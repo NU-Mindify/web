@@ -24,7 +24,10 @@
 
 /* ANALYTICS */
 .analytics-container-dashboard {
-  @apply w-full grid grid-cols-1 gap-4 place-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5;
+  @apply w-full grid grid-cols-1 gap-4 place-items-center 
+  md:grid-cols-2 
+  lg:grid-cols-3 
+  xl:grid-cols-5;
 }
 
 .analytics-properties-dashboard {
