@@ -359,15 +359,7 @@ export default function Leaderboard() {
             
               
 
-            <ExportDropdown
-              onExport={(format) => {
-                if (format === "csv") {
-                  exportToCSV(classicSortingLeaders, "Classic_Leaderboard");
-                } else if (format === "pdf") {
-                  exportToPDF(classicSortingLeaders, "Classic Leaderboard");
-                }
-              }}
-            />
+            
             
             
           </div>
@@ -409,12 +401,12 @@ export default function Leaderboard() {
               value={searchClassic}
               handleChange={(e) => {
                 handleClassicSearchChange(e.target.value);
-                // setShowSuggestions(true);
+                setShowSuggestions(true);
               }}
               placeholder="Search for a user"
               icon={searchIcon}
-              // suggestions={searchSuggestions}
-              // showSuggestions={showSuggestions}
+              suggestions={searchSuggestions}
+              showSuggestions={showSuggestions}
               onSuggestionSelect={(user) => {
                 setSearchQuery(
                   `${user.lastName.toUpperCase()}, ${user.firstName}`
@@ -434,6 +426,15 @@ export default function Leaderboard() {
                 getOptionLabel={(branch) => branch.name}
                 addedClassName=""
               />
+              <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportToCSV(classicSortingLeaders, "Classic_Leaderboard");
+                } else if (format === "pdf") {
+                  exportToPDF(classicSortingLeaders, "Classic Leaderboard");
+                }
+              }}
+            />
           </div>
 
           <div className="leaderboard-contents-container">
@@ -539,31 +540,10 @@ export default function Leaderboard() {
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title mastery-title">Mastery</h1>
 
-            <select
-              value={masterySelectedBranch}
-              className="text-black"
-              onChange={(e) => setMasterySelectedBranch(e.target.value)}
-            >
-              <option value="" disabled>
-                Filter by:
-              </option>
-              <option value="all">All Branch</option>
-              {branches.map((branch, index) => (
-                <option value={branch.id} key={index}>
-                  {branch.name}
-                </option>
-              ))}
-            </select>
 
-            <ExportDropdown
-              onExport={(format) => {
-                if (format === "csv") {
-                  exportToCSV(masterySortingLeaders, "Mastery_Leaderboard");
-                } else if (format === "pdf") {
-                  exportToPDF(masterySortingLeaders, "Mastery Leaderboard");
-                }
-              }}
-            />
+            
+
+            
           </div>
 
           <h2 className="leaderboard-subtitle">
@@ -598,6 +578,25 @@ export default function Leaderboard() {
                 ))}
               </ul>
             )}
+            <SelectFilter
+                value={masterySelectedBranch}
+                onChange={(e) => setMasterySelectedBranch(e.target.value)}
+                disabledOption="Select Branch"
+                fixOption="All Branches"
+                mainOptions={branches}
+                getOptionValue={(branch) => branch.id}
+                getOptionLabel={(branch) => branch.name}
+                addedClassName=""
+              />
+              <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportToCSV(masterySortingLeaders, "Mastery_Leaderboard");
+                } else if (format === "pdf") {
+                  exportToPDF(masterySortingLeaders, "Mastery Leaderboard");
+                }
+              }}
+            />
           </div>
 
           <div className="leaderboard-contents-container">
