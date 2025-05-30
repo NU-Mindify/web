@@ -55,3 +55,5 @@ export const modes = [
     mode: "mastery"
   }
 ]
+
+export const defaultAvatar = "https://static.vecteezy.com/system/resources/previews/055/581/121/non_2x/default-profile-picture-icon-avatar-photo-placeholder-illustration-vector.jpg"

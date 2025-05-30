@@ -25,7 +25,7 @@ import AddAccount from "./pages/accounts/AddAccount";
 import SessionTimeout from "./components/SessionTimeout/SessionTimeout";
 import ShowMoreDetails from "./pages/students/ShowMoreDetails";
 import ActivityLogs from "./pages/activityLogs/ActivityLogs";
-
+import SignUp from "./pages/signUp/SignUp";
 
 const queryClient = new QueryClient();
 
@@ -118,6 +118,7 @@ function App() {
                   path="/terms-and-conditions"
                   element={<TermsAndConditions />}
                 />
+                <Route path="/signup" element={<SignUp />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             ) : !isSplash ? (
@@ -146,6 +147,7 @@ function App() {
                     <Route path="/logs" element={<ActivityLogs />} />
                     <Route path="/addaccount" element={<AddAccount />} />
                     <Route path="/students/overall" element={<ShowMoreDetails />} />
+                    
                     <Route path="*" element={<Navigate to="/" />} />
                   </Routes>
                 </div>

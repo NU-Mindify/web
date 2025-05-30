@@ -12,6 +12,7 @@ import pattern from "../../assets/forAll/pattern.svg";
 import { Eye, EyeOff } from "lucide-react";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 export default function Login() {
   const { setCurrentWebUserUID } = useContext(UserLoggedInContext);
@@ -31,6 +32,7 @@ export default function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const navigate = useNavigate();
   useEffect(() => {
     const timer = setTimeout(() => {
       setLogoTransitioned(true);
@@ -43,6 +45,7 @@ export default function Login() {
     setIsLoading(true);
 
     const matchedBranch = branches.find((item) => item.id === branch);
+    const allowedExceptionDomain = "@students.nu-moa.edu.ph";
 
     try {
       if (!matchedBranch) {
@@ -50,7 +53,7 @@ export default function Login() {
         setShowValidationModal(true);
         return;
       }
-      if (!email || !email.endsWith(matchedBranch.extension)) {
+      if (!email) {
         setValidationMessage("Please enter a valid email");
         setShowValidationModal(true);
         return;
@@ -66,8 +69,6 @@ export default function Login() {
         setShowValidationModal(true);
         return;
       }
-
-      const allowedExceptionDomain = "@students.nu-moa.edu.ph";
 
       if (
         !email.endsWith(matchedBranch.extension) &&
@@ -262,6 +263,15 @@ export default function Login() {
               disabled={isLoading}
             >
               {isLoading ? "Signing you in..." : "Sign In"}
+            </button>
+
+            <button
+              className="login-btn"
+              onClick={() => {
+                navigate("/signup");
+              }}
+            >
+              Sign Up
             </button>
 
             <div className="flex items-center w-full mt-5">
