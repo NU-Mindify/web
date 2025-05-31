@@ -17,6 +17,7 @@ import { Plus } from "lucide-react";
 
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 
+
 const categoriesObj = [
   {
     id: "abnormal",
@@ -46,6 +47,7 @@ const categoriesObj = [
 ];
 
 export default function ManageQuestion() {
+  const [showArchived, setShowArchived] = useState(false);
   const location = useLocation();
   useEffect(() => {
     const category = location.state?.category;
@@ -70,7 +72,7 @@ export default function ManageQuestion() {
       console.log("fetching again");
       const { data } = await axios.get(
         `${API_URL}/getQuestions?${
-          category ? `category=${category}&level=1` : ""
+          category ? `category=${category}` : ""
         }`
       );
       return data;
@@ -227,11 +229,19 @@ export default function ManageQuestion() {
             </div>
 
             <div className="flex flex-wrap items-center gap-4 w-full justify-start">
+
               <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
-                <button className="all-archive-btn active w-1/2">
+                 <button 
+                  onClick={() => setShowArchived(false)}
+                  className={`all-archive-btn ${showArchived || "active" } w-1/2`}>
                   All Questions
                 </button>
-                <button className="all-archive-btn w-1/2">Archive</button>
+
+                <button 
+                  onClick={() => setShowArchived(true)}
+                  className={`all-archive-btn ${showArchived && "active" } w-1/2`}>
+                  Archive
+                  </button>
               </div>
 
               <div className="sort-container relative">
@@ -272,7 +282,7 @@ export default function ManageQuestion() {
                   No questions found.
                 </div>
               ) : (
-                questions.map((question, index) => (
+                questions.filter(question => question.is_deleted === showArchived ).map((question, index) => (
                   <QuestionCard
                     data={question}
                     key={question._id}
