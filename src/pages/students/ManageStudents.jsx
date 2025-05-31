@@ -12,6 +12,10 @@ import SelectFilter from "../../components/selectFilter/SelectFilter";
 import searchIcon from "../../assets/students/search-01.svg";
 import UserContentsTable from "../../components/tableForContents/UserContentsTable";
 import Buttons from "../../components/buttons/Buttons";
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import logo from "../../assets/logo/logo.png";
 import { useNavigate } from "react-router";
 
 export default function ManageStudents() {
@@ -84,6 +88,100 @@ export default function ManageStudents() {
     branches.find((b) => b.id === branchId)?.name || "Unknown Branch";
   const toggleCard = (id) => setCardActive((prev) => (prev === id ? null : id));
 
+  //EXPORT TO CSV
+  const exportToCSV = (data, filename) => {
+    const now = new Date().toLocaleString();
+    const headers = ["Name", "Student ID", "Campus"];
+    const rows = data.map((student) => {
+      const firstName = student.first_name || "";
+      const lastName = student.last_name || "";
+      const fullName = `${lastName.toUpperCase()} ${firstName}`.trim();
+
+      return [
+        fullName,
+        student.student_id,
+        branches.find((branch) => branch.id === student.branch)?.name || "N/A",
+      ];
+    });
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [
+        `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        `Exported on: ${now}`,
+        "",
+        headers.join(","),
+        ...rows.map((row) => row.join(",")),
+      ].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `${filename}_by_${currentWebUser.firstName} ${currentWebUser.lastName}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  //convert logo to base64 para lumabas sa pdf
+  const getBase64FromUrl = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  //EXPORT TO PDF
+  const exportToPDF = async (data, title) => {
+    const logoBase64 = await getBase64FromUrl(logo);
+    const now = new Date().toLocaleString();
+    const doc = new jsPDF();
+    doc.text(`${title}`, 14, 10);
+    doc.text(
+      `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+      14,
+      18
+    );
+    doc.text(`Exported on: ${now}`, 14, 26);
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const logoWidth = 30;
+    const logoHeight = 15;
+    const xPos = pageWidth - logoWidth - 10;
+    doc.addImage(logoBase64, "PNG", xPos, 10, logoWidth, logoHeight);
+
+    const rows = data.map((student) => {
+      const fullName = `${(student.last_name || "").toUpperCase()} ${
+        student.first_name || ""
+      }`.trim();
+      const studentId = student.student_id || "";
+      const campus =
+        branches.find((branch) => branch.id === student.branch)?.name || "N/A";
+
+      return [fullName, studentId, campus];
+    });
+
+    autoTable(doc, {
+      head: [["Name", "Student ID", "Campus"]],
+      body: rows,
+      startY: 30,
+    });
+
+    doc.save(
+      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
+        currentWebUser.lastName
+      }.pdf`
+    );
+  };
+
   return (
     <div className="students-main-container">
       <div className="student-header">
@@ -110,7 +208,15 @@ export default function ManageStudents() {
             addedClassName="ml-3"
           />
 
-          <img src={download} alt="export" className="acc-export-icon" />
+          <ExportDropdown
+            onExport={(format) => {
+              if (format === "csv") {
+                exportToCSV(filteredStudents, "Students_List");
+              } else if (format === "pdf") {
+                exportToPDF(filteredStudents, "Students_List");
+              }
+            }}
+          />
         </div>
       </div>
 
@@ -352,7 +458,6 @@ function CardActiveContent(student) {
                         },
                       });
                     }}
-
                     addedClassName="btn btn-warning !w-[250px]"
                     disabled={loadingData}
                   />
