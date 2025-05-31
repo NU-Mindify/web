@@ -16,6 +16,7 @@ import { UserLoggedInContext } from "../../contexts/Contexts";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
 import SearchBar from "../../components/searchbar/SearchBar";
 import searchIcon from "../../assets/students/search-01.svg";
+import logo from "../../assets/logo/logo.png";
 
 export default function Leaderboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);
@@ -292,8 +293,22 @@ export default function Leaderboard() {
     document.body.removeChild(link);
   };
 
+  //convert logo to base64 para lumabas sa pdf
+  const getBase64FromUrl = async (url) => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+};
+
   // PDF Export
-  const exportToPDF = (data, title) => {
+  const exportToPDF = async (data, title) => {
+    const logoBase64 = await getBase64FromUrl(logo);
     const now = new Date().toLocaleString();
     const doc = new jsPDF();
     doc.text(`${title}`, 14, 10);
@@ -303,6 +318,12 @@ export default function Leaderboard() {
       18
     );
     doc.text(`Exported on: ${now}`, 14, 26);
+
+    const pageWidth = doc.internal.pageSize.getWidth(); 
+    const logoWidth = 30;
+    const logoHeight = 15;
+    const xPos = pageWidth - logoWidth - 10;
+    doc.addImage(logoBase64, 'PNG', xPos,10,logoWidth,logoHeight)
 
     const rows = data.map((leader) => {
       const firstName = leader.user_id?.first_name || "";
