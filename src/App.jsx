@@ -132,7 +132,7 @@ function App() {
                   }
                 >
                   <Routes>
-                    {/* <Route path="/" element={<Dashboard />} /> */}
+                    <Route path="/" element={<Dashboard />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/leaderboard" element={<Leaderboard />} />

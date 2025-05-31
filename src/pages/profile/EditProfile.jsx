@@ -73,7 +73,8 @@ export default function EditProfile() {
     localStorage.setItem("userUID", updatedUser.data.uid);
 
     await axios.post(`${API_URL}/addLogs`, {
-      uid: editWebUser.uid,
+      name: `${editWebUser.firstName} ${editWebUser.lastName}`,
+      branch: editWebUser.branch,
       action: "Edit Profile",
       description: "Updated profile information.",
     });

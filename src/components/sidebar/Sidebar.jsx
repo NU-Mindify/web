@@ -341,12 +341,13 @@ export default function Sidebar() {
               className="btn btn-primary"
               onClick={async () => {
                 await axios.post(`${API_URL}/addLogs`, {
-                  uid: currentWebUser.uid,
+                  name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+                  branch: currentWebUser.branch,
                   action: "Logged Out",
                   description: "-",
                 });
-
-                confirmLogout(); // make sure to CALL it
+                
+                confirmLogout(); 
               }}
             >
               Confirm

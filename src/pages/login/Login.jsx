@@ -16,10 +16,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const { setCurrentWebUserUID } = useContext(UserLoggedInContext);
- const { setSelected } = useContext(ActiveContext)
+  const { setSelected } = useContext(ActiveContext);
   const [logoTransitioned, setLogoTransitioned] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [verifyEmail, setVerifyEmail] = useState("");
   const [password, setPassword] = useState("");
   const [branch, setBranch] = useState("default");
 
@@ -63,13 +64,11 @@ export default function Login() {
         setShowValidationModal(true);
         return;
       }
-
       if (password.length < 5) {
         setValidationMessage("Password too short!");
         setShowValidationModal(true);
         return;
       }
-
       if (
         !email.endsWith(matchedBranch.extension) &&
         !email.endsWith(allowedExceptionDomain)
@@ -82,9 +81,19 @@ export default function Login() {
         return;
       }
 
+      // 🔽 Move API call here BEFORE checking isApproved
+      const response = await axios.get(`${API_URL}/login/${email}`);
+      const verifyData = response.data;
+
+      if (verifyData.isApproved !== true) {
+        setValidationMessage("Your Account is not verified yet.");
+        setShowValidationModal(true);
+        return;
+      }
+
+      // Proceed with Firebase login
       await signInWithEmailAndPassword(firebaseAuth, email, password);
       const user = firebaseAuth.currentUser;
-      setIsLoading(true);
 
       if (user) {
         const token = await user.getIdToken();
@@ -92,10 +101,11 @@ export default function Login() {
         document.cookie = `token=${token}; path=/; Max-Age=${fifteenMinutes}; Secure; SameSite=Strict`;
 
         setCurrentWebUserUID(user.uid);
-        navigate("/dashboard")
+        navigate("/dashboard");
 
         await axios.post(`${API_URL}/addLogs`, {
-          uid: user.uid.toString(),
+          name: `${verifyData.firstName} ${verifyData.lastName}`,
+          branch: verifyData.branch,
           action: "Logged In",
           description: "-",
         });
@@ -148,7 +158,7 @@ export default function Login() {
       setShowResetModal(false);
       setResetEmail("");
     } catch (error) {
-      // console.error("Reset error:", error);
+
       setValidationMessage(
         "Error sending password reset email. Please try again."
       );
@@ -267,7 +277,9 @@ export default function Login() {
 
             <div className="flex items-center w-full mt-5">
               <div className="flex-grow h-px bg-black"></div>
-              <span className="px-4 text-black text-xs">OR NO ACCOUNT YET?</span>
+              <span className="px-4 text-black text-xs">
+                OR NO ACCOUNT YET?
+              </span>
               <div className="flex-grow h-px bg-black"></div>
             </div>
 
@@ -279,8 +291,6 @@ export default function Login() {
             >
               Sign Up
             </button>
-
-            
           </div>
         </div>
       </div>
