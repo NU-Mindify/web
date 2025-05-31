@@ -9,8 +9,12 @@ import axios from "axios";
 import { API_URL, branches, defaultAvatar } from "../../Constants";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import Buttons from "../../components/buttons/Buttons";
-import "../../css/account/account.css";
+import '../../css/signUp/signUp.css'
 import { useNavigate } from "react-router";
+import chevronIcon from "../../assets/forAll/chevron.svg";
+
+
+
 
 export default function SignUp() {
   const [newWebUser, setNewWebUser] = useState({
@@ -97,7 +101,7 @@ export default function SignUp() {
       position,
       useravatar,
       uid: "",
-      approved: false,
+      isApproved: false,
     };
 
     try {
@@ -113,17 +117,20 @@ export default function SignUp() {
       const uidWebUser = { ...finalWebUser, uid: user.uid };
 
       // 2. Send reset email
-      await sendEmailVerification(user);
+      // await sendEmailVerification(user);
 
       // 3. Store user data in database
       await axios.post(`${API_URL}/createWebUser`, uidWebUser);
+      setValidationMessage("Your account has successfully created. You'll receive an email once the admin has verified your account.");
+      setShowValidationModal(true);
+      handleReset();
 
       // 4. Sign out the new user's account
       await signOut(firebaseAuth);
+      navigate("/")
 
       // 5. Reset and show modal
-      setShowModal(true);
-      handleReset();
+      
     } catch (error) {
       console.error("Registration Error:", error.message);
       setValidationMessage("Error: " + error.message);
@@ -135,8 +142,16 @@ export default function SignUp() {
 
   return (
     <div className="sign-up-container bg-white w-full h-full">
-      <div className="sign-up-header-cont">
-        <h1 className="text-black">Sign Up</h1>
+      <div className="sign-up-header">
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="view-acc-btn"
+          disabled={isLoading}
+        >
+          <img src={chevronIcon} alt="chevron" />
+        </button>
+        <h1 className="add-account-title">Sign Up</h1>
       </div>
 
       <div className="user-details-container">

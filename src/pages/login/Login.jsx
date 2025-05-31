@@ -12,11 +12,11 @@ import pattern from "../../assets/forAll/pattern.svg";
 import { Eye, EyeOff } from "lucide-react";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import axios from "axios";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const { setCurrentWebUserUID } = useContext(UserLoggedInContext);
-
+ const { setSelected } = useContext(ActiveContext)
   const [logoTransitioned, setLogoTransitioned] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -92,7 +92,7 @@ export default function Login() {
         document.cookie = `token=${token}; path=/; Max-Age=${fifteenMinutes}; Secure; SameSite=Strict`;
 
         setCurrentWebUserUID(user.uid);
-        localStorage.setItem("userUID", user.uid);
+        navigate("/dashboard")
 
         await axios.post(`${API_URL}/addLogs`, {
           uid: user.uid.toString(),
@@ -265,6 +265,12 @@ export default function Login() {
               {isLoading ? "Signing you in..." : "Sign In"}
             </button>
 
+            <div className="flex items-center w-full mt-5">
+              <div className="flex-grow h-px bg-black"></div>
+              <span className="px-4 text-black text-xs">OR NO ACCOUNT YET?</span>
+              <div className="flex-grow h-px bg-black"></div>
+            </div>
+
             <button
               className="login-btn"
               onClick={() => {
@@ -274,27 +280,7 @@ export default function Login() {
               Sign Up
             </button>
 
-            <div className="flex items-center w-full mt-5">
-              <div className="flex-grow h-px bg-black"></div>
-              <span className="px-4 text-black text-xs">or sign in with</span>
-              <div className="flex-grow h-px bg-black"></div>
-            </div>
-
-            <button className="login-btn">
-              <svg
-                aria-label="Microsoft logo"
-                width="16"
-                height="16"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-              >
-                <path d="M96 96H247V247H96" fill="#f24f23"></path>
-                <path d="M265 96V247H416V96" fill="#7eba03"></path>
-                <path d="M96 265H247V416H96" fill="#3ca4ef"></path>
-                <path d="M265 265H416V416H265" fill="#f9ba00"></path>
-              </svg>
-              Sign In with Microsoft
-            </button>
+            
           </div>
         </div>
       </div>

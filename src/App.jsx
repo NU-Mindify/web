@@ -26,6 +26,7 @@ import SessionTimeout from "./components/SessionTimeout/SessionTimeout";
 import ShowMoreDetails from "./pages/students/ShowMoreDetails";
 import ActivityLogs from "./pages/activityLogs/ActivityLogs";
 import SignUp from "./pages/signUp/SignUp";
+import ApproveAccount from "./pages/accounts/ApproveAccount";
 
 const queryClient = new QueryClient();
 
@@ -131,7 +132,7 @@ function App() {
                   }
                 >
                   <Routes>
-                    <Route path="/" element={<Dashboard />} />
+                    {/* <Route path="/" element={<Dashboard />} /> */}
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/leaderboard" element={<Leaderboard />} />
@@ -141,6 +142,7 @@ function App() {
                     <Route path="/students" element={<ManageStudents />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/account" element={<AccountManagement />} />
+                    <Route path="/account/approval" element={<ApproveAccount />} />
                     <Route path="/profile/edit/:id" element={<EditProfile />} />
                     <Route path="/glossary/edit" element={<EditGlossary />} />
                     <Route path="/addterm" element={<AddTerm />} />

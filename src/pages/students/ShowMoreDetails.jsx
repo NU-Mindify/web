@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from "react-router";
 import "../../css/students/showMoreDetails.css";
-import { useState, useEffect } from "react";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import samplepic from "../../assets/students/sample-minji.svg";
 import { branches, categories } from "../../Constants";
@@ -20,11 +19,6 @@ export default function ShowMoreDetails() {
     branches.find((b) => b.id === location.state?.studentBranch)?.name ||
     "Unknown Branch";
 
-  useEffect(() => {
-    console.log("Competition Mode Data:", competitionData);
-    console.log("Mastery Mode Data:", masteryData);
-    console.log("Review Mode Data:", reviewData);
-  }, [competitionData, masteryData, reviewData]);
 
   const getCompetitionHighScores = () => {
     const grouped = {};

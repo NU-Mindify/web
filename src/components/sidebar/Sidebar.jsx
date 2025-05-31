@@ -105,10 +105,12 @@ export default function Sidebar() {
         console.log(error);
       });
   };
+  
 
   // Fetch user info only when UID changes (avoid infinite loop)
   useEffect(() => {
     if (!currentWebUserUID) return;
+
 
     axios
       .get(`${API_URL}/getwebuser/${currentWebUserUID}`)

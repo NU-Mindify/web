@@ -59,7 +59,7 @@ export default function EditProfile() {
 
   const handleUpdateProfile = async () => {
   try {
-    const response = await axios.put(
+    await axios.put(
       `${API_URL}/updateWebUsers/${editWebUser._id}`,
       editWebUser
     );

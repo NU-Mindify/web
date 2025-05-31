@@ -10,9 +10,10 @@ import Buttons from "../../components/buttons/Buttons";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
 import SearchBar from "../../components/searchbar/SearchBar";
 import UserContentsTable from "../../components/tableForContents/UserContentsTable";
+import chevronIcon from "../../assets/forAll/chevron.svg";
 
-export default function AccountManagement() {
-  const [webUsers, setWebUsers] = useState([]);
+export default function ApproveAccount() {
+  const [unApproveAccounts, setUnApproveAccounts] = useState([]);
   const [branches, setBranches] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardActive, setCardActive] = useState(null);
@@ -27,6 +28,7 @@ export default function AccountManagement() {
   const usersPerPage = 15;
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
 
+  // Load branches once
   useEffect(() => {
     const loadBranches = async () => {
       try {
@@ -39,39 +41,41 @@ export default function AccountManagement() {
     loadBranches();
   }, []);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (!currentUserBranch) return;
 
-      setIsLoading(true);
-      try {
-        const res = await axios.get(
-          `${API_URL}/getWebUsers/${currentUserBranch}`
-        );
-        setWebUsers(res.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchUsers();
+  const fetchPendingUsers = async () => {
+    if (!currentUserBranch) return;
+
+    setIsLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/getWebUsers/${currentUserBranch}`);
+      setUnApproveAccounts(res.data.filter((user) => user.isApproved === false));
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPendingUsers();
   }, [currentUserBranch]);
 
+  // Reset page on filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, selectedBranch, selectedPosition]);
 
+  // Unique positions, excluding "super admin"
   const uniquePositions = Array.from(
     new Set(
-      webUsers
+      unApproveAccounts
         .map((user) => user.position)
         .filter((pos) => pos?.toLowerCase() !== "super admin")
     )
   );
 
-  const filteredUsers = webUsers
-    .filter((user) => user.isApproved === true)
+  // Filter and sort users
+  const filteredUsers = unApproveAccounts
     .filter((user) => {
       const query = searchQuery.toLowerCase().replace(",", "").trim();
       const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
@@ -113,8 +117,7 @@ export default function AccountManagement() {
     ? filteredUsers
         .filter((user) => {
           const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-          const reversedName =
-            `${user.lastName} ${user.firstName}`.toLowerCase();
+          const reversedName = `${user.lastName} ${user.firstName}`.toLowerCase();
           return (
             fullName.includes(searchQuery.toLowerCase()) ||
             reversedName.includes(searchQuery.toLowerCase())
@@ -133,9 +136,17 @@ export default function AccountManagement() {
   return (
     <div className="account-main-container">
       <div className="account-header">
-        <h1 className="account-title flex flex-row items-center">
-          Account Management
-        </h1>
+        <div className="add-account-header">
+          <button
+            type="button"
+            onClick={() => navigate("/account")}
+            className="view-acc-btn"
+            disabled={isLoading}
+          >
+            <img src={chevronIcon} alt="chevron" />
+          </button>
+          <h1 className="add-account-title">Pending Account</h1>
+        </div>
 
         <div className="acc-sub-header-container">
           <SearchBar
@@ -154,19 +165,9 @@ export default function AccountManagement() {
               );
               setShowSuggestions(false);
             }}
-            addedClassName="w-[70%] h-[50px]"
+            addedClassName="w-[65%] h-[50px]"
           />
 
-          <Buttons
-            text="Pending Account"
-            onClick={() => navigate("/account/approval")}
-            addedClassName="btn btn-warning !w-[250px]"
-          />
-
-          <img src={download} alt="export" className="acc-export-icon" />
-        </div>
-
-        <div className="filter-container">
           <SelectFilter
             value={selectedPosition}
             onChange={(e) => setSelectedPosition(e.target.value)}
@@ -187,6 +188,8 @@ export default function AccountManagement() {
               addedClassName="ml-3"
             />
           )}
+
+          <img src={download} alt="export" className="acc-export-icon" />
         </div>
       </div>
 
@@ -200,7 +203,14 @@ export default function AccountManagement() {
         sortOrderAsc={sortOrderAsc}
         setSortOrderAsc={setSortOrderAsc}
         getBranchName={getBranchName}
-        cardActiveContent={CardActiveContent}
+        cardActiveContent={(user) => (
+          <CardActiveContent user={user} refreshData={fetchPendingUsers} />
+        )}
+        isForApprove={true}
+        refreshData={() => {
+          // Optional: provide a function to refresh the list after approve
+          // You could pass this to CardActiveContent via props if needed
+        }}
       />
 
       <div className="acc-footer">
@@ -240,7 +250,26 @@ export default function AccountManagement() {
   );
 }
 
-function CardActiveContent(user) {
+function CardActiveContent({ user, refreshData }) {
+  const [approveLoading, setApproveLoading] = useState(false);
+
+  const handlesApprove = async () => {
+    setApproveLoading(true);
+    try {
+      await axios.put(`${API_URL}/updateWebUsers/${user._id}`, {
+        ...user,
+        isApproved: true,
+      });
+      alert(`User ${user.firstName} ${user.lastName} approved!`);
+      refreshData(); // reloads the list
+    } catch (error) {
+      console.error("Error approving user:", error);
+      alert("Failed to approve user. Try again.");
+    } finally {
+      setApproveLoading(false);
+    }
+  };
+
   return (
     <div className="user-details-card">
       <p>
@@ -249,6 +278,21 @@ function CardActiveContent(user) {
       <p>
         <strong>Employee Number:</strong> {user.employeenum}
       </p>
+
+      <div className="flex flex-row justify-around items-center px-[200px]">
+        <Buttons
+          text={approveLoading ? "Approving..." : "Approve"}
+          onClick={handlesApprove}
+          addedClassName="btn btn-success"
+          disabled={approveLoading}
+        />
+        <Buttons
+          text="Decline"
+          onClick={() => alert("Decline clicked")}
+          addedClassName="btn btn-error"
+        />
+      </div>
     </div>
   );
 }
+
