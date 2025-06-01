@@ -92,7 +92,9 @@ export default function AccountManagement() {
         user.position === selectedPosition;
 
       const matchesArchived = showArchived ? user.is_deleted : !user.is_deleted;
-      return matchesSearch && matchesBranch && matchesPosition && matchesArchived;
+      return (
+        matchesSearch && matchesBranch && matchesPosition && matchesArchived
+      );
     })
     .sort((a, b) => {
       const comparison = a.lastName.localeCompare(b.lastName);
@@ -140,7 +142,7 @@ export default function AccountManagement() {
           Account Management
         </h1>
 
-        <div className="acc-sub-header-container ">
+        <div className="acc-sub-header-container">
           <SearchBar
             value={searchQuery}
             handleChange={(e) => {
@@ -169,23 +171,23 @@ export default function AccountManagement() {
           <img src={download} alt="export" className="acc-export-icon" />
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 w-full justify-start ">
-              <div className="flex bg-gray-100 p-1 rounded-xl w-[500px]">
-          <button 
-            onClick={() => setShowArchived(false)}
-            className={`all-archive-btn ${showArchived || "active" } w-1/2`}>
-            Show All Admins
-          </button>
+        <div className="flex flex-wrap items-center gap-6 w-full justify-start mt-3 px-5">
+          <div className="acc-toggle-btn">
+            <button
+              onClick={() => setShowArchived(false)}
+              className={`all-archive-btn ${showArchived || "active"} w-1/2`}
+            >
+              Show All Admins
+            </button>
 
-          <button 
-            onClick={() => setShowArchived(true)}
-            className={`all-archive-btn ${showArchived && "active" } w-1/2`}>
-            Archive Admins
-          </button>
-        </div>
-        
+            <button
+              onClick={() => setShowArchived(true)}
+              className={`all-archive-btn ${showArchived && "active"} w-1/2`}
+            >
+              Archive Admins
+            </button>
+          </div>
 
-          <div className="sort-container relative">
           <SelectFilter
             value={selectedPosition}
             onChange={(e) => setSelectedPosition(e.target.value)}
@@ -198,8 +200,8 @@ export default function AccountManagement() {
             <SelectFilter
               value={selectedBranch}
               onChange={(e) => setSelectedBranch(e.target.value)}
-              disabledOption="Select Branch"
-              fixOption="All Branches"
+              disabledOption="Select Campus"
+              fixOption="All Campuses"
               mainOptions={branches}
               getOptionValue={(branch) => branch.id}
               getOptionLabel={(branch) => branch.name}
@@ -207,7 +209,6 @@ export default function AccountManagement() {
             />
           )}
         </div>
-        </div>     
       </div>
 
       <UserContentsTable
@@ -270,16 +271,14 @@ function CardActiveContent(user) {
         <strong>Employee Number:</strong> {user.employeenum}
       </p>
       <p>
-        <strong>Date Created: </strong>  
-        {
-          isNaN(new Date(user.createdAt)) 
-            ? 'No Date' 
-            : new Date(user.createdAt).toLocaleString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })
-        }
+        <strong>Date Created: </strong>
+        {isNaN(new Date(user.createdAt))
+          ? "No Date"
+          : new Date(user.createdAt).toLocaleString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
       </p>
     </div>
   );

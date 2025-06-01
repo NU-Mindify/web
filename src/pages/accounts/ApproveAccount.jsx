@@ -12,7 +12,6 @@ import SearchBar from "../../components/searchbar/SearchBar";
 import UserContentsTable from "../../components/tableForContents/UserContentsTable";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 
-
 export default function ApproveAccount() {
   const [unApproveAccounts, setUnApproveAccounts] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -42,14 +41,23 @@ export default function ApproveAccount() {
     loadBranches();
   }, []);
 
-
   const fetchPendingUsers = async () => {
-    if (!currentUserBranch) return;
+    if (!currentUserBranch || !currentWebUser) return;
 
     setIsLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/getWebUsers/${currentUserBranch}`);
-      setUnApproveAccounts(res.data.filter((user) => user.isApproved === false));
+      const res = await axios.get(
+        `${API_URL}/getWebUsers/${currentUserBranch}`
+      );
+      let pendingUsers = res.data.filter((user) => user.isApproved === false);
+
+      if (currentWebUser.position.toLowerCase() === "sub admin") {
+        pendingUsers = pendingUsers.filter(
+          (user) => user.position.toLowerCase() !== "sub admin"
+        );
+      }
+
+      setUnApproveAccounts(pendingUsers);
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
@@ -118,7 +126,8 @@ export default function ApproveAccount() {
     ? filteredUsers
         .filter((user) => {
           const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-          const reversedName = `${user.lastName} ${user.firstName}`.toLowerCase();
+          const reversedName =
+            `${user.lastName} ${user.firstName}`.toLowerCase();
           return (
             fullName.includes(searchQuery.toLowerCase()) ||
             reversedName.includes(searchQuery.toLowerCase())
@@ -166,23 +175,29 @@ export default function ApproveAccount() {
               );
               setShowSuggestions(false);
             }}
-            addedClassName="w-[65%] h-[50px]"
+            addedClassName={`${
+              currentWebUser.position.toLowerCase() === "super admin"
+                ? "w-[65%] h-[50px]"
+                : "w-[90%] h-[50px]"
+            }`}
           />
 
-          <SelectFilter
-            value={selectedPosition}
-            onChange={(e) => setSelectedPosition(e.target.value)}
-            disabledOption="Select Position"
-            fixOption="All Positions"
-            mainOptions={uniquePositions}
-          />
+          {currentWebUser?.position?.toLowerCase() === "super admin" && (
+            <SelectFilter
+              value={selectedPosition}
+              onChange={(e) => setSelectedPosition(e.target.value)}
+              disabledOption="Select Position"
+              fixOption="All Positions"
+              mainOptions={uniquePositions}
+            />
+          )}
 
           {currentWebUser?.position?.toLowerCase() === "super admin" && (
             <SelectFilter
               value={selectedBranch}
               onChange={(e) => setSelectedBranch(e.target.value)}
-              disabledOption="Select Branch"
-              fixOption="All Branches"
+              disabledOption="Select Campus"
+              fixOption="All Campuses"
               mainOptions={branches}
               getOptionValue={(branch) => branch.id}
               getOptionLabel={(branch) => branch.name}
@@ -253,7 +268,7 @@ export default function ApproveAccount() {
 
 function CardActiveContent({ user, refreshData }) {
   const [approveLoading, setApproveLoading] = useState(false);
-    const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
+  const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
 
   const handlesApprove = async () => {
     setApproveLoading(true);
@@ -264,11 +279,11 @@ function CardActiveContent({ user, refreshData }) {
       });
 
       await axios.post(`${API_URL}/addLogs`, {
-          name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-          branch: currentWebUser.branch,
-          action: "Approve Account",
-          description: `${currentWebUser.firstName} has approved ${user.lastName}, ${user.firstName} account`,
-        });
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Approve Account",
+        description: `${currentWebUser.firstName} has approved ${user.lastName}, ${user.firstName} account`,
+      });
       alert(`User ${user.firstName} ${user.lastName} approved!`);
       refreshData(); // reloads the list
     } catch (error) {
@@ -304,4 +319,3 @@ function CardActiveContent({ user, refreshData }) {
     </div>
   );
 }
-
