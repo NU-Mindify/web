@@ -48,6 +48,8 @@ const categoriesObj = [
 
 export default function ManageQuestion() {
   const [showArchived, setShowArchived] = useState(false);
+  const [restore, setRestore] = useState(false)
+  
   const location = useLocation();
   useEffect(() => {
     const category = location.state?.category;
@@ -98,7 +100,31 @@ export default function ManageQuestion() {
         categoryName: selectedCat,
       },
     });
+    
   };
+   const handleDelete = async (id) =>{
+    try {
+      await axios.put(`${API_URL}/deleteQuestion/${id}`, {
+        question_id: id,
+        is_deleted: true,
+      }); getData()
+    }catch (error) {
+      console.error("Error deleting Question:", error);
+    }
+  };
+
+    const handleRestore = async (id) =>{
+      console.log(id)
+    try {
+      await axios.put(`${API_URL}/deleteQuestion/${id}`, {
+        question_id: id,
+        is_deleted: false,
+      }); getData()
+    }catch (error) {
+      console.error("Error restoring Question:", error);
+    }
+  };
+
 
   if (isPending) return <div>Loading</div>;
 
@@ -166,11 +192,25 @@ export default function ManageQuestion() {
               </div>
             </div>
           </div>
-
-          <div className="question-actions">
-            <button className="btn-action">EDIT</button>
-            <button className="btn-action">ARCHIVE</button>
-          </div>
+          {showArchived ? (
+            <div className="question-actions">
+              <button className="btn-action !bg-gray-500" disabled>
+                Edit</button>
+              <button
+                onClick={() => handleRestore(data._id)}
+                className="btn-action" >
+                Restore</button>
+            </div>
+          ) : (
+            <div className="question-actions">
+              <button className="btn-action">
+                Edit</button>
+              <button
+                onClick={() => handleDelete(data._id)}
+                className="btn-action">
+                Delete</button>
+            </div>
+          )}
         </div>
       </div>
     );
