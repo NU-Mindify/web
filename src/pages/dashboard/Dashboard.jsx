@@ -271,7 +271,7 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title font-[Poppins] text-[30px]">
+              <h1 className="dashboard-title mb-2 font-[Poppins] text-[23px]">
                 Total Students
               </h1>
               <h1 className="dashboard-title font-[Poppins] font-bold text-[50px] mt-3">
@@ -293,7 +293,7 @@ export default function Dashboard() {
                 Overall Average Score
               </h1>
 
-              <h2 className="text-3xl font-bold font-[Poppins] text-[50px] text-black mt-4">
+              <h2 className="text-3xl font-bold font-[Poppins] text-[50px] text-black mt-3">
                 {avgScoresByWorld.overall === "N/A" ? (
                   "No Data"
                 ) : (
@@ -386,7 +386,9 @@ export default function Dashboard() {
           ) : (
             <div className="w-full h-10/12 flex flex-col justify-center items-center p-4">
               <div className="w-full flex flex-col mb-4">
-                <h1 className="text-black text-2xl font-bold font-[poppins]">Total Students</h1>
+                <h1 className="text-black text-2xl font-bold font-[poppins]">
+                  Total Students
+                </h1>
                 <p className="text-black font-[poppins]">per campus</p>
               </div>
               <BarGraph data={branchData} />
