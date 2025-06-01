@@ -69,8 +69,9 @@ thead tr {
 
 /* All user table, excluding the titles */
 .user-table {
-  @apply w-full table-fixed;
+  @apply w-full table-fixed ;
 }
+
 
 .user-table td {
   @apply text-black text-[20px];

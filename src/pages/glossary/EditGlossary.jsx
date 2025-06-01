@@ -152,13 +152,20 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
           </div>
 
           <div className="buttons">
-            {hasChanges() && (
+            {hasChanges() ? (
               <Buttons
                 text="Save"
                 onClick={handleSave}
                 addedClassName="btn btn-success"
               />
-            )}
+            ) : 
+              <Buttons
+                text="Save"
+                onClick={handleSave}
+                addedClassName="btn bg-red-400"
+                disabled={true}
+              />
+            }
 
             <Buttons
               text="Delete"

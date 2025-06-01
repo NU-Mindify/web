@@ -12,13 +12,15 @@ import pattern from "../../assets/forAll/pattern.svg";
 import { Eye, EyeOff } from "lucide-react";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const { setCurrentWebUserUID } = useContext(UserLoggedInContext);
-
+  const { setSelected } = useContext(ActiveContext);
   const [logoTransitioned, setLogoTransitioned] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [verifyEmail, setVerifyEmail] = useState("");
   const [password, setPassword] = useState("");
   const [branch, setBranch] = useState("default");
 
@@ -31,6 +33,7 @@ export default function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const navigate = useNavigate();
   useEffect(() => {
     const timer = setTimeout(() => {
       setLogoTransitioned(true);
@@ -43,6 +46,7 @@ export default function Login() {
     setIsLoading(true);
 
     const matchedBranch = branches.find((item) => item.id === branch);
+    const allowedExceptionDomain = "@students.nu-moa.edu.ph";
 
     try {
       if (!matchedBranch) {
@@ -50,7 +54,7 @@ export default function Login() {
         setShowValidationModal(true);
         return;
       }
-      if (!email || !email.endsWith(matchedBranch.extension)) {
+      if (!email) {
         setValidationMessage("Please enter a valid email");
         setShowValidationModal(true);
         return;
@@ -60,15 +64,11 @@ export default function Login() {
         setShowValidationModal(true);
         return;
       }
-
       if (password.length < 5) {
         setValidationMessage("Password too short!");
         setShowValidationModal(true);
         return;
       }
-
-      const allowedExceptionDomain = "@students.nu-moa.edu.ph";
-
       if (
         !email.endsWith(matchedBranch.extension) &&
         !email.endsWith(allowedExceptionDomain)
@@ -81,9 +81,19 @@ export default function Login() {
         return;
       }
 
+      // 🔽 Move API call here BEFORE checking isApproved
+      const response = await axios.get(`${API_URL}/login/${email}`);
+      const verifyData = response.data;
+
+      if (verifyData.isApproved !== true) {
+        setValidationMessage("Your Account is not verified yet.");
+        setShowValidationModal(true);
+        return;
+      }
+
+      // Proceed with Firebase login
       await signInWithEmailAndPassword(firebaseAuth, email, password);
       const user = firebaseAuth.currentUser;
-      setIsLoading(true);
 
       if (user) {
         const token = await user.getIdToken();
@@ -91,10 +101,11 @@ export default function Login() {
         document.cookie = `token=${token}; path=/; Max-Age=${fifteenMinutes}; Secure; SameSite=Strict`;
 
         setCurrentWebUserUID(user.uid);
-        localStorage.setItem("userUID", user.uid);
+        navigate("/dashboard");
 
         await axios.post(`${API_URL}/addLogs`, {
-          uid: user.uid.toString(),
+          name: `${verifyData.firstName} ${verifyData.lastName}`,
+          branch: verifyData.branch,
           action: "Logged In",
           description: "-",
         });
@@ -147,7 +158,7 @@ export default function Login() {
       setShowResetModal(false);
       setResetEmail("");
     } catch (error) {
-      // console.error("Reset error:", error);
+
       setValidationMessage(
         "Error sending password reset email. Please try again."
       );
@@ -266,24 +277,19 @@ export default function Login() {
 
             <div className="flex items-center w-full mt-5">
               <div className="flex-grow h-px bg-black"></div>
-              <span className="px-4 text-black text-xs">or sign in with</span>
+              <span className="px-4 text-black text-xs">
+                OR NO ACCOUNT YET?
+              </span>
               <div className="flex-grow h-px bg-black"></div>
             </div>
 
-            <button className="login-btn-ms">
-              <svg
-                aria-label="Microsoft logo"
-                width="16"
-                height="16"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-              >
-                <path d="M96 96H247V247H96" fill="#f24f23"></path>
-                <path d="M265 96V247H416V96" fill="#7eba03"></path>
-                <path d="M96 265H247V416H96" fill="#3ca4ef"></path>
-                <path d="M265 265H416V416H265" fill="#f9ba00"></path>
-              </svg>
-              Sign In with Microsoft
+            <button
+              className="login-btn"
+              onClick={() => {
+                navigate("/signup");
+              }}
+            >
+              Sign Up
             </button>
           </div>
         </div>

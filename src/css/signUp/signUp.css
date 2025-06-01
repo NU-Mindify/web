@@ -1,0 +1,10 @@
+@reference "tailwindcss";
+@plugin "daisyui";
+
+.sign-up-header{
+    @apply w-full h-[100px] flex flex-row px-5 items-center pt-4 pl-7 bg-red-300;
+}
+
+.sign-up-header-cont h1{
+    @apply text-[40px] font-[Poppins] font-bold text-black h-[50px] pl-3 mt-3;
+}

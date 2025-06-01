@@ -96,7 +96,7 @@ export default function AddAccount() {
 
       function generateTemporaryPassword(length = 10) {
         const chars =
-          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&";
         return Array.from(
           { length },
           () => chars[Math.floor(Math.random() * chars.length)]

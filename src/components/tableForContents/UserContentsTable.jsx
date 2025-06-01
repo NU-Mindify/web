@@ -14,6 +14,7 @@ export default function UserContentsTable({
   setSortOrderAsc,
   getBranchName,
   cardActiveContent,
+  isForApprove,
 }) {
   return (
     <div className="users-main-container">
@@ -57,8 +58,9 @@ export default function UserContentsTable({
                   <p className="text-black mt-10 text-3xl">No user found.</p>
                 </div>
               ) : (
-                data.map((user) => {
-                  const userId = user.employeenum || user.student_id;
+                data
+                .map((user) => {
+                  const userId = user.uid || user.student_id;
 
                   return (
                     <div
@@ -103,17 +105,23 @@ export default function UserContentsTable({
                                 case "action":
                                   return (
                                     <td key={key} className="user-action-cell">
-                                      <div className="action-holder">
-                                        <button
-                                          type="button"
-                                          className="setting-icon bg-transparent border-none p-0"
-                                        >
-                                          <img
-                                            src={settingsIcon}
-                                            alt="settings"
-                                            className="setting-icon"
-                                          />
-                                        </button>
+                                      <div className={isForApprove ? "flex justify-end pr-10" : "action-holder"}>
+                                        {
+                                          !isForApprove && 
+                                          <button
+                                            type="button"
+                                            className="setting-icon bg-transparent border-none p-0"
+                                          >
+                                            <img
+                                              src={settingsIcon}
+                                              alt="settings"
+                                              className="setting-icon"
+                                            />
+                                          </button>
+                                        }
+                                        
+
+
                                         <button
                                           type="button"
                                           className={`acc-chevron transition-transform duration-300 ${

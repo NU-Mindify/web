@@ -25,7 +25,8 @@ import AddAccount from "./pages/accounts/AddAccount";
 import SessionTimeout from "./components/SessionTimeout/SessionTimeout";
 import ShowMoreDetails from "./pages/students/ShowMoreDetails";
 import ActivityLogs from "./pages/activityLogs/ActivityLogs";
-
+import SignUp from "./pages/signUp/SignUp";
+import ApproveAccount from "./pages/accounts/ApproveAccount";
 
 const queryClient = new QueryClient();
 
@@ -118,6 +119,7 @@ function App() {
                   path="/terms-and-conditions"
                   element={<TermsAndConditions />}
                 />
+                <Route path="/signup" element={<SignUp />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             ) : !isSplash ? (
@@ -140,12 +142,14 @@ function App() {
                     <Route path="/students" element={<ManageStudents />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/account" element={<AccountManagement />} />
+                    <Route path="/account/approval" element={<ApproveAccount />} />
                     <Route path="/profile/edit/:id" element={<EditProfile />} />
                     <Route path="/glossary/edit" element={<EditGlossary />} />
                     <Route path="/addterm" element={<AddTerm />} />
                     <Route path="/logs" element={<ActivityLogs />} />
                     <Route path="/addaccount" element={<AddAccount />} />
                     <Route path="/students/overall" element={<ShowMoreDetails />} />
+                    
                     <Route path="*" element={<Navigate to="/" />} />
                   </Routes>
                 </div>

@@ -29,10 +29,10 @@ export default function SessionTimeout({ timeout = 5 * 60 * 1000 }) {
         localStorage.removeItem("sessionTimedOut");
         document.cookie =
           "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-        setSelected("login");
-        setActive(false);
-        setCurrentWebUser(null);
-        setCurrentWebUserUID(null);
+        // setSelected("login");
+        // setActive(false);
+        // setCurrentWebUser(null);
+        // setCurrentWebUserUID(null);
         navigate("/");
       })
       .catch((error) => {
@@ -108,7 +108,7 @@ export default function SessionTimeout({ timeout = 5 * 60 * 1000 }) {
         <div className="modal-overlay">
           <div className="modal-content text-black">
             <h2>Session Expired</h2>
-            <p>You've been inactive for 5 minutes.</p>
+            <p>You've been inactive for 15 minutes.</p>
             {showPasswordPrompt ? (
               <>
                 <input
