@@ -29,13 +29,13 @@ box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6);
 
 
 .edit-title {
-    @apply font-[Poppins] text-black font-bold text-[25px]
+    @apply font-[Poppins] text-[#FFC916] font-bold text-[25px]
     md:text-[40px];
 }
 
 
 .edit-content{
-   @apply flex flex-col gap-5 my-7;
+   @apply flex flex-col gap-5 my-7 font-[Poppins];
 }
 
 

@@ -181,7 +181,7 @@ export default function Login() {
         <div className="login-form">
           <div className="input-container">
             <h1 className="welcome-txt">WELCOME!</h1>
-            <h3 className="mini-txt">Sign in to access your account</h3>
+            <h3 className="mini-txt">Sign in to access your account.</h3>
 
             <label className="floating-label">
               <span className="spanner">Campus</span>
@@ -270,7 +270,7 @@ export default function Login() {
               <div className="flex-grow h-px bg-black"></div>
             </div>
 
-            <button className="login-btn">
+            <button className="login-btn-ms">
               <svg
                 aria-label="Microsoft logo"
                 width="16"

@@ -1,5 +1,6 @@
 @reference "tailwindcss";
 @plugin "daisyui";
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 html, body, #root {
   height: 100vh;
@@ -140,12 +141,15 @@ html, body, #root {
   }
 }
 
+
+
 .login-form {
   width: 100%;
   max-width: 600px;
   min-width: 320px;
   height: 60vh;
   min-height: 600px;
+  font-family: 'Poppins', sans-serif;
 
   @apply bg-white flex flex-col items-center rounded-xl overflow-y-auto p-2 opacity-0 mt-30 mr-10 pt-20;
 
@@ -167,7 +171,7 @@ html, body, #root {
 }
 
 .inputs {
-  border: 2px solid black;
+  border: 1px solid black;
   @apply w-full bg-white text-black h-[40px] my-[10px] px-2 
          focus:outline-none focus:ring-0 focus:border-black;
 }
@@ -190,9 +194,17 @@ html, body, #root {
 }
 
 .login-btn {
-  @apply btn rounded-xl mt-[15px] h-[40px] bg-[#2F2F2F] text-white border-black 
+  @apply btn rounded-xl mt-[15px] h-[40px] bg-[#FFC300] text-white 
          sm:btn-sm md:btn-md lg:btn-lg;
 }
+
+.login-btn-ms {
+  @apply btn rounded-s mt-[15px] h-[40px] bg-[#F3F9FA] text-black
+         sm:btn-sm md:btn-md lg:btn-lg;
+}
+
+
+
 
 
 /********************************* END *******************************/

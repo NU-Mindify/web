@@ -373,7 +373,7 @@ export default function Leaderboard() {
           </div>
 
           <h2 className="leaderboard-subtitle">
-            top 30 performing students in Classic Mode
+            <i>Top 30 performing students in Classic Mode</i>
           </h2>
 
           <div className="search-bar-cont-leaderboards">
@@ -567,7 +567,7 @@ export default function Leaderboard() {
           </div>
 
           <h2 className="leaderboard-subtitle">
-            top 30 performing students in Mastery Mode
+            <i>Top 30 performing students in Mastery Mode</i>
           </h2>
 
           <div className="search-bar-cont-leaderboards">
