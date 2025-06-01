@@ -12,7 +12,7 @@
 }
 
 .glossary-title-container h1 {
-  @apply font-[Poppins] text-black font-bold text-[25px] pl-3 md:text-[40px] mt-3;
+  @apply font-[Poppins] text-[#FFC916] font-bold text-[25px] pl-3 md:text-[40px] mt-3;
 }
 
 .glossary-sub-header-container {
@@ -21,7 +21,7 @@
 
 
 .glossary-letters-btn-container {
-  @apply hidden md:w-[90%] md:h-[80px] md:flex md:justify-around md:items-center md:min-w-[500px];
+  @apply font-[Poppins] hidden md:w-[90%] md:h-[80px] md:flex md:justify-around md:items-center md:min-w-[500px];
 }
 
 .navigator-buttons {
@@ -54,7 +54,7 @@
 /* ------------------- BODY CONTENTS ---------------- */
 
 .header-details-container{
-  @apply w-full flex justify-center items-center mt-2 sticky top-0 z-50;
+  @apply w-full flex justify-center items-center mt-2 sticky top-0 z-50 font-[Poppins];
 }
 
 .header-details {
@@ -71,16 +71,16 @@
 }
 
 .all-word-def-container {
-  @apply w-full flex flex-col justify-center items-center;
+  @apply w-full flex flex-col justify-center items-center font-[Poppins];
 }
 
 /* Non-active word container */
 .per-word-container {
-  @apply w-11/12 grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-300 border-2 border-black;
+  @apply w-11/12 grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-300 border-1 border-black;
     @apply transform scale-100 transition-transform duration-300 ease-in-out;
 }
 .active-per-word-container {
-  @apply w-11/12 h-auto grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 bg-[#35408E] border-2 border-black;
+  @apply w-11/12 h-auto grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 bg-[#35408E] ;
   @apply transition-transform duration-300 ease-in-out transform scale-108;
 
 }

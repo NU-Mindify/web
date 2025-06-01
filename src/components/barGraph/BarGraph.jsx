@@ -29,7 +29,7 @@ const BarGraph = ({ data }) => {
           height={80}
           tick={{ fontSize: 12 }}
         >
-          <Label value="NU Campus" offset={-10} position="insideBottom" />
+          <Label value="NU Campus" offset={-15} position="insideBottom" />
         </XAxis>
 
         <YAxis>
