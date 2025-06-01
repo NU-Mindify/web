@@ -87,7 +87,6 @@ thead tr {
 
 .active-user-card {
   @apply w-full bg-[#35408E] my-4 py-2 rounded-xl px-2 transition-transform duration-500 ease-in-out transform scale-108;
-  border: 1px solid black;
 }
 
 .active-user-card .user-table td {

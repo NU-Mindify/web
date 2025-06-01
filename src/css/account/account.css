@@ -4,7 +4,7 @@
 
 /*------------------------- MAIN CONTAINER --------------------------*/
 .account-main-container {
-  @apply p-3 flex flex-col h-full w-full bg-white;
+  @apply font-[Poppins] p-3 flex flex-col h-full w-full bg-white;
 }
 
 /*------------------------- HEADER --------------------------*/
@@ -13,7 +13,7 @@
 }
 
 .account-title {
-  @apply text-[40px] font-[Poppins] font-bold text-black h-[50px] pl-3 mt-3;
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFC916] h-[50px] pl-3 mt-3;
 }
 
 .acc-sub-header-container {

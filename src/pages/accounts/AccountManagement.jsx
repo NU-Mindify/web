@@ -170,7 +170,7 @@ export default function AccountManagement() {
         </div>
 
         <div className="flex flex-wrap items-center gap-4 w-full justify-start ">
-              <div className="flex bg-gray-100 p-1 rounded-xl w-[500px]">
+              <div className="flex bg-gray-100 p-1 rounded-xl w-[500px] mt-5 ml-15 mb-5">
           <button 
             onClick={() => setShowArchived(false)}
             className={`all-archive-btn ${showArchived || "active" } w-1/2`}>

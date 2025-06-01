@@ -126,7 +126,7 @@ export default function ManageGlossary() {
               setSearchTerm(e.target.value);
               // setShowSuggestions(true);
             }}
-            placeholder="Search for a user"
+            placeholder="Search for a term"
             icon={searchIcon}
             // suggestions={searchSuggestions}
             // showSuggestions={showSuggestions}

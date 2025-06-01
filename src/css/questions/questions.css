@@ -31,7 +31,7 @@
 }
 
 .question-title {
-  @apply text-[40px] font-[Poppins] font-bold text-black pl-3  mt-3;
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFC916] pl-3  mt-3;
 }
 
 .question-count {
@@ -99,11 +99,12 @@
 
 .category-container {
   @apply w-[95%] relative flex items-center justify-between overflow-hidden cursor-pointer rounded-lg my-2;
-  height: calc((100% / 5) - 20px); 
+  height: calc((95% / 5) - 20px); 
+  border-radius: 10px;
 }
 
 .category-bg {
-  @apply w-full h-full absolute object-cover transition-transform duration-700 ease-in-out scale-100;
+  @apply w-full h-full absolute object-cover transition-transform duration-700 ease-in-out scale-115;
 }
 
 .category-container:hover .category-bg {
@@ -111,11 +112,11 @@
 }
 
 .category-text {
-  @apply w-1/2 h-full flex justify-start items-center cursor-pointer text-3xl font-extrabold z-50 ml-5;
+  @apply w-1/2 h-full flex justify-start items-center cursor-pointer text-3xl font-extrabold z-50 ml-5 font-[Poppins] text-white;
 }
 
 .category-quantity {
-  @apply w-1/2 h-full flex justify-end items-center text-xl font-bold z-50 mr-5;
+  @apply w-1/2 h-full flex justify-end items-center text-xl font-bold z-50 mr-5 font-[Poppins] text-white;
 }
 
 
@@ -134,7 +135,7 @@
 }
 
 .ques-sub-container {
-  @apply flex-grow overflow-auto md:!h-[calc(100svh-185px)] h-full;
+  @apply flex-grow overflow-auto md:!h-[calc(100svh-185px)] h-full font-[Poppins];
 }
 
 
@@ -154,7 +155,7 @@
 }
 
 .question-header {
-  @apply flex justify-between w-full;
+  @apply flex justify-between w-full font-[Poppins];
 }
 
 .question-text {

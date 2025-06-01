@@ -123,8 +123,8 @@ function AddQuestion() {
       className="flex justify-center h-full bg-transparent"
       data-theme="light"
     >
-      <div className="bg-white p-8 flex flex-col gap-2 m-auto w-[500px] rounded-xl">
-        <h1 className="text-2xl font-bold text-center mb-4">Add Question</h1>
+      <div className="bg-white p-8 flex flex-col gap-2 m-auto w-[500px] rounded-xl font-[Poppins]">
+        <h1 className="text-2xl font-bold text-center mb-4 text-[]">Add Question</h1>
 
         <label className={Style["row"]}>
           <label htmlFor="category">Category:</label>
@@ -260,7 +260,7 @@ function AddQuestion() {
 
         <div className="flex gap-2">
           <button
-            className="btn btn-neutral grow"
+            className="btn btn-neutral grow bg-[#FFC300] text-black border-0"
             onClick={() => {
               console.log(question);
               addToDB();
