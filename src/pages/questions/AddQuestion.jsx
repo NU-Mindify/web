@@ -340,7 +340,6 @@ function AddQuestion() {
             Back
           </button>
         </div>
-      </div>
 
       {showValidationModal && (
         <ValidationModal
