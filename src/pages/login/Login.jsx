@@ -192,7 +192,7 @@ export default function Login() {
         <div className="login-form">
           <div className="input-container">
             <h1 className="welcome-txt">WELCOME!</h1>
-            <h3 className="mini-txt">Sign in to access your account</h3>
+            <h3 className="mini-txt">Sign in to access your account.</h3>
 
             <label className="floating-label">
               <span className="spanner">Campus</span>

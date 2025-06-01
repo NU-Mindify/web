@@ -11,11 +11,11 @@
 }
 
 .header-container-analytics h1{
-    @apply text-[40px] font-[Poppins] font-bold text-black;
+    @apply text-[40px] font-[Poppins] font-bold text-[#FFC300];
 }
 
 .content-container-analytics{
-    @apply grid grid-cols-1 gap-4 mt-3;
+    @apply grid grid-cols-1 gap-4 mt-3 font-[Poppins];
 }
 
 .analytics-container-properties{

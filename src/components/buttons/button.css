@@ -7,6 +7,13 @@
   @apply w-[200px] h-[50px];
 }
 
+.all-btn-holder:disabled {
+  opacity: 0.6; /* or any value you like */
+  cursor: not-allowed;
+  color: inherit; /* keep text color */
+  @apply w-[200px] h-[50px] bg-green-200 text-white opacity-60 ;
+}
+
 .all-btn-holder{
     @apply w-full h-full text-white font-[Poppins] text-xl rounded-xl;
     text-shadow: 0 2px 4px #888888;

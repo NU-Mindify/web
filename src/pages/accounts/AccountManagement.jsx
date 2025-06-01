@@ -269,6 +269,18 @@ function CardActiveContent(user) {
       <p>
         <strong>Employee Number:</strong> {user.employeenum}
       </p>
+      <p>
+        <strong>Date Created: </strong>  
+        {
+          isNaN(new Date(user.createdAt)) 
+            ? 'No Date' 
+            : new Date(user.createdAt).toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })
+        }
+      </p>
     </div>
   );
 }

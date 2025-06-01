@@ -49,7 +49,25 @@ const categoriesObj = [
 export default function ManageQuestion() {
   const [showArchived, setShowArchived] = useState(false);
   const [restore, setRestore] = useState(false)
-  
+
+
+
+    const [totalQuestion, setTotalQuestion] = useState([])
+
+    useEffect(() => {
+      getTotalQuestion()
+    }, [])
+
+    const getTotalQuestion = async () => {
+      try {
+        const { data } = await axios.get(`${API_URL}/getTotalQuestions`);
+        setTotalQuestion(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching total questions:", error);
+      }
+    };
+
   const location = useLocation();
   useEffect(() => {
     const category = location.state?.category;
@@ -71,7 +89,6 @@ export default function ManageQuestion() {
 
   const getData = async () => {
     try {
-      console.log("fetching again");
       const { data } = await axios.get(
         `${API_URL}/getQuestions?${
           category ? `category=${category}` : ""
@@ -133,6 +150,13 @@ export default function ManageQuestion() {
   function handleBack() {
     setGotSelected(false);
   }
+  
+
+ 
+
+
+
+
 
   function Category_Choices({ text, id, onClick, bgImage }) {
     return (
@@ -140,7 +164,7 @@ export default function ManageQuestion() {
       <div className="category-container" onClick={onClick} key={id}>
         <img src={bgImage} className="category-bg" alt="bgImages" />
         <h1 className="category-text">{text}</h1>
-        <p className="category-quantity">Questions: {questions.length}</p>
+        <p className="category-quantity">Questions: {totalQuestion.find(category => category._id === id)?.count || 0}</p>
       </div>
     );
   }

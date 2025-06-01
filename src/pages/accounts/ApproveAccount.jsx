@@ -12,6 +12,7 @@ import SearchBar from "../../components/searchbar/SearchBar";
 import UserContentsTable from "../../components/tableForContents/UserContentsTable";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 
+
 export default function ApproveAccount() {
   const [unApproveAccounts, setUnApproveAccounts] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -252,6 +253,7 @@ export default function ApproveAccount() {
 
 function CardActiveContent({ user, refreshData }) {
   const [approveLoading, setApproveLoading] = useState(false);
+    const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
 
   const handlesApprove = async () => {
     setApproveLoading(true);
@@ -260,6 +262,13 @@ function CardActiveContent({ user, refreshData }) {
         ...user,
         isApproved: true,
       });
+
+      await axios.post(`${API_URL}/addLogs`, {
+          name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+          branch: currentWebUser.branch,
+          action: "Approve Account",
+          description: `${currentWebUser.firstName} has approved ${user.lastName}, ${user.firstName} account`,
+        });
       alert(`User ${user.firstName} ${user.lastName} approved!`);
       refreshData(); // reloads the list
     } catch (error) {
