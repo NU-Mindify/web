@@ -189,7 +189,7 @@ export default function ManageStudents() {
   return (
     <div className="students-main-container">
       <div className="student-header">
-        <h1 className="account-title flex flex-row items-center">
+        <h1 className="student-title flex flex-row items-center">
           View Students
         </h1>
         <div className="acc-sub-header-container">
@@ -224,7 +224,7 @@ export default function ManageStudents() {
         </div>
        
       </div>
-        <div className="flex bg-gray-100 p-1 rounded-xl w-[500px]">
+        <div className="flex bg-gray-100 p-1 rounded-xl w-[500px] ml-5 mb-7">
           <button 
             onClick={() => setShowArchived(false)}
             className={`all-archive-btn ${showArchived || "active" } w-1/2`}>

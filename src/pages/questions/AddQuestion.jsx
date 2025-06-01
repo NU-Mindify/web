@@ -129,6 +129,7 @@ function AddQuestion() {
   }, [location.state]);
 
   return (
+
     <div className="add-ques-main-container">
       <input
         type="hidden"
@@ -314,32 +315,31 @@ function AddQuestion() {
           }
         ></textarea>
       </div>
-
-      <div className="flex gap-2">
-        <button
-          className="btn btn-neutral grow"
-          onClick={() => {
-            console.log(question);
-            addToDB();
-          }}
-        >
-          Save
-        </button>
-        <button
-          className="btn btn-neutral btn-outline grow"
-          onClick={() => {
-            nav("/question", {
-              state: {
-                category: category,
-                categoryName: categoryName,
-                catSelected: true,
-              },
-            });
-          }}
-        >
-          Back
-        </button>
-      </div>
+        <div className="flex gap-2">
+          <button
+            className="btn btn-neutral grow bg-[#FFC300] text-black border-0"
+            onClick={() => {
+              console.log(question);
+              addToDB();
+            }}
+          >
+            Save
+          </button>
+          <button
+            className="btn btn-neutral btn-outline grow"
+            onClick={() => {
+              nav("/question", {
+                state: {
+                  category: category,
+                  categoryName: categoryName,
+                  catSelected: true,
+                },
+              });
+            }}
+          >
+            Back
+          </button>
+        </div>
 
       {showValidationModal && (
         <ValidationModal
