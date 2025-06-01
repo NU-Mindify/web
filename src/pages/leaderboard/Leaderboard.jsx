@@ -3,14 +3,12 @@ import search from "../../assets/search/search.svg";
 import download from "../../assets/leaderboard/file-export.svg";
 import dropdown from "../../assets/glossary/dropdown.svg";
 import axios from "axios";
-import { API_URL, branches } from "../../Constants";
+import { API_URL, branches, categories } from "../../Constants";
 import { useEffect, useState, useContext } from "react";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
-
-
 
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
@@ -35,6 +33,9 @@ export default function Leaderboard() {
   const [classicSelectedBranch, setClassicSelectedBranch] = useState("");
   const [masterySelectedBranch, setMasterySelectedBranch] = useState("");
 
+  const [selectedCategoryClassic, setselectedCategoryClassic] = useState("");
+  const [selectedCategoryMastery, setselectedCategoryMastery] = useState("");
+
   useEffect(() => {
     fetchTopClassicLeaderboard();
     fetchTopMasteryLeaderboard();
@@ -52,6 +53,7 @@ export default function Leaderboard() {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
         params: {
           mode: "classic",
+          category: selectedCategoryClassic
         },
       });
       setClassicLeaderboards(response.data);
@@ -69,6 +71,7 @@ export default function Leaderboard() {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
         params: {
           mode: "mastery",
+          category: selectedCategoryMastery
         },
       });
 
@@ -87,7 +90,7 @@ export default function Leaderboard() {
 
     if (value.length > 0) {
       const normalizedSearchValue = normalizeName(value);
-      const uniqueSuggestionsMap = new Map(); 
+      const uniqueSuggestionsMap = new Map();
 
       leaderboardClassic.forEach((leader) => {
         const firstName = leader.user_id?.first_name || "";
@@ -175,8 +178,13 @@ export default function Leaderboard() {
       classicSelectedBranch === "all" ||
       !classicSelectedBranch ||
       leader.user_id?.branch === classicSelectedBranch;
+      
+    const matchesCategory =
+      selectedCategoryClassic === "all" ||
+      !selectedCategoryClassic ||
+      leader.category === selectedCategoryClassic;
 
-    return matchesSearch && matchesBranch;
+    return matchesSearch && matchesBranch && matchesCategory;
   });
 
   // FILTERING MASTERY LEADERBOARD PER BRANCH OF THE PROFESSOR
@@ -199,7 +207,12 @@ export default function Leaderboard() {
       !masterySelectedBranch ||
       leader.user_id?.branch === masterySelectedBranch;
 
-    return matchesSearch && matchesBranch;
+    const matchesCategoryMastery =
+      selectedCategoryMastery === "all" ||
+      !selectedCategoryMastery ||
+      leader.category === selectedCategoryMastery;
+
+    return matchesSearch && matchesBranch && matchesCategoryMastery;
   });
 
   //AFTER FILTERING THE CLASSIC, THEN SORTING
@@ -295,16 +308,16 @@ export default function Leaderboard() {
 
   //convert logo to base64 para lumabas sa pdf
   const getBase64FromUrl = async (url) => {
-  const response = await fetch(url);
-  const blob = await response.blob();
+    const response = await fetch(url);
+    const blob = await response.blob();
 
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-};
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
 
   // PDF Export
   const exportToPDF = async (data, title) => {
@@ -319,11 +332,11 @@ export default function Leaderboard() {
     );
     doc.text(`Exported on: ${now}`, 14, 26);
 
-    const pageWidth = doc.internal.pageSize.getWidth(); 
+    const pageWidth = doc.internal.pageSize.getWidth();
     const logoWidth = 30;
     const logoHeight = 15;
     const xPos = pageWidth - logoWidth - 10;
-    doc.addImage(logoBase64, 'PNG', xPos,10,logoWidth,logoHeight)
+    doc.addImage(logoBase64, "PNG", xPos, 10, logoWidth, logoHeight);
 
     const rows = data.map((leader) => {
       const firstName = leader.user_id?.first_name || "";
@@ -376,13 +389,6 @@ export default function Leaderboard() {
         <div className="classic-cont">
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title classic-title">Classic</h1>
-            
-            
-              
-
-            
-            
-            
           </div>
 
           <h2 className="leaderboard-subtitle">
@@ -437,17 +443,7 @@ export default function Leaderboard() {
               addedClassName="w-[80%] h-[50px]"
             /> */}
 
-            <SelectFilter
-                value={classicSelectedBranch}
-                onChange={(e) => setClassicSelectedBranch(e.target.value)}
-                disabledOption="Select Branch"
-                fixOption="All Branches"
-                mainOptions={branches}
-                getOptionValue={(branch) => branch.id}
-                getOptionLabel={(branch) => branch.name}
-                addedClassName=""
-              />
-              <ExportDropdown
+            <ExportDropdown
               onExport={(format) => {
                 if (format === "csv") {
                   exportToCSV(classicSortingLeaders, "Classic_Leaderboard");
@@ -455,6 +451,30 @@ export default function Leaderboard() {
                   exportToPDF(classicSortingLeaders, "Classic Leaderboard");
                 }
               }}
+            />
+          </div>
+
+          <div className="w-full flex flex-row ml-4 mt-[-10px]">
+            <SelectFilter
+              value={classicSelectedBranch}
+              onChange={(e) => setClassicSelectedBranch(e.target.value)}
+              disabledOption="Select Branch"
+              fixOption="All Branches"
+              mainOptions={branches}
+              getOptionValue={(branch) => branch.id}
+              getOptionLabel={(branch) => branch.name}
+              addedClassName=""
+            />
+
+            <SelectFilter
+              value={selectedCategoryClassic}
+              onChange={(e) => setselectedCategoryClassic(e.target.value)}
+              disabledOption="Select Category"
+              fixOption="All Categories"
+              mainOptions={categories}
+              getOptionValue={(categories) => categories.id}
+              getOptionLabel={(categories) => categories.name}
+              addedClassName="ml-3"
             />
           </div>
 
@@ -488,7 +508,7 @@ export default function Leaderboard() {
               <div className="leaders-main-container">
                 {classicSortingLeaders
                   .filter((leader) =>
-                    classicSelectedBranch === "all" || !classicSelectedBranch
+                    classicSelectedBranch === "All" || !classicSelectedBranch
                       ? true
                       : leader.user_id?.branch === classicSelectedBranch
                   )
@@ -560,11 +580,6 @@ export default function Leaderboard() {
         <div className="mastery-cont">
           <div className="leaderboard-titles-cont">
             <h1 className="leaderboard-title mastery-title">Mastery</h1>
-
-
-            
-
-            
           </div>
 
           <h2 className="leaderboard-subtitle">
@@ -599,17 +614,8 @@ export default function Leaderboard() {
                 ))}
               </ul>
             )}
-            <SelectFilter
-                value={masterySelectedBranch}
-                onChange={(e) => setMasterySelectedBranch(e.target.value)}
-                disabledOption="Select Branch"
-                fixOption="All Branches"
-                mainOptions={branches}
-                getOptionValue={(branch) => branch.id}
-                getOptionLabel={(branch) => branch.name}
-                addedClassName=""
-              />
-              <ExportDropdown
+
+            <ExportDropdown
               onExport={(format) => {
                 if (format === "csv") {
                   exportToCSV(masterySortingLeaders, "Mastery_Leaderboard");
@@ -617,6 +623,30 @@ export default function Leaderboard() {
                   exportToPDF(masterySortingLeaders, "Mastery Leaderboard");
                 }
               }}
+            />
+          </div>
+
+          <div className="w-full flex flex-row ml-4 mt-[-10px]">
+            <SelectFilter
+              value={masterySelectedBranch}
+              onChange={(e) => setMasterySelectedBranch(e.target.value)}
+              disabledOption="Select Branch"
+              fixOption="All Branches"
+              mainOptions={branches}
+              getOptionValue={(branch) => branch.id}
+              getOptionLabel={(branch) => branch.name}
+              addedClassName=""
+            />
+
+            <SelectFilter
+              value={selectedCategoryMastery}
+              onChange={(e) => setselectedCategoryMastery(e.target.value)}
+              disabledOption="Select Category"
+              fixOption="All Categories"
+              mainOptions={categories}
+              getOptionValue={(categories) => categories.id}
+              getOptionLabel={(categories) => categories.name}
+              addedClassName="ml-3"
             />
           </div>
 
