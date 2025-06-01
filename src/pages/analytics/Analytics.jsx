@@ -138,7 +138,7 @@ export default function Analytics() {
 
   return (
     <>
-      <div className="main-container-analytics">
+      <div className="main-container-analytic">
         <div className="header-container-analytics flex flex-row justify-between">
           <h1>
             Analytics for {branches.find(branch => branch.id === selectedBranch)?.name || "All"}

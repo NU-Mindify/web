@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Style from "./addQuestion.module.css";
+import "../../css/questions/questions.css";
 import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
 import { CheckCircle2Icon, XCircle } from "lucide-react";
 import { API_URL } from "../../Constants";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
-
-
 
 const categoriesObj = [
   {
@@ -39,35 +37,41 @@ function AddQuestion() {
       {
         letter: "a",
         text: "",
+        rationale: "",
         isCorrect: true,
       },
       {
         letter: "b",
         text: "",
+        rationale: "",
         isCorrect: false,
       },
       {
         letter: "c",
         text: "",
+        rationale: "",
         isCorrect: false,
       },
       {
         letter: "d",
         text: "",
+        rationale: "",
         isCorrect: false,
       },
     ],
     rationale: "",
     category: "developmental",
+    difficulty: "",
     level: 1,
     answer: "a",
   });
   const nav = useNavigate();
-  
+
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
 
   const addToDB = async () => {
+    console.log(question);
     
     setIsFormDisabled(true);
     try {
@@ -83,6 +87,12 @@ function AddQuestion() {
       setShowValidationModal(true);
     }
     setIsFormDisabled(false);
+  };
+
+  const onChoiceChangeRationale = (e, index) => {
+    const newChoices = [...question.choices];
+    newChoices[index].rationale = e.target.value;
+    setQuestion({ ...question, choices: newChoices });
   };
 
   const onChoiceChange = (e, index) => {
@@ -119,33 +129,44 @@ function AddQuestion() {
   }, [location.state]);
 
   return (
-    <div
-      className="flex justify-center h-full bg-transparent"
-      data-theme="light"
-    >
-      <div className="bg-white p-8 flex flex-col gap-2 m-auto w-[500px] rounded-xl font-[Poppins]">
-        <h1 className="text-2xl font-bold text-center mb-4 text-[]">Add Question</h1>
 
-        <label className={Style["row"]}>
-          <label htmlFor="category">Category:</label>
-          <select
-            id="category"
-            disabled={isFormDisabled}
-            value={question.category}
-            onChange={(e) =>
-              setQuestion({ ...question, category: e.target.value })
-            }
-          >
-            {categoriesObj.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+    <div className="add-ques-main-container">
+      <input
+        type="hidden"
+        id="category"
+        name="category"
+        value={question.category}
+      />
+
+      <div className="add-ques-header w-full h-[100px] bg-amber-200 flex flex-col">
+        <h1 className="text-2xl font-bold font-[poppins] text-black">
+          Add Question
+        </h1>
+        <h1 className="text-black">Create Question for {categoryName}</h1>
+      </div>
+
+      <div className="w-full h-auto flex flex-col justify-center items-center">
+        <label htmlFor="Question" className="w-full text-black">
+          Question
         </label>
+        <textarea
+          name="Question"
+          id="Question"
+          className="w-11/12 h-[80px] bg-white text-black border border-black"
+          placeholder="Type here..."
+          disabled={isFormDisabled}
+          value={question.question}
+          onChange={(e) =>
+            setQuestion({ ...question, question: e.target.value })
+          }
+        ></textarea>
+      </div>
 
-        <label className={Style["row"]}>
-          <label htmlFor="level">Level:</label>
+      <div className="w-full h-[150px] bg-violet-300 flex flex-row">
+        <div className="flex flex-col">
+          <label htmlFor="level" className="text-black">
+            Level:
+          </label>
           <select
             id="level"
             disabled={isFormDisabled}
@@ -153,66 +174,90 @@ function AddQuestion() {
             onChange={(e) =>
               setQuestion({ ...question, level: e.target.value })
             }
+            className="!w-[200px] bg-white"
           >
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-              <option key={num}>{num}</option>
+              <option key={num} value={num}>
+                {num}
+              </option>
             ))}
           </select>
-        </label>
-
-        <div className={Style["row"]}>
-          <label htmlFor="Question">Question</label>
-          <textarea
-            name="Question"
-            id="Question"
-            className="textarea"
-            placeholder="Type your question here..."
-            disabled={isFormDisabled}
-            value={question.question}
-            onChange={(e) =>
-              setQuestion({ ...question, question: e.target.value })
-            }
-          ></textarea>
         </div>
 
-        <div className={`${Style.row} flex`}>
-          <label htmlFor="options" className="md:!w-[20%]">
-            Options:
+        <div className="flex flex-col">
+          <label htmlFor="level" className="text-black">
+            Difficulty:
           </label>
-          <div className="md:!w-[80%] flex">
-            <label className="!swap swap-rotate !w-[15%]">
-              <input
-                type="checkbox"
-                name="correctLetter"
-                class="my-auto me-2"
-                checked={question.answer === "a"}
-                onChange={(e) => onAnswerChange(e)}
-                value={"a"}
-              />
-              <CheckCircle2Icon className="swap-on h-8 w-8" size={10} />
-              <XCircle className="swap-off h-8 w-8" size={10} />
-            </label>
-            <div
-              className={`${
-                question.answer == "a" ? "bg-green-500" : "bg-red-300"
-              } border border-black/20 rounded px-4 rounded-e-none border-e-0 h-full flex items-center transition`}
-            >
-              A
-            </div>
+          <select
+            id="level"
+            disabled={isFormDisabled}
+            value={question.difficulty}
+            onChange={(e) =>
+              setQuestion({
+                ...question,
+                difficulty: e.target.value
+              })
+            }
+            className="!w-[200px] bg-white"
+          >
+            {[
+              { value: "easy", text: "Easy" },
+              { value: "average", text: "Average" },
+              { value: "difficult", text: "Difficult" },
+            ].map((diff) => (
+              <option key={diff.value} value={diff.value}>
+                {diff.text}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="h-auto w-full bg-cyan-200 flex flex-col items-center">
+        <label htmlFor="options" className="w-full text-black">
+          Options:
+        </label>
+
+        <div className="w-[80%] flex flex-row">
+          <label className="!swap swap-rotate !w-[15%]">
+            <input
+              type="checkbox"
+              name="correctLetter"
+              class="my-auto me-2 h-[70px]"
+              checked={question.answer === "a"}
+              onChange={(e) => onAnswerChange(e)}
+              value={"a"}
+            />
+            <CheckCircle2Icon className="swap-on h-8 w-8" size={10} />
+            <XCircle className="swap-off h-8 w-8" size={10} />
+          </label>
+          <div
+            className={`${
+              question.answer == "a" ? "bg-green-500" : "bg-red-300"
+            } border border-black/20 rounded px-4 rounded-e-none border-e-0 h-full flex items-center transition`}
+          >
+            A
+          </div>
+          <div className="w-full flex flex-col">
             <textarea
-              className="!grow !rounded-s-none text-sm"
+              className="w-full h-[70px] text-sm bg-white border border-black rounded-none text-black"
               required
-              id="options"
               disabled={isFormDisabled}
               value={question.choices[0].text}
               onChange={(e) => onChoiceChange(e, 0)}
             ></textarea>
+            <textarea
+              className="w-full h-[70px] text-sm bg-white border border-black rounded-none text-black"
+              placeholder="Enter Rationale"
+              value={question.choices[0].rationale}
+              onChange={(e) => onChoiceChangeRationale(e, 0)}
+            ></textarea>
           </div>
         </div>
+
         {["b", "c", "d"].map((letter, index) => (
-          <div className={`${Style.row} mt-0`} key={letter}>
-            <div className="!w-[20%]"></div>
-            <div className="md:!w-[80%] flex">
+          <div className="mt-0 w-full flex flex-col items-center" key={letter}>
+            <div className="w-[80%] flex flex-row">
               <label className="!swap swap-rotate !w-[15%]">
                 <input
                   type="checkbox"
@@ -232,32 +277,44 @@ function AddQuestion() {
               >
                 {letter.toUpperCase()}
               </div>
-              <textarea
-                className="!grow !rounded-s-none text-sm"
-                required
-                disabled={isFormDisabled}
-                value={question.choices[index + 1].text}
-                onChange={(e) => onChoiceChange(e, index + 1)}
-              ></textarea>
+
+              <div className="w-full bg-blue-300 flex flex-col">
+                <textarea
+                  className="w-full h-[70px] text-sm bg-white border border-black rounded-none text-black"
+                  required
+                  disabled={isFormDisabled}
+                  value={question.choices[index + 1].text}
+                  onChange={(e) => onChoiceChange(e, index + 1)}
+                ></textarea>
+
+                <textarea
+                  className="w-full h-[70px] text-sm bg-white border border-black rounded-none text-black"
+                  placeholder="Enter Rationale"
+                  value={question.choices[index + 1].rationale}
+                  onChange={(e) => onChoiceChangeRationale(e, index + 1)}
+                ></textarea>
+              </div>
             </div>
           </div>
         ))}
+      </div>
 
-        <div className={Style["row"]}>
-          <label htmlFor="Rationale">Rationale: </label>
-          <textarea
-            name="Rationale"
-            id="Rationale"
-            className="textarea"
-            placeholder="Type the rationale here..."
-            disabled={isFormDisabled}
-            value={question.rationale}
-            onChange={(e) =>
-              setQuestion({ ...question, rationale: e.target.value })
-            }
-          ></textarea>
-        </div>
-
+      <div className="w-full flex flex-col justify-center items-center bg-blue-500">
+        <label htmlFor="Rationale" className="w-full text-black">
+          Rationale:{" "}
+        </label>
+        <textarea
+          name="Rationale"
+          id="Rationale"
+          className="w-11/12 text-black h-[100px] bg-white"
+          placeholder="Type the rationale here..."
+          disabled={isFormDisabled}
+          value={question.rationale}
+          onChange={(e) =>
+            setQuestion({ ...question, rationale: e.target.value })
+          }
+        ></textarea>
+      </div>
         <div className="flex gap-2">
           <button
             className="btn btn-neutral grow bg-[#FFC300] text-black border-0"
@@ -284,6 +341,7 @@ function AddQuestion() {
           </button>
         </div>
       </div>
+
       {showValidationModal && (
         <ValidationModal
           message={validationMessage}

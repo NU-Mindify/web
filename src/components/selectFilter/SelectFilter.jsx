@@ -14,7 +14,7 @@ export default function SelectFilter({
   return (
     <select value={value} onChange={onChange} className={`${className} ${addedClassName}`}>
       {disabledOption && (
-        <option value="" disabled>{disabledOption}</option>
+        <option value="" disabled hidden>{disabledOption}</option>
       )}
       {fixOption && (
         <option value="All">{fixOption}</option>
