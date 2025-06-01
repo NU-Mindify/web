@@ -28,6 +28,9 @@ export default function ManageStudents() {
   const [selectedBranch, setSelectedBranch] = useState("disabled");
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [showArchived, setShowArchived] = useState(false);
+
+
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -61,7 +64,8 @@ export default function ManageStudents() {
           ? true
           : student.branch === selectedBranch;
 
-      return matchesSearch && matchesBranch;
+      const matchesArchived = showArchived ? student.is_deleted : !student.is_deleted;
+      return matchesSearch && matchesBranch && matchesArchived;
     })
     .sort((a, b) => {
       const comparison = a.last_name.localeCompare(b.last_name);
@@ -218,8 +222,22 @@ export default function ManageStudents() {
             }}
           />
         </div>
+       
       </div>
+        <div className="flex bg-gray-100 p-1 rounded-xl w-[500px]">
+          <button 
+            onClick={() => setShowArchived(false)}
+            className={`all-archive-btn ${showArchived || "active" } w-1/2`}>
+            Show All Students
+          </button>
 
+          <button 
+            onClick={() => setShowArchived(true)}
+            className={`all-archive-btn ${showArchived && "active" } w-1/2`}>
+            Archive Students
+          </button>
+        </div>
+      
       <UserContentsTable
         columns={4}
         data={currentStudents}

@@ -17,6 +17,7 @@ import { Plus } from "lucide-react";
 
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 
+
 const categoriesObj = [
   {
     id: "abnormal",
@@ -46,6 +47,9 @@ const categoriesObj = [
 ];
 
 export default function ManageQuestion() {
+  const [showArchived, setShowArchived] = useState(false);
+  const [restore, setRestore] = useState(false)
+
 
 
     const [totalQuestion, setTotalQuestion] = useState([])
@@ -63,8 +67,6 @@ export default function ManageQuestion() {
         console.error("Error fetching total questions:", error);
       }
     };
-
-
 
   const location = useLocation();
   useEffect(() => {
@@ -89,7 +91,7 @@ export default function ManageQuestion() {
     try {
       const { data } = await axios.get(
         `${API_URL}/getQuestions?${
-          category ? `category=${category}&level=1` : ""
+          category ? `category=${category}` : ""
         }`
       );
       return data;
@@ -115,7 +117,31 @@ export default function ManageQuestion() {
         categoryName: selectedCat,
       },
     });
+    
   };
+   const handleDelete = async (id) =>{
+    try {
+      await axios.put(`${API_URL}/deleteQuestion/${id}`, {
+        question_id: id,
+        is_deleted: true,
+      }); getData()
+    }catch (error) {
+      console.error("Error deleting Question:", error);
+    }
+  };
+
+    const handleRestore = async (id) =>{
+      console.log(id)
+    try {
+      await axios.put(`${API_URL}/deleteQuestion/${id}`, {
+        question_id: id,
+        is_deleted: false,
+      }); getData()
+    }catch (error) {
+      console.error("Error restoring Question:", error);
+    }
+  };
+
 
   if (isPending) return <div>Loading</div>;
 
@@ -190,11 +216,25 @@ export default function ManageQuestion() {
               </div>
             </div>
           </div>
-
-          <div className="question-actions">
-            <button className="btn-action">EDIT</button>
-            <button className="btn-action">ARCHIVE</button>
-          </div>
+          {showArchived ? (
+            <div className="question-actions">
+              <button className="btn-action !bg-gray-500" disabled>
+                Edit</button>
+              <button
+                onClick={() => handleRestore(data._id)}
+                className="btn-action" >
+                Restore</button>
+            </div>
+          ) : (
+            <div className="question-actions">
+              <button className="btn-action">
+                Edit</button>
+              <button
+                onClick={() => handleDelete(data._id)}
+                className="btn-action">
+                Delete</button>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -253,11 +293,19 @@ export default function ManageQuestion() {
             </div>
 
             <div className="flex flex-wrap items-center gap-4 w-full justify-start">
+
               <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
-                <button className="all-archive-btn active w-1/2">
+                 <button 
+                  onClick={() => setShowArchived(false)}
+                  className={`all-archive-btn ${showArchived || "active" } w-1/2`}>
                   All Questions
                 </button>
-                <button className="all-archive-btn w-1/2">Archive</button>
+
+                <button 
+                  onClick={() => setShowArchived(true)}
+                  className={`all-archive-btn ${showArchived && "active" } w-1/2`}>
+                  Archive
+                  </button>
               </div>
 
               <div className="sort-container relative">
@@ -298,7 +346,7 @@ export default function ManageQuestion() {
                   No questions found.
                 </div>
               ) : (
-                questions.map((question, index) => (
+                questions.filter(question => question.is_deleted === showArchived ).map((question, index) => (
                   <QuestionCard
                     data={question}
                     key={question._id}
