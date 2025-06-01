@@ -31,7 +31,7 @@
 }
 
 .question-title {
-  @apply text-[40px] font-[Poppins] font-bold text-black pl-3  mt-3;
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFC916] pl-4 mt-5;
 }
 
 .question-count {
@@ -111,11 +111,11 @@
 }
 
 .category-text {
-  @apply w-1/2 h-full flex justify-start items-center cursor-pointer text-3xl font-extrabold z-50 ml-5;
+  @apply w-1/2 h-full flex justify-start  font-[Poppins] items-center cursor-pointer text-3xl font-extrabold z-50 ml-5  text-white;
 }
 
 .category-quantity {
-  @apply w-1/2 h-full flex justify-end items-center text-xl font-bold z-50 mr-5;
+  @apply w-1/2 h-full flex justify-end items-center text-xl font-bold z-50 mr-5  text-white;
 }
 
 

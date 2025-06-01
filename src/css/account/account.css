@@ -9,19 +9,20 @@
 
 /*------------------------- HEADER --------------------------*/
 .account-header {
-  @apply w-full h-[200px] p-1;
+  @apply w-full h-auto p-1 ;
 }
 
 .account-title {
-  @apply text-[40px] font-[Poppins] font-bold text-black h-[50px] pl-3 mt-3;
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFC916] h-[50px] pl-3;
 }
 
 .acc-sub-header-container {
-  @apply w-full h-auto flex flex-row justify-evenly items-center mt-3;
+  @apply w-full h-auto flex flex-row justify-start items-center gap-4 mt-3;
 }
 
+
 .filter-container {
-  @apply w-full mt-3 px-6;
+  @apply w-full mt-2 px-6;
 }
 
 
