@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router";
-import styles from './AddQuestion.module.css';
+import styles from './addQuestion.module.css';
 import add from "../../assets/questions/addQuestionbtn.svg";
 import edit from "../../assets/questions/editQuestionbtn.svg";
 import remove from "../../assets/questions/removeQuestionbtn.svg";
