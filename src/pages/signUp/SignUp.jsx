@@ -123,13 +123,18 @@ export default function SignUp() {
       await axios.post(`${API_URL}/createWebUser`, uidWebUser);
       setValidationMessage("Your account has successfully created. You'll receive an email once the admin has verified your account.");
       setShowValidationModal(true);
-      handleReset();
 
-      // 4. Sign out the new user's account
-      await signOut(firebaseAuth);
-      navigate("/")
+      {
+        !showValidationModal && 
+         handleReset();
 
-      // 5. Reset and show modal
+        // 4. Sign out the new user's account
+        await signOut(firebaseAuth);
+        navigate("/")
+
+        // 5. Reset and show modal
+      }
+     
       
     } catch (error) {
       console.error("Registration Error:", error.message);

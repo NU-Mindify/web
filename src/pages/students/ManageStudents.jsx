@@ -440,13 +440,6 @@ function CardActiveContent(student) {
                   <Buttons
                     text="View Student Details"
                     onClick={async () => {
-                      await axios.post(`${API_URL}/addLogs`, {
-                        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-                        branch: currentWebUser.branch,
-                        action: "View Student Details",
-                        description: `${currentWebUser.firstName} viewed the details of ${student.last_name}, ${student.first_name}`,
-                      });
-
                       navigate("/students/overall", {
                         state: {
                           competitionData: competitionModeData,
