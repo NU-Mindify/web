@@ -13,7 +13,7 @@
 }
 
 .student-title{
-  @apply text-[40px] font-[Poppins] font-bold h-[50px] pl-3 ;
+  @apply text-[40px] font-[Poppins] font-bold  text-[#FFC916] h-[50px] pl-3 mb-5 ;
 }
 
 

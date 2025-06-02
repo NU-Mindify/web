@@ -198,7 +198,7 @@ export default function ManageStudents() {
             handleChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search for a student"
             icon={searchIcon}
-            addedClassName="w-[80%] h-[50px]"
+            addedClassName="w-[80%] h-[50px] ml-1"
           />
 
           <SelectFilter
@@ -224,17 +224,17 @@ export default function ManageStudents() {
         </div>
        
       </div>
-        <div className="flex bg-gray-100 p-1 rounded-xl w-[500px] ml-5 mb-7">
+        <div className="flex bg-gray-100 p-1 rounded-xl w-[300px] ml-4 mb-8">
           <button 
             onClick={() => setShowArchived(false)}
             className={`all-archive-btn ${showArchived || "active" } w-1/2`}>
-            Show All Students
+            All Students
           </button>
 
           <button 
             onClick={() => setShowArchived(true)}
             className={`all-archive-btn ${showArchived && "active" } w-1/2`}>
-            Archive Students
+            Archive
           </button>
         </div>
       

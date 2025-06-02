@@ -408,33 +408,31 @@ export default function Dashboard() {
             borderRadius: "8px",
           }}
         >
-          <div className="flex gap-4 mb-4">
-            <button
-              onClick={() => setLeaderboardMode("classic")}
-              disabled={leaderboardMode === "classic"}
-              className={`px-4 py-2 rounded-md font-semibold transition-colors duration-200
-      ${
-        leaderboardMode === "classic"
-          ? "bg-[#35408E] text-black cursor-pointer"
-          : "bg-[#FFD41C] text-black  hover:bg-[#FFD41C] cursor-pointer"
-      }`}
-            >
-              Competition
-            </button>
+        <div className="flex bg-[#F5F6F8] p-1 rounded-xl w-[300px] mb-4">
+          <button
+            onClick={() => setLeaderboardMode("classic")}
+            className={`w-1/2 py-2  rounded-xl font-semibold 
+              ${
+                leaderboardMode === "classic"
+                  ? "bg-white  text-[#FFA500] shadow-sm"
+                  : "bg-transparent text-gray-400"
+              }`}
+          >
+            Competition
+          </button>
 
-            <button
-              onClick={() => setLeaderboardMode("mastery")}
-              disabled={leaderboardMode === "mastery"}
-              className={`px-4 py-2 rounded-md font-semibold transition-colors duration-200
-      ${
-        leaderboardMode === "mastery"
-          ? "bg-[#35408E] text-black cursor-pointer"
-          : "bg-[#FFD41C] text-black  hover:bg-[#FFD41C] cursor-pointer"
-      }`}
-            >
-              Mastery
-            </button>
-          </div>
+          <button
+            onClick={() => setLeaderboardMode("mastery")}
+            className={`w-1/2 py-2  rounded-xl font-semibold
+              ${
+                leaderboardMode === "mastery"
+                  ? "bg-white text-[#FFD700] shadow-sm"
+                  : "bg-transparent text-gray-400"
+              }`}
+          >
+            Mastery
+          </button>
+        </div>
 
           {(
             leaderboardMode === "classic"
