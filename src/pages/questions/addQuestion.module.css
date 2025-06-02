@@ -1,35 +1,324 @@
 @reference "tailwindcss";
+@plugin "daisyui";
+
+.pageWrapper {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none; 
+  -ms-overflow-style: none;  
+}
+
+.pageWrapper::-webkit-scrollbar {
+  display: none; 
+}
+
+.header {
+  @apply flex justify-between items-center -mt-3 mb-6;
+}
 
 
- .row {
-   display: flex;
-   flex-wrap: wrap;
-   width: 100%;
-   margin-bottom: 0.5rem;
-   position: relative;
- }
- .row > * {
-   flex-shrink: 0;
-   width: 100%;
-   max-width: 100%;
- }
- @media (min-width: 768px) {
-   .row label {
-     width: 30%;
-     flex: 0 0 auto;
-   }
-   .row input,
-   .row select,
-   .row textarea {
-     width: 70%;
-     flex: 0 0 auto;
-   }
- }
- input,
- select,
- textarea {
-   @apply border border-black/20 rounded-lg p-1 px-3;
- }
- .row label {
-   margin: auto;
- }
+
+/* Add Question container */
+.container {
+  font-family: 'Poppins';
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.title {
+  font-size: 40px;
+  font-weight: bold;
+  margin-top: 0.025rem;
+  color:black;
+}
+
+
+.label{
+  color:black;
+  font-weight: bold;
+}
+
+span{
+  color:red;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.row > * {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .row label {
+    width: 30%;
+    flex: 0 0 auto;
+  }
+
+  .row input,
+  .row select,
+  .row textarea {
+    width: 100%;
+    height: 50px;
+    margin-top: 1%;
+    flex: 0 0 auto;
+    color:black;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+
+.row label {
+  margin: auto;
+  font-weight: 500;
+  color:black;
+}
+
+
+
+.selectRow {
+  gap: 0.5rem;
+}
+
+
+.selectGroup {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  height: 100px;
+}
+
+.selectItem {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+}
+
+.selectItem label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: black;
+}
+
+.selectItem input,
+.selectItem select {
+  height:50px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+  color:black;
+  margin-top: 2%;
+}
+
+.selectItem textarea {
+  height:50px;
+}
+
+.optionsBox {
+  background-color: #f9f9f9;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ddd;
+}
+
+.optionsTitle {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: black;
+}
+
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  color: black;
+}
+
+.optionInput {
+  flex-grow: 1;
+  outline: none;
+}
+
+
+.optionTextContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: 12px;
+  font-size: 14px;
+
+}
+
+.rationaleInput {
+  margin-top: 4px;
+  border-bottom: 1px solid #000000;
+  outline: none;
+}
+
+
+.correctAnswer{
+  @apply w-5 h-5;
+}
+
+.btnContainer{
+  display: flex;
+  justify-content: center;
+}
+
+.addButton {
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.addButton:hover {
+    filter: brightness(1.1);
+}
+
+
+.divider {
+  margin: 0.5rem 0;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+
+
+/* List of Questions container */
+.questionsContainer {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  margin-top: 0.75rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.questionsHeader {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #000000;
+}
+
+.questionsScrollContainer {
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.questionItem {
+  background-color: #ffffff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #000000;
+  color:black;
+}
+
+.questionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem auto;
+  padding: 10px;
+  width:500px;
+  font-size: 14px;
+  border-radius: 0.25rem;
+  border: 1px solid #000000;
+}
+
+.metaRow div {
+  text-align: center;
+  flex: 1;
+  gap:2px;
+}
+
+.optionText {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.rationaleLine {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+  margin-left: 1.5rem; 
+}
+
+/* .underline {
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  margin-left: 1.5rem;
+} */
+
+.optionIconCorrect img {
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+}
+
+.optionIconIncorrect img {
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+}
+
+
+.questionActions {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.Button {
+  border: none;
+  cursor: pointer;
+}
+
+.Button:hover {
+    filter: brightness(1.1);
+}
+
+.saveButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.saveButton {
+  padding: 0.6rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.saveButton:hover {
+    filter: brightness(1.1);
+}
+
+
