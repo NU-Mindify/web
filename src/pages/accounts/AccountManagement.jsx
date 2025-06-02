@@ -10,6 +10,10 @@ import Buttons from "../../components/buttons/Buttons";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
 import SearchBar from "../../components/searchbar/SearchBar";
 import UserContentsTable from "../../components/tableForContents/UserContentsTable";
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import logo from "../../assets/logo/logo.png";
 
 export default function AccountManagement() {
   const [webUsers, setWebUsers] = useState([]);
@@ -135,10 +139,105 @@ export default function AccountManagement() {
     { key: "action", label: "Action", className: "w-1/5" },
   ];
 
+    // EXPORT TO CSV for Accounts
+  const exportAccountsToCSV = (data, filename) => {
+    const now = new Date().toLocaleString();
+    const headers = ["Name", "Position", "Campus"];
+    const rows = data.map((user) => {
+      const firstName = user.firstName || "";
+      const lastName = user.lastName || "";
+      const fullName = `${lastName.toUpperCase()} ${firstName}`.trim();
+      const position = user.position || "N/A";
+      const campus = branches.find((branch) => branch.id === user.branch)?.name || "N/A";
+
+      return [fullName, position, campus];
+    });
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [
+        `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        `Exported on: ${now}`,
+        "",
+        headers.join(","),
+        ...rows.map((row) => row.join(",")),
+      ].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `${filename}_by_${currentWebUser.firstName}_${currentWebUser.lastName}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  //convert logo to base64 para lumabas sa pdf
+  const getBase64FromUrl = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  // EXPORT TO PDF for Accounts
+  const exportAccountsToPDF = async (data, title) => {
+    const logoBase64 = await getBase64FromUrl(logo);
+    const now = new Date().toLocaleString();
+    const doc = new jsPDF();
+
+    doc.text(`${title}`, 14, 10);
+    doc.text(
+      `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+      14,
+      18
+    );
+    doc.text(`Exported on: ${now}`, 14, 26);
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const logoWidth = 30;
+    const logoHeight = 15;
+    const xPos = pageWidth - logoWidth - 10;
+    doc.addImage(logoBase64, "PNG", xPos, 10, logoWidth, logoHeight);
+
+    const rows = data.map((user) => {
+      const fullName = `${(user.lastName || "").toUpperCase()} ${
+        user.firstName || ""
+      }`.trim();
+      const position = user.position || "";
+      const campus =
+        branches.find((branch) => branch.id === user.branch)?.name || "N/A";
+
+      return [fullName, position, campus];
+    });
+
+    
+    autoTable(doc, {
+      head: [["Name", "Position", "Campus"]],
+      body: rows,
+      startY: 30,
+    });
+
+    doc.save(
+      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
+        currentWebUser.lastName
+      }.pdf`
+    );
+  };
+
+
   return (
     <div className="account-main-container">
       <div className="account-header">
-        <h1 className="account-title flex flex-row items-center">
+        <h1 className="account-title">
           Account Management
         </h1>
 
@@ -159,32 +258,42 @@ export default function AccountManagement() {
               );
               setShowSuggestions(false);
             }}
-            addedClassName="w-[70%] h-[50px]"
+            addedClassName="w-[70%] h-[50px] mt-2 ml-1"
           />
 
           <Buttons
             text="Pending Account"
             onClick={() => navigate("/account/approval")}
-            addedClassName="btn btn-warning !w-[250px]"
+            addedClassName="btn btn-warning !w-[250px] ml-28 mt-2"
           />
 
-          <img src={download} alt="export" className="acc-export-icon" />
+          <div className="ml-40 mr-1 mt-2">
+           <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportAccountsToCSV(filteredUsers, "Accounts_List");
+                } else if (format === "pdf") {
+                  exportAccountsToPDF(filteredUsers, "Accounts_List");
+                }
+              }}
+            />
+          </div>
+          
         </div>
-
-        <div className="flex flex-wrap items-center gap-6 w-full justify-start mt-3 px-5">
-          <div className="acc-toggle-btn mt-5 ml-15 mb-5">
+        <div className="flex flex-wrap items-center gap-6 w-full mb-7 mt-5 ml-3">
+          <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
             <button
               onClick={() => setShowArchived(false)}
               className={`all-archive-btn ${showArchived || "active"} w-1/2`}
             >
-              Show All Admins
+              All Admins
             </button>
 
             <button
               onClick={() => setShowArchived(true)}
               className={`all-archive-btn ${showArchived && "active"} w-1/2`}
             >
-              Archive Admins
+              Archive
             </button>
           </div>
 
@@ -209,7 +318,9 @@ export default function AccountManagement() {
             />
           )}
         </div>
+
       </div>
+
 
       <UserContentsTable
         columns={4}

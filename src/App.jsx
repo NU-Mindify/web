@@ -27,6 +27,7 @@ import ShowMoreDetails from "./pages/students/ShowMoreDetails";
 import ActivityLogs from "./pages/activityLogs/ActivityLogs";
 import SignUp from "./pages/signUp/SignUp";
 import ApproveAccount from "./pages/accounts/ApproveAccount";
+import Branches from "./pages/branches/Branches";
 
 const queryClient = new QueryClient();
 
@@ -149,7 +150,8 @@ function App() {
                     <Route path="/logs" element={<ActivityLogs />} />
                     <Route path="/addaccount" element={<AddAccount />} />
                     <Route path="/students/overall" element={<ShowMoreDetails />} />
-                    
+                    <Route path="/branches" element={<Branches />} />
+
                     <Route path="*" element={<Navigate to="/" />} />
                   </Routes>
                 </div>

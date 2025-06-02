@@ -18,7 +18,7 @@
 
 /* Search Dropdown */
 .search-suggestion-dropdown {
-  @apply absolute top-full left-0 right-0 bg-white border border-gray-300 max-h-[200px] overflow-y-auto z-[1000] shadow-md;
+  @apply absolute top-full left-0 right-0 bg-white border border-gray-300 max-h-[200px] overflow-y-auto z-[1000] shadow-sm;
 }
 
 .search-suggestion-item {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import '../ExportDropdown/ExportDropdown.css'
-import download from "../../assets/leaderboard/file-export.svg";
+import { Download } from "lucide-react";
 
 const ExportDropdown = ({ onExport }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,8 +16,8 @@ const ExportDropdown = ({ onExport }) => {
 
   return (
     <div className="export-dropdown-container">
-      <button className="export-btn" onClick={handleToggle}>
-        <img src={download} alt="Export" style={{ cursor: "pointer" }} />
+      <button className="export-btn" onClick={handleToggle} style={{ cursor: "pointer" }}>
+        <Download size={22} />
       </button>
       {isOpen && (
         <div className="export-dropdown-menu">
