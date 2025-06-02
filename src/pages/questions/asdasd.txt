@@ -1,0 +1,333 @@
+import React, { useEffect, useState } from "react";
+import "../../css/questions/questions.css";
+import { useLocation, useNavigate } from "react-router";
+import axios from "axios";
+import { CheckCircle2Icon, XCircle } from "lucide-react";
+import { API_URL } from "../../Constants";
+import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+
+
+
+function AddQuestion() {
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
+  const [question, setQuestion] = useState({
+    question: "",
+    choices: [
+      {
+        letter: "a",
+        text: "",
+        rationale: "",
+        isCorrect: true,
+      },
+      {
+        letter: "b",
+        text: "",
+        rationale: "",
+        isCorrect: false,
+      },
+      {
+        letter: "c",
+        text: "",
+        rationale: "",
+        isCorrect: false,
+      },
+      {
+        letter: "d",
+        text: "",
+        rationale: "",
+        isCorrect: false,
+      },
+    ],
+    rationale: "",
+    category: "developmental",
+    difficulty: "",
+    level: 1,
+    answer: "a",
+  });
+  const nav = useNavigate();
+
+  const [validationMessage, setValidationMessage] = useState("");
+  const [showValidationModal, setShowValidationModal] = useState(false);
+
+  const addToDB = async () => {
+    console.log(question);
+    
+    setIsFormDisabled(true);
+    try {
+      const { data } = await axios.post(`${API_URL}/addQuestion`, question);
+      console.log(data);
+      setValidationMessage("Added Successfully");
+      setShowValidationModal(true);
+
+      nav(-1);
+    } catch (error) {
+      console.error(error);
+      setValidationMessage(error.response.data.error.name);
+      setShowValidationModal(true);
+    }
+    setIsFormDisabled(false);
+  };
+
+  const onChoiceChangeRationale = (e, index) => {
+    const newChoices = [...question.choices];
+    newChoices[index].rationale = e.target.value;
+    setQuestion({ ...question, choices: newChoices });
+  };
+
+  const onChoiceChange = (e, index) => {
+    const newChoices = [...question.choices];
+    newChoices[index].text = e.target.value;
+    setQuestion({ ...question, choices: newChoices });
+  };
+  const onAnswerChange = (e) => {
+    const choices = [...question.choices];
+    const newChoices = choices.map((choice) => {
+      if (choice.letter == e.target.value.toLowerCase()) {
+        return { ...choice, isCorrect: true };
+      }
+      return { ...choice, isCorrect: false };
+    });
+    setQuestion({ ...question, choices: newChoices, answer: e.target.value });
+  };
+
+  const location = useLocation();
+  const [category, setCategory] = useState(null);
+  const [categoryName, setCategoryName] = useState(null);
+
+  useEffect(() => {
+    const categoryFromState = location.state?.category;
+    const categoryNameFromState = location.state?.categoryName;
+
+    if (categoryFromState) {
+      setCategory(categoryFromState);
+    }
+
+    if (categoryNameFromState) {
+      setCategoryName(categoryNameFromState);
+    }
+  }, [location.state]);
+
+  return (
+
+    <div className="add-ques-main-container">
+      <input
+        type="hidden"
+        id="category"
+        name="category"
+        value={question.category}
+      />
+
+      <div className="add-ques-header w-full h-[100px] bg-amber-200 flex flex-col">
+        <h1 className="text-2xl font-bold font-[poppins] text-black">
+          Add Question
+        </h1>
+        <h1 className="text-black">Create Question for {categoryName}</h1>
+      </div>
+
+      <div className="w-full h-auto flex flex-col justify-center items-center">
+        <label htmlFor="Question" className="w-full text-black">
+          Question
+        </label>
+        <textarea
+          name="Question"
+          id="Question"
+          className="w-11/12 h-[80px] bg-white text-black border border-black"
+          placeholder="Type here..."
+          disabled={isFormDisabled}
+          value={question.question}
+          onChange={(e) =>
+            setQuestion({ ...question, question: e.target.value })
+          }
+        ></textarea>
+      </div>
+
+      <div className="w-full h-[150px] bg-violet-300 flex flex-row">
+        <div className="flex flex-col">
+          <label htmlFor="level" className="text-black">
+            Level:
+          </label>
+          <select
+            id="level"
+            disabled={isFormDisabled}
+            value={question.level}
+            onChange={(e) =>
+              setQuestion({ ...question, level: e.target.value })
+            }
+            className="!w-[200px] bg-white"
+          >
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="level" className="text-black">
+            Difficulty:
+          </label>
+          <select
+            id="level"
+            disabled={isFormDisabled}
+            value={question.difficulty}
+            onChange={(e) =>
+              setQuestion({
+                ...question,
+                difficulty: e.target.value
+              })
+            }
+            className="!w-[200px] bg-white"
+          >
+            {[
+              { value: "easy", text: "Easy" },
+              { value: "average", text: "Average" },
+              { value: "difficult", text: "Difficult" },
+            ].map((diff) => (
+              <option key={diff.value} value={diff.value}>
+                {diff.text}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="h-auto w-full bg-cyan-200 flex flex-col items-center">
+        <label htmlFor="options" className="w-full text-black">
+          Options:
+        </label>
+
+        <div className="w-[80%] flex flex-row">
+          <label className="!swap swap-rotate !w-[15%]">
+            <input
+              type="checkbox"
+              name="correctLetter"
+              class="my-auto me-2 h-[70px]"
+              checked={question.answer === "a"}
+              onChange={(e) => onAnswerChange(e)}
+              value={"a"}
+            />
+            <CheckCircle2Icon className="swap-on h-8 w-8" size={10} />
+            <XCircle className="swap-off h-8 w-8" size={10} />
+          </label>
+          <div
+            className={`${
+              question.answer == "a" ? "bg-green-500" : "bg-red-300"
+            } border border-black/20 rounded px-4 rounded-e-none border-e-0 h-full flex items-center transition`}
+          >
+            A
+          </div>
+          <div className="w-full flex flex-col">
+            <textarea
+              className="w-full h-[70px] text-sm bg-white border border-black rounded-none text-black"
+              required
+              disabled={isFormDisabled}
+              value={question.choices[0].text}
+              onChange={(e) => onChoiceChange(e, 0)}
+            ></textarea>
+            <textarea
+              className="w-full h-[70px] text-sm bg-white border border-black rounded-none text-black"
+              placeholder="Enter Rationale"
+              value={question.choices[0].rationale}
+              onChange={(e) => onChoiceChangeRationale(e, 0)}
+            ></textarea>
+          </div>
+        </div>
+
+        {["b", "c", "d"].map((letter, index) => (
+          <div className="mt-0 w-full flex flex-col items-center" key={letter}>
+            <div className="w-[80%] flex flex-row">
+              <label className="!swap swap-rotate !w-[15%]">
+                <input
+                  type="checkbox"
+                  name="correctLetter"
+                  class="my-auto me-2"
+                  checked={question.answer === letter}
+                  onChange={(e) => onAnswerChange(e)}
+                  value={letter}
+                />
+                <CheckCircle2Icon className="swap-on h-8 w-8" size={8} />
+                <XCircle className="swap-off h-8 w-8" size={8} />
+              </label>
+              <div
+                className={`${
+                  question.answer == letter ? "bg-green-500" : "bg-red-300"
+                } border border-black/20 rounded px-4 rounded-e-none border-e-0 h-full flex items-center transition`}
+              >
+                {letter.toUpperCase()}
+              </div>
+
+              <div className="w-full bg-blue-300 flex flex-col">
+                <textarea
+                  className="w-full h-[70px] text-sm bg-white border border-black rounded-none text-black"
+                  required
+                  disabled={isFormDisabled}
+                  value={question.choices[index + 1].text}
+                  onChange={(e) => onChoiceChange(e, index + 1)}
+                ></textarea>
+
+                <textarea
+                  className="w-full h-[70px] text-sm bg-white border border-black rounded-none text-black"
+                  placeholder="Enter Rationale"
+                  value={question.choices[index + 1].rationale}
+                  onChange={(e) => onChoiceChangeRationale(e, index + 1)}
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="w-full flex flex-col justify-center items-center bg-blue-500">
+        <label htmlFor="Rationale" className="w-full text-black">
+          Rationale:{" "}
+        </label>
+        <textarea
+          name="Rationale"
+          id="Rationale"
+          className="w-11/12 text-black h-[100px] bg-white"
+          placeholder="Type the rationale here..."
+          disabled={isFormDisabled}
+          value={question.rationale}
+          onChange={(e) =>
+            setQuestion({ ...question, rationale: e.target.value })
+          }
+        ></textarea>
+      </div>
+        <div className="flex gap-2">
+          <button
+            className="btn btn-neutral grow bg-[#FFC300] text-black border-0"
+            onClick={() => {
+              console.log(question);
+              addToDB();
+            }}
+          >
+            Save
+          </button>
+          <button
+            className="btn btn-neutral btn-outline grow"
+            onClick={() => {
+              nav("/question", {
+                state: {
+                  category: category,
+                  categoryName: categoryName,
+                  catSelected: true,
+                },
+              });
+            }}
+          >
+            Back
+          </button>
+        </div>
+
+      {showValidationModal && (
+        <ValidationModal
+          message={validationMessage}
+          onClose={() => setShowValidationModal(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+export default AddQuestion;
