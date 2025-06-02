@@ -245,7 +245,7 @@ body{
 
 /* Modal Button */
 .modal .btn-warning {
-    @apply py-2 flex justify-center items-center rounded-lg bg-[#FFC300] text-white 
+    @apply py-2 flex justify-center items-center rounded-lg bg-[#FFC300] 
     transition-colors transition-shadow duration-500 ease-in-out;
 }
 

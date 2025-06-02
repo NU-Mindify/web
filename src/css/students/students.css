@@ -4,12 +4,12 @@
 
 
 .students-main-container{
-  @apply p-3 flex flex-col h-full w-full bg-white;
+  @apply font-[Poppins] p-3 flex flex-col h-full w-full bg-white;
 }
 
 
 .student-header{
-  @apply w-full h-[150px] p-1;
+  @apply w-full h-[150px] p-1 text-[#FFC916];
 }
 
 .student-title{
@@ -21,7 +21,7 @@
 
 
 .student-footer{
-  @apply w-full h-[50px] flex flex-col justify-center items-center;
+  @apply w-full h-[50px] font-[Poppins] flex flex-col justify-center items-center;
 }
 
 .student-pagination-container{

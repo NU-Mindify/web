@@ -280,7 +280,6 @@ export default function AccountManagement() {
           </div>
           
         </div>
-
         <div className="flex flex-wrap items-center gap-6 w-full mb-7 mt-5 ml-3">
           <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
             <button

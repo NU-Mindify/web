@@ -189,7 +189,7 @@ export default function ManageStudents() {
   return (
     <div className="students-main-container">
       <div className="student-header">
-        <h1 className="student-title">
+        <h1 className="student-title flex flex-row items-center">
           View Students
         </h1>
         <div className="acc-sub-header-container">
