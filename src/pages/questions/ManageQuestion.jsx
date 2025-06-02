@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import search from "../../assets/search/search.svg";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -16,6 +16,7 @@ import back from "../../assets/questions/angle-left.svg";
 import { Plus } from "lucide-react";
 
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import { ActiveContext } from "../../contexts/Contexts";
 
 
 const categoriesObj = [
@@ -50,6 +51,11 @@ export default function ManageQuestion() {
   const [showArchived, setShowArchived] = useState(false);
   const [restore, setRestore] = useState(false)
 
+
+  const {
+      subSelected,
+      setSubSelected,
+    } = useContext(ActiveContext);
 
 
     const [totalQuestion, setTotalQuestion] = useState([])
@@ -149,6 +155,7 @@ export default function ManageQuestion() {
 
   function handleBack() {
     setGotSelected(false);
+    setSubSelected("")
   }
   
 
@@ -374,6 +381,7 @@ export default function ManageQuestion() {
                 setCategory(elem.id);
                 setGotSelected(true);
                 setSelectedCat(elem.name);
+                setSubSelected(elem.id)
               }}
             />
           ))}

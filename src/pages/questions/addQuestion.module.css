@@ -219,8 +219,7 @@ span{
 }
 
 .questionsScrollContainer {
-  max-height: 350px;
-  overflow-y: auto;
+  height: auto;
   padding-right: 0.5rem;
 }
 

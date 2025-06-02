@@ -1,0 +1,78 @@
+@reference "tailwindcss";
+@plugin "daisyui";
+
+
+.add-ques-main-container{
+  @apply w-full h-full overflow-y-auto rounded-xl bg-white flex flex-col items-center px-10;
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
+}
+
+.add-ques-main-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.add-ques-main-container::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 8px;
+}
+
+.add-ques-main-container::-webkit-scrollbar-track {
+  background: black;
+}
+
+
+
+
+.add-ques-header{
+    @apply w-full h-[150px] bg-green-400 px-5;
+}
+
+.add-ques-sub-header{
+    @apply flex justify-between pt-5;
+}
+
+.add-ques-sub-header h1{
+    @apply font-[Poppins] text-black font-bold text-[40px];
+}
+
+.add-ques-header h2{
+    @apply font-[Poppins] text-black font-bold text-[25px] mt-3;
+}
+
+.ques-container{
+    @apply w-full flex flex-col items-center px-5 bg-green-400;
+}
+
+.ques-container h1{
+    @apply font-[Poppins] text-black font-bold text-[20px]; 
+}
+
+.ques-container textarea{
+    @apply mt-2 w-11/12 h-[80px] bg-white text-black border border-black text-[18px] px-1;
+}
+
+
+.select-container{
+    @apply w-full h-[150px] bg-green-400 flex gap-8 px-5 items-center;
+}
+
+.select-container div{
+    @apply flex flex-col;
+}
+
+.select-container div h1{
+    @apply font-[Poppins] text-black font-bold text-[20px]; 
+}
+
+.select-container div select{
+    @apply mt-2 text-[18px] w-[250px] h-[60px] bg-white;
+}
+
+.option-container{
+    @apply h-auto w-full bg-gray-200 flex flex-col items-center rounded-2xl p-5;
+}
+
+.option-container h1{
+    @apply font-[Poppins] text-black font-bold text-[20px];
+}

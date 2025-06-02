@@ -238,8 +238,3 @@
 
 
 
-.add-ques-main-container{
-  @apply w-full h-full overflow-y-auto rounded-xl bg-white;
-  scrollbar-width: thin;
-  scrollbar-color: black transparent;
-}
