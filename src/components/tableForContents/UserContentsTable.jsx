@@ -19,7 +19,7 @@ export default function UserContentsTable({
   return (
     <div className="users-main-container">
       <table className="titles-table">
-        <thead>
+        <thead className="contentsTable-thead">
           <tr>
             {titles.map(({ key, label, className }) => (
               <th key={key} className={className}>

@@ -34,7 +34,10 @@
   @apply text-xl text-black;
 }
 
-thead tr {
+.contentsTable-thead {
+  @apply w-full;
+}
+.contentsTable-thead tr {
   @apply sticky top-0 z-10 bg-white;
 }
 
