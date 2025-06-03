@@ -443,18 +443,20 @@ export default function Leaderboard() {
               addedClassName="w-[80%] h-[50px]"
             /> */}
 
-            <ExportDropdown
-              onExport={(format) => {
-                if (format === "csv") {
-                  exportToCSV(classicSortingLeaders, "Classic_Leaderboard");
-                } else if (format === "pdf") {
-                  exportToPDF(classicSortingLeaders, "Classic Leaderboard");
-                }
-              }}
-            />
+            <div className="ml-5">
+              <ExportDropdown
+                onExport={(format) => {
+                  if (format === "csv") {
+                    exportToCSV(classicSortingLeaders, "Classic_Leaderboard");
+                  } else if (format === "pdf") {
+                    exportToPDF(classicSortingLeaders, "Classic Leaderboard");
+                  }
+                }}
+              />
+            </div>
           </div>
 
-          <div className="w-full flex flex-row ml-4 mt-[-10px]">
+          <div className="w-full flex flex-row ml-4 mt-[-10px] mb-3">
             <SelectFilter
               value={classicSelectedBranch}
               onChange={(e) => setClassicSelectedBranch(e.target.value)}
@@ -482,16 +484,8 @@ export default function Leaderboard() {
             <div className="content-header">
               <h1 className="title-header">Rank</h1>
               <h1 className="title-header">Name</h1>
-              <h1 className="title-header flex items-center gap-1 cursor-pointer">
-                {" "}
-                Campus
-                <img src={dropdown} className="w-20 h-7" alt="dropdown icon" />
-              </h1>
-              <h1 className="title-header flex items-center gap-1 cursor-pointer">
-                {" "}
-                World
-                <img src={dropdown} className="w-20 h-7" alt="dropdown icon" />
-              </h1>
+              <h1 className="title-header">Campus</h1>
+              <h1 className="title-header">World</h1>
               <h1 className="title-header">Score</h1>
               <h1 className="title-header">Time</h1>
             </div>
@@ -615,18 +609,20 @@ export default function Leaderboard() {
               </ul>
             )}
 
-            <ExportDropdown
-              onExport={(format) => {
-                if (format === "csv") {
-                  exportToCSV(masterySortingLeaders, "Mastery_Leaderboard");
-                } else if (format === "pdf") {
-                  exportToPDF(masterySortingLeaders, "Mastery Leaderboard");
-                }
-              }}
-            />
+            <div className="ml-5">
+              <ExportDropdown
+                onExport={(format) => {
+                  if (format === "csv") {
+                    exportToCSV(masterySortingLeaders, "Mastery_Leaderboard");
+                  } else if (format === "pdf") {
+                    exportToPDF(masterySortingLeaders, "Mastery Leaderboard");
+                  }
+                }}
+              />
+            </div>
           </div>
 
-          <div className="w-full flex flex-row ml-4 mt-[-10px]">
+          <div className="w-full flex flex-row ml-4 mt-[-10px] mb-3">
             <SelectFilter
               value={masterySelectedBranch}
               onChange={(e) => setMasterySelectedBranch(e.target.value)}
@@ -654,16 +650,8 @@ export default function Leaderboard() {
             <div className="content-header">
               <h1 className="title-header">Rank</h1>
               <h1 className="title-header">Name</h1>
-              <h1 className="title-header flex items-center gap-1 cursor-pointer">
-                {" "}
-                Campus
-                <img src={dropdown} className="w-20 h-7" alt="dropdown icon" />
-              </h1>
-              <h1 className="title-header flex items-center gap-1 cursor-pointer">
-                {" "}
-                World
-                <img src={dropdown} className="w-20 h-7" alt="dropdown icon" />
-              </h1>
+              <h1 className="title-header">Campus</h1>
+              <h1 className="title-header">World</h1>
               <h1 className="title-header">Score</h1>
               <h1 className="title-header">Time</h1>
             </div>

@@ -179,7 +179,7 @@ export default function AddTerm() {
           <Buttons
             text="Add Terms"
             onClick={handleCreateNewTerm}
-            addedClassName="btn btn-warning "
+            addedClassName="btn btn-warning"
           />
         </div>
       </div>
