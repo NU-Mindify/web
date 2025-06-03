@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { API_URL, branches } from "../../Constants";
 import "../../css/activityLog/activityLog.css";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
+import SearchBar from "../../components/searchbar/SearchBar";
+import searchIcon from "../../assets/students/search-01.svg";
+
 
 export default function ActivityLogs() {
   const [allLogs, setAllLogs] = useState([]);
@@ -61,27 +64,41 @@ export default function ActivityLogs() {
 
   return (
     <div className="logs-main-container">
-      <div className="w-full bg-amber-200">
+      <h1 className="activity-logs-title">Activity Logs</h1>
+        
+      <SearchBar className="search-input"
+      placeholder="Search for an action"
+      icon={searchIcon}
+      addedClassName="w-[70%] h-[50px] mt-2 ml-1"
+      />
+        
+  
+      <div className="log-controls">
+        <div className="action-filter">
+          <SelectFilter
+            value={selectedAction}
+            onChange={(e) => setSelectedAction(e.target.value)}
+            fixOption="All Actions"
+            disabledOption="Select Action"
+            mainOptions={[...new Set(allLogs.map((log) => log.action))]}
+            getOptionValue={(opt) => opt}
+            getOptionLabel={(opt) => opt}
+            addedClassName="w-[70%] h-[50px] mt-2 ml-1"
+          />
+        </div>
+
+        <div className="month-filter">
         <SelectFilter
-          value={selectedAction}
-          onChange={(e) => setSelectedAction(e.target.value)}
-          fixOption="All Actions"
-          disabledOption="Select Action"
-          mainOptions={[...new Set(allLogs.map((log) => log.action))]}
-          getOptionValue={(opt) => opt}
-          getOptionLabel={(opt) => opt}
-          className="!w-3/12 !h-[50px] bg-green-400 ml-4"
-        />
-        <SelectFilter
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
-          fixOption="All Months"
-          disabledOption="Select Month"
-          mainOptions={months}
-          getOptionValue={(opt) => opt}
-          getOptionLabel={(opt) => opt}
-          className="!w-3/12 !h-[50px] bg-red-400"
-        />
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            fixOption="All Months"
+            disabledOption="Select Month"
+            mainOptions={months}
+            getOptionValue={(opt) => opt}
+            getOptionLabel={(opt) => opt}
+            addedClassName="w-[70%] h-[50px] mt-2 ml-1"
+          />
+        </div>
       </div>
 
       <table className="w-full h-full text-center text-black font-[poppins] text-xl">

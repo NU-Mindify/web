@@ -20,3 +20,17 @@
 .logs-main-container::-webkit-scrollbar-track {
   background: black;
 }
+
+
+.log-controls {
+  @apply w-full h-auto flex flex-row justify-start items-center gap-4 mt-3;
+}
+
+
+.activity-logs-header {
+  @apply w-full h-auto p-1 ;
+}
+
+.activity-logs-title {
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFC916] h-[50px] pl-3 mt-3;
+}
