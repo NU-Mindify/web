@@ -290,11 +290,11 @@ export default function Sidebar() {
                     ].map(({ id, label }) => (
                       <li key={id}>
                         <div
-                          className={
+                          className={`font-[Poppins] ${
                             subSelected === id
                               ? "active-sub-selected"
                               : "active-sub-btn-container"
-                          }
+                          }`}
                         >
                           <button
                             className="active-btn-icon"
@@ -324,7 +324,7 @@ export default function Sidebar() {
       </div>
 
       <dialog id="logout_modal" className="modal">
-        <form method="dialog" className="modal-box text-center">
+        <form method="dialog" className="modal-box text-center font-[Poppins]">
           <h3 className="font-bold text-lg mb-4">
             Are you sure you want to logout?
           </h3>
@@ -338,7 +338,7 @@ export default function Sidebar() {
             </button>
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-primary text-black"
               onClick={async () => {
                 await axios.post(`${API_URL}/addLogs`, {
                   name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,

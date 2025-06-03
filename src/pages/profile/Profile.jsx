@@ -115,7 +115,7 @@ export default function Profile() {
           <div className="avatar-edit-container-prof-settings">
             <div className="avatar-container-prof-settings">
               <img
-                className="avatar-dimensions"
+                className="avatar-dimensions shadow-[-2px_-2px_0px_0px_rgba(0,0,0)]"
                 src={webUser.useravatar}
                 alt=""
               />
@@ -208,11 +208,11 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className="edit-btn-container-prof-settings w-full">
-            <button class="edit-btn-properties" onClick={handleEditProfile}>
+          <div className="edit-btn-prof-settings w-full">
+            <button class="edit-btn-properties shadow-md" onClick={handleEditProfile}>
               Edit Profile
             </button>
-            <button class="edit-btn-properties" onClick={handlePasswordChange}>
+            <button class="edit-btn-properties shadow-md" onClick={handlePasswordChange}>
               Change Password
             </button>
           </div>
