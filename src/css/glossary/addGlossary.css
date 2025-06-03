@@ -38,8 +38,6 @@
   @apply -mb-2 mt-3 font-[Poppins] text-black font-bold text-[25px] md:text-[40px];
 }
 
-
-
 .add-term-contents {
   flex: 1;
   overflow:  hidden;
@@ -134,6 +132,9 @@
   color: #000000;
 }
 
+.required-asterisk {
+  color: red;
+}
 
 
 .add-more-term-btn {
@@ -154,8 +155,42 @@
 }
 
 
+.confirm-delete-popup {
+  @apply fixed inset-0 z-50 flex items-center justify-center;
+}
+
+.confirm-dialog {
+  @apply bg-white rounded-2xl p-6 w-full max-w-md shadow-lg text-center;
+}
+
+.confirm-dialog h2 {
+  @apply font-[Poppins] text-xl font-semibold mb-4  text-[#FFC916];
+}
+
+.confirm-dialog p {
+  @apply mb-6;
+}
+
+.popup-buttons {
+  @apply flex justify-center gap-4;
+}
+
+.btn-delete {
+  @apply text-white font-bold px-6 py-3 rounded-md text-sm shadow transition duration-200;
+  background-color: #ff5e7d;
+}
+
+.btn-delete:hover {
+  background-color: #ee5576;
+}
+
+.btn-cancel {
+  @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold px-6 py-3 rounded-md text-sm shadow transition duration-200;
+}
+
 @media (max-width: 600px) {
   .term-input-row {
     flex-direction: column;
   }
 }
+
