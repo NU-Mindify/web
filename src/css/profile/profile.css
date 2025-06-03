@@ -31,24 +31,29 @@ body,
 }
 
 .avatar-edit-container-prof-settings {
-  @apply w-full flex flex-col px-4 gap-0.5 mb-[50px]
-    lg:flex-row lg:px-8 lg:mb-0;
+  @apply w-full flex flex-col px-4 gap-0.5 mb-[10px]
+    lg:flex-row lg:px-8 lg:mb-5;
 }
 
 .avatar-container-prof-settings {
-  @apply w-full flex flex-col items-center justify-center px-4 py-4 mt-[-80px] 
-    md:w-auto md:mt-[-100px];
+  @apply max-w-2xs flex flex-col items-start justify-center px-4 py-4 mt-[-80px] 
+    md:w-full md:mt-[-110px];
 }
 
 .avatar-dimensions {
-  border: 5px solid white;
-  @apply w-[200px] h-[200px] 
-  lg:w-[250px] lg:h-[250px] object-cover rounded-full;
+  border: 12px solid white;
+  box-shadow: 0 0 0 2px #facc15;
+  @apply w-[200px] h-[200px] lg:w-[250px] lg:h-[250px] object-cover rounded-full;
 }
 
 .edit-btn-container-prof-settings {
-  @apply w-full h-full flex justify-center items-center flex-col mt-10
-    lg:w-[300px] lg:ml-8 lg:justify-start;
+  @apply w-full h-auto flex items-start flex-col
+    lg:w-full lg:ml-5 lg:mt-3;
+}
+
+.edit-btn-prof-settings {
+  @apply w-full h-auto flex justify-center items-center flex-row
+    lg:w-full gap-5 lg:mt-5 lg:justify-center;
 }
 
 .disabled-btn {
@@ -59,24 +64,24 @@ body,
 }
 
 .edit-btn-properties {
-  @apply w-[250px] h-[40px] focus:outline-none text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-lg px-5 py-2 me-2 mb-2 dark:focus:ring-yellow-900 cursor-pointer font-[Poppins]
+  @apply w-[250px] h-[60px] focus:outline-none text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-lg px-5 py-2 me-2 mb-2 dark:focus:ring-yellow-900 cursor-pointer font-[Poppins]
     md:w-[250px]
     lg:w-[250px];
 }
 .edit-btn-properties-disabled {
-  @apply w-[250px] h-[40px] focus:outline-none text-black bg-yellow-400  focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-lg px-5 py-2 me-2 mb-2 dark:focus:ring-yellow-900 cursor-not-allowed font-[Poppins]
+  @apply w-[250px] h-[60px] focus:outline-none text-black bg-yellow-400  focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-lg px-5 py-2 me-2 mb-2 dark:focus:ring-yellow-900 cursor-not-allowed font-[Poppins]
     md:w-[250px]
     lg:w-[250px];
 }
 
 .username-properties {
-  @apply mt-4 text-base font-semibold text-center text-gray-800
+  @apply mt-8 text-base font-semibold text-center text-gray-800 font-[Poppins]
     sm:text-xl
-    md:text-2xl;
+    md:text-4xl;
 }
 
 .forms-container {
-  @apply w-full p-4 grid grid-cols-1 gap-6 items-start 
+  @apply mr-8 ml-8 mb-10 p-4 grid grid-cols-1 gap-10 items-start 
     md:grid-cols-2 
     lg:grid-cols-3;
 }
@@ -86,34 +91,40 @@ body,
 }
 
 .forms-label-properties {
-  @apply text-black font-[Poppins];
+  @apply text-black font-[Poppins] mb-1 text-xs;
 }
+
 
 .input-properties {
   border: 1px solid black;
-  @apply w-full h-[60px] pl-3 rounded-xl text-black text-[16px] bg-white font-[Poppins];
+  @apply max-w-xs h-[30px] pl-3 rounded-full text-black text-[16px] bg-white font-[Poppins];
 }
 
+/* .input-properties-disabled {
+  border: 1px solid gray;
+  @apply w-full h-[60px] pl-3 text-black text-[16px] font-[Poppins] shadow-[-2px_-2px_0px_0px_rgba(0,0,0)];
+} */
+
 .input-properties-disabled {
-  border: 1px solid black;
-  @apply w-full h-[60px] pl-3 rounded-xl text-black text-[16px] bg-gray-200 font-[Poppins] shadow-[-2px_-2px_0px_0px_rgba(0,0,0)];
+  border: 1px solid gray;
+  @apply w-full h-[70px] pl-4 text-gray-800 text-[16px] font-[Poppins];
 }
 
 .save-btn-container-profile-settings {
-  @apply w-full h-full flex justify-center items-center flex-col mt-5
+  @apply w-full h-full flex justify-center items-center flex-col mt-5 
     lg:w-[300px] lg:ml-8 lg:justify-start;
 }
 
 .cancel-btn-properties-profile-settings {
   border: 1px solid black;
-  @apply w-3/4 h-8 rounded-3xl text-black font-[Poppins] font-bold text-sm cursor-pointer mt-3
+  @apply w-3/4 h-8 rounded-3xl text-black font-[Poppins] font-bold text-sm cursor-pointer mt-3 shadow-md
     md:w-7/12
     lg:w-10/12 lg:h-1/6;
 }
 
 .save-btn-properties-profile-settings {
   border: 1px solid black;
-  @apply w-3/4 h-8 rounded-3xl text-black font-[Poppins] font-bold text-sm cursor-pointer mt-3
+  @apply w-3/4 h-8 rounded-3xl text-black font-[Poppins] font-bold text-sm cursor-pointer mt-3 shadow-md
     md:w-7/12
     lg:w-10/12 lg:h-1/6;
 }
@@ -150,7 +161,7 @@ body,
   cursor: pointer;
 }
 
-//loading
+/* loading */
 .spinner-center {
   display: flex;
   align-items: center;

@@ -168,14 +168,14 @@ export default function EditProfile() {
                 }
               />
 
-              <label className="forms-label-properties mt-2">
+              <label className="forms-label-properties mt-5">
                 Upload Image File
               </label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleFileUpload}
-                className="btn btn-warning text-black"
+                className="btn btn-warning text-black font-[Poppins] h-[30px] flex items-center justify-center rounded-full"
               />
             </div>
           </div>
@@ -278,27 +278,27 @@ export default function EditProfile() {
             </div>
           </div>
 
-          <div className="edit-btn-container-prof-settings">
+          <div className="edit-btn-prof-settings">
             <button
-              className={
+              className={`shadow-md ${
                 !hasChanges() ||
                 !editWebUser.useravatar
                   ? "edit-btn-properties-disabled"
                   : "edit-btn-properties"
-              }
+              }`}
               onClick={handleUpdateProfile}
               disabled={
                 !hasChanges() ||
                 !editWebUser.useravatar
               }
             >
-              Save Profile
+              SAVE PROFILE
             </button>
             <button
-              className="edit-btn-properties mt-1"
+              className="edit-btn-properties mt-1 shadow-md"
               onClick={handleCancelEdit}
             >
-              Cancel
+              CANCEL
             </button>
           </div>
         </div>

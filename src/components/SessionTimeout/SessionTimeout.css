@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+
 .modal-btn-group {
   display: flex;
   justify-content: center;
@@ -18,11 +20,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font: 'Poppins', sans-serif;
 }
 
 .modal-close-btn {
   background-color: #ef4444; /* red */
   color: white;
+  font: 'Poppins', sans-serif;
 }
 
 .modal-stay-btn {
