@@ -8,6 +8,8 @@ import Buttons from "../../components/buttons/Buttons";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function EditGlossary({ onClose, term, onTermUpdated }) {
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const { _id, word, meaning, tags } = term;
   const { currentWebUser } = useContext(UserLoggedInContext);
 
@@ -35,6 +37,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
 
     const originalTags = tags.map((tag) => tag.trim()).sort();
     const currentTags = editTags.map((tag) => tag.trim()).sort();
+ 
 
     if (trimmedOriginalWord !== trimmedEditedWord) {
       changes.push(`word: "${trimmedOriginalWord}" → "${trimmedEditedWord}"`);
@@ -85,7 +88,11 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
     }
   };
 
-  const handleDelete = async () => {
+  const confirmDelete = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
       await axios.put(`${API_URL}/deleteTerm/${_id}`, {
         term_id: _id,
@@ -101,9 +108,17 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
         description: `${currentWebUser.firstName} deleted the term "${word}"`,
       });
     } catch (error) {
-      console.error("Error updating term:", error);
+      console.error("Error deleting term:", error);
+    } finally {
+      setShowDeleteConfirm(false);
     }
   };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false);
+  };
+
+
 
   return (
     <>
@@ -166,12 +181,29 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
                 disabled={true}
               />
             }
+              <Buttons
+                text="Delete"
+                onClick={confirmDelete}
+                addedClassName="btn btn-error"
+              />
 
-            <Buttons
-              text="Delete"
-              onClick={() => handleDelete()}
-              addedClassName="btn btn-error"
-            />
+            {showDeleteConfirm && (
+              <div className="modal-overlay confirm-delete-popup">
+                <div className="confirm-dialog">
+                  <h2>Confirm Delete</h2>
+                  <p>Are you sure you want to delete the term "<strong>{word}</strong>"?</p>
+                  <div className="popup-buttons">
+                    <button className="btn-delete" onClick={handleConfirmDelete}>
+                      Yes, Delete
+                    </button>
+                    <button className="btn-cancel" onClick={handleCancelDelete}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
 
           {/* <div className="create-container">
