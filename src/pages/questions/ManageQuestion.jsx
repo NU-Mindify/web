@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { useContext, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import search from "../../assets/search/search.svg";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -17,7 +17,7 @@ import { Plus } from "lucide-react";
 
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import { ActiveContext } from "../../contexts/Contexts";
-
+import Buttons from "../../components/buttons/Buttons";
 
 const categoriesObj = [
   {
@@ -49,30 +49,25 @@ const categoriesObj = [
 
 export default function ManageQuestion() {
   const [showArchived, setShowArchived] = useState(false);
-  const [restore, setRestore] = useState(false)
+  const [restore, setRestore] = useState(false);
 
+  const { subSelected, setSubSelected } = useContext(ActiveContext);
 
-  const {
-      subSelected,
-      setSubSelected,
-    } = useContext(ActiveContext);
+  const [totalQuestion, setTotalQuestion] = useState([]);
 
+  useEffect(() => {
+    getTotalQuestion();
+  }, []);
 
-    const [totalQuestion, setTotalQuestion] = useState([])
-
-    useEffect(() => {
-      getTotalQuestion()
-    }, [])
-
-    const getTotalQuestion = async () => {
-      try {
-        const { data } = await axios.get(`${API_URL}/getTotalQuestions`);
-        setTotalQuestion(data);
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching total questions:", error);
-      }
-    };
+  const getTotalQuestion = async () => {
+    try {
+      const { data } = await axios.get(`${API_URL}/getTotalQuestions`);
+      setTotalQuestion(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching total questions:", error);
+    }
+  };
 
   const location = useLocation();
   useEffect(() => {
@@ -96,9 +91,7 @@ export default function ManageQuestion() {
   const getData = async () => {
     try {
       const { data } = await axios.get(
-        `${API_URL}/getQuestions?${
-          category ? `category=${category}` : ""
-        }`
+        `${API_URL}/getQuestions?${category ? `category=${category}` : ""}`
       );
       return data;
     } catch (error) {
@@ -123,31 +116,31 @@ export default function ManageQuestion() {
         categoryName: selectedCat,
       },
     });
-    
   };
-   const handleDelete = async (id) =>{
+  const handleDelete = async (id) => {
     try {
       await axios.put(`${API_URL}/deleteQuestion/${id}`, {
         question_id: id,
         is_deleted: true,
-      }); getData()
-    }catch (error) {
+      });
+      getData();
+    } catch (error) {
       console.error("Error deleting Question:", error);
     }
   };
 
-    const handleRestore = async (id) =>{
-      console.log(id)
+  const handleRestore = async (id) => {
+    console.log(id);
     try {
       await axios.put(`${API_URL}/deleteQuestion/${id}`, {
         question_id: id,
         is_deleted: false,
-      }); getData()
-    }catch (error) {
+      });
+      getData();
+    } catch (error) {
       console.error("Error restoring Question:", error);
     }
   };
-
 
   if (isPending) return <div>Loading</div>;
 
@@ -155,15 +148,10 @@ export default function ManageQuestion() {
 
   function handleBack() {
     setGotSelected(false);
-    setSubSelected("")
+    setSubSelected("");
   }
-  
 
- 
-
-
-
-
+  const [searchQuestion, setSearchQuestion] = useState("");
 
   function Category_Choices({ text, id, onClick, bgImage }) {
     return (
@@ -171,7 +159,10 @@ export default function ManageQuestion() {
       <div className="category-container" onClick={onClick} key={id}>
         <img src={bgImage} className="category-bg" alt="bgImages" />
         <h1 className="category-text">{text}</h1>
-        <p className="category-quantity">Questions: {totalQuestion.find(category => category._id === id)?.count || 0}</p>
+        <p className="category-quantity">
+          Questions:{" "}
+          {totalQuestion.find((category) => category._id === id)?.count || 0}
+        </p>
       </div>
     );
   }
@@ -226,20 +217,24 @@ export default function ManageQuestion() {
           {showArchived ? (
             <div className="question-actions">
               <button className="btn-action !bg-gray-500" disabled>
-                Edit</button>
+                Edit
+              </button>
               <button
                 onClick={() => handleRestore(data._id)}
-                className="btn-action" >
-                Restore</button>
+                className="btn-action"
+              >
+                Restore
+              </button>
             </div>
           ) : (
             <div className="question-actions">
-              <button className="btn-action">
-                Edit</button>
+              <button className="btn-action">Edit</button>
               <button
                 onClick={() => handleDelete(data._id)}
-                className="btn-action">
-                Delete</button>
+                className="btn-action"
+              >
+                Delete
+              </button>
             </div>
           )}
         </div>
@@ -254,7 +249,10 @@ export default function ManageQuestion() {
           {gotSelected ? (
             <div className="title-content">
               <div className="title-left">
-                <button className="back-button" onClick={handleBack}>
+                <button
+                  className="back-button cursor-pointer"
+                  onClick={handleBack}
+                >
                   <img src={back} alt="back arrow" className="back-icon" />
                 </button>
                 <h1 className="question-title">{selectedCat}</h1>
@@ -280,18 +278,22 @@ export default function ManageQuestion() {
                     type="text"
                     placeholder="Search questions..."
                     className="search-input-question"
+                    onChange={(e) => setSearchQuestion(e.target.value)}
                   />
                 </div>
               </div>
 
               <div className="add-ques-container flex gap-2">
-                <button
-                  className="btn flex items-center gap-2 px-4 py-2 text-sm font-medium"
+                <Buttons
+                  text={
+                    <span className="flex items-center">
+                      <Plus className="w-5 h-5 text-white mr-2" />
+                      Add Question
+                    </span>
+                  }
                   onClick={addQuestion}
-                >
-                  <Plus className="w-5 h-5  text-white" />
-                  Add Question
-                </button>
+                  addedClassName="btn btn-warning"
+                />
 
                 <div className="pt-1">
                   <ExportDropdown />
@@ -300,19 +302,24 @@ export default function ManageQuestion() {
             </div>
 
             <div className="flex flex-wrap items-center gap-4 w-full justify-start">
-
               <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
-                 <button 
+                <button
                   onClick={() => setShowArchived(false)}
-                  className={`all-archive-btn ${showArchived || "active" } w-1/2`}>
+                  className={`all-archive-btn ${
+                    showArchived || "active"
+                  } w-1/2`}
+                >
                   All Questions
                 </button>
 
-                <button 
+                <button
                   onClick={() => setShowArchived(true)}
-                  className={`all-archive-btn ${showArchived && "active" } w-1/2`}>
+                  className={`all-archive-btn ${
+                    showArchived && "active"
+                  } w-1/2`}
+                >
                   Archive
-                  </button>
+                </button>
               </div>
 
               <div className="sort-container relative">
@@ -353,18 +360,32 @@ export default function ManageQuestion() {
         <div className="allquesitons-container">
           <div className="ques-sub-container">
             <div className="allques-main-holder">
-              {questions.length === 0 ? (
+              {questions.filter(
+                (q) =>
+                  q.is_deleted === showArchived &&
+                  q.question
+                    .toLowerCase()
+                    .includes(searchQuestion.trim().toLowerCase())
+              ).length === 0 ? (
                 <div className="text-center text-gray-500 text-xl">
-                  No questions found.
+                  No matching questions found.
                 </div>
               ) : (
-                questions.filter(question => question.is_deleted === showArchived ).map((question, index) => (
-                  <QuestionCard
-                    data={question}
-                    key={question._id}
-                    index={index}
-                  />
-                ))
+                questions
+                  .filter((question) => {
+                    const matchArchived = question.is_deleted === showArchived;
+                    const matchSearch = question.question
+                      .toLowerCase()
+                      .includes(searchQuestion.trim().toLowerCase());
+                    return matchArchived && matchSearch;
+                  })
+                  .map((question, index) => (
+                    <QuestionCard
+                      data={question}
+                      key={question._id}
+                      index={index}
+                    />
+                  ))
               )}
             </div>
           </div>
@@ -381,7 +402,7 @@ export default function ManageQuestion() {
                 setCategory(elem.id);
                 setGotSelected(true);
                 setSelectedCat(elem.name);
-                setSubSelected(elem.id)
+                setSubSelected(elem.id);
               }}
             />
           ))}

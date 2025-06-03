@@ -42,6 +42,7 @@ export default function ManageStudents() {
         (a.last_name || "").localeCompare(b.last_name || "")
       );
       setStudents(sortedStudents);
+       setCardActive(null);
     } catch (error) {
       console.error("Error fetching students:", error);
     } finally {
@@ -250,7 +251,12 @@ export default function ManageStudents() {
         cardActive={cardActive}
         toggleCard={toggleCard}
         getBranchName={getBranchName}
-        cardActiveContent={(student) => <CardActiveContent student={student} />}
+        cardActiveContent={(student) => 
+          <CardActiveContent 
+            student={student} 
+            fetchUsers={fetchStudents}
+            setCardActive={setCardActive}
+          />}
       />
 
       <div className="student-footer">
@@ -290,7 +296,7 @@ export default function ManageStudents() {
   );
 }
 
-function CardActiveContent({student}) {
+function CardActiveContent({student, fetchUsers, setCardActive}) {
   const [loadingData, setLoadingData] = useState(false);
   const [competitionModeData, setCompetitionModeData] = useState([]);
   const [masteryModeData, setMasteryModeData] = useState([]);
@@ -379,8 +385,8 @@ function CardActiveContent({student}) {
         is_deleted: true,
       });
 
-      // await fetchUsers();
-      // setCardActive(null);
+      await fetchUsers();
+      setCardActive(null);
 
       // await axios.post(`${API_URL}/addLogs`, {
       //   name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
@@ -401,6 +407,8 @@ function CardActiveContent({student}) {
         user_id: student._id,
         is_deleted: false,
       });
+
+      await fetchUsers();
     } catch (error) {
       console.error("Error unarchiving user:", error);
     } finally {

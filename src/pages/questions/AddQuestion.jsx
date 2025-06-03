@@ -53,10 +53,21 @@ function AddQuestion() {
   const [question, setQuestion] = useState(getInitialQuestionState);
 
   const handleAddQuestion = () => {
-    const { question: questionText, choices, rationale, difficulty, level } = question;
+    const {
+      question: questionText,
+      choices,
+      rationale,
+      difficulty,
+      level,
+    } = question;
 
     for (const choice of choices) {
-      if (!choice.text || !choice.text.trim() || !choice.rationale || !choice.rationale.trim()) {
+      if (
+        !choice.text ||
+        !choice.text.trim() ||
+        !choice.rationale ||
+        !choice.rationale.trim()
+      ) {
         setValidationMessage("All choices must have both text and rationale.");
         setShowValidationModal(true);
         return;
@@ -101,7 +112,6 @@ function AddQuestion() {
 
     console.log("Added:", questionCopy);
   };
-
 
   const addToDB = async () => {
     setIsFormDisabled(true);
@@ -152,7 +162,27 @@ function AddQuestion() {
     setQuestion({ ...question, answer: value, choices: updatedChoices });
   };
 
-  const [dropdownActive, setDropdownActive] = useState(false);
+ 
+
+
+  const [dropdownStates, setDropdownStates] = useState({});
+
+   const onAnswerChangeInList = (e, qIdx) => {
+  const value = e.target.value.toLowerCase();
+  const updatedQuestions = [...allQuestions];
+
+  const updatedChoices = updatedQuestions[qIdx].choices.map((choice) => ({
+    ...choice,
+    isCorrect: choice.letter === value,
+  }));
+
+  updatedQuestions[qIdx].choices = updatedChoices;
+  updatedQuestions[qIdx].answer = value;
+
+  setAllQuestions(updatedQuestions);
+};
+
+
 
   return (
     <div className="add-ques-main-container">
@@ -167,9 +197,16 @@ function AddQuestion() {
         <div className="add-ques-header">
           <div className="add-ques-sub-header">
             <h1>Add Question</h1>
-            <div>
-              <img src={closebtn} alt="close" className="w-[50px] h-[50px] cursor-pointer" />
-            </div>
+            <button
+              className="w-[50px] h-[50px]"
+              onClick={() => {
+                nav("/question", {
+                  state: { category, categoryName, catSelected: true },
+                });
+              }}
+            >
+              <img src={closebtn} alt="close" />
+            </button>
           </div>
 
           <h2>Create Question for {categoryName}</h2>
@@ -275,7 +312,6 @@ function AddQuestion() {
           })}
         </div>
 
-
         <div className="overall-rationale-container">
           <h3 className="w-full text-black">Rationale:</h3>
           <textarea
@@ -311,18 +347,23 @@ function AddQuestion() {
                 </h1>
                 <button
                   onClick={() => {
-                    setDropdownActive(!dropdownActive);
+                    setDropdownStates((prev) => ({
+                      ...prev,
+                      [idx]: !prev[idx],
+                    }));
                   }}
                 >
                   <img
                     src={chevronIcon}
                     alt="chevron"
-                    className={`${dropdownActive ? `rotate-180` : `rotate-0`}`}
+                    className={`${
+                      dropdownStates[idx] ? `rotate-180` : `rotate-0`
+                    }`}
                   />
                 </button>
               </div>
 
-              {dropdownActive && (
+              {dropdownStates[idx] && (
                 <div className="dropdown-active-container">
                   <div className="level-diff-container">
                     <div className="grid grid-cols-2 text-center">
@@ -338,12 +379,16 @@ function AddQuestion() {
                   <div className="choices-container">
                     {question.choices.map((choice) => (
                       <div className="per-choice-container" key={choice.letter}>
-                        <label className={`check-circle-container ${onEdit ? `cursor-pointer` : `!cursor-default`}`}>
+                        <label
+                          className={`check-circle-container ${
+                            onEdit ? `cursor-pointer` : `!cursor-default`
+                          }`}
+                        >
                           <input
                             type="checkbox"
                             name="correctLetter"
                             checked={choice.isCorrect}
-                            onChange={(e) => onAnswerChange(e)}
+                            onChange={(e) => onAnswerChangeInList(e, idx)}
                             value={choice.letter}
                           />
                           <CheckCircle2Icon className="swap-on h-8 w-8 text-green-600" />
@@ -373,34 +418,31 @@ function AddQuestion() {
                     ))}
                   </div>
 
-
                   <div className="question-btn-container">
-                    
-                    {onEdit ? 
-                      <Buttons 
+                    {onEdit ? (
+                      <Buttons
                         text="Save"
                         onClick={() => {
-                          setOnEdit(!onEdit)
-                          alert("save")
+                          setOnEdit(!onEdit);
+                          alert("save");
                         }}
                         addedClassName="btn btn-warning"
                       />
-                    : 
-                      <Buttons 
+                    ) : (
+                      <Buttons
                         text="Edit"
                         onClick={() => {
-                          setOnEdit(!onEdit)
-                          alert("edit")
+                          setOnEdit(!onEdit);
+                          alert("edit");
                         }}
                         addedClassName="btn btn-warning"
                       />
-                    }
-                    
+                    )}
 
-                    <Buttons 
+                    <Buttons
                       text="Remove"
                       onClick={() => {
-                        alert("remove")
+                        alert("remove");
                       }}
                       addedClassName="btn btn-error"
                     />
@@ -411,7 +453,7 @@ function AddQuestion() {
           ))}
         </div>
         <div className="w-full flex justify-center py-4">
-          <Buttons 
+          <Buttons
             text="Save"
             onClick={addToDB}
             addedClassName="btn btn-success"
