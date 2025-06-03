@@ -392,7 +392,7 @@ function CardActiveContent({ user, fetchUsers, setCardActive }) {
 
       await axios.post(`${API_URL}/addLogs`, {
         name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-        branch: currentUserBranch,
+        branch: currentWebUser.branch,
         action: "Delete a User",
         description: `${currentWebUser.firstName} deleted ${user.firstName} ${user.lastName}'s account.`,
       });

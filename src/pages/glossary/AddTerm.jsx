@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "../../Constants";
 import "../../css/glossary/addGlossary.css";
@@ -7,6 +7,7 @@ import closebtn from "../../assets/glossary/close-btn.svg";
 import deletebtn from "../../assets/glossary/delete-icon.svg";
 import Buttons from "../../components/buttons/Buttons";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
 
 export default function AddTerm() {
   const [newTerm, setNewTerm] = useState([
@@ -14,6 +15,7 @@ export default function AddTerm() {
   ]);
   const [tagInput, setTagInput] = useState("");
   const navigate = useNavigate();
+  const { currentWebUser } = useContext(UserLoggedInContext);
 
   const [termToDeleteIndex, setTermToDeleteIndex] = useState(null);
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
@@ -80,6 +82,18 @@ export default function AddTerm() {
         setValidationMessage("Added successfully!");
         setShowValidationModal(true);
         setNewTerm([{ word: "", meaning: "", tags: [], is_deleted: false }]);
+
+        // Log each added term
+        Promise.all(
+          newTerm.map((term) =>
+            axios.post(`${API_URL}/addLogs`, {
+              name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+              branch: currentWebUser.branch,
+              action: "Add Term",
+              description: `${currentWebUser.firstName} added a term "${term.word}" with meaning "${term.meaning}".`,
+            })
+          )
+        );
       })
       .catch((error) => {
         console.error("Error adding term:", error);

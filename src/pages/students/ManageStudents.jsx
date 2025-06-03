@@ -388,12 +388,12 @@ function CardActiveContent({student, fetchUsers, setCardActive}) {
       await fetchUsers();
       setCardActive(null);
 
-      // await axios.post(`${API_URL}/addLogs`, {
-      //   name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-      //   branch: currentWebUser.branch,
-      //   action: "Unarchive a User",
-      //   description: `${currentWebUser.firstName} unarchived ${user.firstName} ${user.lastName}'s account.`,
-      // });
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Delete a Student",
+        description: `${currentWebUser.firstName} deleted ${student.first_name} ${student.last_name}'s account.`,
+      });
     } catch (error) {
       console.error("Error deleting user:", error);
     } finally {
@@ -406,6 +406,13 @@ function CardActiveContent({student, fetchUsers, setCardActive}) {
       await axios.put(`${API_URL}/deleteUser/${student._id}`, {
         user_id: student._id,
         is_deleted: false,
+      });
+
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Unarchive a Student",
+        description: `${currentWebUser.firstName} unarchived ${student.first_name} ${student.last_name}'s account.`,
       });
 
       await fetchUsers();

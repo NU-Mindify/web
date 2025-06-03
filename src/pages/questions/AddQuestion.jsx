@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import "../../css/questions/addQuestion.css";
 import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
@@ -8,10 +8,12 @@ import ValidationModal from "../../components/ValidationModal/ValidationModal.js
 import Buttons from "../../components/buttons/Buttons.jsx";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import closebtn from "../../assets/glossary/close-btn.svg";
+import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
 
 function AddQuestion() {
   const nav = useNavigate();
   const location = useLocation();
+  const { currentWebUser } = useContext(UserLoggedInContext);
 
   const [allQuestions, setAllQuestions] = useState([]);
   const [isFormDisabled, setIsFormDisabled] = useState(false);
@@ -129,7 +131,17 @@ function AddQuestion() {
       console.log(data);
       setValidationMessage("Added Successfully");
       setShowValidationModal(true);
+      alert("Questions Added Successfully");
       nav(-1);
+
+      for (const q of allQuestions) {
+        await axios.post(`${API_URL}/addLogs`, {
+          name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+          branch: currentWebUser.branch,
+          action: "Add Question",
+          description: `${currentWebUser.firstName} Added question "${q.question}" to category "${q.category}"`,
+        });
+      };
     } catch (error) {
       console.error(error);
       setValidationMessage(
@@ -162,27 +174,28 @@ function AddQuestion() {
     setQuestion({ ...question, answer: value, choices: updatedChoices });
   };
 
- 
-
-
   const [dropdownStates, setDropdownStates] = useState({});
 
-   const onAnswerChangeInList = (e, qIdx) => {
-  const value = e.target.value.toLowerCase();
-  const updatedQuestions = [...allQuestions];
+  const onAnswerChangeInList = (e, qIdx) => {
+    const value = e.target.value.toLowerCase();
+    const updatedQuestions = [...allQuestions];
 
-  const updatedChoices = updatedQuestions[qIdx].choices.map((choice) => ({
-    ...choice,
-    isCorrect: choice.letter === value,
-  }));
+    const updatedChoices = updatedQuestions[qIdx].choices.map((choice) => ({
+      ...choice,
+      isCorrect: choice.letter === value,
+    }));
 
-  updatedQuestions[qIdx].choices = updatedChoices;
-  updatedQuestions[qIdx].answer = value;
+    updatedQuestions[qIdx].choices = updatedChoices;
+    updatedQuestions[qIdx].answer = value;
 
-  setAllQuestions(updatedQuestions);
-};
+    setAllQuestions(updatedQuestions);
+  };
 
-
+  const handleRemoveQuestion = (index) => {
+    const updatedQuestions = [...allQuestions];
+    updatedQuestions.splice(index, 1);
+    setAllQuestions(updatedQuestions);
+  };
 
   return (
     <div className="add-ques-main-container">
@@ -424,7 +437,6 @@ function AddQuestion() {
                         text="Save"
                         onClick={() => {
                           setOnEdit(!onEdit);
-                          alert("save");
                         }}
                         addedClassName="btn btn-warning"
                       />
@@ -433,7 +445,6 @@ function AddQuestion() {
                         text="Edit"
                         onClick={() => {
                           setOnEdit(!onEdit);
-                          alert("edit");
                         }}
                         addedClassName="btn btn-warning"
                       />
@@ -442,7 +453,13 @@ function AddQuestion() {
                     <Buttons
                       text="Remove"
                       onClick={() => {
-                        alert("remove");
+                        if (
+                          confirm(
+                            "Are you sure you want to remove this question?"
+                          )
+                        ) {
+                          handleRemoveQuestion(idx);
+                        }
                       }}
                       addedClassName="btn btn-error"
                     />
