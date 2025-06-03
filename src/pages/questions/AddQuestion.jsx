@@ -10,6 +10,13 @@ import chevronIcon from "../../assets/forAll/chevron.svg";
 import closebtn from "../../assets/glossary/close-btn.svg";
 import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
 
+import add from "../../assets/questions/addQuestionbtn.svg";
+import edit from "../../assets/questions/editQuestionbtn.svg";
+import saveBTN from "../../assets/questions/savebtn.svg";
+import remove from "../../assets/questions/removeQuestionbtn.svg";
+import save from "../../assets/questions/saveQuestionbtn.svg";
+
+
 function AddQuestion() {
   const nav = useNavigate();
   const location = useLocation();
@@ -222,11 +229,11 @@ function AddQuestion() {
             </button>
           </div>
 
-          <h2>Create Question for {categoryName}</h2>
+          <h3>Create Question for {categoryName}</h3>
         </div>
 
         <div className="ques-container">
-          <h3 className="w-full">Question</h3>
+          <h3 className="w-full">Question<span>*</span></h3>
           <textarea
             id="Question"
             placeholder="Type here..."
@@ -240,7 +247,7 @@ function AddQuestion() {
 
         <div className="select-container">
           <div>
-            <h3>Level:</h3>
+            <h3>Level:<span>*</span></h3>
             <select
               id="levelSelect"
               disabled={isFormDisabled}
@@ -258,7 +265,7 @@ function AddQuestion() {
           </div>
 
           <div>
-            <h3>Difficulty:</h3>
+            <h3>Difficulty:<span>*</span></h3>
             <select
               id="difficultySelect"
               disabled={isFormDisabled}
@@ -277,7 +284,7 @@ function AddQuestion() {
         </div>
 
         <div className="option-container">
-          <h3 className="text-lg font-semibold w-full">Options</h3>
+          <h3 className="text-lg font-semibold w-full">Options<span>*</span></h3>
 
           {question.choices.map((choice, idx) => {
             const isCorrect = question.answer === choice.letter;
@@ -326,7 +333,7 @@ function AddQuestion() {
         </div>
 
         <div className="overall-rationale-container">
-          <h3 className="w-full text-black">Rationale:</h3>
+          <h3 className="w-full text-black">Rationale:<span>*</span></h3>
           <textarea
             id="Rationale"
             placeholder="Type the rationale here..."
@@ -339,11 +346,17 @@ function AddQuestion() {
         </div>
 
         <div className="add-btn-container">
-          <Buttons
+          {/* <Buttons
             text="Add Question"
             onClick={handleAddQuestion}
             addedClassName="btn btn-success"
-          />
+          /> */}
+          <button
+            className="add-btn-container"
+            onClick={handleAddQuestion}
+          >
+            <img src={add} className="add-btn" alt="add-btn-icon"/>
+          </button>
         </div>
       </div>
 
@@ -433,25 +446,40 @@ function AddQuestion() {
 
                   <div className="question-btn-container">
                     {onEdit ? (
-                      <Buttons
-                        text="Save"
-                        onClick={() => {
-                          setOnEdit(!onEdit);
-                        }}
-                        addedClassName="btn btn-warning"
-                      />
-                    ) : (
-                      <Buttons
-                        text="Edit"
-                        onClick={() => {
-                          setOnEdit(!onEdit);
-                        }}
-                        addedClassName="btn btn-warning"
-                      />
-                    )}
+                      // <Buttons
+                      //   text="Save"
+                      //   onClick={() => {
+                      //     setOnEdit(!onEdit);
+                      //   }}
+                      //   addedClassName="btn btn-warning"
+                      // />
+                    <button
+                      className=""
+                      onClick={() => setOnEdit(!onEdit)}
+                    >
+                      <img src={saveBTN} className="" alt="save-btn-icon" />
+                    </button>
 
-                    <Buttons
-                      text="Remove"
+                    ) : (
+                      // <Buttons
+                      //   text="Edit"
+                      //   onClick={() => {
+                      //     setOnEdit(!onEdit);
+                      //   }}
+                      //   addedClassName="btn btn-warning"
+                        
+                      // />
+
+                    <button
+                      className=""
+                      onClick={() => setOnEdit(!onEdit)}
+                    >
+                      <img src={edit} className="" alt="edit-btn-icon" />
+                    </button>
+
+                    )}
+                    <button
+                      className=""                       
                       onClick={() => {
                         if (
                           confirm(
@@ -461,8 +489,10 @@ function AddQuestion() {
                           handleRemoveQuestion(idx);
                         }
                       }}
-                      addedClassName="btn btn-error"
-                    />
+                        addedClassName="btn btn-error"
+                      >
+                        <img src={remove} className="remove-btn" alt="remove-btn-icon"/>
+                    </button>
                   </div>
                 </div>
               )}
@@ -470,11 +500,13 @@ function AddQuestion() {
           ))}
         </div>
         <div className="w-full flex justify-center py-4">
-          <Buttons
-            text="Save"
+          <button
+            className="success-btn"         
             onClick={addToDB}
             addedClassName="btn btn-success"
-          />
+          >
+          <img src={save} className="save-ques-btn" alt="save-btn-icon"/>
+          </button>
         </div>
 
         {showValidationModal && (
