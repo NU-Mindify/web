@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import "../../css/questions/addQuestion.css";
 import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
 import { CheckCircle2Icon, XCircle } from "lucide-react";
 import { API_URL } from "../../Constants";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+import Buttons from "../../components/buttons/Buttons.jsx";
+import chevronIcon from "../../assets/forAll/chevron.svg";
+import closebtn from "../../assets/glossary/close-btn.svg";
 
 function AddQuestion() {
   const nav = useNavigate();
@@ -105,189 +108,269 @@ function AddQuestion() {
     setQuestion({ ...question, answer: value, choices: updatedChoices });
   };
 
+  const [dropdownActive, setDropdownActive] = useState(false);
+
+  const [onEdit, setOnEdit] = useState(false)
   return (
     <div className="add-ques-main-container">
-      <input
-        type="hidden"
-        id="category"
-        name="category"
-        value={question.category}
-      />
-
-      <div className="add-ques-header">
-        <div className="add-ques-sub-header">
-          <h1 className="text-2xl font-bold font-[poppins] text-black">
-            Add Question
-          </h1>
-          <div className="w-[50px] h-[50px] bg-red-600"></div>
-        </div>
-
-        <h2 className="text-black">Create Question for {categoryName}</h2>
-      </div>
-
-      <div className="ques-container">
-        <h1 className="w-full text-black">
-          Question
-        </h1>
-        <textarea
-          id="Question"
-          placeholder="Type here..."
-          disabled={isFormDisabled}
-          value={question.question}
-          onChange={(e) =>
-            setQuestion({ ...question, question: e.target.value })
-          }
-        ></textarea>
-      </div>
-
-      <div className="select-container">
-        <div>
-          <h1 className="text-black">
-            Level:
-          </h1>
-          <select
-            id="levelSelect"
-            disabled={isFormDisabled}
-            value={question.level}
-            onChange={(e) =>
-              setQuestion({ ...question, level: parseInt(e.target.value) })
-            }
-          >
-            {[...Array(10)].map((_, i) => (
-              <option key={i + 1} value={i + 1}>
-                {i + 1}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <h1 className="text-black">
-            Difficulty:
-          </h1>
-          <select
-            id="difficultySelect"
-            disabled={isFormDisabled}
-            value={question.difficulty}
-            onChange={(e) =>
-              setQuestion({ ...question, difficulty: e.target.value })
-            }
-          >
-            {["easy", "average", "difficult"].map((val) => (
-              <option key={val} value={val}>
-                {val.charAt(0).toUpperCase() + val.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="option-container">
-        <h1 className="w-full text-black">
-          Options:
-        </h1>
-        {question.choices.map((choice, idx) => (
-          <div className="w-[80%] flex flex-row my-2" key={choice.letter}>
-            <label className="!swap swap-rotate !w-[15%] flex justify-center items-center">
-              <input
-                type="checkbox"
-                name="correctLetter"
-                className="my-auto me-2 h-[70px]"
-                checked={question.answer === choice.letter}
-                onChange={(e) => onAnswerChange(e)}
-                value={choice.letter}
-              />
-              <CheckCircle2Icon className="swap-on h-8 w-8" />
-              <XCircle className="swap-off h-8 w-8" />
-            </label>
-            <div
-              className={`${
-                question.answer === choice.letter
-                  ? "bg-green-500"
-                  : "bg-red-300"
-              } border border-black/20 rounded px-4 rounded-e-none border-e-0 h-full flex items-center`}
-            >
-              {choice.letter.toUpperCase()}
-            </div>
-            <div className="w-full flex flex-col">
-              <textarea
-                className="w-full h-[70px] text-sm bg-white border border-black text-black"
-                required
-                disabled={isFormDisabled}
-                value={choice.text}
-                onChange={(e) => onChoiceChange(e, idx)}
-              ></textarea>
-              <textarea
-                className="w-full h-[70px] text-sm bg-white border border-black text-black"
-                placeholder="Enter Rationale"
-                value={choice.rationale}
-                onChange={(e) => onChoiceChangeRationale(e, idx)}
-              ></textarea>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="w-full flex flex-col justify-center items-center bg-blue-500">
-        <label htmlFor="Rationale" className="w-full text-black">
-          Rationale:
-        </label>
-        <textarea
-          id="Rationale"
-          className="w-11/12 text-black h-[100px] bg-white"
-          placeholder="Type the rationale here..."
-          disabled={isFormDisabled}
-          value={question.rationale}
-          onChange={(e) =>
-            setQuestion({ ...question, rationale: e.target.value })
-          }
-        ></textarea>
-      </div>
-
-      <div className="w-full bg-violet-400 flex justify-center items-center">
-        <button
-          className="w-[200px] h-[50px] btn btn-success"
-          onClick={handleAddQuestion}
-        >
-          Add Question
-        </button>
-      </div>
-
-      <div className="flex gap-2 p-4">
-        <button
-          className="btn btn-neutral grow bg-[#FFC300] text-black border-0"
-          onClick={addToDB}
-        >
-          Save
-        </button>
-
-        <button
-          className="btn btn-neutral btn-outline grow"
-          onClick={() => {
-            nav("/question", {
-              state: { category, categoryName, catSelected: true },
-            });
-          }}
-        >
-          Back
-        </button>
-      </div>
-
-      <div className="w-full bg-red-300 p-4">
-        {allQuestions.map((q, idx) => (
-          <div key={idx} className="mb-2">
-            <h1 className="font-bold">{q.question}</h1>
-            <h2>{q.category}</h2>
-          </div>
-        ))}
-      </div>
-
-      {showValidationModal && (
-        <ValidationModal
-          message={validationMessage}
-          onClose={() => setShowValidationModal(false)}
+      <div className="inputs-question-container">
+        <input
+          type="hidden"
+          id="category"
+          name="category"
+          value={question.category}
         />
-      )}
+
+        <div className="add-ques-header">
+          <div className="add-ques-sub-header">
+            <h1>Add Question</h1>
+            <div>
+              <img src={closebtn} alt="close" className="w-[50px] h-[50px] cursor-pointer" />
+            </div>
+          </div>
+
+          <h2>Create Question for {categoryName}</h2>
+        </div>
+
+        <div className="ques-container">
+          <h3 className="w-full">Question</h3>
+          <textarea
+            id="Question"
+            placeholder="Type here..."
+            disabled={isFormDisabled}
+            value={question.question}
+            onChange={(e) =>
+              setQuestion({ ...question, question: e.target.value })
+            }
+          ></textarea>
+        </div>
+
+        <div className="select-container">
+          <div>
+            <h3>Level:</h3>
+            <select
+              id="levelSelect"
+              disabled={isFormDisabled}
+              value={question.level}
+              onChange={(e) =>
+                setQuestion({ ...question, level: parseInt(e.target.value) })
+              }
+            >
+              {[...Array(10)].map((_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {i + 1}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <h3>Difficulty:</h3>
+            <select
+              id="difficultySelect"
+              disabled={isFormDisabled}
+              value={question.difficulty}
+              onChange={(e) =>
+                setQuestion({ ...question, difficulty: e.target.value })
+              }
+            >
+              {["easy", "average", "difficult"].map((val) => (
+                <option key={val} value={val}>
+                  {val.charAt(0).toUpperCase() + val.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="option-container">
+          <h3 className="w-full">Options:</h3>
+          {question.choices.map((choice, idx) => (
+            <div className="per-choice-container" key={choice.letter}>
+              <label className="check-circle-container">
+                <input
+                  type="checkbox"
+                  name="correctLetter"
+                  checked={question.answer === choice.letter}
+                  onChange={(e) => onAnswerChange(e)}
+                  value={choice.letter}
+                />
+                <CheckCircle2Icon className="swap-on h-8 w-8 text-green-600" />
+                <XCircle className="swap-off h-8 w-8 text-red-500" />
+              </label>
+              <div className={`letter-container`}>
+                <h4>{choice.letter.toUpperCase()}.</h4>
+              </div>
+              <div className="textarea-container">
+                <textarea
+                  required
+                  placeholder="Enter Answer"
+                  disabled={isFormDisabled}
+                  value={choice.text}
+                  onChange={(e) => onChoiceChange(e, idx)}
+                ></textarea>
+                <textarea
+                  required
+                  disabled={isFormDisabled}
+                  placeholder="Enter Rationale"
+                  value={choice.rationale}
+                  onChange={(e) => onChoiceChangeRationale(e, idx)}
+                  className="border-b border-black"
+                ></textarea>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="overall-rationale-container">
+          <h3 className="w-full text-black">Rationale:</h3>
+          <textarea
+            id="Rationale"
+            placeholder="Type the rationale here..."
+            disabled={isFormDisabled}
+            value={question.rationale}
+            onChange={(e) =>
+              setQuestion({ ...question, rationale: e.target.value })
+            }
+          ></textarea>
+        </div>
+
+        <div className="add-btn-container">
+          <Buttons
+            text="Add Question"
+            onClick={handleAddQuestion}
+            addedClassName="btn btn-success"
+          />
+        </div>
+      </div>
+
+      <div className="w-full bg-white rounded-2xl mt-10 px-10 py-5">
+        <div className="add-ques-sub-header px-4">
+          <h1 className="mb-4">Questions</h1>
+        </div>
+        <div className="all-questions-container">
+          {allQuestions.map((question, idx) => (
+            <div key={idx} className="per-question-container">
+              <div className="quesetion-chev-holder">
+                <h1 className="font-bold">
+                  {idx + 1}. {question.question}
+                </h1>
+                <button
+                  onClick={() => {
+                    setDropdownActive(!dropdownActive);
+                  }}
+                >
+                  <img
+                    src={chevronIcon}
+                    alt="chevron"
+                    className={`${dropdownActive ? `rotate-180` : `rotate-0`}`}
+                  />
+                </button>
+              </div>
+
+              {dropdownActive && (
+                <div className="dropdown-active-container">
+                  <div className="level-diff-container">
+                    <div className="grid grid-cols-2 text-center">
+                      <h1>Level</h1>
+                      <h1>Difficulty</h1>
+                    </div>
+                    <div className="grid grid-cols-2 text-center border border-black h-6/12 mt-2 rounded-xl place-items-center">
+                      <h1>{question.level}</h1>
+                      <h1>{question.difficulty}</h1>
+                    </div>
+                  </div>
+
+                  <div className="choices-container">
+                    {question.choices.map((choice) => (
+                      <div className="per-choice-container" key={choice.letter}>
+                        <label className={`check-circle-container ${onEdit ? `cursor-pointer` : `!cursor-default`}`}>
+                          <input
+                            type="checkbox"
+                            name="correctLetter"
+                            checked={choice.isCorrect}
+                            onChange={(e) => onAnswerChange(e)}
+                            value={choice.letter}
+                          />
+                          <CheckCircle2Icon className="swap-on h-8 w-8 text-green-600" />
+                          <XCircle className="swap-off h-8 w-8 text-red-500" />
+                        </label>
+                        <div className={`letter-container`}>
+                          <h4>{choice.letter.toUpperCase()}.</h4>
+                        </div>
+                        <div className="textarea-container">
+                          <textarea
+                            required
+                            placeholder="Enter Answer"
+                            disabled={!onEdit}
+                            value={choice.text}
+                            onChange={(e) => onChoiceChange(e, idx)}
+                          ></textarea>
+                          <textarea
+                            required
+                            disabled={!onEdit}
+                            placeholder="Enter Rationale"
+                            value={choice.rationale}
+                            onChange={(e) => onChoiceChangeRationale(e, idx)}
+                            className="border-b border-black"
+                          ></textarea>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+
+                  <div className="question-btn-container">
+                    
+                    {onEdit ? 
+                      <Buttons 
+                        text="Save"
+                        onClick={() => {
+                          setOnEdit(!onEdit)
+                          alert("save")
+                        }}
+                        addedClassName="btn btn-success"
+                      />
+                    : 
+                      <Buttons 
+                        text="Edit"
+                        onClick={() => {
+                          setOnEdit(!onEdit)
+                          alert("edit")
+                        }}
+                        addedClassName="btn btn-warning"
+                      />
+                    }
+                    
+
+                    <Buttons 
+                      text="Remove"
+                      onClick={() => {
+                        alert("remove")
+                      }}
+                      addedClassName="btn btn-error"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="w-full bg-amber-500 flex justify-center py-4">
+          <Buttons 
+            text="Save"
+            onClick={addToDB}
+            addedClassName="btn btn-success"
+          />
+        </div>
+
+        {showValidationModal && (
+          <ValidationModal
+            message={validationMessage}
+            onClose={() => setShowValidationModal(false)}
+          />
+        )}
+      </div>
     </div>
   );
 }

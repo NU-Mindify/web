@@ -3,7 +3,7 @@
 
 
 .add-ques-main-container{
-  @apply w-full h-full overflow-y-auto rounded-xl bg-white flex flex-col items-center px-10;
+  @apply w-full h-full overflow-y-auto rounded-xl bg-transparent flex flex-col items-center;
   scrollbar-width: thin;
   scrollbar-color: black transparent;
 }
@@ -21,11 +21,22 @@
   background: black;
 }
 
+.add-ques-main-container h3{
+    @apply font-[Poppins] text-black font-bold text-[20px]; 
+}
+.add-ques-main-container h4{
+    @apply font-[Poppins] text-black font-bold text-[18px]; 
+}
 
+
+
+.inputs-question-container{
+    @apply w-full bg-white rounded-2xl px-10;
+}
 
 
 .add-ques-header{
-    @apply w-full h-[150px] bg-green-400 px-5;
+    @apply w-full h-[150px] px-5 mb-3;
 }
 
 .add-ques-sub-header{
@@ -41,7 +52,7 @@
 }
 
 .ques-container{
-    @apply w-full flex flex-col items-center px-5 bg-green-400;
+    @apply w-full flex flex-col items-center px-5 mb-3;
 }
 
 .ques-container h1{
@@ -54,25 +65,105 @@
 
 
 .select-container{
-    @apply w-full h-[150px] bg-green-400 flex gap-8 px-5 items-center;
+    @apply w-full h-[150px] flex gap-8 px-5 items-center mb-3;
 }
 
 .select-container div{
     @apply flex flex-col;
 }
 
-.select-container div h1{
-    @apply font-[Poppins] text-black font-bold text-[20px]; 
-}
 
 .select-container div select{
     @apply mt-2 text-[18px] w-[250px] h-[60px] bg-white;
 }
 
+
+
 .option-container{
-    @apply h-auto w-full bg-gray-200 flex flex-col items-center rounded-2xl p-5;
+    @apply h-auto w-full bg-gray-200 flex flex-col items-center rounded-2xl p-5 mb-3;
 }
 
 .option-container h1{
     @apply font-[Poppins] text-black font-bold text-[20px];
+}
+
+
+.per-choice-container{
+    @apply w-[90%] flex flex-row my-2 justify-center;
+}
+
+
+.check-circle-container{
+    @apply !swap swap-rotate flex justify-center items-center;
+}
+
+.letter-container{
+    @apply  rounded px-3 rounded-e-none border-e-0 flex items-center h-[40px];
+}
+
+.textarea-container{
+    @apply flex flex-col w-[95%];
+}
+
+.textarea-container textarea {
+  @apply w-full h-[40px] text-sm bg-white text-black focus:outline-none focus:ring-0;
+}
+
+
+
+.overall-rationale-container{
+    @apply w-full flex flex-col justify-center items-center;
+}
+
+.overall-rationale-container textarea{
+    @apply mt-2 w-11/12 h-[80px] bg-white text-black border border-black text-[18px] px-1;
+}
+
+
+
+
+
+.add-btn-container{
+    @apply w-full flex justify-center items-center py-5;
+}
+
+
+
+.all-questions-container{
+    @apply w-full bg-red-300 p-4 ;
+}
+
+
+.per-question-container{
+    @apply w-full mb-2 bg-white border border-black rounded-xl px-8 py-4 ;
+}
+
+
+.quesetion-chev-holder{
+    @apply w-full flex flex-row justify-between;
+}
+.quesetion-chev-holder h1{
+    @apply text-black;
+}
+
+.quesetion-chev-holder button img{
+    @apply w-[20px] h-[20px] transform transition-transform duration-300;
+}
+
+
+.dropdown-active-container{
+    @apply w-full flex flex-col items-center pt-4 text-black;
+}
+
+
+.level-diff-container{
+    @apply w-3/12 h-[100px] mb-4;
+}
+
+.choices-container{
+    @apply w-full flex flex-col items-center py-3;
+}
+
+.question-btn-container{
+    @apply w-full h-[50px] flex flex-row gap-5 items-center justify-center;
 }
