@@ -19,7 +19,6 @@ export default function ShowMoreDetails() {
     branches.find((b) => b.id === location.state?.studentBranch)?.name ||
     "Unknown Branch";
 
-
   const getCompetitionHighScores = () => {
     const grouped = {};
     competitionData.forEach((attempt) => {
@@ -224,8 +223,8 @@ export default function ShowMoreDetails() {
                           );
                         })}
                       </div>
-                      <div className="w-full h-autoflex justify-center items-center">
-                        <div className="per-level-stats-container border-1 border-black p-2 rounded-xl">
+                      <div className="w-full h-auto flex justify-center items-center mt-2">
+                        <div className="per-level-stats-container border-1 border-black p-2 rounded-xl bg-red-300">
                           <table className="w-full text-center text-black">
                             <tr>
                               <td></td>
@@ -257,6 +256,46 @@ export default function ShowMoreDetails() {
               ))}
             </tr>
           </table>
+
+          <div className="w-full my-5">
+            <h1 className="text-2xl font-bold text-black mt-5">Mastery Mode</h1>
+            <table className="w-full mt-2">
+              <tr className="">
+                {categories.map((category) => {
+                  const masteryAttempt = highestMasteryScores[category.id];
+                  const percentage = masteryAttempt?.percentage ?? 0;
+                  const total = masteryAttempt?.total_items ?? 0;
+                  const correct = masteryAttempt?.correct ?? 0;
+
+                  let color = "bg-white";
+                  if (percentage === 100) {
+                    color = "bg-green-500";
+                  } else if (percentage >= 80) {
+                    color = "bg-orange-300";
+                  } else if (percentage > 0) {
+                    color = "bg-gray-500 text-white";
+                  }
+
+                  return (
+                    <td key={category.id}>
+                      <h1 className="text-black font-bold">{category.name}</h1>
+                      <div className="w-full flex items-center justify-center">
+                        <div className="w-11/12 h-5 bg-gray-200 rounded-md overflow-hidden border border-black">
+                          <div
+                            className={`h-full ${color} text-sm text-black text-center`}
+                            style={{ width: `${percentage}%` }}
+                            title={`Score: ${correct}/${total} (${percentage}%)`}
+                          >
+                            {percentage > 0 ? `${percentage}%` : ""}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  );
+                })}
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     </>

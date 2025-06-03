@@ -3,6 +3,7 @@
 @plugin "daisyui";
 
 
+
 .more-details-container {
   @apply font-[Poppins] w-full h-full bg-white overflow-hidden overflow-y-auto p-2 pb-4;
   scrollbar-width: thin;

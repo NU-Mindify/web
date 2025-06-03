@@ -95,20 +95,23 @@ body,
 }
 
 
-.input-properties {
+/* .input-properties {
   border: 1px solid black;
   @apply max-w-xs h-[30px] pl-3 rounded-full text-black text-[16px] bg-white font-[Poppins];
-}
-
-/* .input-properties-disabled {
-  border: 1px solid gray;
-  @apply w-full h-[60px] pl-3 text-black text-[16px] font-[Poppins] shadow-[-2px_-2px_0px_0px_rgba(0,0,0)];
 } */
 
 .input-properties-disabled {
+  background-color: white !important;
+  border: 2px solid black !important;
+  box-shadow: -2px -2px 0px 0px rgba(0, 0, 0, 1);
+  @apply w-full h-[70px] pl-4 text-gray-800 text-[16px] font-[Poppins] rounded-xl cursor-not-allowed;
+}
+
+
+/* .input-properties-disabled {
   border: 1px solid gray;
   @apply w-full h-[70px] pl-4 text-gray-800 text-[16px] font-[Poppins];
-}
+} */
 
 .save-btn-container-profile-settings {
   @apply w-full h-full flex justify-center items-center flex-col mt-5 
