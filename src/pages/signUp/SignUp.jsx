@@ -157,172 +157,181 @@ export default function SignUp() {
       />
 
       {/* Left: Form section */}
-      <div className="sign-up-form-side">
+      <div className="form-container">
+        
+        <div className="form-fields-wrapper">
+          <div className="form-welcome-text">
+            <h1>WELCOME!</h1>
+            <p>Create your account.</p>
+          </div>
+    
+          {/* Left Column */}
+          <div className="form-column">
+            <div className="form-group">
+              <p className="label">First Name<span>*</span></p>
+              <input
+                type="text"
+                placeholder="Enter your first name"
+                value={newWebUser.firstName}
+                onChange={(e) =>
+                  setNewWebUser({ ...newWebUser, firstName: e.target.value })
+                }
+              />
+            </div>
 
-        <div className="form-welcome-text">
-          <h1>WELCOME!</h1>
-          <p>Create your account.</p>
-        </div>
+            <div className="form-group">
+              <p className="label">Email<span>*</span></p>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={newWebUser.email}
+                onChange={(e) =>
+                  setNewWebUser({ ...newWebUser, email: e.target.value })
+                }
+              />
+            </div>
 
-        <div className="form-group">
-          <p className="label">First Name</p>
-          <input
-            type="text"
-            placeholder="Enter your first name"
-            value={newWebUser.firstName}
-            onChange={(e) =>
-              setNewWebUser({ ...newWebUser, firstName: e.target.value })
-            }
-          />
-        </div>
+            <div className="form-group">
+              <p className="label">Position<span>*</span></p>
+              <select
+                value={newWebUser.position}
+                onChange={(e) =>
+                  setNewWebUser({ ...newWebUser, position: e.target.value })
+                }
+              >
+                <option value="">Select Position</option>
+                <option value="Professor">Professor</option>
+                <option value="Sub Admin">Sub Admin</option>
+              </select>
+            </div>
 
-        <div className="form-group">
-          <p className="label"><span>*</span>Last Name</p>
-          <input
-            type="text"
-            placeholder="Enter your last name"
-            value={newWebUser.lastName}
-            onChange={(e) =>
-              setNewWebUser({ ...newWebUser, lastName: e.target.value })
-            }
-          />
-        </div>
+            <div className="form-group">
+              <p className="label">Password<span>*</span></p>
+              <div className="password-input-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="toggle-password-btn"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+          </div>
 
-        <div className="form-group">
-          <p className="label"><span>*</span>Campus</p>
-          <select
-            value={newWebUser.branch}
-            onChange={(e) => {
-              const branchId = e.target.value;
-              const branch = branches.find((b) => b.id === branchId);
-              const extension = branch?.extension || "";
-              setNewWebUser((prev) => ({
-                ...prev,
-                branch: branchId,
-                email: extension,
-              }));
-            }}
-          >
-            <option value=""> Select Campus </option>
-            {branches.map((branch) => (
-              <option key={branch.id} value={branch.id}>
-                {branch.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Right Column */}
+          <div className="form-column">
+            <div className="form-group">
+              <p className="label">Last Name<span>*</span></p>
+              <input
+                type="text"
+                placeholder="Enter your last name"
+                value={newWebUser.lastName}
+                onChange={(e) =>
+                  setNewWebUser({ ...newWebUser, lastName: e.target.value })
+                }
+              />
+            </div>
 
-        <div className="form-group">
-          <p className="label"><span>*</span>Email</p>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={newWebUser.email}
-            onChange={(e) =>
-              setNewWebUser({ ...newWebUser, email: e.target.value })
-            }
-          />
-        </div>
+            <div className="form-group">
+              <p className="label">Employee Number<span>*</span></p>
+              <input
+                type="number"
+                placeholder="Enter employee number"
+                value={newWebUser.employeenum}
+                onChange={(e) =>
+                  setNewWebUser({ ...newWebUser, employeenum: e.target.value })
+                }
+              />
+            </div>
 
-        <div className="form-group">
-          <p className="label"><span>*</span>Employee Number</p>
-          <input
-            type="number"
-            placeholder="Enter employee number"
-            value={newWebUser.employeenum}
-            onChange={(e) =>
-              setNewWebUser({ ...newWebUser, employeenum: e.target.value })
-            }
-          />
-        </div>
+            <div className="form-group">
+              <p className="label">Campus<span>*</span></p>
+              <select
+                value={newWebUser.branch}
+                onChange={(e) => {
+                  const branchId = e.target.value;
+                  const branch = branches.find((b) => b.id === branchId);
+                  const extension = branch?.extension || "";
+                  setNewWebUser((prev) => ({
+                    ...prev,
+                    branch: branchId,
+                    email: extension,
+                  }));
+                }}
+              >
+                <option value="">Select Campus</option>
+                {branches.map((branch) => (
+                  <option key={branch.id} value={branch.id}>
+                    {branch.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-        <div className="form-group">
-          <p className="label"><span>*</span>Position</p>
-          <select
-            value={newWebUser.position}
-            onChange={(e) =>
-              setNewWebUser({ ...newWebUser, position: e.target.value })
-            }
-          >
-            <option value="">Select Position</option>
-            <option value="Professor">Professor</option>
-            <option value="Sub Admin">Sub Admin</option>
-          </select>
-        </div>
+            <div className="form-group">
+              <p className="label">Confirm Password<span>*</span></p>
+              <div className="password-input-wrapper">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Re-type your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="toggle-password-btn"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                >
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
 
-        <div className="form-group">
-          <p className="label"><span>*</span>Password</p>
-          <div className="password-input-wrapper">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button
-              type="button"
-              className="toggle-password-btn"
-              onClick={() => setShowPassword((prev) => !prev)}
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
           </div>
           
+            <div className="form-footer">
+              {/* NOT SURE KASI IF TUTUTLOY NIYO PRIVACY POLICY, GINAYA KO LANG NASA FIGMA */}
+              {/* <label className="form-checkbox">   
+                <input type="checkbox" />
+                <span>
+                  {/* I accept and acknowledge the <a href="#">Privacy Policy</a>. }
+                </span>
+              </label> */}
 
-        </div>
+              <button
+                className="register-button"
+                onClick={handleRegister}
+                disabled={isLoading}
+              >
+                {isLoading ? "Submitting..." : "REGISTER"}
+              </button>
 
-        <div className="form-group">
-          <p className="label">Confirm Password</p>
-          <div className="password-input-wrapper">
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Re-type your password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <button
-              type="button"
-              className="toggle-password-btn"
-              onClick={() => setShowConfirmPassword((prev) => !prev)}
-            >
-              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
+              <button
+                className="reset-button"
+                onClick={handleReset}
+                disabled={isLoading}
+              >
+              RESET
+              </button>
+              
+              <p className="sign-in-footer">
+                Already have an account?{" "}
+                <a href="/" className="font-bold hover:underline">
+                Sign in here
+                </a>
+              </p>
           </div>
-        </div>
-
-        <div className="form-footer">
-          {/* NOT SURE KASI IF TUTUTLOY NIYO PRIVACY POLICY, GINAYA KO LANG NASA FIGMA */}
-          {/* <label className="form-checkbox">   
-            <input type="checkbox" />
-            <span>
-              {/* I accept and acknowledge the <a href="#">Privacy Policy</a>. }
-            </span>
-          </label> */}
-
-          <button
-            className="register-button"
-            onClick={handleRegister}
-            disabled={isLoading}
-          >
-            {isLoading ? "Submitting..." : "REGISTER"}
-          </button>
-
-            <button
-            className="reset-button"
-            onClick={handleReset}
-            disabled={isLoading}
-          >
-            RESET
-          </button>
-          
-          <p className="sign-in-footer">
-            Already have an account?{" "}
-            <a href="/" className="font-bold hover:underline">
-            Sign in here
-            </a>
-          </p>
         </div>
       </div>
+
+
 
       {/* Right: Logo section */}
       <div className="sign-up-branding-side">

@@ -25,7 +25,7 @@ html, body, #root {
 }
 
 /* Left Side (Form) */
-.sign-up-form-side {
+/* .sign-up-form-side {
   width: 40%;
   padding: 18px 40px;
   margin-left: 50px;
@@ -38,18 +38,52 @@ html, body, #root {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); 
   z-index: 2; 
   position: relative;
+} */
+
+.form-container {
+  width: 40%;
+  background-color: #ffffff;
+  padding: 10px 10px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+  position: relative;
+}
+
+.form-fields-wrapper {
+  padding: 18px 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  color: #000000;
+  border-radius: 20px; 
+  z-index: 2;
+  position: relative;
+}
+
+
+.form-column {
+  flex: 1;
+  min-width: 20px;
+}
+
+.form-welcome-text {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2px;
 }
 
 .form-welcome-text h1 {
-  font-weight: bold;
-  margin-bottom: 5px;
-  @apply text-3xl;
   color: #35408E;
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 5px;
 }
 
 .form-welcome-text p {
   font-size: 14px;
-  margin-bottom: 30px;
+  margin-bottom: 5px;
 }
 
 .form-group {
@@ -100,6 +134,7 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
 .sign-in-footer{
