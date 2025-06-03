@@ -45,7 +45,7 @@ export default function Dashboard() {
     setLoadingDataClassic(true);
     try {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
-        params: { mode: "classic" },
+        params: { mode: "competition" },
       });
       setClassicLeaderboards(response.data);
     } catch (error) {

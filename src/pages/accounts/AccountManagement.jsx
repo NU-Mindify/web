@@ -139,7 +139,7 @@ export default function AccountManagement() {
     { key: "action", label: "Action", className: "w-1/5" },
   ];
 
-    // EXPORT TO CSV for Accounts
+  // EXPORT TO CSV for Accounts
   const exportAccountsToCSV = (data, filename) => {
     const now = new Date().toLocaleString();
     const headers = ["Name", "Position", "Campus"];
@@ -148,7 +148,8 @@ export default function AccountManagement() {
       const lastName = user.lastName || "";
       const fullName = `${lastName.toUpperCase()} ${firstName}`.trim();
       const position = user.position || "N/A";
-      const campus = branches.find((branch) => branch.id === user.branch)?.name || "N/A";
+      const campus =
+        branches.find((branch) => branch.id === user.branch)?.name || "N/A";
 
       return [fullName, position, campus];
     });
@@ -219,7 +220,6 @@ export default function AccountManagement() {
       return [fullName, position, campus];
     });
 
-    
     autoTable(doc, {
       head: [["Name", "Position", "Campus"]],
       body: rows,
@@ -233,13 +233,10 @@ export default function AccountManagement() {
     );
   };
 
-
   return (
-    <div className="account-main-container">
+    <div className="account-main-container overflow-hidden">
       <div className="account-header">
-        <h1 className="account-title">
-          Account Management
-        </h1>
+        <h1 className="account-title">Account Management</h1>
 
         <div className="acc-sub-header-container">
           <SearchBar
@@ -268,7 +265,7 @@ export default function AccountManagement() {
           />
 
           <div className="ml-40 mr-1 mt-2">
-           <ExportDropdown
+            <ExportDropdown
               onExport={(format) => {
                 if (format === "csv") {
                   exportAccountsToCSV(filteredUsers, "Accounts_List");
@@ -278,7 +275,6 @@ export default function AccountManagement() {
               }}
             />
           </div>
-          
         </div>
         <div className="flex flex-wrap items-center gap-6 w-full mb-7 mt-5 ml-3">
           <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
@@ -318,9 +314,7 @@ export default function AccountManagement() {
             />
           )}
         </div>
-
       </div>
-
 
       <UserContentsTable
         columns={4}
@@ -373,6 +367,26 @@ export default function AccountManagement() {
 }
 
 function CardActiveContent(user) {
+ 
+
+  const [confirmUserDelete, setConfirmUserDelete] = useState(false);
+
+
+   const handleConfirmDelete = async () => {
+    try {
+      await axios.put(`${API_URL}/deleteWebUser/${user._id}`, {
+        user_id: user._id,
+        is_deleted: true,
+      });
+    
+      
+    } catch (error) {
+      console.error("Error deleting term:", error);
+    } finally {
+      setConfirmUserDelete(false);
+    }
+  };
+
   return (
     <div className="user-details-card">
       <p>
@@ -391,6 +405,40 @@ function CardActiveContent(user) {
               day: "numeric",
             })}
       </p>
+
+      <Buttons
+        text="Delete User"
+        onClick={() => {
+          setConfirmUserDelete(!confirmUserDelete)
+        }}
+        addedClassName="btn btn-error"
+      />
+
+      {confirmUserDelete && (
+        <div className="modal-overlay confirm-delete-popup">
+          <div className="confirm-dialog !h-10/12">
+            <h2>Confirm Delete</h2>
+            <p>
+              Are you sure you want to delete the term "<strong>{user.firstName} {user.lastName}</strong>
+              "?
+            </p>
+            <div className="popup-buttons mt-[-30px]">
+              <Buttons 
+                text="Yes, Delete"
+                addedClassName="btn btn-delete"
+                onClick={handleConfirmDelete}
+              />
+              <Buttons 
+                text="Cancel"
+                addedClassName="btn btn-cancel"
+                onClick={() => {
+                  setConfirmUserDelete(false)
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

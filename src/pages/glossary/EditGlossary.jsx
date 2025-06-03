@@ -75,7 +75,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
         await axios.post(`${API_URL}/addLogs`, {
           name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
           branch: currentWebUser.branch,
-          action: "Approve Account",
+          action: "Updated a Term",
           description,
         });
       }
@@ -104,7 +104,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
       await axios.post(`${API_URL}/addLogs`, {
         name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
         branch: currentWebUser.branch,
-        action: "Approve Account",
+        action: "Delete a Term",
         description: `${currentWebUser.firstName} deleted the term "${word}"`,
       });
     } catch (error) {

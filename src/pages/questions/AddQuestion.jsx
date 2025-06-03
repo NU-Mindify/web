@@ -110,7 +110,7 @@ function AddQuestion() {
 
   const [dropdownActive, setDropdownActive] = useState(false);
 
-  const [onEdit, setOnEdit] = useState(false)
+  const [onEdit, setOnEdit] = useState(false);
   return (
     <div className="add-ques-main-container">
       <div className="inputs-question-container">
@@ -124,9 +124,19 @@ function AddQuestion() {
         <div className="add-ques-header">
           <div className="add-ques-sub-header">
             <h1>Add Question</h1>
-            <div>
-              <img src={closebtn} alt="close" className="w-[50px] h-[50px] cursor-pointer" />
-            </div>
+            <button
+              onClick={() => {
+                nav("/question", {
+                  state: { category, categoryName, catSelected: true },
+                });
+              }}
+            >
+              <img
+                src={closebtn}
+                alt="close"
+                className="w-[50px] h-[50px] cursor-pointer"
+              />
+            </button>
           </div>
 
           <h2>Create Question for {categoryName}</h2>
@@ -284,7 +294,11 @@ function AddQuestion() {
                   <div className="choices-container">
                     {question.choices.map((choice) => (
                       <div className="per-choice-container" key={choice.letter}>
-                        <label className={`check-circle-container ${onEdit ? `cursor-pointer` : `!cursor-default`}`}>
+                        <label
+                          className={`check-circle-container ${
+                            onEdit ? `cursor-pointer` : `!cursor-default`
+                          }`}
+                        >
                           <input
                             type="checkbox"
                             name="correctLetter"
@@ -319,34 +333,31 @@ function AddQuestion() {
                     ))}
                   </div>
 
-
                   <div className="question-btn-container">
-                    
-                    {onEdit ? 
-                      <Buttons 
+                    {onEdit ? (
+                      <Buttons
                         text="Save"
                         onClick={() => {
-                          setOnEdit(!onEdit)
-                          alert("save")
+                          setOnEdit(!onEdit);
+                          alert("save");
                         }}
                         addedClassName="btn btn-success"
                       />
-                    : 
-                      <Buttons 
+                    ) : (
+                      <Buttons
                         text="Edit"
                         onClick={() => {
-                          setOnEdit(!onEdit)
-                          alert("edit")
+                          setOnEdit(!onEdit);
+                          alert("edit");
                         }}
                         addedClassName="btn btn-warning"
                       />
-                    }
-                    
+                    )}
 
-                    <Buttons 
+                    <Buttons
                       text="Remove"
                       onClick={() => {
-                        alert("remove")
+                        alert("remove");
                       }}
                       addedClassName="btn btn-error"
                     />
@@ -357,7 +368,7 @@ function AddQuestion() {
           ))}
         </div>
         <div className="w-full bg-amber-500 flex justify-center py-4">
-          <Buttons 
+          <Buttons
             text="Save"
             onClick={addToDB}
             addedClassName="btn btn-success"
