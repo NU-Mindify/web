@@ -54,12 +54,11 @@
 /* ------------------- BODY CONTENTS ---------------- */
 
 .header-details-container{
-  @apply w-full flex justify-center items-center mt-2 sticky top-0 z-50 font-[Poppins];
+  @apply w-full flex justify-center items-center mt-2 sticky top-0 z-50 font-[Poppins] flex-col bg-white;
 }
 
 .header-details {
-  @apply grid grid-cols-[1.5fr_3fr_1fr] text-2xl font-medium text-black 
-  bg-white h-[60px] items-center border-b-2 border-black w-11/12 ;
+  @apply grid grid-cols-[1.5fr_3fr_1fr] text-2xl font-medium text-black h-[60px] items-center border-b-2 border-black w-11/12 ;
 }
 
 .header-title {

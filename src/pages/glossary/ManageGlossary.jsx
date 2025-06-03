@@ -17,16 +17,17 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import logo from "../../assets/logo/logo.png";
 
-
 export default function ManageGlossary() {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const navigate = useNavigate();
   const termRefs = useRef({});
   const glossaryBodyRef = useRef(null);
 
-  
   const context = useContext(UserLoggedInContext);
-  const currentWebUser = context?.currentWebUser || { firstName: "Admin", lastName: "" };
+  const currentWebUser = context?.currentWebUser || {
+    firstName: "Admin",
+    lastName: "",
+  };
   const [activeTermWord, setActiveTermWord] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [allTerms, setAllTerms] = useState([]);
@@ -122,9 +123,9 @@ export default function ManageGlossary() {
 
   //EXPORT TO CSV
   const exportGlossaryToCSV = (data, filename) => {
-  const now = new Date().toLocaleString();
-  const headers = ["Term", "Definition"];
-  const rows = data.map((term) => [term.word, term.meaning]);
+    const now = new Date().toLocaleString();
+    const headers = ["Term", "Definition"];
+    const rows = data.map((term) => [term.word, term.meaning]);
 
     const csvContent =
       "data:text/csv;charset=utf-8," +
@@ -203,7 +204,6 @@ export default function ManageGlossary() {
     );
   };
 
-
   return (
     <>
       <div className="header">
@@ -240,9 +240,9 @@ export default function ManageGlossary() {
           <ExportDropdown
             onExport={(format) => {
               if (format === "csv") {
-                exportGlossaryToCSV(displayedTerms, "Glossary_Terms");
+                exportGlossaryToCSV(allTerms, "Glossary_Terms");
               } else if (format === "pdf") {
-                exportGlossaryToPDF(displayedTerms, "Glossary Terms");
+                exportGlossaryToPDF(allTerms, "Glossary Terms");
               }
             }}
           />
@@ -262,30 +262,30 @@ export default function ManageGlossary() {
       </div>
 
       <div className="glossary-body" ref={glossaryBodyRef}>
-        
-        <div className="flex bg-gray-100 p-1 rounded-xl w-[300px] ml-15 mt-5">
-          <button
-            onClick={() => setShowArchived(false)}
-            className={`all-archive-btn ${showArchived || "active"} w-1/2`}
-          >
-            All Terms
-          </button>
-          <button
-            onClick={() => setShowArchived(true)}
-            className={`all-archive-btn ${showArchived && "active"} w-1/2`}
-          >
-            Archive
-          </button>
-        </div>
-        
         <div className="header-details-container">
+          <div className="w-full mb-3">
+            <div className="flex bg-gray-100 p-1 rounded-xl w-[300px] ml-15 mt-5 sticky top-0">
+              <button
+                onClick={() => setShowArchived(false)}
+                className={`all-archive-btn ${showArchived || "active"} w-1/2`}
+              >
+                All Terms
+              </button>
+              <button
+                onClick={() => setShowArchived(true)}
+                className={`all-archive-btn ${showArchived && "active"} w-1/2`}
+              >
+                Archive
+              </button>
+            </div>
+          </div>
+
           <div className="header-details">
             <div className="header-title">Terminology</div>
             <div className="header-title">Definition</div>
             <div className="header-title">Action</div>
           </div>
         </div>
-        
 
         {loadingTerms ? (
           <div className="loading-overlay-accounts !mt-10">

@@ -8,7 +8,6 @@ import Buttons from "../../components/buttons/Buttons";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function EditGlossary({ onClose, term, onTermUpdated }) {
-
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const { _id, word, meaning, tags } = term;
   const { currentWebUser } = useContext(UserLoggedInContext);
@@ -37,7 +36,6 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
 
     const originalTags = tags.map((tag) => tag.trim()).sort();
     const currentTags = editTags.map((tag) => tag.trim()).sort();
- 
 
     if (trimmedOriginalWord !== trimmedEditedWord) {
       changes.push(`word: "${trimmedOriginalWord}" → "${trimmedEditedWord}"`);
@@ -75,8 +73,9 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
 
       if (description) {
         await axios.post(`${API_URL}/addLogs`, {
-          uid: currentWebUser.uid,
-          action: "Updated a term",
+          name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+          branch: currentWebUser.branch,
+          action: "Approve Account",
           description,
         });
       }
@@ -103,8 +102,9 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
       onClose();
 
       await axios.post(`${API_URL}/addLogs`, {
-        uid: currentWebUser.uid,
-        action: "Deleted a term",
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Approve Account",
         description: `${currentWebUser.firstName} deleted the term "${word}"`,
       });
     } catch (error) {
@@ -117,8 +117,6 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
   const handleCancelDelete = () => {
     setShowDeleteConfirm(false);
   };
-
-
 
   return (
     <>
@@ -173,27 +171,33 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
                 onClick={handleSave}
                 addedClassName="btn btn-success"
               />
-            ) : 
+            ) : (
               <Buttons
                 text="Save"
                 onClick={handleSave}
                 addedClassName="btn bg-red-400"
                 disabled={true}
               />
-            }
-              <Buttons
-                text="Delete"
-                onClick={confirmDelete}
-                addedClassName="btn btn-error"
-              />
+            )}
+            <Buttons
+              text="Delete"
+              onClick={confirmDelete}
+              addedClassName="btn btn-error"
+            />
 
             {showDeleteConfirm && (
               <div className="modal-overlay confirm-delete-popup">
                 <div className="confirm-dialog">
                   <h2>Confirm Delete</h2>
-                  <p>Are you sure you want to delete the term "<strong>{word}</strong>"?</p>
+                  <p>
+                    Are you sure you want to delete the term "
+                    <strong>{word}</strong>"?
+                  </p>
                   <div className="popup-buttons">
-                    <button className="btn-delete" onClick={handleConfirmDelete}>
+                    <button
+                      className="btn-delete"
+                      onClick={handleConfirmDelete}
+                    >
                       Yes, Delete
                     </button>
                     <button className="btn-cancel" onClick={handleCancelDelete}>
@@ -203,7 +207,6 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
                 </div>
               </div>
             )}
-
           </div>
 
           {/* <div className="create-container">
