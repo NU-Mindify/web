@@ -168,7 +168,7 @@
 }
 
 .confirm-dialog p {
-  @apply mb-6;
+  @apply mb-6 text-[#000000];
 }
 
 .popup-buttons {
