@@ -35,7 +35,7 @@
 } */
 
 .add-term-title {
-  @apply -mb-2 mt-3 font-[Poppins] text-black font-bold text-[25px] md:text-[40px];
+  @apply -mb-2 mt-3 font-[Poppins] text-[#FFC916] font-bold text-[25px] md:text-[40px];
 }
 
 .add-term-contents {
@@ -151,7 +151,7 @@
 }
 
 .create-container {
-  @apply flex justify-center sticky mb-2 w-full pt-2;
+  @apply flex justify-center sticky mb-5 w-full pt-2;
 }
 
 
