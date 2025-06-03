@@ -15,6 +15,9 @@ export default function AddTerm() {
   const [tagInput, setTagInput] = useState("");
   const navigate = useNavigate();
 
+  const [termToDeleteIndex, setTermToDeleteIndex] = useState(null);
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
 
@@ -33,8 +36,34 @@ export default function AddTerm() {
   };
 
   const handleDeleteTerm = (index) => {
-    const updatedTerms = newTerm.filter((_, i) => i !== index);
-    setNewTerm(updatedTerms);
+    const term = newTerm[index];
+    // Check if term has any data filled in
+    if (
+      term.word.trim() !== "" ||
+      term.meaning.trim() !== "" ||
+      (term.tags && term.tags !== "")
+    ) {
+      setTermToDeleteIndex(index);
+      setShowDeleteConfirmModal(true);
+    } else {
+      // no input, delete immediately
+      const updatedTerms = newTerm.filter((_, i) => i !== index);
+      setNewTerm(updatedTerms);
+    }
+  };
+
+  const confirmDeleteTerm = () => {
+    if (termToDeleteIndex !== null) {
+      const updatedTerms = newTerm.filter((_, i) => i !== termToDeleteIndex);
+      setNewTerm(updatedTerms);
+      setTermToDeleteIndex(null);
+      setShowDeleteConfirmModal(false);
+    }
+  };
+
+  const cancelDeleteTerm = () => {
+    setTermToDeleteIndex(null);
+    setShowDeleteConfirmModal(false);
   };
 
   const handleCreateNewTerm = () => {
@@ -80,10 +109,8 @@ export default function AddTerm() {
               <div className="term-header">
                 <select
                   className="w-10"
-                  value={term.tags}
-                  onChange={(e) =>
-                    handleInputChange(index, "tags", e.target.value)
-                  }
+                  value={term.tags || ""}
+                  onChange={(e) => handleInputChange(index, "tags", e.target.value)}
                 >
                   <option value="">Choose Category</option>
                   <option value="AbPsych">Abnormal Psychology</option>
@@ -117,7 +144,9 @@ export default function AddTerm() {
                       handleInputChange(index, "word", e.target.value)
                     }
                   />
-                  <div className="term-label">Term</div>
+                <div className="term-label">
+                  Term <span className="required-asterisk">*</span>
+                </div>
                 </div>
 
                 <div className="term-input-column">
@@ -129,7 +158,9 @@ export default function AddTerm() {
                       handleInputChange(index, "meaning", e.target.value)
                     }
                   />
-                  <div className="term-label">Definition</div>
+                <div className="term-label">
+                  Definition <span className="required-asterisk">*</span>
+                </div>
                 </div>
               </div>
             </div>
@@ -158,6 +189,24 @@ export default function AddTerm() {
           onClose={() => setShowValidationModal(false)}
         />
       )}
+
+        {showDeleteConfirmModal && (
+    <div className="modal-overlay confirm-delete-popup">
+      <div className="confirm-dialog">
+        <h2>Confirm Delete</h2>
+        <p>Are you sure you want to delete this term? You have unsaved data.</p>
+        <div className="popup-buttons">
+          <button className="btn-delete" onClick={confirmDeleteTerm}>
+            Yes, Delete
+          </button>
+          <button className="btn-cancel" onClick={cancelDeleteTerm}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+
     </div>
   );
 }

@@ -10,6 +10,13 @@ import SearchBar from "../../components/searchbar/SearchBar";
 import searchIcon from "../../assets/students/search-01.svg";
 import download from "../../assets/leaderboard/file-export.svg";
 import Buttons from "../../components/buttons/Buttons";
+import { useContext } from "react";
+import { UserLoggedInContext } from "../../contexts/Contexts";
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import logo from "../../assets/logo/logo.png";
+
 
 export default function ManageGlossary() {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -17,6 +24,9 @@ export default function ManageGlossary() {
   const termRefs = useRef({});
   const glossaryBodyRef = useRef(null);
 
+  
+  const context = useContext(UserLoggedInContext);
+  const currentWebUser = context?.currentWebUser || { firstName: "Admin", lastName: "" };
   const [activeTermWord, setActiveTermWord] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [allTerms, setAllTerms] = useState([]);
@@ -27,6 +37,7 @@ export default function ManageGlossary() {
   const [page, setPage] = useState(0);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState(null);
+  const [showArchived, setShowArchived] = useState(false);
 
   const pageSize = 20;
 
@@ -109,7 +120,88 @@ export default function ManageGlossary() {
     return acc;
   }, {});
 
+  //EXPORT TO CSV
+  const exportGlossaryToCSV = (data, filename) => {
+  const now = new Date().toLocaleString();
+  const headers = ["Term", "Definition"];
+  const rows = data.map((term) => [term.word, term.meaning]);
 
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [
+        `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        `Exported on: ${now}`,
+        "",
+        headers.join(","),
+        ...rows.map((row) => row.join(",")),
+      ].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `${filename}_by_${currentWebUser.firstName} ${currentWebUser.lastName}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  //convert logo to base64 para lumabas sa pdf
+  const getBase64FromUrl = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  //EXPORT TO PDF
+  const exportGlossaryToPDF = async (data, title) => {
+    let logoBase64 = "";
+    try {
+      logoBase64 = await getBase64FromUrl(logo);
+    } catch (error) {
+      console.error("Error converting logo:", error);
+    }
+
+    const now = new Date().toLocaleString();
+    const doc = new jsPDF();
+    doc.text(`${title}`, 14, 10);
+    doc.text(
+      `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+      14,
+      18
+    );
+    doc.text(`Exported on: ${now}`, 14, 26);
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const logoWidth = 30;
+    const logoHeight = 15;
+    const xPos = pageWidth - logoWidth - 10;
+    if (logoBase64) {
+      doc.addImage(logoBase64, "PNG", xPos, 10, logoWidth, logoHeight);
+    }
+
+    const rows = data.map((term) => [term.word, term.meaning]);
+
+    autoTable(doc, {
+      head: [["Term", "Definition"]],
+      body: rows,
+      startY: 30,
+    });
+
+    doc.save(
+      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
+        currentWebUser.lastName
+      }.pdf`
+    );
+  };
 
 
   return (
@@ -145,7 +237,15 @@ export default function ManageGlossary() {
             addedClassName="btn btn-warning"
           />
 
-          <img src={download} alt="export" className="acc-export-icon" />
+          <ExportDropdown
+            onExport={(format) => {
+              if (format === "csv") {
+                exportGlossaryToCSV(displayedTerms, "Glossary_Terms");
+              } else if (format === "pdf") {
+                exportGlossaryToPDF(displayedTerms, "Glossary Terms");
+              }
+            }}
+          />
         </div>
 
         <div className="glossary-letters-btn-container">
@@ -162,6 +262,22 @@ export default function ManageGlossary() {
       </div>
 
       <div className="glossary-body" ref={glossaryBodyRef}>
+        
+        <div className="flex bg-gray-100 p-1 rounded-xl w-[300px] ml-15 mt-5">
+          <button
+            onClick={() => setShowArchived(false)}
+            className={`all-archive-btn ${showArchived || "active"} w-1/2`}
+          >
+            All Terms
+          </button>
+          <button
+            onClick={() => setShowArchived(true)}
+            className={`all-archive-btn ${showArchived && "active"} w-1/2`}
+          >
+            Archive
+          </button>
+        </div>
+        
         <div className="header-details-container">
           <div className="header-details">
             <div className="header-title">Terminology</div>
@@ -169,6 +285,7 @@ export default function ManageGlossary() {
             <div className="header-title">Action</div>
           </div>
         </div>
+        
 
         {loadingTerms ? (
           <div className="loading-overlay-accounts !mt-10">
