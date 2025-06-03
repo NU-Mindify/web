@@ -20,6 +20,8 @@ function AddQuestion() {
   const [category, setCategory] = useState("");
   const [categoryName, setCategoryName] = useState("");
 
+  const [onEdit, setOnEdit] = useState(false);
+
   useEffect(() => {
     const categoryFromState = location.state?.category;
     const categoryNameFromState = location.state?.categoryName;
@@ -51,13 +53,55 @@ function AddQuestion() {
   const [question, setQuestion] = useState(getInitialQuestionState);
 
   const handleAddQuestion = () => {
+    const { question: questionText, choices, rationale, difficulty, level } = question;
+
+    for (const choice of choices) {
+      if (!choice.text || !choice.text.trim() || !choice.rationale || !choice.rationale.trim()) {
+        setValidationMessage("All choices must have both text and rationale.");
+        setShowValidationModal(true);
+        return;
+      }
+    }
+
+    const choiceTexts = choices.map((c) => c.text.trim().toLowerCase());
+    const hasDuplicate = new Set(choiceTexts).size !== choiceTexts.length;
+    if (hasDuplicate) {
+      setValidationMessage("Duplicate choice texts are not allowed.");
+      setShowValidationModal(true);
+      return;
+    }
+
+    if (!questionText.trim()) {
+      setValidationMessage("Please enter a question.");
+      setShowValidationModal(true);
+      return;
+    }
+
+    if (!difficulty.trim()) {
+      setValidationMessage("Please select a difficulty level.");
+      setShowValidationModal(true);
+      return;
+    }
+
+    if (!level || level < 1) {
+      setValidationMessage("Please select a valid level.");
+      setShowValidationModal(true);
+      return;
+    }
+
+    if (!rationale.trim()) {
+      setValidationMessage("Please enter an overall rationale.");
+      setShowValidationModal(true);
+      return;
+    }
+
     const questionCopy = JSON.parse(JSON.stringify(question));
     setAllQuestions((prev) => [...prev, questionCopy]);
     setQuestion(getInitialQuestionState());
 
-    // For debug only — won’t show latest due to async state
     console.log("Added:", questionCopy);
   };
+
 
   const addToDB = async () => {
     setIsFormDisabled(true);
@@ -110,7 +154,6 @@ function AddQuestion() {
 
   const [dropdownActive, setDropdownActive] = useState(false);
 
-  const [onEdit, setOnEdit] = useState(false);
   return (
     <div className="add-ques-main-container">
       <div className="inputs-question-container">
@@ -124,19 +167,9 @@ function AddQuestion() {
         <div className="add-ques-header">
           <div className="add-ques-sub-header">
             <h1>Add Question</h1>
-            <button
-              onClick={() => {
-                nav("/question", {
-                  state: { category, categoryName, catSelected: true },
-                });
-              }}
-            >
-              <img
-                src={closebtn}
-                alt="close"
-                className="w-[50px] h-[50px] cursor-pointer"
-              />
-            </button>
+            <div>
+              <img src={closebtn} alt="close" className="w-[50px] h-[50px] cursor-pointer" />
+            </div>
           </div>
 
           <h2>Create Question for {categoryName}</h2>
@@ -194,43 +227,54 @@ function AddQuestion() {
         </div>
 
         <div className="option-container">
-          <h3 className="w-full">Options:</h3>
-          {question.choices.map((choice, idx) => (
-            <div className="per-choice-container" key={choice.letter}>
-              <label className="check-circle-container">
-                <input
-                  type="checkbox"
-                  name="correctLetter"
-                  checked={question.answer === choice.letter}
-                  onChange={(e) => onAnswerChange(e)}
-                  value={choice.letter}
-                />
-                <CheckCircle2Icon className="swap-on h-8 w-8 text-green-600" />
-                <XCircle className="swap-off h-8 w-8 text-red-500" />
-              </label>
-              <div className={`letter-container`}>
-                <h4>{choice.letter.toUpperCase()}.</h4>
+          <h3 className="text-lg font-semibold w-full">Options</h3>
+
+          {question.choices.map((choice, idx) => {
+            const isCorrect = question.answer === choice.letter;
+
+            return (
+              <div className="per-choice-container" key={choice.letter}>
+                <label className="check-circle-container">
+                  <input
+                    type="checkbox"
+                    name="correctLetter"
+                    checked={isCorrect}
+                    onChange={(e) => onAnswerChange(e)}
+                    value={choice.letter}
+                    className="hidden"
+                  />
+                  {isCorrect ? (
+                    <CheckCircle2Icon className="h-6 w-6 text-green-600" />
+                  ) : (
+                    <XCircle className="h-6 w-6 text-red-500" />
+                  )}
+                </label>
+
+                <div className="letter-container">
+                  <h4>{choice.letter.toUpperCase()}.</h4>
+                </div>
+
+                <div className="textarea-container">
+                  <textarea
+                    required
+                    placeholder="Enter Answer"
+                    disabled={isFormDisabled}
+                    value={choice.text}
+                    onChange={(e) => onChoiceChange(e, idx)}
+                  />
+                  <textarea
+                    required
+                    placeholder="Enter Rationale"
+                    disabled={isFormDisabled}
+                    value={choice.rationale}
+                    onChange={(e) => onChoiceChangeRationale(e, idx)}
+                  />
+                </div>
               </div>
-              <div className="textarea-container">
-                <textarea
-                  required
-                  placeholder="Enter Answer"
-                  disabled={isFormDisabled}
-                  value={choice.text}
-                  onChange={(e) => onChoiceChange(e, idx)}
-                ></textarea>
-                <textarea
-                  required
-                  disabled={isFormDisabled}
-                  placeholder="Enter Rationale"
-                  value={choice.rationale}
-                  onChange={(e) => onChoiceChangeRationale(e, idx)}
-                  className="border-b border-black"
-                ></textarea>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
 
         <div className="overall-rationale-container">
           <h3 className="w-full text-black">Rationale:</h3>
@@ -294,11 +338,7 @@ function AddQuestion() {
                   <div className="choices-container">
                     {question.choices.map((choice) => (
                       <div className="per-choice-container" key={choice.letter}>
-                        <label
-                          className={`check-circle-container ${
-                            onEdit ? `cursor-pointer` : `!cursor-default`
-                          }`}
-                        >
+                        <label className={`check-circle-container ${onEdit ? `cursor-pointer` : `!cursor-default`}`}>
                           <input
                             type="checkbox"
                             name="correctLetter"
@@ -333,31 +373,34 @@ function AddQuestion() {
                     ))}
                   </div>
 
+
                   <div className="question-btn-container">
-                    {onEdit ? (
-                      <Buttons
+                    
+                    {onEdit ? 
+                      <Buttons 
                         text="Save"
                         onClick={() => {
-                          setOnEdit(!onEdit);
-                          alert("save");
-                        }}
-                        addedClassName="btn btn-success"
-                      />
-                    ) : (
-                      <Buttons
-                        text="Edit"
-                        onClick={() => {
-                          setOnEdit(!onEdit);
-                          alert("edit");
+                          setOnEdit(!onEdit)
+                          alert("save")
                         }}
                         addedClassName="btn btn-warning"
                       />
-                    )}
+                    : 
+                      <Buttons 
+                        text="Edit"
+                        onClick={() => {
+                          setOnEdit(!onEdit)
+                          alert("edit")
+                        }}
+                        addedClassName="btn btn-warning"
+                      />
+                    }
+                    
 
-                    <Buttons
+                    <Buttons 
                       text="Remove"
                       onClick={() => {
-                        alert("remove");
+                        alert("remove")
                       }}
                       addedClassName="btn btn-error"
                     />
@@ -367,8 +410,8 @@ function AddQuestion() {
             </div>
           ))}
         </div>
-        <div className="w-full bg-amber-500 flex justify-center py-4">
-          <Buttons
+        <div className="w-full flex justify-center py-4">
+          <Buttons 
             text="Save"
             onClick={addToDB}
             addedClassName="btn btn-success"
