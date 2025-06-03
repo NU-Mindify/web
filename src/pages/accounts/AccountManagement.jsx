@@ -45,22 +45,23 @@ export default function AccountManagement() {
     loadBranches();
   }, []);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (!currentUserBranch) return;
+  const fetchUsers = async () => {
+    if (!currentUserBranch) return;
 
-      setIsLoading(true);
-      try {
-        const res = await axios.get(
-          `${API_URL}/getWebUsers/${currentUserBranch}`
-        );
-        setWebUsers(res.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    setIsLoading(true);
+    try {
+      const res = await axios.get(
+        `${API_URL}/getWebUsers/${currentUserBranch}`
+      );
+      setWebUsers(res.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUsers();
   }, [currentUserBranch]);
 
@@ -139,7 +140,7 @@ export default function AccountManagement() {
     { key: "action", label: "Action", className: "w-1/5" },
   ];
 
-    // EXPORT TO CSV for Accounts
+  // EXPORT TO CSV for Accounts
   const exportAccountsToCSV = (data, filename) => {
     const now = new Date().toLocaleString();
     const headers = ["Name", "Position", "Campus"];
@@ -148,7 +149,8 @@ export default function AccountManagement() {
       const lastName = user.lastName || "";
       const fullName = `${lastName.toUpperCase()} ${firstName}`.trim();
       const position = user.position || "N/A";
-      const campus = branches.find((branch) => branch.id === user.branch)?.name || "N/A";
+      const campus =
+        branches.find((branch) => branch.id === user.branch)?.name || "N/A";
 
       return [fullName, position, campus];
     });
@@ -219,7 +221,6 @@ export default function AccountManagement() {
       return [fullName, position, campus];
     });
 
-    
     autoTable(doc, {
       head: [["Name", "Position", "Campus"]],
       body: rows,
@@ -233,13 +234,10 @@ export default function AccountManagement() {
     );
   };
 
-
   return (
-    <div className="account-main-container">
+    <div className="account-main-container overflow-hidden">
       <div className="account-header">
-        <h1 className="account-title">
-          Account Management
-        </h1>
+        <h1 className="account-title">Account Management</h1>
 
         <div className="acc-sub-header-container">
           <SearchBar
@@ -268,7 +266,7 @@ export default function AccountManagement() {
           />
 
           <div className="ml-40 mr-1 mt-2">
-           <ExportDropdown
+            <ExportDropdown
               onExport={(format) => {
                 if (format === "csv") {
                   exportAccountsToCSV(filteredUsers, "Accounts_List");
@@ -278,7 +276,6 @@ export default function AccountManagement() {
               }}
             />
           </div>
-          
         </div>
         <div className="flex flex-wrap items-center gap-6 w-full mb-7 mt-5 ml-3">
           <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
@@ -318,9 +315,7 @@ export default function AccountManagement() {
             />
           )}
         </div>
-
       </div>
-
 
       <UserContentsTable
         columns={4}
@@ -332,7 +327,13 @@ export default function AccountManagement() {
         sortOrderAsc={sortOrderAsc}
         setSortOrderAsc={setSortOrderAsc}
         getBranchName={getBranchName}
-        cardActiveContent={CardActiveContent}
+        cardActiveContent={(user) => (
+          <CardActiveContent
+            user={user}
+            fetchUsers={fetchUsers}
+            setCardActive={setCardActive}
+          />
+        )}
       />
 
       <div className="acc-footer">
@@ -372,25 +373,157 @@ export default function AccountManagement() {
   );
 }
 
-function CardActiveContent(user) {
+function CardActiveContent({ user, fetchUsers, setCardActive }) {
+  const [confirmUserDelete, setConfirmUserDelete] = useState(false);
+
+  const [confirmUnarchive, setConfirmUnarchive] = useState(false);
+
+  const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
+
+  const handleConfirmDelete = async () => {
+    try {
+      await axios.put(`${API_URL}/deleteWebUser/${user._id}`, {
+        user_id: user._id,
+        is_deleted: true,
+      });
+
+      await fetchUsers();
+      setCardActive(null);
+
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Delete a User",
+        description: `${currentWebUser.firstName} deleted ${user.firstName} ${user.lastName}'s account.`,
+      });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    } finally {
+      setConfirmUserDelete(false);
+    }
+  };
+
+  const handleUnarchiveUser = async () => {
+    try {
+      await axios.put(`${API_URL}/deleteWebUser/${user._id}`, {
+        user_id: user._id,
+        is_deleted: false,
+      });
+
+      await fetchUsers();
+      setCardActive(null);
+
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Unarchive a User",
+        description: `${currentWebUser.firstName} unarchived ${user.firstName} ${user.lastName}'s account.`,
+      });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    } finally {
+      setConfirmUserDelete(false);
+    }
+  };
+
   return (
-    <div className="user-details-card">
-      <p>
-        <strong>Email:</strong> {user.email}
-      </p>
-      <p>
-        <strong>Employee Number:</strong> {user.employeenum}
-      </p>
-      <p>
-        <strong>Date Created: </strong>
-        {isNaN(new Date(user.createdAt))
-          ? "No Date"
-          : new Date(user.createdAt).toLocaleString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-      </p>
-    </div>
+    <>
+      <div className="user-details-card">
+        <p>
+          <strong>Email:</strong> {user.email}
+        </p>
+        <p>
+          <strong>Employee Number:</strong> {user.employeenum}
+        </p>
+        <p>
+          <strong>Date Created: </strong>
+          {isNaN(new Date(user.createdAt))
+            ? "No Date"
+            : new Date(user.createdAt).toLocaleString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+        </p>
+
+        {user.is_deleted ? (
+          <Buttons
+            text="Unarchive User"
+            onClick={() => {
+              setConfirmUnarchive(!confirmUnarchive);
+            }}
+            addedClassName="btn btn-error"
+          />
+        ) : (
+          <Buttons
+            text="Delete User"
+            onClick={() => {
+              setConfirmUserDelete(!confirmUserDelete);
+            }}
+            addedClassName="btn btn-error"
+          />
+        )}
+
+        
+      </div>
+
+      {confirmUnarchive && (
+          <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
+            <div className="confirm-dialog !h-10/12">
+              <h2>Confirm Unarchive</h2>
+              <p className="text-black text-[13px]">
+                Are you sure you want to unarchive "
+                <strong>
+                  {user.firstName} {user.lastName}
+                </strong>
+                "?
+              </p>
+              <div className="popup-buttons">
+                <Buttons
+                  text="Yes, Unarchive"
+                  addedClassName="btn btn-delete"
+                  onClick={handleUnarchiveUser}
+                />
+                <Buttons
+                  text="Cancel"
+                  addedClassName="btn btn-cancel"
+                  onClick={() => {
+                    setConfirmUnarchive(false);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+      {confirmUserDelete && (
+        <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
+          <div className="confirm-dialog !h-10/12">
+            <h2>Confirm Delete</h2>
+            <p className="text-black text-[13px]">
+              Are you sure you want to delete "
+              <strong>
+                {user.firstName} {user.lastName}
+              </strong>
+              "?
+            </p>
+            <div className="popup-buttons">
+              <Buttons
+                text="Yes, Delete"
+                addedClassName="btn btn-delete"
+                onClick={handleConfirmDelete}
+              />
+              <Buttons
+                text="Cancel"
+                addedClassName="btn btn-cancel"
+                onClick={() => {
+                  setConfirmUserDelete(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

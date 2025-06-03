@@ -22,12 +22,12 @@ export default function OldPasswordModal({
         />
         <div className="flex justify-end gap-4 mt-6">
           <button
-            className="btn bg-[#35408E] hover:bg-[#FFBF1A] text-white font-[Poppins]"
+            className="btn bg-[#35408E] hover:bg-[#FFBF1A] text-white font-[Poppins] font-light"
             onClick={onSubmit}
           >
             Submit
           </button>
-          <button className="btn btn-error text-white" onClick={onClose}>
+          <button className="btn btn-error text-white font-[Poppins] font-light" onClick={onClose}>
             Cancel
           </button>
         </div>

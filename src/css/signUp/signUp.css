@@ -1,10 +1,189 @@
 @reference "tailwindcss";
 @plugin "daisyui";
 
-.sign-up-header{
+/* .sign-up-header{
     @apply w-full h-[100px] flex flex-row px-5 items-center pt-4 pl-7 bg-red-300;
 }
 
 .sign-up-header-cont h1{
     @apply text-[40px] font-[Poppins] font-bold text-black h-[50px] pl-3 mt-3;
+} */
+ 
+html, body, #root {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins';
 }
+
+.sign-up-container {
+    background: radial-gradient(circle at center, #4A6FB4 0%, #27298F 70%, #273574 100%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    @apply w-screen h-screen p-5 flex flex-col lg:flex-row justify-center items-center;
+}
+
+/* Left Side (Form) */
+/* .sign-up-form-side {
+  width: 40%;
+  padding: 18px 40px;
+  margin-left: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #000000;
+  background-color: #ffffff;
+  border-radius: 20px; 
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); 
+  z-index: 2; 
+  position: relative;
+} */
+
+.form-container {
+  width: 40%;
+  background-color: #ffffff;
+  padding: 10px 10px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+  position: relative;
+}
+
+.form-fields-wrapper {
+  padding: 18px 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  color: #000000;
+  border-radius: 20px; 
+  z-index: 2;
+  position: relative;
+}
+
+
+.form-column {
+  flex: 1;
+  min-width: 20px;
+}
+
+.form-welcome-text {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.form-welcome-text h1 {
+  color: #35408E;
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.form-welcome-text p {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.form-group span{
+    color: red;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  padding-right: 40px; /* space for the icon */
+  width: 100%;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.form-footer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.sign-in-footer{
+    @apply text-sm text-center;
+}
+
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.form-checkbox input {
+  margin-right: 10px;
+}
+
+
+/* Right Side (logo) */
+.sign-up-branding-side {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.nu-logo {
+  width: 600px;
+  margin-bottom: 20px;
+}
+
+
+/* Buttons */
+.register-button {
+  @apply btn rounded-xl mt-[5px] h-[40px] bg-[#FFC300] text-black 
+         sm:btn-sm md:btn-md lg:btn-lg;
+}
+
+.register-button:hover {
+    filter: brightness(1.1);
+}
+
+.reset-button {
+  @apply btn rounded-xl mt-[5px] h-[40px] bg-[#FF3F42] text-black 
+         sm:btn-sm md:btn-md lg:btn-lg;
+}
+
+.reset-button:hover {
+    filter: brightness(1.5);
+}
+
+

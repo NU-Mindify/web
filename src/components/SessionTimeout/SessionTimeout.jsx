@@ -106,9 +106,9 @@ export default function SessionTimeout({ timeout = 5 * 60 * 1000 }) {
     <>
       {showModal && (
         <div className="modal-overlay">
-          <div className="modal-content text-black">
-            <h2>Session Expired</h2>
-            <p>You've been inactive for 15 minutes.</p>
+          <div className="modal-content text-black font-[Poppins]">
+            <h2 className="text-xl">Session Expired</h2>
+            <p className="text-sm">You've been inactive for 15 minutes.</p>
             {showPasswordPrompt ? (
               <>
                 <input

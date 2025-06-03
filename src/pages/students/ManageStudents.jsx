@@ -30,7 +30,6 @@ export default function ManageStudents() {
 
   const [showArchived, setShowArchived] = useState(false);
 
-
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -43,6 +42,7 @@ export default function ManageStudents() {
         (a.last_name || "").localeCompare(b.last_name || "")
       );
       setStudents(sortedStudents);
+       setCardActive(null);
     } catch (error) {
       console.error("Error fetching students:", error);
     } finally {
@@ -64,7 +64,9 @@ export default function ManageStudents() {
           ? true
           : student.branch === selectedBranch;
 
-      const matchesArchived = showArchived ? student.is_deleted : !student.is_deleted;
+      const matchesArchived = showArchived
+        ? student.is_deleted
+        : !student.is_deleted;
       return matchesSearch && matchesBranch && matchesArchived;
     })
     .sort((a, b) => {
@@ -222,22 +224,23 @@ export default function ManageStudents() {
             }}
           />
         </div>
-       
       </div>
-        <div className="flex bg-gray-100 p-1 rounded-xl w-[300px] ml-4 mb-8">
-          <button 
-            onClick={() => setShowArchived(false)}
-            className={`all-archive-btn ${showArchived || "active" } w-1/2`}>
-            All Students
-          </button>
+      <div className="flex bg-gray-100 p-1 rounded-xl w-[300px] ml-4 mb-8">
+        <button
+          onClick={() => setShowArchived(false)}
+          className={`all-archive-btn ${showArchived || "active"} w-1/2`}
+        >
+          All Students
+        </button>
 
-          <button 
-            onClick={() => setShowArchived(true)}
-            className={`all-archive-btn ${showArchived && "active" } w-1/2`}>
-            Archive
-          </button>
-        </div>
-      
+        <button
+          onClick={() => setShowArchived(true)}
+          className={`all-archive-btn ${showArchived && "active"} w-1/2`}
+        >
+          Archive
+        </button>
+      </div>
+
       <UserContentsTable
         columns={4}
         data={currentStudents}
@@ -248,7 +251,12 @@ export default function ManageStudents() {
         cardActive={cardActive}
         toggleCard={toggleCard}
         getBranchName={getBranchName}
-        cardActiveContent={CardActiveContent}
+        cardActiveContent={(student) => 
+          <CardActiveContent 
+            student={student} 
+            fetchUsers={fetchStudents}
+            setCardActive={setCardActive}
+          />}
       />
 
       <div className="student-footer">
@@ -288,7 +296,7 @@ export default function ManageStudents() {
   );
 }
 
-function CardActiveContent(student) {
+function CardActiveContent({student, fetchUsers, setCardActive}) {
   const [loadingData, setLoadingData] = useState(false);
   const [competitionModeData, setCompetitionModeData] = useState([]);
   const [masteryModeData, setMasteryModeData] = useState([]);
@@ -365,120 +373,252 @@ function CardActiveContent(student) {
   const navigate = useNavigate();
   const [masteryPercentage, setMasteryPercentage] = useState(0);
 
+  const [confirmDeleteUser, setConfirmDeleteuser] = useState(false);
+  const [unarchiveUser, setUnarchiveUser] = useState(false);
+
+  const handleDeleteStudent = async () =>{
+    console.log(student._id);
+    
+    try {
+      await axios.put(`${API_URL}/deleteUser/${student._id}`, {
+        user_id: student._id,
+        is_deleted: true,
+      });
+
+      await fetchUsers();
+      setCardActive(null);
+
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Delete a Student",
+        description: `${currentWebUser.firstName} deleted ${student.first_name} ${student.last_name}'s account.`,
+      });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    } finally {
+      setConfirmDeleteuser(false);
+    }
+  }
+
+  const handleUnarchiveStudent = async () => {
+    try {
+      await axios.put(`${API_URL}/deleteUser/${student._id}`, {
+        user_id: student._id,
+        is_deleted: false,
+      });
+
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Unarchive a Student",
+        description: `${currentWebUser.firstName} unarchived ${student.first_name} ${student.last_name}'s account.`,
+      });
+
+      await fetchUsers();
+    } catch (error) {
+      console.error("Error unarchiving user:", error);
+    } finally {
+      setUnarchiveUser(false);
+    }
+  };
+
   return (
-    <div className="text-black p-2">
-      {loadingData ? (
-        <div className="loading-overlay-accounts">
-          <div className="spinner"></div>
-          <p>Fetching data...</p>
-        </div>
-      ) : (
-        <table className="w-full border-collapse mt-2 bg-transparent">
-          <thead>
-            <tr className="!bg-transparent border-0">
-              {categories.map((category) => (
-                <th
-                  key={category.id}
-                  className="!bg-transparent !text-white !border-none"
-                >
-                  {category.name}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {categories.map((category) => (
-                <td key={category.id}>
-                  <h1 className="mt-4">Competition</h1>
-                  <div className="flex justify-center items-center">
-                    {levels.map((level) => {
-                      const attemptKey = `${category.id}-${level}`;
-                      const attempt = classicHighestScores[attemptKey];
-                      const score = attempt ? attempt.correct : 0;
-                      const total = attempt ? attempt.total_items : 0;
-                      const color = getScoreColor(score / total);
-                      return (
-                        <div
-                          key={level}
-                          className={`w-[20px] h-[20px] mr-1 rounded-md ${color} text-xs text-center text-black flex items-center justify-center mt-2 border border-black`}
-                          title={`Stage ${level} - Score: ${score}/${total}`}
-                        >
-                          {score > 0 ? score : ""}
-                        </div>
-                      );
-                    })}
-                  </div>
+    <>
+      <div className="text-black p-2">
+        {loadingData ? (
+          <div className="loading-overlay-accounts">
+            <div className="spinner"></div>
+            <p>Fetching data...</p>
+          </div>
+        ) : (
+          <table className="w-full border-collapse mt-2 bg-transparent">
+            <thead>
+              <tr className="!bg-transparent border-0">
+                {categories.map((category) => (
+                  <th
+                    key={category.id}
+                    className="!bg-transparent !text-white !border-none"
+                  >
+                    {category.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {categories.map((category) => (
+                  <td key={category.id}>
+                    <h1 className="mt-4">Competition</h1>
+                    <div className="flex justify-center items-center">
+                      {levels.map((level) => {
+                        const attemptKey = `${category.id}-${level}`;
+                        const attempt = classicHighestScores[attemptKey];
+                        const score = attempt ? attempt.correct : 0;
+                        const total = attempt ? attempt.total_items : 0;
+                        const color = getScoreColor(score / total);
+                        return (
+                          <div
+                            key={level}
+                            className={`w-[20px] h-[20px] mr-1 rounded-md ${color} text-xs text-center text-black flex items-center justify-center mt-2 border border-black`}
+                            title={`Stage ${level} - ${score}/${total} (${Math.round(
+                              (score / total) * 100
+                            )}%)`}
+                          >
+                            {score > 0 ? score : ""}
+                          </div>
+                        );
+                      })}
+                    </div>
 
-                  <div className="w-full flex justify-between items-center pr-4 mt-4">
-                    <h1>Mastery</h1>
-                    <h1>
-                      {highestMasteryScores[category.id]?.percentage ?? 0}%
-                    </h1>
-                  </div>
+                    <div className="w-full flex justify-between items-center pr-4 mt-4">
+                      <h1>Mastery</h1>
+                      <h1>
+                        {highestMasteryScores[category.id]?.percentage ?? 0}%
+                      </h1>
+                    </div>
 
-                  <div className="mt-1">
-                    {(() => {
-                      const masteryAttempt = highestMasteryScores[category.id];
-                      // const score = masteryAttempt?.score ?? 0;
-                      const percentage = masteryAttempt?.percentage ?? 0;
-                      const total = masteryAttempt?.total_items ?? 0;
-                      const correct = masteryAttempt?.correct ?? 0;
+                    <div className="mt-1">
+                      {(() => {
+                        const masteryAttempt =
+                          highestMasteryScores[category.id];
+                        // const score = masteryAttempt?.score ?? 0;
+                        const percentage = masteryAttempt?.percentage ?? 0;
+                        const total = masteryAttempt?.total_items ?? 0;
+                        const correct = masteryAttempt?.correct ?? 0;
 
-                      let color = "bg-white";
-                      if (percentage === 100) {
-                        color = "bg-green-500";
-                      } else if (percentage >= 80) {
-                        color = "bg-orange-300";
-                      } else if (percentage > 0) {
-                        color = "bg-gray-500 text-white";
-                      }
+                        let color = "bg-white";
+                        if (percentage === 100) {
+                          color = "bg-green-500";
+                        } else if (percentage >= 80) {
+                          color = "bg-orange-300";
+                        } else if (percentage > 0) {
+                          color = "bg-gray-500 text-white";
+                        }
 
-                      return (
-                        <div className="w-full flex items-center justify-center">
-                          <div className="w-11/12 h-5 bg-gray-200 rounded-md overflow-hidden  border border-black">
-                            <div
-                              className={`h-full ${color} text-sm text-black text-center`}
-                              style={{ width: `${percentage}%` }}
-                              title={`Score: ${correct}/${total} (${percentage}%)`}
-                            >
-                              {percentage > 0 ? `${percentage}%` : ""}
+                        return (
+                          <div className="w-full flex items-center justify-center">
+                            <div className="w-11/12 h-5 bg-gray-200 rounded-md overflow-hidden  border border-black">
+                              <div
+                                className={`h-full ${color} text-sm text-black text-center`}
+                                style={{ width: `${percentage}%` }}
+                                title={`Score: ${correct}/${total} (${percentage}%)`}
+                              >
+                                {percentage > 0 ? `${percentage}%` : ""}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })()}
+                        );
+                      })()}
+                    </div>
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td colSpan={5} className="pt-3">
+                  <div className="w-full flex justify-around px-20 mt-5">
+                    <Buttons
+                      text="View Student Details"
+                      onClick={async () => {
+                        navigate("/students/overall", {
+                          state: {
+                            competitionData: competitionModeData,
+                            masteryData: masteryModeData,
+                            reviewData: reviewModeData,
+                            studentFirstName: student.first_name,
+                            studentLastName: student.last_name,
+                            studentId: student.student_id,
+                            studentBranch: student.branch,
+                          },
+                        });
+                      }}
+                      addedClassName="btn btn-warning !w-[250px]"
+                      disabled={loadingData}
+                    />
+
+                    {student.is_deleted ? (
+                      <Buttons
+                        text="Unarchive Student"
+                        onClick={() => {
+                          setUnarchiveUser(!unarchiveUser);
+                        }}
+                        addedClassName="btn btn-error ml-20 !w-[250px]"
+                      />
+                    ) : (
+                      <Buttons
+                        text="Delete Student"
+                        onClick={() => {
+                          setConfirmDeleteuser(!confirmDeleteUser);
+                        }}
+                        addedClassName="btn btn-error ml-20"
+                      />
+                    )}
                   </div>
                 </td>
-              ))}
-            </tr>
-            <tr>
-              <td colSpan={5} className="pt-3">
-                <div className="w-full flex items-center justify-center mt-3">
-                  <Buttons
-                    text="View Student Details"
-                    onClick={async () => {
-                      navigate("/students/overall", {
-                        state: {
-                          competitionData: competitionModeData,
-                          masteryData: masteryModeData,
-                          reviewData: reviewModeData,
-                          studentFirstName: student.first_name,
-                          studentLastName: student.last_name,
-                          studentId: student.student_id,
-                          studentBranch: student.branch,
-                        },
-                      });
-                    }}
-                    addedClassName="btn btn-warning !w-[250px]"
-                    disabled={loadingData}
-                  />
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </tr>
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {confirmDeleteUser && (
+        <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%] flex items-center justify-center">
+          <div className="confirm-dialog !h-10/12 flex justify-center items-center flex-col">
+            <h2>Confirm Delete</h2>
+            <p className="text-black text-base">
+              Are you sure you want to delete "
+              <strong>
+                {student.first_name} {student.last_name}
+              </strong>
+              "?
+            </p>
+            <div className="popup-buttons">
+              <Buttons
+                text="Yes, Delete"
+                addedClassName="btn btn-delete"
+                onClick={handleDeleteStudent}
+              />
+              <Buttons
+                text="Cancel"
+                addedClassName="btn btn-cancel"
+                onClick={() => {
+                  setConfirmDeleteuser(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
       )}
-    </div>
+
+      {
+        unarchiveUser && 
+        <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%] flex items-center justify-center">
+          <div className="confirm-dialog !h-10/12 flex justify-center items-center flex-col">
+            <h2>Confirm Delete</h2>
+            <p className="text-black text-base">
+              Are you sure you want to unarchive "
+              <strong>
+                {student.first_name} {student.last_name}
+              </strong>
+              "?
+            </p>
+            <div className="popup-buttons">
+              <Buttons
+                text="Yes, Unarchive"
+                addedClassName="btn btn-delete"
+                onClick={handleUnarchiveStudent}
+              />
+              <Buttons
+                text="Cancel"
+                addedClassName="btn btn-cancel"
+                onClick={() => {
+                  setConfirmDeleteuser(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      }
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "../../Constants";
 import "../../css/glossary/addGlossary.css";
@@ -7,6 +7,7 @@ import closebtn from "../../assets/glossary/close-btn.svg";
 import deletebtn from "../../assets/glossary/delete-icon.svg";
 import Buttons from "../../components/buttons/Buttons";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
 
 export default function AddTerm() {
   const [newTerm, setNewTerm] = useState([
@@ -14,6 +15,7 @@ export default function AddTerm() {
   ]);
   const [tagInput, setTagInput] = useState("");
   const navigate = useNavigate();
+  const { currentWebUser } = useContext(UserLoggedInContext);
 
   const [termToDeleteIndex, setTermToDeleteIndex] = useState(null);
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
@@ -80,6 +82,18 @@ export default function AddTerm() {
         setValidationMessage("Added successfully!");
         setShowValidationModal(true);
         setNewTerm([{ word: "", meaning: "", tags: [], is_deleted: false }]);
+
+        // Log each added term
+        Promise.all(
+          newTerm.map((term) =>
+            axios.post(`${API_URL}/addLogs`, {
+              name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+              branch: currentWebUser.branch,
+              action: "Add Term",
+              description: `${currentWebUser.firstName} added a term "${term.word}" with meaning "${term.meaning}".`,
+            })
+          )
+        );
       })
       .catch((error) => {
         console.error("Error adding term:", error);
@@ -110,7 +124,9 @@ export default function AddTerm() {
                 <select
                   className="w-10"
                   value={term.tags || ""}
-                  onChange={(e) => handleInputChange(index, "tags", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(index, "tags", e.target.value)
+                  }
                 >
                   <option value="">Choose Category</option>
                   <option value="AbPsych">Abnormal Psychology</option>
@@ -140,13 +156,16 @@ export default function AddTerm() {
                     type="text"
                     placeholder="Enter Term"
                     value={term.word}
-                    onChange={(e) =>
-                      handleInputChange(index, "word", e.target.value)
-                    }
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const capitalized =
+                        value.charAt(0).toUpperCase() + value.slice(1);
+                      handleInputChange(index, "word", capitalized);
+                    }}
                   />
-                <div className="term-label">
-                  Term <span className="required-asterisk">*</span>
-                </div>
+                  <div className="term-label">
+                    Term <span className="required-asterisk">*</span>
+                  </div>
                 </div>
 
                 <div className="term-input-column">
@@ -154,13 +173,16 @@ export default function AddTerm() {
                     type="text"
                     placeholder="Enter Definition"
                     value={term.meaning}
-                    onChange={(e) =>
-                      handleInputChange(index, "meaning", e.target.value)
-                    }
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const capitalized =
+                        value.charAt(0).toUpperCase() + value.slice(1);
+                      handleInputChange(index, "meaning", capitalized);
+                    }}
                   />
-                <div className="term-label">
-                  Definition <span className="required-asterisk">*</span>
-                </div>
+                  <div className="term-label">
+                    Definition <span className="required-asterisk">*</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -190,23 +212,24 @@ export default function AddTerm() {
         />
       )}
 
-        {showDeleteConfirmModal && (
-    <div className="modal-overlay confirm-delete-popup">
-      <div className="confirm-dialog">
-        <h2>Confirm Delete</h2>
-        <p>Are you sure you want to delete this term? You have unsaved data.</p>
-        <div className="popup-buttons">
-          <button className="btn-delete" onClick={confirmDeleteTerm}>
-            Yes, Delete
-          </button>
-          <button className="btn-cancel" onClick={cancelDeleteTerm}>
-            Cancel
-          </button>
+      {showDeleteConfirmModal && (
+        <div className="modal-overlay confirm-delete-popup">
+          <div className="confirm-dialog">
+            <h2>Confirm Delete</h2>
+            <p>
+              Are you sure you want to delete this term? You have unsaved data.
+            </p>
+            <div className="popup-buttons">
+              <button className="btn-delete" onClick={confirmDeleteTerm}>
+                Yes, Delete
+              </button>
+              <button className="btn-cancel" onClick={cancelDeleteTerm}>
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  )}
-
+      )}
     </div>
   );
 }

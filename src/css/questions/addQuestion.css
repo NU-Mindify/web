@@ -22,7 +22,7 @@
 }
 
 .add-ques-main-container h3{
-    @apply font-[Poppins] text-black font-bold text-[20px]; 
+    @apply font-[Poppins] text-black font-bold text-[18px]; 
 }
 .add-ques-main-container h4{
     @apply font-[Poppins] text-black font-bold text-[18px]; 
@@ -31,7 +31,7 @@
 
 
 .inputs-question-container{
-    @apply w-full bg-white rounded-2xl px-10;
+    @apply w-full bg-white rounded-2xl px-2;
 }
 
 
@@ -44,28 +44,27 @@
 }
 
 .add-ques-sub-header h1{
-    @apply font-[Poppins] text-black font-bold text-[40px];
+    @apply font-[Poppins] text-[#FFC916] font-bold text-[40px];
 }
 
 .add-ques-header h2{
-    @apply font-[Poppins] text-black font-bold text-[25px] mt-3;
+    @apply font-[Poppins] text-black font-bold text-[25px];
 }
 
 .ques-container{
-    @apply w-full flex flex-col items-center px-5 mb-3;
+    @apply w-full flex flex-col items-center px-5;
 }
 
 .ques-container h1{
     @apply font-[Poppins] text-black font-bold text-[20px]; 
 }
 
-.ques-container textarea{
-    @apply mt-2 w-11/12 h-[80px] bg-white text-black border border-black text-[18px] px-1;
+.ques-container textarea {
+  @apply mt-2 w-12/12 h-[70px] bg-white text-black border border-gray-300 text-[18px] px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400;
 }
 
-
 .select-container{
-    @apply w-full h-[150px] flex gap-8 px-5 items-center mb-3;
+    @apply w-full h-[120px] flex gap-5 px-5 items-center mb-2;
 }
 
 .select-container div{
@@ -74,13 +73,11 @@
 
 
 .select-container div select{
-    @apply mt-2 text-[18px] w-[250px] h-[60px] bg-white;
+    @apply mt-2 text-[18px] w-[250px] h-[50px] bg-white;
 }
 
-
-
-.option-container{
-    @apply h-auto w-full bg-gray-200 flex flex-col items-center rounded-2xl p-5 mb-3;
+.option-container {
+  @apply bg-gray-100 flex flex-col items-center rounded-2xl p-5 mb-3 ml-5 mr-5 w-auto;
 }
 
 .option-container h1{
@@ -89,38 +86,42 @@
 
 
 .per-choice-container{
-    @apply w-[90%] flex flex-row my-2 justify-center;
+    @apply w-[90%] flex items-start flex-row my-2 justify-center gap-3 p-3 bg-white rounded-lg shadow-sm mb-4;
 }
 
 
 .check-circle-container{
-    @apply !swap swap-rotate flex justify-center items-center;
+    @apply !swap swap-rotate flex justify-center items-center mt-2 ml-3;
 }
 
 .letter-container{
-    @apply  rounded px-3 rounded-e-none border-e-0 flex items-center h-[40px];
+    @apply  rounded px-2 rounded-e-none border-e-0 flex items-center h-[40px];
+}
+
+.letter-container h4 {
+  @apply font-medium w-2;
 }
 
 .textarea-container{
-    @apply flex flex-col w-[95%];
+    @apply flex flex-col w-[95%] gap-2 flex-1 mt-2.5;
 }
 
-.textarea-container textarea {
-  @apply w-full h-[40px] text-sm bg-white text-black focus:outline-none focus:ring-0;
+.textarea-container textarea:first-of-type {
+  @apply w-full border-b border-gray-400 bg-transparent text-sm text-gray-700 outline-none;
 }
 
+.textarea-container textarea:last-of-type {
+  @apply w-full border-b border-gray-400 bg-transparent text-sm text-gray-700 outline-none;
+}
 
 
 .overall-rationale-container{
-    @apply w-full flex flex-col justify-center items-center;
+    @apply w-full flex flex-col justify-center items-center px-5;
 }
 
 .overall-rationale-container textarea{
-    @apply mt-2 w-11/12 h-[80px] bg-white text-black border border-black text-[18px] px-1;
+    @apply mt-2 w-12/12 h-[70px] bg-white text-black border border-gray-300 text-[18px] px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400;
 }
-
-
-
 
 
 .add-btn-container{
@@ -130,7 +131,7 @@
 
 
 .all-questions-container{
-    @apply w-full bg-red-300 p-4 ;
+    @apply w-full p-4 ;
 }
 
 

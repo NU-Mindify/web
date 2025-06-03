@@ -45,7 +45,7 @@ export default function Dashboard() {
     setLoadingDataClassic(true);
     try {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
-        params: { mode: "classic" },
+        params: { mode: "competition" },
       });
       setClassicLeaderboards(response.data);
     } catch (error) {
@@ -168,7 +168,8 @@ export default function Dashboard() {
 
     if (bottomCategory) {
       setMostChallengingWorld(bottomCategory);
-      setMostChallengingWorldScore(parseFloat(lowestAvg.toFixed(2)));
+      setMostChallengingWorldScore(parseFloat(((lowestAvg / 8) * 100).toFixed(2)));
+
     } else {
       setMostChallengingWorld("N/A");
       setMostChallengingWorldScore(null);
@@ -207,7 +208,7 @@ export default function Dashboard() {
 
     if (topCategory) {
       setBestPerformingWorld(topCategory);
-      setBestPerformingWorldScore(parseFloat(highestAvg.toFixed(2)));
+      setBestPerformingWorldScore(parseFloat(((highestAvg / 8) * 100).toFixed(2)));
     } else {
       setBestPerformingWorld("N/A");
       setBestPerformingWorldScore(null);
@@ -333,7 +334,7 @@ export default function Dashboard() {
                     Average Score
                   </h2>
                   <h2 className="text-3xl font-bold text-black font-[Poppins] text-[50px]">
-                    <CountUp end={mostChallengingWorldScore} decimals={2} /> / 8
+                    <CountUp end={mostChallengingWorldScore} decimals={2} />%
                   </h2>
                 </>
               )}
@@ -363,7 +364,7 @@ export default function Dashboard() {
                     Average Score
                   </h2>
                   <h2 className="text-3xl font-bold text-black font-[Poppins] text-[50px]">
-                    <CountUp end={bestPerformingWorldScore} decimals={2} /> / 8
+                    <CountUp end={bestPerformingWorldScore} decimals={2} />%
                   </h2>
                 </>
               )}

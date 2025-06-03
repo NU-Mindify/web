@@ -7,6 +7,7 @@ import { UserLoggedInContext } from "../../contexts/Contexts";
 
 import { supabase } from "../../supabase";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+import Buttons from "../../components/buttons/Buttons.jsx";
 
 export default function EditProfile() {
   const { currentWebUser, setCurrentWebUser, setCurrentWebUserUID } =
@@ -52,46 +53,42 @@ export default function EditProfile() {
   };
 
   const hasChanges = () => {
-    return (
-      initialWebUser.useravatar !== editWebUser.useravatar
-    );
+    return initialWebUser.useravatar !== editWebUser.useravatar;
   };
 
   const handleUpdateProfile = async () => {
-  try {
-    await axios.put(
-      `${API_URL}/updateWebUsers/${editWebUser._id}`,
-      editWebUser
-    );
+    try {
+      await axios.put(
+        `${API_URL}/updateWebUsers/${editWebUser._id}`,
+        editWebUser
+      );
 
-    const updatedUser = await axios.get(
-      `${API_URL}/getwebuser/${editWebUser.uid}`
-    );
+      const updatedUser = await axios.get(
+        `${API_URL}/getwebuser/${editWebUser.uid}`
+      );
 
-    setCurrentWebUser(updatedUser.data);
-    setCurrentWebUserUID(updatedUser.data.uid);
-    localStorage.setItem("userUID", updatedUser.data.uid);
+      setCurrentWebUser(updatedUser.data);
+      setCurrentWebUserUID(updatedUser.data.uid);
+      localStorage.setItem("userUID", updatedUser.data.uid);
 
-    await axios.post(`${API_URL}/addLogs`, {
-      name: `${editWebUser.firstName} ${editWebUser.lastName}`,
-      branch: editWebUser.branch,
-      action: "Edit Profile",
-      description: "Updated profile information.",
-    });
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${editWebUser.firstName} ${editWebUser.lastName}`,
+        branch: editWebUser.branch,
+        action: "Edit Profile",
+        description: "Updated profile information.",
+      });
 
-    setInitialWebUser(updatedUser.data);
-    setEditWebUser(updatedUser.data);
+      setInitialWebUser(updatedUser.data);
+      setEditWebUser(updatedUser.data);
 
-    setShowModal(true);
-    navigate("/profile");
-  } catch (error) {
-    console.error(error);
-    setValidationMessage("Update Unsuccessful!");
-    setShowValidationModal(true);
-  }
-};
-
-
+      setShowModal(true);
+      navigate("/profile");
+    } catch (error) {
+      console.error(error);
+      setValidationMessage("Update Unsuccessful!");
+      setShowValidationModal(true);
+    }
+  };
 
   const handleCancelEdit = () => {
     navigate("/profile");
@@ -156,27 +153,20 @@ export default function EditProfile() {
               )}
             </div>
 
-            <div className="edit-btn-container-prof-settings">
-              <label className="forms-label-properties">Enter Image URL</label>
+            <div className="relative inline-block">
               <input
-                type="text"
-                placeholder="Image URL"
-                className="input input-properties"
-                value={editWebUser.useravatar}
-                onChange={(e) =>
-                  setEditWebUser({ ...editWebUser, useravatar: e.target.value })
-                }
-              />
-
-              <label className="forms-label-properties mt-2">
-                Upload Image File
-              </label>
-              <input
+                id="upload-btn"
                 type="file"
                 accept="image/*"
                 onChange={handleFileUpload}
-                className="btn btn-warning text-black"
+                className="hidden"
               />
+              <label
+                htmlFor="upload-btn"
+                className="btn btn-warning w-[200px] rounded-full text-black font-[Poppins] h-[50px] px-4 flex items-center justify-center text-center cursor-pointer"
+              >
+                Upload Image
+              </label>
             </div>
           </div>
 
@@ -278,27 +268,23 @@ export default function EditProfile() {
             </div>
           </div>
 
-          <div className="edit-btn-container-prof-settings">
+          <div className="edit-btn-prof-settings">
             <button
-              className={
-                !hasChanges() ||
-                !editWebUser.useravatar
+              className={`shadow-md ${
+                !hasChanges() || !editWebUser.useravatar
                   ? "edit-btn-properties-disabled"
                   : "edit-btn-properties"
-              }
+              }`}
               onClick={handleUpdateProfile}
-              disabled={
-                !hasChanges() ||
-                !editWebUser.useravatar
-              }
+              disabled={!hasChanges() || !editWebUser.useravatar}
             >
-              Save Profile
+              SAVE PROFILE
             </button>
             <button
-              className="edit-btn-properties mt-1"
+              className="edit-btn-properties mt-1 shadow-md"
               onClick={handleCancelEdit}
             >
-              Cancel
+              CANCEL
             </button>
           </div>
         </div>
