@@ -45,14 +45,17 @@ export const categories = [
   }
 ]
 
-export const levels = [1,2,3]
+export const levels = [1,2,3,4,5,6,7,8,9,10]
 
 export const modes = [
   {
-    mode: "classic"
+    mode: "mastery"
   },
   {
-    mode: "mastery"
+    mode: "competition"
+  },
+  {
+    mode: "review"
   }
 ]
 

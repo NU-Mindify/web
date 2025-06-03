@@ -3,7 +3,7 @@ import "../NewPassModal/NewPasswordModal.css"
 
 export default function NewPasswordModal({ onClose, onSubmit, password, setPassword }) {
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999]">
       <div className="bg-white p-6 rounded-lg shadow-lg w-90 h-50 flex items-center justify-center flex-col animate-popup">
         <h2 className="text-black text-center font-[Poppins] mb-4">Enter New Password</h2>
         <input

@@ -508,7 +508,7 @@ export default function Leaderboard() {
               <div className="leaders-main-container">
                 {classicSortingLeaders
                   .filter((leader) =>
-                    classicSelectedBranch === "All" || !classicSelectedBranch
+                    classicSelectedBranch === "all" || !classicSelectedBranch
                       ? true
                       : leader.user_id?.branch === classicSelectedBranch
                   )

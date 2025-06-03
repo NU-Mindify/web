@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "../ExportDropdown/ExportDropdown.css";
 import { Download } from "lucide-react";
 
-const ExportDropdown = ({ onExport }) => {
+const ExportDropdownPng = ({ onExport }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -42,13 +42,10 @@ const ExportDropdown = ({ onExport }) => {
           <button className="text-black" onClick={() => handleExport("csv")}>
             Export as CSV
           </button>
-          <button className="text-black" onClick={() => handleExport("pdf")}>
-            Export as PDF
-          </button>
         </div>
       )}
     </div>
   );
 };
 
-export default ExportDropdown;
+export default ExportDropdownPng;

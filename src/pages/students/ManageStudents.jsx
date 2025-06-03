@@ -59,7 +59,7 @@ export default function ManageStudents() {
 
       const matchesBranch =
         selectedBranch === "" ||
-        selectedBranch === "All" ||
+        selectedBranch === "all" ||
         selectedBranch === "disabled"
           ? true
           : student.branch === selectedBranch;

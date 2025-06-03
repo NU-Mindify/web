@@ -1,30 +1,37 @@
 import "../../css/analytics/analytics.css";
 import axios from "axios";
-import { API_URL, categories, modes, levels } from "../../Constants";
+import { API_URL, categories, modes, levels, branches } from "../../Constants";
 import { useContext, useEffect, useState } from "react";
-import AnimatedProgressBar from "../../components/animatedProgressBar/AnimatedProgressBar";
 import PieChartAttempts from "../../components/PieChart/PieChartAttempts";
-import { branches } from "../../Constants";
-import { UserLoggedInContext } from "../../contexts/Contexts";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
+import CountUp from "../../components/CountUp/CountUp";
+import AttemptsChart from "../../components/LineChart/AttemptsChart";
+import AccountsCreatedChart from "../../components/LineChart/AccountsCreatedChart";
+import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
+import { Download } from "lucide-react";
 
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
+
+import ExportDropdownPng from "../../components/ExportDropdown/ExportDropdownPng.jsx";
 
 export default function Analytics() {
+  const { currentWebUser } = useContext(UserLoggedInContext);
+
   const [attempts, setAttempts] = useState([]);
+  const [masteryAttempts, setMasteryAttempts] = useState([]);
   const [allStudents, setAllStudents] = useState([]);
-  const [perfectCount, setPerfectCount] = useState(0);
 
-  const {currentWebUser} = useContext(UserLoggedInContext)
-
-  const [branch, setBranch] = useState(null);
   const [selectedBranch, setSelectedBranch] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
-  
-
+  const [attemptsViewMode, setAttemptsViewMode] = useState("daily");
+  const [accountsViewMode, setAccountsViewMode] = useState("daily");
 
   useEffect(() => {
     fetchAttempts();
     fetchStudents();
+    fetchAttemptsMastery();
   }, []);
 
   const fetchAttempts = async () => {
@@ -41,8 +48,27 @@ export default function Analytics() {
         },
       });
 
-      console.log(response.data);
+      // console.log("Fetched attempts:", response.data);
       setAttempts(response.data);
+    } catch (error) {
+      console.error("Error fetching analytics data:", error.message);
+    }
+  };
+
+  const fetchAttemptsMastery = async () => {
+    try {
+      const categoryList = categories.map((c) => c.id).join(",");
+
+      const response = await axios.get(`${API_URL}/getAnalytics`, {
+        params: {
+          categories: categoryList,
+          levels: "",
+          mode: "mastery",
+        },
+      });
+
+      // console.log("Fetched attempts:", response.data);
+      setMasteryAttempts(response.data);
     } catch (error) {
       console.error("Error fetching analytics data:", error.message);
     }
@@ -58,95 +84,211 @@ export default function Analytics() {
   };
 
   // Filter students based on selected branch
-  const filteredStudents = branch
-    ? allStudents.filter((student) => student.branch === branch)
-    : allStudents;
+  const filteredStudents =
+    selectedBranch === "all"
+      ? allStudents
+      : allStudents.filter((student) => student.branch === selectedBranch);
 
-  // Filter attempts to only include those from students in the selected branch
-  const filteredAttempts = branch
-    ? attempts.filter((attempt) =>
-        filteredStudents.some((student) => student._id === attempt.user_id?._id)
-      )
-    : attempts;
+  const filteredStudentIds = new Set(filteredStudents.map((s) => s._id));
 
-  // Filtered takers based on filtered students and attempts
-  const filteredAttemptedUserIds = new Set(
-    filteredAttempts.map((item) => item.user_id?._id)
+  // Filtered attempts by student and category
+  const filteredAttemptsByStudent =
+    selectedBranch === "all"
+      ? attempts
+      : attempts.filter((attempt) =>
+          filteredStudentIds.has(attempt.user_id?._id)
+        );
+
+  const filteredAttempts =
+    selectedCategory === "all"
+      ? filteredAttemptsByStudent
+      : filteredAttemptsByStudent.filter(
+          (attempt) => attempt.category === selectedCategory
+        );
+
+  const competitionAttempts = filteredAttempts.filter(
+    (a) => a.mode === "competition"
   );
+  const reviewAttempts = filteredAttempts.filter((a) => a.mode === "review");
+
+  // Get IDs of students who attempted after filtering
+  const filteredAttemptedUserIds = new Set(
+    filteredAttempts.map((attempt) => attempt.user_id?._id)
+  );
+
+  // Filter students who have attempted
   const filteredAttemptedStudents = filteredStudents.filter((student) =>
     filteredAttemptedUserIds.has(student._id)
   );
 
-  useEffect(() => {
-    const perfects = filteredAttempts.filter(
-      (user) => user.correct === user.total_items && user.total_items > 0
-    );
-    setPerfectCount(perfects.length);
-  }, [filteredAttempts]);
+  //mastery filters
+  const filteredMasteryAttemptsByStudent =
+    selectedBranch === "all"
+      ? masteryAttempts
+      : masteryAttempts.filter((attempt) =>
+          filteredStudentIds.has(attempt.user_id?._id)
+        );
 
-  //counts how many got perfect then converts to percentage
-  const perfectPercent =
-    filteredAttempts.length > 0
-      ? ((perfectCount / filteredAttempts.length) * 100).toFixed(0) + "%" //para whole num
-      : 0;
+  const filteredMasteryAttempts =
+    selectedCategory === "all"
+      ? filteredMasteryAttemptsByStudent
+      : filteredMasteryAttemptsByStudent.filter(
+          (attempt) => attempt.category === selectedCategory
+        );
 
-  // Filter and calculate correct percentages for each category
-  const filterCategoryData = (category, attemptList) => {
-    const categoryAttempts = attemptList.filter(
-      (attempt) => attempt.category === category
-    );
-    return categoryAttempts.length > 0
-      ? (
-          categoryAttempts.reduce((acc, curr) => {
-            const percent = (curr.correct / curr.total_items) * 100;
-            return acc + percent;
-          }, 0) / categoryAttempts.length
-        ).toFixed(0) + "%"
-      : 0;
+  //add other mode filters + mastery mode filters
+  const totalFilteredAttemptsCount =
+    filteredAttempts.length + filteredMasteryAttempts.length;
+
+  const averageScorePercentage = (attempts) => {
+    if (attempts.length === 0) return 0;
+
+    // Sum of (correct / total_items) for each attempt
+    const totalPercentSum = attempts.reduce((sum, attempt) => {
+      if (!attempt.total_items || attempt.total_items === 0) return sum; // avoid division by zero
+      return sum + attempt.correct / attempt.total_items;
+    }, 0);
+
+    // Average percentage (0 to 1), multiply by 100 to get %
+    return (totalPercentSum / attempts.length) * 100;
   };
 
-  //get takers vs non takers per category
-  const getCategoryAttemptedStudents = (category) => {
-    const categoryAttempts = filteredAttempts.filter(
-      (attempt) => attempt.category === category
+  const competitionAvgPercent = averageScorePercentage(competitionAttempts);
+  const reviewAvgPercent = averageScorePercentage(reviewAttempts);
+  const filteredMasteryAvgPercent = averageScorePercentage(
+    filteredMasteryAttempts
+  );
+
+  //export to CSV
+  const exportAttemptsAccountsCSV = (
+    allAttempts,
+    allStudents,
+    attemptsViewMode,
+    accountsViewMode
+  ) => {
+    const now = new Date().toLocaleString();
+
+    // Helper to group by date/month
+    const groupByDate = (data, viewMode, keyGetter) => {
+      const map = {};
+      data.forEach((item) => {
+        const key = keyGetter(item);
+        if (!map[key]) map[key] = 0;
+        map[key]++;
+      });
+      return Object.entries(map).map(([date, count]) => [date, count]);
+    };
+
+    const getFormattedDate = (dateStr, mode) => {
+      const date = new Date(dateStr);
+      return mode === "daily"
+        ? date.toLocaleDateString()
+        : `${date.getFullYear()}-${(date.getMonth() + 1)
+            .toString()
+            .padStart(2, "0")}`;
+    };
+
+    const attemptsPerTime = groupByDate(allAttempts, attemptsViewMode, (a) =>
+      getFormattedDate(a.createdAt, attemptsViewMode)
     );
-    const userIds = new Set(categoryAttempts.map((a) => a.user_id?._id));
-    return filteredStudents.filter((student) => userIds.has(student._id));
+
+    const accountsPerTime = groupByDate(allStudents, accountsViewMode, (s) =>
+      getFormattedDate(s.createdAt, accountsViewMode)
+    );
+
+    // Takers vs Non-Takers
+    const attemptedIds = new Set(allAttempts.map((a) => a.user_id?._id));
+    const takers = allStudents.filter((s) => attemptedIds.has(s._id)).length;
+    const nonTakers = allStudents.length - takers;
+
+    const csvSections = [
+      `Exported on:,${now}`,
+      "",
+      "Attempts Per " + (attemptsViewMode === "daily" ? "Day" : "Month"),
+      "Date,Number of Attempts",
+      ...attemptsPerTime.map((row) => row.join(",")),
+      "",
+      "Accounts Created Per " +
+        (accountsViewMode === "daily" ? "Day" : "Month"),
+      "Date,Number of Accounts",
+      ...accountsPerTime.map((row) => row.join(",")),
+      "",
+      "Takers vs Non-Takers",
+      "Category,Count",
+      `Takers,${takers}`,
+      `Non-Takers,${nonTakers}`,
+    ];
+
+    // Category breakdown
+    const categoryNames = {
+      developmental: "Developmental Psychology",
+      abnormal: "Abnormal Psychology",
+      psychological: "Psychological Psychology",
+      industrial: "Industrial Psychology",
+      general: "General Psychology",
+    };
+
+    const categoryCounts = {};
+    allAttempts.forEach((a) => {
+      const cat = a.category;
+      if (!cat) return;
+      categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+    });
+
+    csvSections.push(
+      "",
+      "Attempts per Category",
+      "Category,Number of Attempts",
+      ...Object.entries(categoryCounts).map(
+        ([cat, count]) => `${categoryNames[cat] || cat},${count}`
+      )
+    );
+
+    csvSections.push(
+      "",
+      "Summary Scores",
+      "Competition Average %,Review Average %,Mastery Average %",
+      `${competitionAvgPercent ?? ""},${reviewAvgPercent ?? ""},${
+        filteredMasteryAvgPercent ?? ""
+      }`
+    );
+
+    const csvContent = "data:text/csv;charset=utf-8," + csvSections.join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `Analytics_Report_by_${currentWebUser.firstName} ${currentWebUser.lastName}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
-
-  const abnormalCorrectPercent = filterCategoryData(
-    "abnormal",
-    filteredAttempts
-  );
-
-  const developmentalCorrectPercent = filterCategoryData(
-    "developmental",
-    filteredAttempts
-  );
-
-  const psychologicalCorrectPercent = filterCategoryData(
-    "psychological",
-    filteredAttempts
-  );
-
-  const industrialCorrectPercent = filterCategoryData(
-    "industrial",
-    filteredAttempts
-  );
-
-  const generalCorrectPercent = filterCategoryData("general", filteredAttempts);
 
   return (
     <>
-      <div className="main-container-analytic">
+      <div className="main-container-analytics" id="main-cont-analytics">
         <div className="header-container-analytics flex flex-row justify-between">
           <h1>
-            Analytics for {branches.find(branch => branch.id === selectedBranch)?.name || "All"}
+            Analytics for{" "}
+            {branches.find((branch) => branch.id === selectedBranch)?.name ||
+              "All Branches"}
           </h1>
 
-          
-          
-          <SelectFilter
+          <div className="w-[700px] flex flex-row justify-end gap-4 mt-1.5">
+            <SelectFilter
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              disabledOption="Select Category"
+              fixOption="All Categories"
+              mainOptions={categories}
+              getOptionValue={(category) => category.id}
+              getOptionLabel={(category) => category.name}
+              addedClassName="ml-3 !w-[300px]"
+            />
+
+            <SelectFilter
               value={selectedBranch}
               onChange={(e) => setSelectedBranch(e.target.value)}
               disabledOption="Select Branch"
@@ -156,322 +298,133 @@ export default function Analytics() {
               getOptionLabel={(branch) => branch.name}
               addedClassName="ml-3 !w-[300px]"
             />
-          
-          
 
-          {branch && (
-            <button
-              onClick={() => {
-                setSelectedBranch("all");
-                setBranch(null);
+            <ExportDropdownPng
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportAttemptsAccountsCSV(
+                    filteredAttempts.concat(filteredMasteryAttempts),
+                    filteredStudents,
+                    attemptsViewMode,
+                    accountsViewMode
+                  );
+                } else if (format === "png") {
+                  exportAsPng();
+                }
               }}
-              className="btn btn-outline text-black border-black hover:bg-black hover:text-white ml-5 mt-3 h-[40px]"
-            >
-              Reset
-            </button>
-          )}
-
+            />
+          </div>
         </div>
 
         <div className="content-container-analytics">
-          {/* OVERALL ANALYTICS */}
-          <div className="analytics-container-properties flex flex-row">
+          <div className="analytics-container-properties">
             <div className="analytics-content-properties">
               <h1 className="analytics-title-text-properties">
-                Overall Analytics
+                Attempts per {attemptsViewMode === "daily" ? "Day" : "Month"}
               </h1>
 
-              <div className="progress-bar-container">
-                <AnimatedProgressBar
-                  label="Total Attempts"
-                  percent={filteredAttempts.length}
-                  color="bg-[#FFBF1A]"
-                />
-                
-
-                <AnimatedProgressBar
-                  label="Completion Rate"
-                  percent={0}
-                  color="bg-[#FFBF1A]"
-                />
-                <AnimatedProgressBar
-                  label="Perfect %"
-                  percent={parseInt(perfectPercent)}
-                  color="bg-[#FFBF1A]"
+              <div className="line-graph-container">
+                <AttemptsChart
+                  attempts={filteredAttempts.concat(filteredMasteryAttempts)}
+                  viewMode={attemptsViewMode}
+                  setViewMode={setAttemptsViewMode}
                 />
               </div>
             </div>
 
             <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">Overall</h1>
+              <h1 className="analytics-title-text-properties">
+                Accounts Created per{" "}
+                {accountsViewMode === "daily" ? "Day" : "Month"}
+              </h1>
+              <div className="line-graph-container">
+                <AccountsCreatedChart
+                  accounts={allStudents}
+                  viewMode={accountsViewMode}
+                  setViewMode={setAccountsViewMode}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT CONT */}
+
+          <div className="analytics-container-properties">
+            <div className="analytics-content-properties">
+              <h1 className="analytics-title-text-properties">
+                Analytics for{" "}
+                {categories.find((category) => category.id === selectedCategory)
+                  ?.name || "All Categories"}
+              </h1>
+
+              <div className="progress-bar-container">
+                <div className="total-attempts-container">
+                  <h1 className="total-attempts-label">Competition Attempts</h1>
+                  <p className="total-attempts-num">
+                    <CountUp end={competitionAttempts.length} />
+                  </p>
+                </div>
+
+                <div className="total-attempts-container">
+                  <h1 className="total-attempts-label">Review Attempts</h1>
+                  <p className="total-attempts-num">
+                    <CountUp end={reviewAttempts.length} />
+                  </p>
+                </div>
+
+                <div className="total-attempts-container">
+                  <h1 className="total-attempts-label">Mastery Attempts</h1>
+                  <p className="total-attempts-num">
+                    <CountUp end={filteredMasteryAttempts.length} />
+                  </p>
+                </div>
+
+                <div className="total-attempts-container">
+                  <h1 className="total-attempts-label">
+                    Competition Average Score
+                  </h1>
+                  <p className="total-attempts-num">
+                    <CountUp end={competitionAvgPercent.toFixed(0)} />%
+                  </p>
+                </div>
+
+                <div className="total-attempts-container">
+                  <h1 className="total-attempts-label">Review Average Score</h1>
+                  <p className="total-attempts-num">
+                    <CountUp end={reviewAvgPercent.toFixed(0)} />%
+                  </p>
+                </div>
+
+                <div className="total-attempts-container">
+                  <h1 className="total-attempts-label">
+                    Mastery Average Score
+                  </h1>
+                  <p className="total-attempts-num">
+                    <CountUp end={filteredMasteryAvgPercent.toFixed(0)} />%
+                  </p>
+                </div>
+
+                <div className="total-attempts-container">
+                  <h1 className="total-attempts-label">Total Attempts</h1>
+                  <p className="total-attempts-num">
+                    <CountUp end={totalFilteredAttemptsCount} />
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="analytics-content-properties">
+              <h1 className="analytics-title-text-properties">
+                {" "}
+                {categories.find((category) => category.id === selectedCategory)
+                  ?.name || "All Categories"}
+              </h1>
               <p className="text-black font-[Poppins]">Takers vs Non-Takers</p>
-              <div className="flex items-center justify-center">
-                <div
-                  className="flex justify-center items-center"
-                  style={{ width: "250px", height: "250px" }}
-                >
+              <div className="w-[100%] flex items-center justify-center">
+                <div className="pie-chart-properties">
                   <PieChartAttempts
                     allStudents={filteredStudents}
                     attemptedStudents={filteredAttemptedStudents}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* ABNORMAL PSYCH ANALYTICS */}
-          <div className="analytics-container-properties flex flex-row">
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
-                Abnormal Psychology Analytics
-              </h1>
-
-              <div className="progress-bar-container">
-                <AnimatedProgressBar
-                  label="Total Attempts"
-                  percent={
-                      filteredAttempts.filter(
-                        (attempt) => attempt.category === "abnormal"
-                      ).length
-                    }
-                  color="bg-[#FFBF1A]"
-                />
-              </div>
-
-              <AnimatedProgressBar
-                label="Correct %"
-                percent={parseInt(abnormalCorrectPercent)}
-                color="bg-[#FFBF1A]"
-              />
-              <AnimatedProgressBar
-                label="Mastery %"
-                percent={0}
-                color="bg-[#FFBF1A]"
-              />
-            </div>
-
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
-                Abnormal Psychology
-              </h1>
-              <p className="text-black font-[Poppins]">Takers vs Non-Takers</p>
-              <div className="flex items-center justify-center">
-                <div
-                  className="flex justify-center items-center"
-                  style={{ width: "250px", height: "250px" }}
-                >
-                  <PieChartAttempts
-                    allStudents={filteredStudents}
-                    attemptedStudents={getCategoryAttemptedStudents("abnormal")}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* DEVELOPMENTAL PSYCH ANALYTICS */}
-          <div className="analytics-container-properties flex flex-row">
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
-                Developmental Psychology Analytics
-              </h1>
-
-              <div className="progress-bar-container">
-                <AnimatedProgressBar
-                  label="Total Attempts"
-                  percent={
-                      filteredAttempts.filter(
-                        (attempt) => attempt.category === "developmental"
-                      ).length
-                    }
-                  color="bg-[#FFBF1A]"
-                />
-                
-              </div>
-
-              <AnimatedProgressBar
-                label="Correct %"
-                percent={parseInt(developmentalCorrectPercent)}
-                color="bg-[#FFBF1A]"
-              />
-              <AnimatedProgressBar
-                label="Mastery %"
-                percent={0}
-                color="bg-[#FFBF1A]"
-              />
-            </div>
-
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
-                Developmental Psychology
-              </h1>
-              <p className="text-black font-[Poppins]">Takers vs Non-Takers</p>
-              <div className="flex items-center justify-center">
-                <div
-                  className="flex justify-center items-center"
-                  style={{ width: "250px", height: "250px" }}
-                >
-                  <PieChartAttempts
-                    allStudents={filteredStudents}
-                    attemptedStudents={getCategoryAttemptedStudents(
-                      "developmental"
-                    )}
-                  />
-                </div>
-              </div>
-              
-            </div>
-          </div>
-
-          {/* PSYCHOLOGICAL PSYCH ANALYTICS */}
-          <div className="analytics-container-properties flex flex-row">
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
-                Psychological Psychology Analytics
-              </h1>
-
-              <div className="progress-bar-container">
-                <AnimatedProgressBar
-                  label="Total Attempts"
-                  percent={
-                      filteredAttempts.filter(
-                        (attempt) => attempt.category === "psychological"
-                      ).length
-                    }
-                  color="bg-[#FFBF1A]"
-                />
-              </div>
-
-              <AnimatedProgressBar
-                label="Correct %"
-                percent={parseInt(psychologicalCorrectPercent)}
-                color="bg-[#FFBF1A]"
-              />
-              <AnimatedProgressBar
-                label="Mastery %"
-                percent={0}
-                color="bg-[#FFBF1A]"
-              />
-            </div>
-
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
-                Psychological Psychology
-              </h1>
-              <p className="text-black font-[Poppins]">Takers vs Non-Takers</p>
-              <div className="flex items-center justify-center">
-                <div
-                  className="flex justify-center items-center"
-                  style={{ width: "250px", height: "250px" }}
-                >
-                  <PieChartAttempts
-                    allStudents={filteredStudents}
-                    attemptedStudents={getCategoryAttemptedStudents(
-                      "psychological"
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* INDUSTRIAL PSYCH ANALYTICS */}
-          <div className="analytics-container-properties flex flex-row">
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
-                Industrial/Organizational Psychology Analytics
-              </h1>
-
-              <div className="progress-bar-container">
-                <AnimatedProgressBar
-                  label="Total Attempts"
-                  percent={
-                      filteredAttempts.filter(
-                        (attempt) => attempt.category === "industrial"
-                      ).length
-                    }
-                  color="bg-[#FFBF1A]"
-                />
-              </div>
-
-              <AnimatedProgressBar
-                label="Correct %"
-                percent={parseInt(industrialCorrectPercent)}
-                color="bg-[#FFBF1A]"
-              />
-              <AnimatedProgressBar
-                label="Mastery %"
-                percent={0}
-                color="bg-[#FFBF1A]"
-              />
-            </div>
-
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
-                Industrial/Organizational Psychology
-              </h1>
-              <p className="text-black font-[Poppins]">Takers vs Non-Takers</p>
-              <div className="flex items-center justify-center">
-                <div
-                  className="flex justify-center items-center"
-                  style={{ width: "250px", height: "250px" }}
-                >
-                  <PieChartAttempts
-                    allStudents={filteredStudents}
-                    attemptedStudents={getCategoryAttemptedStudents(
-                      "industrial"
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* GENERAL PSYCH ANALYTICS */}
-          <div className="analytics-container-properties flex flex-row">
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
-                General Psychology Analytics
-              </h1>
-
-              <div className="progress-bar-container">
-                <AnimatedProgressBar
-                  label="Total Attempts"
-                  percent={
-                      filteredAttempts.filter(
-                        (attempt) => attempt.category === "general"
-                      ).length
-                    }
-                  color="bg-[#FFBF1A]"
-                />
-
-              </div>
-
-              <AnimatedProgressBar
-                label="Correct %"
-                percent={parseInt(generalCorrectPercent)}
-                color="bg-[#FFBF1A]"
-              />
-              <AnimatedProgressBar
-                label="Mastery %"
-                percent={0}
-                color="bg-[#FFBF1A]"
-              />
-            </div>
-
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
-                General Psychology
-              </h1>
-              <p className="text-black font-[Poppins]">Takers vs Non-Takers</p>
-              <div className="flex items-center justify-center">
-                <div
-                  className="flex justify-center items-center"
-                  style={{ width: "250px", height: "250px" }}
-                >
-                  <PieChartAttempts
-                    allStudents={filteredStudents}
-                    attemptedStudents={getCategoryAttemptedStudents("general")}
                   />
                 </div>
               </div>

@@ -87,12 +87,12 @@ export default function AccountManagement() {
 
       const matchesBranch =
         selectedBranch === "" ||
-        selectedBranch === "All" ||
+        selectedBranch === "all" ||
         user.branch === selectedBranch;
 
       const matchesPosition =
         selectedPosition === "" ||
-        selectedPosition === "All" ||
+        selectedPosition === "all" ||
         user.position === selectedPosition;
 
       const matchesArchived = showArchived ? user.is_deleted : !user.is_deleted;

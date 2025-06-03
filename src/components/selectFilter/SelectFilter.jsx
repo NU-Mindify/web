@@ -17,7 +17,7 @@ export default function SelectFilter({
         <option value="" disabled hidden>{disabledOption}</option>
       )}
       {fixOption && (
-        <option value="All">{fixOption}</option>
+        <option value="all">{fixOption}</option>
       )}
       {mainOptions.map((option, index) => (
         <option key={index} value={getOptionValue(option)}>

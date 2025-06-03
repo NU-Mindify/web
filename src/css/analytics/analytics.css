@@ -3,7 +3,7 @@
 @plugin "daisyui";
 
 .main-container-analytics{
-    @apply w-full h-full flex flex-col rounded-xl overflow-y-auto;
+    @apply w-full h-full flex flex-col rounded-xl overflow-y-hidden;
 }
 
 .header-container-analytics{
@@ -15,15 +15,16 @@
 }
 
 .content-container-analytics{
-    @apply grid grid-cols-1 gap-4 mt-3 font-[Poppins];
+    @apply gap-4 mt-3 font-[Poppins]
+    flex flex-row;
 }
 
 .analytics-container-properties{
-    @apply w-full h-[400px] bg-white rounded-xl;
+    @apply w-[50%] h-full bg-white rounded-xl;
 }
 
 .analytics-content-properties{
-    @apply flex flex-col w-[50%] h-[385px] p-10 m-2;
+    @apply flex flex-col w-[95%] h-[373px] p-6 m-3 mt-[-3px];
 }
 
 .analytics-title-text-properties {
@@ -31,11 +32,33 @@
 }
 
 .progress-bar-container {
-    @apply flex-row mt-7
+    @apply flex flex-wrap mt-3 w-full gap-1.5 items-center justify-center p-1
 }
 
 .analytics-progress-bar {
     @apply w-[95%] rounded-full mr-5;
     appearance: none; 
     overflow: hidden; 
+}
+
+.total-attempts-container{
+    @apply w-[230px] h-[100px] bg-white flex items-center justify-center flex-col
+    rounded-2xl shadow-[0_3px_10px_rgb(0,0,0,0.2)]
+}
+
+.total-attempts-label{
+    @apply text-black font-[Poppins] text-center
+}
+
+.total-attempts-num{
+    @apply text-black font-[Poppins] text-[45px]
+    font-bold mt-1
+}
+
+.pie-chart-properties{
+    @apply w-[240px] h-[240px] flex justify-center items-center
+}
+
+.line-graph-container{
+    @apply w-full h-[210px] flex justify-center items-center mt-8
 }
