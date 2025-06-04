@@ -3,7 +3,7 @@
 @plugin "daisyui";
 
 .main-container-analytics{
-    @apply w-full h-full flex flex-col rounded-xl overflow-y-hidden;
+    @apply w-full h-full flex flex-col rounded-xl overflow-y-auto overflow-hidden;
 }
 
 .header-container-analytics{

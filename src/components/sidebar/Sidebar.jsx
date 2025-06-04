@@ -18,6 +18,7 @@ import axios from "axios";
 import { API_URL } from "../../Constants";
 import close from "../../assets/sidebar/close.svg";
 import logs from "../../assets/sidebar/logs.svg";
+import school from "../../assets/sidebar/school.svg";
 
 import { UserLoggedInContext } from "../../contexts/Contexts";
 
@@ -189,6 +190,13 @@ export default function Sidebar() {
       text: "Activity Logs",
       icon: logs,
       path: "/logs",
+      superAdmin: true,
+    },
+    {
+      id: "campus",
+      text: "NU Campuses",
+      icon: school,
+      path: "/branches",
       superAdmin: true,
     },
     {
