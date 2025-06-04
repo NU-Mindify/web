@@ -190,7 +190,7 @@ export default function Sidebar() {
       text: "Activity Logs",
       icon: logs,
       path: "/logs",
-      superAdmin: true,
+      bothAdmin: true,
     },
     {
       id: "campus",
