@@ -457,16 +457,22 @@ export default function Leaderboard() {
           </div>
 
           <div className="w-full flex flex-row ml-4 mt-[-10px] mb-3">
-            <SelectFilter
-              value={classicSelectedBranch}
-              onChange={(e) => setClassicSelectedBranch(e.target.value)}
-              disabledOption="Select Branch"
-              fixOption="All Branches"
-              mainOptions={branches}
-              getOptionValue={(branch) => branch.id}
-              getOptionLabel={(branch) => branch.name}
-              addedClassName=""
-            />
+
+            {
+              currentWebUser.position.toLowerCase() === "super admin" && 
+
+              <SelectFilter
+                value={classicSelectedBranch}
+                onChange={(e) => setClassicSelectedBranch(e.target.value)}
+                disabledOption="Select Branch"
+                fixOption="All Branches"
+                mainOptions={branches}
+                getOptionValue={(branch) => branch.id}
+                getOptionLabel={(branch) => branch.name}
+                addedClassName=""
+              />
+            }
+            
 
             <SelectFilter
               value={selectedCategoryClassic}
@@ -623,16 +629,21 @@ export default function Leaderboard() {
           </div>
 
           <div className="w-full flex flex-row ml-4 mt-[-10px] mb-3">
-            <SelectFilter
-              value={masterySelectedBranch}
-              onChange={(e) => setMasterySelectedBranch(e.target.value)}
-              disabledOption="Select Branch"
-              fixOption="All Branches"
-              mainOptions={branches}
-              getOptionValue={(branch) => branch.id}
-              getOptionLabel={(branch) => branch.name}
-              addedClassName=""
-            />
+
+            {
+              currentWebUser.position.toLowerCase() === "super admin" && 
+              <SelectFilter
+                value={masterySelectedBranch}
+                onChange={(e) => setMasterySelectedBranch(e.target.value)}
+                disabledOption="Select Branch"
+                fixOption="All Branches"
+                mainOptions={branches}
+                getOptionValue={(branch) => branch.id}
+                getOptionLabel={(branch) => branch.name}
+                addedClassName=""
+              />
+            }
+            
 
             <SelectFilter
               value={selectedCategoryMastery}
