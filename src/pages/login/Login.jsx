@@ -13,6 +13,7 @@ import { Eye, EyeOff } from "lucide-react";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import SelectFilter from "../../components/selectFilter/SelectFilter.jsx";
 
 export default function Login() {
   const { setCurrentWebUserUID } = useContext(UserLoggedInContext);
@@ -158,7 +159,6 @@ export default function Login() {
       setShowResetModal(false);
       setResetEmail("");
     } catch (error) {
-
       setValidationMessage(
         "Error sending password reset email. Please try again."
       );
@@ -169,7 +169,7 @@ export default function Login() {
   };
 
   return (
-    <div className="login-main-container relative">
+    <div className="login-main-container">
       <img
         src={pattern}
         alt="pattern"
@@ -189,108 +189,111 @@ export default function Login() {
       >
         <div className="logo-container"></div>
 
-        <div className="login-form">
-          <div className="input-container">
-            <h1 className="welcome-txt">WELCOME!</h1>
-            <h3 className="mini-txt">Sign in to access your account.</h3>
+        <div className="w-1/2 h-full flex justify-center items-center">
+          <div className="login-form">
+            <div className="input-container">
+              <h1 className="welcome-txt">WELCOME!</h1>
+              <h3 className="mini-txt">Sign in to access your account.</h3>
 
-            <label className="floating-label">
-              <span className="spanner">Campus</span>
-              <select
-                className="select select-ghost inputs"
-                value={branch}
-                onChange={(e) => setBranch(e.target.value)}
-              >
-                <option disabled value="default">
-                  Select a Campus
-                </option>
-                {branches.map((branch) => (
-                  <option value={branch.id} key={branch.id}>
-                    {branch.name}
+              <label className="floating-label">
+                <span className="spanner">Campus</span>
+                <select
+                  className="select select-ghost inputs"
+                  value={branch}
+                  onChange={(e) => setBranch(e.target.value)}
+                  defaultValue="Select a Campus"
+                >
+                  <option disabled value="default" hidden>
+                    Select a Campus
                   </option>
-                ))}
-              </select>
-            </label>
+                  {branches.map((branch) => (
+                    <option value={branch.id} key={branch.id}>
+                      {branch.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
 
-            <label className="floating-label">
-              <span className="spanner">Email</span>
-              <input
-                className="input validator inputs"
-                type="email"
-                required
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleLoginFirebase(e);
-                  }
-                }}
-              />
-            </label>
+              <label className="floating-label">
+                <span className="spanner">Email</span>
+                <input
+                  className="input validator inputs"
+                  type="email"
+                  required
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleLoginFirebase(e);
+                    }
+                  }}
+                />
+              </label>
 
-            <label className="floating-label relative">
-              <span className="spanner">Password</span>
-              <input
-                type={showPassword ? "text" : "password"}
-                className="input validator inputs !pr-12"
-                required
-                placeholder="Password"
-                minLength="8"
-                value={password}
-                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleLoginFirebase(e);
-                  }
-                }}
-              />
+              <label className="floating-label relative">
+                <span className="spanner">Password</span>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="input validator inputs !pr-12"
+                  required
+                  placeholder="Password"
+                  minLength="8"
+                  value={password}
+                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleLoginFirebase(e);
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-5 top-[22px] text-gray-600 text-sm"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </label>
+
+              <div className="remember-container">
+                <input type="checkbox" className="checkbox" />
+                <p className="remember-txt">Remember me</p>
+                <button
+                  className="ml-50 underline text-blue-700 cursor-pointer pl-2 text-sm w-full"
+                  onClick={() => setShowResetModal(true)}
+                >
+                  Forgot password?
+                </button>
+              </div>
+
               <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-5 top-[22px] text-gray-600 text-sm"
+                className="login-btn"
+                onClick={handleLoginFirebase}
+                disabled={isLoading}
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                {isLoading ? "Signing you in..." : "Sign In"}
               </button>
-            </label>
 
-            <div className="remember-container">
-              <input type="checkbox" className="checkbox" />
-              <p className="remember-txt">Remember me</p>
+              <div className="flex items-center w-full mt-5">
+                <div className="flex-grow h-px bg-black"></div>
+                <span className="px-4 text-black text-xs">
+                  OR NO ACCOUNT YET?
+                </span>
+                <div className="flex-grow h-px bg-black"></div>
+              </div>
+
               <button
-                className="ml-50 underline text-blue-700 cursor-pointer pl-2 text-sm w-full"
-                onClick={() => setShowResetModal(true)}
+                className="login-btn"
+                onClick={() => {
+                  navigate("/signup");
+                }}
               >
-                Forgot password?
+                Sign Up
               </button>
             </div>
-
-            <button
-              className="login-btn"
-              onClick={handleLoginFirebase}
-              disabled={isLoading}
-            >
-              {isLoading ? "Signing you in..." : "Sign In"}
-            </button>
-
-            <div className="flex items-center w-full mt-5">
-              <div className="flex-grow h-px bg-black"></div>
-              <span className="px-4 text-black text-xs">
-                OR NO ACCOUNT YET?
-              </span>
-              <div className="flex-grow h-px bg-black"></div>
-            </div>
-
-            <button
-              className="login-btn"
-              onClick={() => {
-                navigate("/signup");
-              }}
-            >
-              Sign Up
-            </button>
           </div>
         </div>
       </div>
