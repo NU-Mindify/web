@@ -21,7 +21,6 @@ export default function Login() {
   const [logoTransitioned, setLogoTransitioned] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
-  const [verifyEmail, setVerifyEmail] = useState("");
   const [password, setPassword] = useState("");
   const [branch, setBranch] = useState("default");
 
@@ -33,6 +32,9 @@ export default function Login() {
   const [showValidationModal, setShowValidationModal] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const [isEmailValid, setIsEmailValid] = useState(email);
+  const [isPasswordValid, setIsPasswordValid] = useState(password);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -217,12 +219,18 @@ export default function Login() {
               <label className="floating-label">
                 <span className="spanner">Email</span>
                 <input
-                  className="input validator inputs"
+                  className={`input validator inputs ${
+                    isEmailValid || email === "" ? "" : "!border-red-500"
+                  }`}
                   type="email"
                   required
                   placeholder="Email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setEmail(value);
+                    setIsEmailValid(value.includes(".edu.ph"));
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       handleLoginFirebase(e);
@@ -235,13 +243,13 @@ export default function Login() {
                 <span className="spanner">Password</span>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="input validator inputs !pr-12"
+                  className={`input validator inputs !pr-12 ${
+                    password && password.length < 6 ? "!border-red-500" : ""
+                  }`}
                   required
                   placeholder="Password"
-                  minLength="8"
+                  minLength="6"
                   value={password}
-                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                  title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
