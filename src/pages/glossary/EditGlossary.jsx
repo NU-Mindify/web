@@ -6,6 +6,7 @@ import { API_URL } from "../../Constants";
 import closebtn from "../../assets/glossary/close-btn.svg";
 import Buttons from "../../components/buttons/Buttons";
 import { UserLoggedInContext } from "../../contexts/Contexts";
+import { Info } from "lucide-react";
 
 export default function EditGlossary({ onClose, term, onTermUpdated }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -15,6 +16,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
   const [editedWord, setEditedWord] = useState(word);
   const [editedMeaning, setEditedMeaning] = useState(meaning);
   const [editTags, setEditTags] = useState(tags);
+  const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
 
   const hasChanges = () => {
     const originalTags = tags.map((tag) => tag.trim()).sort();
@@ -118,15 +120,23 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
     setShowDeleteConfirm(false);
   };
 
+  const handleBackClick = () => {
+    if (hasChanges()) {
+      setShowBackConfirmModal(true);
+    } else {
+      onClose();
+    }
+  };
+
   return (
     <>
       <div className="modal-overlay">
         <div className="edit-glossary-container">
           <div className="edit-header">
             <h1 className="edit-title">Edit Terminology</h1>
-            <button className="back-btn" onClick={onClose}>
-              <img src={closebtn} alt="close btn" />
-            </button>
+              <button className="back-btn" onClick={handleBackClick}>
+                <img src={closebtn} alt="close btn" />
+              </button>
           </div>
 
           <div className="edit-content">
@@ -218,6 +228,36 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
                         />
                     </button>
                 </div> */}
+
+                {showBackConfirmModal && (
+                  <div className="modal-overlay confirm-delete-popup">
+                    <div className="confirm-dialog">
+                      <div className="flex justify-center">
+                        <Info className="text-black mb-4" size={30} />
+                      </div>
+                      <p>You have unsaved input. Are you sure you want to go back?</p>
+                      <div className="popup-buttons">
+                        <button
+                          className="btn-delete"
+                          onClick={() => {
+                            setShowBackConfirmModal(false);
+                            onClose(); 
+                          }}
+                        >
+                          Yes, Go Back
+                        </button>
+                        <button
+                          className="btn-cancel"
+                          onClick={() => setShowBackConfirmModal(false)}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+
         </div>
       </div>
     </>

@@ -15,6 +15,7 @@ import edit from "../../assets/questions/editQuestionbtn.svg";
 import saveBTN from "../../assets/questions/savebtn.svg";
 import remove from "../../assets/questions/removeQuestionbtn.svg";
 import save from "../../assets/questions/saveQuestionbtn.svg";
+import { Info } from "lucide-react";
 
 
 function AddQuestion() {
@@ -28,6 +29,7 @@ function AddQuestion() {
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [category, setCategory] = useState("");
   const [categoryName, setCategoryName] = useState("");
+  const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
 
   const [onEdit, setOnEdit] = useState(false);
 
@@ -217,16 +219,28 @@ function AddQuestion() {
         <div className="add-ques-header">
           <div className="add-ques-sub-header">
             <h1>Add Question</h1>
-            <button
-              className="w-[50px] h-[50px]"
-              onClick={() => {
+          <button
+            className="w-[50px] h-[50px]"
+            onClick={() => {
+              const hasInput =
+                question.question.trim() !== "" ||
+                question.choices.some((c) => c.text.trim() !== "" || c.rationale.trim() !== "") ||
+                question.rationale.trim() !== "" ||
+                question.difficulty.trim() !== "" ||
+                question.level !== 1;
+
+              if (hasInput) {
+                setShowBackConfirmModal(true);
+              } else {
                 nav("/question", {
                   state: { category, categoryName, catSelected: true },
                 });
-              }}
-            >
-              <img src={closebtn} alt="close" />
-            </button>
+              }
+            }}
+          >
+            <img src={closebtn} alt="close" />
+          </button>
+
           </div>
 
           <h3>Create Question for {categoryName}</h3>
@@ -515,6 +529,34 @@ function AddQuestion() {
             onClose={() => setShowValidationModal(false)}
           />
         )}
+
+        {showBackConfirmModal && (
+          <div className="modal-overlay confirm-delete-popup">
+            <div className="confirm-dialog">
+              <div className="flex justify-center">
+                <Info className="text-black mb-4" size={30} />
+              </div>
+              <p>You have unsaved input. Are you sure you want to go back?</p>
+              <div className="popup-buttons">
+                <button
+                  className="btn-delete"
+                  onClick={() => {
+                    setShowBackConfirmModal(false); // close modal
+                    nav("/question", {
+                      state: { category, categoryName, catSelected: true },
+                    });
+                  }}
+                >
+                  Yes, Go Back
+                </button>
+                <button className="btn-cancel" onClick={() => setShowBackConfirmModal(false)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
