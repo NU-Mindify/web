@@ -15,7 +15,7 @@ import AccountManagement from "./pages/accounts/AccountManagement";
 import Login from "./pages/login/Login";
 import EditProfile from "./pages/profile/EditProfile";
 import EditGlossary from "./pages/glossary/EditGlossary";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "./Firebase";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AddQuestion from "./pages/questions/AddQuestion";
@@ -28,7 +28,6 @@ import ActivityLogs from "./pages/activityLogs/ActivityLogs";
 import SignUp from "./pages/signUp/SignUp";
 import ApproveAccount from "./pages/accounts/ApproveAccount";
 import Branches from "./pages/branches/Branches";
-import TermsAndConditions from "./pages/login/TermsAndConditions";
 
 const queryClient = new QueryClient();
 
