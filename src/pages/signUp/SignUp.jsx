@@ -42,6 +42,8 @@ export default function SignUp() {
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [errors, setErrors] = useState({});
+  const [termscondError, setTermsCondError] = useState("");
+
 
 
   const navigate = useNavigate();
@@ -113,10 +115,12 @@ export default function SignUp() {
     }
 
     if (!acceptTermsAndCond){
+      // setTermsCondError("You must accept the Terms & Conditions.");
       setValidationMessage("You must accept the Terms & Conditions.");
       setShowValidationModal(true);
       return;
-    }
+    } 
+
 
     const finalWebUser = {
       firstName,
@@ -434,17 +438,26 @@ export default function SignUp() {
           </div>
           
             <div className="form-footer">
-              {/* NOT SURE KASI IF TUTUTLOY NIYO PRIVACY POLICY, GINAYA KO LANG NASA FIGMA */}
               <label className="form-checkbox">   
-                <input type="checkbox" 
-                checked={acceptTermsAndCond}
-                onChange={(e) => setAcceptTermsAndCond(e.target.checked)}/>
+                <input 
+                  type="checkbox" 
+                  checked={acceptTermsAndCond}
+                  onChange={(e) => {
+                    setAcceptTermsAndCond(e.target.checked);
+                    if (e.target.checked) {
+                      setTermsCondError(""); 
+                    }
+                  }}
+                />
                 <span>
-                  {/*MAY LINK NA SA TERMS AND CONDITION (NAKA ROUTE SA TERMS AND CONDITION, SA PAGES>LOGIN>TERMSANDCONDITION.JSX); DESIGN NALANG SA PAGE AND CONTENT*/} 
                   I accept and acknowledge the
                   <Link to="/terms-and-conditions" className="terms-and-cond"> Terms and Conditions. </Link>
                 </span>
               </label>
+
+              {/* {termscondError && (
+                <p className="error-message">{termscondError}</p>
+              )} */}
 
               <button
                 className="register-button"
