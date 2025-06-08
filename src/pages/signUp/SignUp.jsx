@@ -36,7 +36,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const [acceptTermsAndCond, setAcceptTermsAndCond] = useState(false);
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
@@ -107,6 +107,12 @@ export default function SignUp() {
 
     if (password.length < 6) {
       setValidationMessage("Password must be at least 6 characters long.");
+      setShowValidationModal(true);
+      return;
+    }
+
+    if (!acceptTermsAndCond){
+      setValidationMessage("You must accept the Terms & Conditions.");
       setShowValidationModal(true);
       return;
     }
@@ -428,12 +434,14 @@ export default function SignUp() {
           
             <div className="form-footer">
               {/* NOT SURE KASI IF TUTUTLOY NIYO PRIVACY POLICY, GINAYA KO LANG NASA FIGMA */}
-              {/* <label className="form-checkbox">   
-                <input type="checkbox" />
+              <label className="form-checkbox">   
+                <input type="checkbox" 
+                checked={acceptTermsAndCond}
+                onChange={(e) => setAcceptTermsAndCond(e.target.checked)}/>
                 <span>
-                  {/* I accept and acknowledge the <a href="#">Privacy Policy</a>. }
+                  I accept and acknowledge the <a href="#"> {/*Link a T&C Page here*/} Terms and Conditions. </a>
                 </span>
-              </label> */}
+              </label>
 
               <button
                 className="register-button"
