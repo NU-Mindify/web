@@ -169,10 +169,20 @@ export default function SignUp() {
 
     switch (fieldName) {
       case "firstName":
-        if (!value.trim()) message = "First name is required.";
+        if (!value.trim()) {
+          message = "First name is required.";
+        }
+        else if (value.trim().length<2) {
+          message = "First name must be at least 2 characters.";
+        }
         break;
       case "lastName":
-        if (!value.trim()) message = "Last name is required.";
+        if (!value.trim()) {
+          message = "Last name is required.";
+        }
+        else if (value.trim().length<2) {
+          message = "Last name must be at least 2 characters.";
+        }
         break;
       case "branch":
         if (!value) message = "Campus is required.";
