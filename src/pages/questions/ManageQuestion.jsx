@@ -18,6 +18,7 @@ import { Plus } from "lucide-react";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import { ActiveContext } from "../../contexts/Contexts";
 import Buttons from "../../components/buttons/Buttons";
+import { useQueryClient } from "@tanstack/react-query";
 
 const categoriesObj = [
   {
@@ -54,6 +55,12 @@ export default function ManageQuestion() {
   const { subSelected, setSubSelected } = useContext(ActiveContext);
 
   const [totalQuestion, setTotalQuestion] = useState([]);
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+  const [questionToDeleteId, setQuestionToDeleteId] = useState(null);
+  const [showRestoreConfirmModal, setShowRestoreConfirmModal] = useState(false);
+  const [questionToRestoreId, setQuestionToRestoreId] = useState(null);
+  const queryClient = useQueryClient();
+
 
   useEffect(() => {
     getTotalQuestion();
@@ -117,26 +124,30 @@ export default function ManageQuestion() {
       },
     });
   };
-  const handleDelete = async (id) => {
+
+  const confirmDeleteQuestion = async () => {
     try {
-      await axios.put(`${API_URL}/deleteQuestion/${id}`, {
-        question_id: id,
+      await axios.put(`${API_URL}/deleteQuestion/${questionToDeleteId}`, {
+        question_id: questionToDeleteId,
         is_deleted: true,
       });
-      getData();
+      setShowDeleteConfirmModal(false);
+      setQuestionToDeleteId(null);
+      queryClient.invalidateQueries(["questionsList", category]); 
     } catch (error) {
-      console.error("Error deleting Question:", error);
+      console.error("Error deleting question:", error);
     }
   };
 
-  const handleRestore = async (id) => {
-    console.log(id);
+    const confirmRestoreQuestion = async () => {
     try {
-      await axios.put(`${API_URL}/deleteQuestion/${id}`, {
-        question_id: id,
+      await axios.put(`${API_URL}/deleteQuestion/${questionToRestoreId}`, {
+        question_id: questionToRestoreId,
         is_deleted: false,
       });
-      getData();
+      setShowRestoreConfirmModal(false);
+      setQuestionToRestoreId(null);
+      queryClient.invalidateQueries(["questionsList", category]);
     } catch (error) {
       console.error("Error restoring Question:", error);
     }
@@ -220,7 +231,10 @@ export default function ManageQuestion() {
                 Edit
               </button>
               <button
-                onClick={() => handleRestore(data._id)}
+                onClick={() => {
+                  setQuestionToRestoreId(data._id);
+                  setShowRestoreConfirmModal(true);
+                }}
                 className="btn-action"
               >
                 Restore
@@ -229,12 +243,15 @@ export default function ManageQuestion() {
           ) : (
             <div className="question-actions">
               <button className="btn-action">Edit</button>
-              <button
-                onClick={() => handleDelete(data._id)}
-                className="btn-action"
-              >
-                Delete
-              </button>
+                <button
+                  onClick={() => {
+                    setQuestionToDeleteId(data._id);
+                    setShowDeleteConfirmModal(true);
+                  }}
+                  className="btn-action"
+                >
+                  Delete
+                </button>
             </div>
           )}
         </div>
@@ -408,6 +425,52 @@ export default function ManageQuestion() {
           ))}
         </div>
       )}
+
+      {showDeleteConfirmModal && (
+        <div className="modal-overlay confirm-delete-popup">
+          <div className="confirm-dialog">
+            <div className="flex justify-center">
+              <h2>Delete Confirmation</h2>
+            </div>
+            <p>Are you sure you want to delete this question?</p>
+            <div className="popup-buttons">
+              <button className="btn-delete" onClick={confirmDeleteQuestion}>
+                Yes, Delete
+              </button>
+              <button
+                className="btn-cancel"
+                onClick={() => setShowDeleteConfirmModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showRestoreConfirmModal && (
+        <div className="modal-overlay confirm-delete-popup">
+          <div className="confirm-dialog">
+            <div className="flex justify-center">
+              <h2>Restore Confirmation</h2>
+            </div>
+            <p>Are you sure you want to restore this question?</p>
+            <div className="popup-buttons">
+              <button className="btn-delete" onClick={confirmRestoreQuestion}>
+                Yes, Restore
+              </button>
+              <button
+                className="btn-cancel"
+                onClick={() => setShowRestoreConfirmModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
     </div>
   );
 }
