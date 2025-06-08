@@ -2,10 +2,14 @@
 @reference "tailwindcss";
 @plugin "daisyui";
 
-.logs-main-container{
-    @apply w-full h-full bg-white overflow-y-auto;
-    scrollbar-width: thin;
-    scrollbar-color: black transparent;
+.logs-main-container {
+  @apply font-[Poppins] p-3 flex flex-col w-full bg-white;
+  
+  height: 100vh;         
+  overflow-y: auto;      
+  
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
 }
 
 .logs-main-container::-webkit-scrollbar {
@@ -18,5 +22,14 @@
 }
 
 .logs-main-container::-webkit-scrollbar-track {
-  background: black;
+  background: transparent;
+}
+
+
+.logs-header {
+  @apply w-full h-auto p-1 ;
+}
+
+.logs-title {
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFC916] h-[50px] pl-3 mt-3;
 }
