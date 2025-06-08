@@ -255,7 +255,6 @@ function AddQuestion() {
                 <img src={closebtn} alt="close" />
               </button>
 
-
           </div>
 
           <h3>Create Question for {categoryName}</h3>

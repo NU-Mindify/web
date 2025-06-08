@@ -203,16 +203,21 @@ export default function ManageStudents() {
             addedClassName="w-[80%] h-[50px] ml-1"
           />
 
-          <SelectFilter
-            value={selectedBranch}
-            onChange={(e) => setSelectedBranch(e.target.value)}
-            disabledOption="Select Branch"
-            fixOption="All Branches"
-            mainOptions={branches}
-            getOptionValue={(branch) => branch.id}
-            getOptionLabel={(branch) => branch.name}
-            addedClassName="ml-3"
-          />
+
+          {
+            currentWebUser.position.toLowerCase() === "super admin" &&
+            <SelectFilter
+              value={selectedBranch}
+              onChange={(e) => setSelectedBranch(e.target.value)}
+              disabledOption="Select Branch"
+              fixOption="All Branches"
+              mainOptions={branches}
+              getOptionValue={(branch) => branch.id}
+              getOptionLabel={(branch) => branch.name}
+              addedClassName="ml-3"
+            />
+          }
+          
 
           <ExportDropdown
             onExport={(format) => {

@@ -49,7 +49,7 @@ html, body, #root {
 /* ------------------- MAIN CONTAINER ---------------------*/
 .login-main-container {
   background: radial-gradient(circle at center, #4A6FB4 0%, #27298F 70%, #273574 100%);
-  @apply w-screen h-[100svh] p-5 flex flex-col lg:flex-row justify-center items-center;
+  @apply w-screen h-[100svh] p-5 flex flex-row justify-center items-center;
 }
 
 /********************************* END *******************************/
@@ -144,15 +144,9 @@ html, body, #root {
 
 
 .login-form {
-  width: 100%;
-  max-width: 600px;
-  min-width: 320px;
-  height: 60vh;
-  min-height: 600px;
+  width: 80%;
   font-family: 'Poppins', sans-serif;
-
-  @apply bg-white flex flex-col items-center rounded-xl overflow-y-auto p-2 opacity-0 mt-30 mr-10 pt-20;
-
+  @apply bg-white flex justify-center items-center p-10 rounded-2xl;
   animation: fadeUp 1.8s ease-in forwards;
   animation-delay: 1.5s;
   scrollbar-width: none;
@@ -196,7 +190,15 @@ html, body, #root {
 .login-btn {
   @apply btn rounded-xl mt-[15px] h-[40px] bg-[#FFC300] text-black 
          sm:btn-sm md:btn-md lg:btn-lg;
+
+
+  &:disabled {
+    background-color: #FFC300 !important;
+    opacity: 0.8;
+    cursor: not-allowed;
+  }
 }
+
 
 .login-btn-ms {
   @apply btn rounded-s mt-[15px] h-[40px] bg-[#F3F9FA] text-black

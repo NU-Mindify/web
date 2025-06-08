@@ -350,7 +350,7 @@ export default function Analytics() {
           {/* RIGHT CONT */}
 
           <div className="analytics-container-properties">
-            <div className="analytics-content-properties">
+            <div className="analytics-content-properties !h-auto">
               <h1 className="analytics-title-text-properties">
                 Analytics for{" "}
                 {categories.find((category) => category.id === selectedCategory)

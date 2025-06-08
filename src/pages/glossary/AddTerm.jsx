@@ -8,6 +8,8 @@ import deletebtn from "../../assets/glossary/delete-icon.svg";
 import Buttons from "../../components/buttons/Buttons";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
+import { Info } from "lucide-react";
+
 
 export default function AddTerm() {
   const [newTerm, setNewTerm] = useState([
@@ -22,6 +24,7 @@ export default function AddTerm() {
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
+  const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
 
   const handleInputChange = (index, field, value) => {
     const updatedTerms = [...newTerm];
@@ -102,10 +105,23 @@ export default function AddTerm() {
       });
   };
 
-  const handleBack = () => {
-    // if (onClose) onClose();
-    navigate("/glossary");
-  };
+
+    const handleBack = () => {
+      const hasUnsavedInput = newTerm.some(
+        (term) =>
+          term.word.trim() !== "" ||
+          term.meaning.trim() !== "" ||
+          (Array.isArray(term.tags) ? term.tags.length > 0 : term.tags.trim() !== "")
+      );
+
+      if (hasUnsavedInput) {
+        setShowBackConfirmModal(true);
+      } else {
+        navigate("/glossary");
+      }
+    };
+
+
 
   return (
     <div className="add-term-page-wrapper">
@@ -201,7 +217,7 @@ export default function AddTerm() {
           <Buttons
             text="Add Terms"
             onClick={handleCreateNewTerm}
-            addedClassName="btn btn-warning "
+            addedClassName="btn btn-warning"
           />
         </div>
       </div>
@@ -230,6 +246,32 @@ export default function AddTerm() {
           </div>
         </div>
       )}
+
+      {showBackConfirmModal && (
+        <div className="modal-overlay confirm-delete-popup">
+          <div className="confirm-dialog">
+            <div className="flex justify-center">
+              <Info className="text-black mb-4" size={30} />
+            </div>
+            <p>You have unsaved input. Are you sure you want to go back?</p>
+            <div className="popup-buttons">
+              <button
+                className="btn-delete"
+                onClick={() => {
+                  setShowBackConfirmModal(false);
+                  navigate("/glossary");
+                }}
+              >
+                Yes, Go Back
+              </button>
+              <button className="btn-cancel" onClick={() => setShowBackConfirmModal(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
