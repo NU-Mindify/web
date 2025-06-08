@@ -89,8 +89,15 @@ html, body, #root {
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 18px;
+  margin-bottom: 15px;
+  position: relative;
+  height: 88px;
+
 }
+
+/* .spanner {
+  @apply text-lg mt-[10px] bg-white text-black;
+} */
 
 .form-group label {
   margin-bottom: 5px;
@@ -98,9 +105,9 @@ html, body, #root {
   font-size: 14px;
 }
 
-.form-group span{
+/* .form-group span{
     color: red;
-}
+} */
 
 .form-group input,
 .form-group select {
@@ -117,9 +124,26 @@ html, body, #root {
 }
 
 .password-input-wrapper input {
-  padding-right: 40px; /* space for the icon */
+  padding-right: 40px; 
   width: 100%;
 }
+
+.error-border {
+  border: 2px solid #e74c3c !important;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  height: 16px;
+  margin-top: 4px;
+  visibility: visible;
+}
+
+/* .form-group.error .error-message {
+  visibility: visible;
+} */
+
 
 .toggle-password-btn {
   position: absolute;

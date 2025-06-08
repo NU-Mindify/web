@@ -46,6 +46,12 @@ function AddQuestion() {
     }
   }, [category]);
 
+  useEffect(() => {
+  console.log("allQuestions.length =", allQuestions.length);
+  console.log("showBackConfirmModal =", showBackConfirmModal);
+}, [allQuestions, showBackConfirmModal]);
+
+
   const getInitialQuestionState = () => ({
     question: "",
     choices: [
@@ -219,27 +225,35 @@ function AddQuestion() {
         <div className="add-ques-header">
           <div className="add-ques-sub-header">
             <h1>Add Question</h1>
-          <button
-            className="w-[50px] h-[50px]"
-            onClick={() => {
-              const hasInput =
-                question.question.trim() !== "" ||
-                question.choices.some((c) => c.text.trim() !== "" || c.rationale.trim() !== "") ||
-                question.rationale.trim() !== "" ||
-                question.difficulty.trim() !== "" ||
-                question.level !== 1;
+              <button
+                className="w-[50px] h-[50px]"
+                onClick={() => {
+                  const hasUnsavedInput = () => {
+                    const formHasInput =
+                      question.question.trim() !== "" ||
+                      question.choices.some(
+                        (c) => c.text.trim() !== "" || c.rationale.trim() !== ""
+                      ) ||
+                      question.rationale.trim() !== "" ||
+                      question.difficulty.trim() !== "" ||
+                      question.level !== 1;
 
-              if (hasInput) {
-                setShowBackConfirmModal(true);
-              } else {
-                nav("/question", {
-                  state: { category, categoryName, catSelected: true },
-                });
-              }
-            }}
-          >
-            <img src={closebtn} alt="close" />
-          </button>
+                    const listHasQuestions = allQuestions.length > 0;
+
+                    return formHasInput || listHasQuestions;
+                  };
+
+                  if (hasUnsavedInput()) {
+                    setShowBackConfirmModal(true);
+                  } else {
+                    nav("/question", {
+                      state: { category, categoryName, catSelected: true },
+                    });
+                  }
+                }}
+              >
+                <img src={closebtn} alt="close" />
+              </button>
 
           </div>
 
