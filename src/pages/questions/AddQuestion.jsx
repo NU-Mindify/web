@@ -15,7 +15,6 @@ import edit from "../../assets/questions/editQuestionbtn.svg";
 import saveBTN from "../../assets/questions/savebtn.svg";
 import remove from "../../assets/questions/removeQuestionbtn.svg";
 import save from "../../assets/questions/saveQuestionbtn.svg";
-import { Info } from "lucide-react";
 
 
 function AddQuestion() {
@@ -548,7 +547,7 @@ function AddQuestion() {
           <div className="modal-overlay confirm-delete-popup">
             <div className="confirm-dialog">
               <div className="flex justify-center">
-                <Info className="text-black mb-4" size={30} />
+                <h2>Unsaved Changes</h2>
               </div>
               <p>You have unsaved input. Are you sure you want to go back?</p>
               <div className="popup-buttons">
