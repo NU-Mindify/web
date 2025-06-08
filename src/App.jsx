@@ -28,6 +28,7 @@ import ActivityLogs from "./pages/activityLogs/ActivityLogs";
 import SignUp from "./pages/signUp/SignUp";
 import ApproveAccount from "./pages/accounts/ApproveAccount";
 import Branches from "./pages/branches/Branches";
+import TermsAndConditions from "./pages/login/TermsAndConditions";
 
 const queryClient = new QueryClient();
 
@@ -151,6 +152,7 @@ function App() {
                     <Route path="/addaccount" element={<AddAccount />} />
                     <Route path="/students/overall" element={<ShowMoreDetails />} />
                     <Route path="/branches" element={<Branches />} />
+                    <Route path="/termsAndCondition" element={<TermsAndConditions />} />
 
                     <Route path="*" element={<Navigate to="/" />} />
                   </Routes>
