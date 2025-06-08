@@ -156,6 +156,14 @@ html, body, #root {
   width: 100%;
 }
 
+.terms-and-cond{
+    @apply text-black text-sm;
+}
+
+.terms-and-cond:hover{
+    @apply text-blue-800 underline;
+}
+
 .sign-in-footer{
     @apply text-sm text-center;
 }

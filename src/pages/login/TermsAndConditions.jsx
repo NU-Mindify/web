@@ -1,6 +1,5 @@
 import React from 'react'
 import parse from "html-react-parser";
-import '../../css/signUp/TermsAndConditions.css'
 
 const termsAndConditions = `
 **Terms and Conditions for NU Mindify**
@@ -121,7 +120,6 @@ function formatAIText(message) {
     .replace(/\n/g, "<br>");
 }
 
-// Here is your component rewritten with `const` and `return`:
 const TermsAndConditions = () => {
   return (
     <div className='!overflow-auto !h-[100svh] bg-white text-black p-8 pt-2'>

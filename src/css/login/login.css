@@ -182,6 +182,14 @@ html, body, #root {
   @apply w-full text-black pl-2 text-sm;
 }
 
+.forget-pass{
+  @apply ml-50 text-black text-sm cursor-pointer pl-2 w-full;
+}
+
+.forget-pass:hover{
+  @apply text-blue-800 underline;
+}
+
 .checkbox {
   border: 1px solid black;
   @apply text-[8px] h-[15px] w-[10px] text-black rounded-[3px];

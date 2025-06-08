@@ -441,7 +441,7 @@ export default function SignUp() {
                 onChange={(e) => setAcceptTermsAndCond(e.target.checked)}/>
                 <span>
                   {/*MAY LINK NA SA TERMS AND CONDITION (NAKA ROUTE SA TERMS AND CONDITION, SA PAGES>LOGIN>TERMSANDCONDITION.JSX); DESIGN NALANG SA PAGE AND CONTENT*/} 
-                  I accept and acknowledge the  
+                  I accept and acknowledge the
                   <Link to="/terms-and-conditions" className="terms-and-cond"> Terms and Conditions. </Link>
                 </span>
               </label>

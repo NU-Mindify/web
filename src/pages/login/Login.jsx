@@ -270,7 +270,7 @@ export default function Login() {
                 <input type="checkbox" className="checkbox" />
                 <p className="remember-txt">Remember me</p>
                 <button
-                  className="ml-50 underline text-blue-700 cursor-pointer pl-2 text-sm w-full"
+                  className="forget-pass"
                   onClick={() => setShowResetModal(true)}
                 >
                   Forgot password?
