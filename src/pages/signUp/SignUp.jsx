@@ -40,6 +40,8 @@ export default function SignUp() {
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
+  const [errors, setErrors] = useState({});
+
 
   const navigate = useNavigate();
 
@@ -53,9 +55,23 @@ export default function SignUp() {
       position: "",
       uid: "",
     });
+
     setPassword("");
     setConfirmPassword("");
+
+
+    setErrors({
+      firstName: "",
+      lastName: "",
+      branch: "",
+      email: "",
+      employeenum: "",
+      position: "",
+      password: "",
+      confirmPassword: "",
+    });
   };
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -148,6 +164,52 @@ export default function SignUp() {
     }
   };
 
+    const validateField = (fieldName, value) => {
+    let message = "";
+
+    switch (fieldName) {
+      case "firstName":
+        if (!value.trim()) message = "First name is required.";
+        break;
+      case "lastName":
+        if (!value.trim()) message = "Last name is required.";
+        break;
+      case "branch":
+        if (!value) message = "Campus is required.";
+        break;
+      case "email":
+        if (!value.trim()) {
+          message = "Email is required.";
+        } else if (!/\S+@\S+\.\S+/.test(value)) {
+          message = "Invalid email format.";
+        }
+        break;
+      case "employeenum":
+        if (!value.trim()) message = "Employee number is required.";
+        break;
+      case "position":
+        if (!value) message = "Position is required.";
+        break;
+      case "password":
+        if (!value.trim()) {
+          message = "Password is required.";
+        } else if (value.length < 6) {
+          message = "Password must be at least 6 characters.";
+        }
+        break;
+      case "confirmPassword":
+        if (value !== password) {
+          message = "Passwords do not match.";
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prev) => ({ ...prev, [fieldName]: message }));
+  };
+
+
   return (
     <div className="sign-up-container">
       <img
@@ -168,52 +230,79 @@ export default function SignUp() {
           {/* Left Column */}
           <div className="form-column">
             <div className="form-group">
-              <p className="label">First Name<span>*</span></p>
+              {/* FIRSTNAME */}
+              <p className="label">First Name</p> 
               <input
                 type="text"
                 placeholder="Enter your first name"
                 value={newWebUser.firstName}
-                onChange={(e) =>
-                  setNewWebUser({ ...newWebUser, firstName: e.target.value })
-                }
+                onChange={(e) => {
+                  setNewWebUser({ ...newWebUser, firstName: e.target.value });
+                  validateField("firstName", e.target.value);
+                }}
+                onBlur={(e) => validateField("firstName", e.target.value)}
+                className={errors.firstName ? "error-border" : ""}
               />
+              {errors.firstName && <p className="error-message">{errors.firstName || '\u00A0'}</p>}
             </div>
 
+
+
             <div className="form-group">
-              <p className="label">Email<span>*</span></p>
+              {/* EMAIL */}
+              <p className="label">Email</p>
               <input
                 type="email"
                 placeholder="Enter your email"
                 value={newWebUser.email}
-                onChange={(e) =>
-                  setNewWebUser({ ...newWebUser, email: e.target.value })
-                }
+                onChange={(e) => {
+                  setNewWebUser({ ...newWebUser, email: e.target.value });
+                  validateField("email", e.target.value);
+                }}
+                onBlur={(e) => validateField("email", e.target.value)}
+                className={errors.email ? "error-border" : ""}
               />
+              {errors.email && <p className="error-message">{errors.email || '\u00A0'}</p>}
             </div>
 
+
+
             <div className="form-group">
-              <p className="label">Position<span>*</span></p>
+              {/* POSITION */}
+              <p className="label">Position</p>
               <select
                 value={newWebUser.position}
-                onChange={(e) =>
-                  setNewWebUser({ ...newWebUser, position: e.target.value })
-                }
+                onChange={(e) => {
+                  setNewWebUser({ ...newWebUser, position: e.target.value });
+                  validateField("position", e.target.value);
+                }}
+                onBlur={(e) => validateField("position", e.target.value)}
+                className={`select-field ${errors.position ? "error-border" : ""}`}
               >
                 <option value="">Select Position</option>
-                <option value="Professor">Professor</option>
-                <option value="Sub Admin">Sub Admin</option>
+                <option value="Instructor">Professor</option>
+                <option value="Admin">Admin</option>
               </select>
+              {errors.position && <p className="error-message">{errors.position || '\u00A0'}</p>}
             </div>
 
+
+
             <div className="form-group">
-              <p className="label">Password<span>*</span></p>
+              {/* PASSW */}
+              <p className="label">Password</p>
               <div className="password-input-wrapper">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    validateField("password", e.target.value);
+                  }}
+                  onBlur={(e) => validateField("password", e.target.value)}
+                  className={errors.password ? "error-border" : ""}
+              />
                 <button
                   type="button"
                   className="toggle-password-btn"
@@ -222,37 +311,52 @@ export default function SignUp() {
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              {errors.password && <p className="error-message">{errors.password || '\u00A0'}</p>}
             </div>
           </div>
 
           {/* Right Column */}
           <div className="form-column">
             <div className="form-group">
-              <p className="label">Last Name<span>*</span></p>
+              {/* LASTNAME */}
+              <p className="label">Last Name</p>
               <input
                 type="text"
                 placeholder="Enter your last name"
                 value={newWebUser.lastName}
-                onChange={(e) =>
-                  setNewWebUser({ ...newWebUser, lastName: e.target.value })
-                }
+                onChange={(e) => {
+                  setNewWebUser({ ...newWebUser, lastName: e.target.value });
+                  validateField("lastName", e.target.value);
+                }}
+                onBlur={(e) => validateField("lastName", e.target.value)}
+                className={errors.lastName ? "error-border" : ""}
               />
+              {errors.lastName && <p className="error-message">{errors.lastName || '\u00A0'}</p>}
             </div>
 
+
             <div className="form-group">
-              <p className="label">Employee Number<span>*</span></p>
+              {/* EMPLOYEE# */}
+              <p className="label">Employee Number</p>
               <input
                 type="number"
                 placeholder="Enter employee number"
                 value={newWebUser.employeenum}
-                onChange={(e) =>
-                  setNewWebUser({ ...newWebUser, employeenum: e.target.value })
-                }
+                onChange={(e) => {
+                  setNewWebUser({ ...newWebUser, employeenum: e.target.value });
+                  validateField("employeenum", e.target.value);
+                }}
+                onBlur={(e) => validateField("employeenum", e.target.value)}
+                className={errors.employeenum ? "error-border" : ""}
               />
+              {errors.employeenum && <p className="error-message">{errors.employeenum || '\u00A0'}</p>}
+
             </div>
 
+
             <div className="form-group">
-              <p className="label">Campus<span>*</span></p>
+              {/* CAMPUS */}
+              <p className="label">Campus</p>
               <select
                 value={newWebUser.branch}
                 onChange={(e) => {
@@ -264,26 +368,40 @@ export default function SignUp() {
                     branch: branchId,
                     email: extension,
                   }));
+                  validateField("branch", branchId);
                 }}
+                onBlur={(e) => validateField("branch", e.target.value)}
+                className={`select-field ${errors.branch ? "error-border" : ""}`}
               >
                 <option value="">Select Campus</option>
-                {branches.map((branch) => (
-                  <option key={branch.id} value={branch.id}>
-                    {branch.name}
+                {branches.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
                   </option>
                 ))}
               </select>
+              {errors.branch && <p className="error-message">{errors.branch || '\u00A0'}</p>}
+
+
             </div>
 
+
+
             <div className="form-group">
-              <p className="label">Confirm Password<span>*</span></p>
+              {/* CONFIRMPASS */}
+              <p className="label">Confirm Password</p>
               <div className="password-input-wrapper">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Re-type your password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    validateField("confirmPassword", e.target.value);
+                  }}
+                  onBlur={(e) => validateField("confirmPassword", e.target.value)}
+                  className={errors.confirmPassword ? "error-border" : ""}
+              />
                 <button
                   type="button"
                   className="toggle-password-btn"
@@ -292,8 +410,10 @@ export default function SignUp() {
                   {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              {errors.confirmPassword && (
+                <p className="error-message">{errors.confirmPassword || '\u00A0'}</p>
+              )}
             </div>
-
           </div>
           
             <div className="form-footer">
