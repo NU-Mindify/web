@@ -6,7 +6,6 @@ import { API_URL } from "../../Constants";
 import closebtn from "../../assets/glossary/close-btn.svg";
 import Buttons from "../../components/buttons/Buttons";
 import { UserLoggedInContext } from "../../contexts/Contexts";
-import { Info } from "lucide-react";
 
 export default function EditGlossary({ onClose, term, onTermUpdated }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -233,7 +232,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
                   <div className="modal-overlay confirm-delete-popup">
                     <div className="confirm-dialog">
                       <div className="flex justify-center">
-                        <Info className="text-black mb-4" size={30} />
+                        <h2>Unsaved Changes</h2>
                       </div>
                       <p>You have unsaved input. Are you sure you want to go back?</p>
                       <div className="popup-buttons">
