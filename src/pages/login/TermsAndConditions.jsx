@@ -1,5 +1,7 @@
 import React from 'react'
 import parse from "html-react-parser";
+import '../../css/signUp/TermsAndConditions.css'
+
 const termsAndConditions = `
 **Terms and Conditions for NU Mindify**
 Last Updated: April 15, 2025
@@ -111,17 +113,23 @@ If you have any questions, concerns, or requests regarding this Data Privacy Con
 numindify@gmail.com
 
 By clicking "I Agree" or by continuing to use the NU Mindify App, you signify your free and informed consent to the collection, use, processing, storage, retention, and disclosure of your personal data as described in this Data Privacy Consent.
-`;
+`
 function formatAIText(message) {
   return message
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.+?)/g, '<br><b className="pt-12">• </b>')
     .replace(/\n/g, "<br>");
 }
-function TermsAndConditions() {
-  return <div className='!overflow-auto !h-[100svh] bg-white text-black p-8 pt-2'>
-    <div className='!overflow-auto !h-fit max-w-[60rem] mx-auto'>{parse(formatAIText(termsAndConditions))}</div>
-  </div>
-}
 
-export default TermsAndConditions
+// Here is your component rewritten with `const` and `return`:
+const TermsAndConditions = () => {
+  return (
+    <div className='!overflow-auto !h-[100svh] bg-white text-black p-8 pt-2'>
+      <div className='!overflow-auto !h-fit max-w-[60rem] mx-auto'>
+        {parse(formatAIText(termsAndConditions))}
+      </div>
+    </div>
+  );
+};
+
+export default TermsAndConditions;

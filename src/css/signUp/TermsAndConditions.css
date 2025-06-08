@@ -1,0 +1,10 @@
+@reference "tailwindcss";
+@plugin "daisyui";
+
+.terms-and-cond{
+    @apply text-black text-sm;
+}
+
+.terms-and-cond:hover{
+    @apply text-blue-800 underline;
+}
