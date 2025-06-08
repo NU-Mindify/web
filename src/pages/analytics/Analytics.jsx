@@ -22,7 +22,7 @@ export default function Analytics() {
   const [masteryAttempts, setMasteryAttempts] = useState([]);
   const [allStudents, setAllStudents] = useState([]);
 
-  const [selectedBranch, setSelectedBranch] = useState("all");
+  const [selectedBranch, setSelectedBranch] = useState(currentWebUser.position.toLowerCase() === "super admin" ? "all":currentWebUser.branch);
   const [selectedCategory, setSelectedCategory] = useState("all");
 
   const [attemptsViewMode, setAttemptsViewMode] = useState("daily");
@@ -287,17 +287,18 @@ export default function Analytics() {
               getOptionLabel={(category) => category.name}
               addedClassName="ml-3 !w-[300px]"
             />
-
+            {currentWebUser?.position?.toLowerCase() === "super admin" && 
             <SelectFilter
-              value={selectedBranch}
-              onChange={(e) => setSelectedBranch(e.target.value)}
-              disabledOption="Select Branch"
-              fixOption="All Branches"
-              mainOptions={branches}
-              getOptionValue={(branch) => branch.id}
-              getOptionLabel={(branch) => branch.name}
-              addedClassName="ml-3 !w-[300px]"
+            value={selectedBranch}
+            onChange={(e) => setSelectedBranch(e.target.value)}
+            disabledOption="Select Branch"
+            fixOption="All Branches"
+            mainOptions={branches}
+            getOptionValue={(branch) => branch.id}
+            getOptionLabel={(branch) => branch.name}
+            addedClassName="ml-3 !w-[300px]"
             />
+          }
 
             <ExportDropdownPng
               onExport={(format) => {
@@ -308,8 +309,6 @@ export default function Analytics() {
                     attemptsViewMode,
                     accountsViewMode
                   );
-                } else if (format === "png") {
-                  exportAsPng();
                 }
               }}
             />
