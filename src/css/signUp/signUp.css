@@ -140,11 +140,6 @@ html, body, #root {
   visibility: visible;
 }
 
-/* .form-group.error .error-message {
-  visibility: visible;
-} */
-
-
 .toggle-password-btn {
   position: absolute;
   right: 10px;
