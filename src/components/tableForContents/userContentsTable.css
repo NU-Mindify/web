@@ -5,7 +5,8 @@
 
 /* Main Container */
 .users-main-container {
-  @apply w-full flex-1 overflow-hidden overflow-y-auto flex flex-col items-center transition-transform duration-500 ease-in-out;
+  /* Added overflow-x-auto to enable horizontal scrolling when content exceeds width */
+  @apply w-full flex-1 overflow-x-auto overflow-y-auto flex flex-col lg:items-center transition-transform duration-500 ease-in-out;
   scrollbar-width: thin;
   scrollbar-color: black transparent;
 }
@@ -27,11 +28,13 @@
 
 /* For Title */
 .titles-table {
-  @apply w-11/12 h-[50px] text-left table-fixed;
+  /* Set a minimum width for the entire header table to ensure all columns are visible */
+  @apply w-11/12 h-[50px] text-left table-fixed min-w-[900px];
 }
 
 .titles-table th {
-  @apply text-xl text-black;
+  /* Ensures each header cell has a minimum width, preventing content from squishing */
+  @apply text-xl text-black min-w-[150px]; /* Adjust this value based on your content */
 }
 
 .contentsTable-thead {
@@ -72,7 +75,8 @@
 
 /* All user table, excluding the titles */
 .user-table {
-  @apply w-full table-fixed ;
+  /* Set a minimum width for the main content table to match the header */
+  @apply w-full table-fixed min-w-[900px];
 }
 
 

@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 html, body, #root {
-  height: 100vh;
+  height: 100svh;
   margin: 0;
   padding: 0;
 }
@@ -106,7 +106,7 @@ html, body, #root {
   left: 30%;
   transform: translate(-50%, -50%) scale(1.4);
   animation: none;
-  opacity: 1; /* Ensure visible */
+  opacity: 1;
 }
 
 
@@ -144,9 +144,8 @@ html, body, #root {
 
 
 .login-form {
-  width: 80%;
   font-family: 'Poppins', sans-serif;
-  @apply bg-white flex justify-center items-center p-10 rounded-2xl;
+  @apply w-[80%] bg-white flex justify-center items-center p-10 rounded-2xl;
   animation: fadeUp 1.8s ease-in forwards;
   animation-delay: 1.5s;
   scrollbar-width: none;
@@ -183,7 +182,7 @@ html, body, #root {
 }
 
 .forget-pass{
-  @apply ml-50 text-black text-sm cursor-pointer pl-2 w-full;
+  @apply text-black text-sm cursor-pointer pl-2 w-full flex justify-end;
 }
 
 .forget-pass:hover{

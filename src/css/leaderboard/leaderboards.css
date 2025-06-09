@@ -3,7 +3,7 @@
 @plugin "daisyui";
 
 .leaderboard-body {
-  @apply w-full h-full grid gap-2 grid-cols-2;
+  @apply w-full h-full;
 }
 
 .classic-cont,

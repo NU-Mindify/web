@@ -173,7 +173,8 @@ export default function ActivityLogs() {
       <div className="logs-header">
         <h1 className="logs-title">Activity Logs</h1>
 
-        <div className="flex flex-wrap items-center gap-6 w-full mb-7 mt-5 ml-3">
+        <div className="flex flex-wrap items-center justify-between w-full mb-7 mt-5 px-4">
+          <div className="flex gap-6">
           <SelectFilter
             value={selectedAction}
             onChange={(e) => setSelectedAction(e.target.value)}
@@ -193,28 +194,33 @@ export default function ActivityLogs() {
             getOptionValue={(opt) => opt.value}
             getOptionLabel={(opt) => opt.label}
           />
-
-          <div className="ml-225 mr-1 mt-1">
-            <ExportDropdown
-              onExport={(format) => {
-                if (format === "csv") exportActLogsToCSV(filteredLogs, "Activity_Logs");
-                else if (format === "pdf") exportActLogsToPDF(filteredLogs, "Activity_Logs");
-              }}
-            />  
           </div>
 
-        </div>
+
+            <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv")
+                  exportActLogsToCSV(filteredLogs, "Activity_Logs");
+                else if (format === "pdf")
+                  exportActLogsToPDF(filteredLogs, "Activity_Logs");
+              }}
+            />
 
         </div>
+      </div>
 
       <table className="w-full h-full text-center text-black font-[poppins] text-xl">
         <thead>
           <tr>
-            <th className="border border-black w-2/12">Name</th>
-            <th className="border border-black w-1/12">Branch</th>
-            <th className="border border-black w-2/12">Action</th>
-            <th className="border border-black w-5/12">Description</th>
-            <th className="border border-black w-2/12">Timestamp</th>
+            <th className="border border-black w-2/12 min-w-[150px]">Name</th>
+            <th className="border border-black w-1/12 min-w-[120px]">Branch</th>
+            <th className="border border-black w-2/12 min-w-[100px]">Action</th>
+            <th className="border border-black w-5/12 min-w-[250px]">
+              Description
+            </th>
+            <th className="border border-black w-2/12 min-w-[150px]">
+              Timestamp
+            </th>
           </tr>
         </thead>
         <tbody>

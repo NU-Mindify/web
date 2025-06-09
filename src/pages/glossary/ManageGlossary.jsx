@@ -239,21 +239,25 @@ export default function ManageGlossary() {
             addedClassName="w-[80%] h-[50px]"
           />
 
-          <Buttons
-            text="Add Term"
-            onClick={() => navigate("/addterm")}
-            addedClassName="btn btn-warning"
-          />
 
-          <ExportDropdown
-            onExport={(format) => {
-              if (format === "csv") {
-                exportGlossaryToCSV(allTerms, "Glossary_Terms");
-              } else if (format === "pdf") {
-                exportGlossaryToPDF(allTerms, "Glossary Terms");
-              }
-            }}
-          />
+          <div className="flex justify-between w-full mt-3 lg:w-auto lg:mt-0">
+            <Buttons
+              text="Add Term"
+              onClick={() => navigate("/addterm")}
+              addedClassName="btn btn-warning"
+            />
+
+            <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportGlossaryToCSV(allTerms, "Glossary_Terms");
+                } else if (format === "pdf") {
+                  exportGlossaryToPDF(allTerms, "Glossary Terms");
+                }
+              }}
+            />
+          </div>
+          
         </div>
 
         <div className="glossary-letters-btn-container">
