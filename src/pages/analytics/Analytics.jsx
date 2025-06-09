@@ -269,36 +269,38 @@ export default function Analytics() {
   return (
     <>
       <div className="main-container-analytics" id="main-cont-analytics">
-        <div className="header-container-analytics flex flex-row justify-between">
-          <h1>
+        <div className="header-container-analytics">
+          <h1 className="h-full w-full !text-[32px]">
             Analytics for{" "}
             {branches.find((branch) => branch.id === selectedBranch)?.name ||
               "All Branches"}
           </h1>
 
-          <div className="w-[700px] flex flex-row justify-end gap-4 mt-1.5">
-            <SelectFilter
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              disabledOption="Select Category"
-              fixOption="All Categories"
-              mainOptions={categories}
-              getOptionValue={(category) => category.id}
-              getOptionLabel={(category) => category.name}
-              addedClassName="ml-3 !w-[300px]"
-            />
-            {currentWebUser?.position?.toLowerCase() === "super admin" && 
-            <SelectFilter
-            value={selectedBranch}
-            onChange={(e) => setSelectedBranch(e.target.value)}
-            disabledOption="Select Branch"
-            fixOption="All Branches"
-            mainOptions={branches}
-            getOptionValue={(branch) => branch.id}
-            getOptionLabel={(branch) => branch.name}
-            addedClassName="ml-3 !w-[300px]"
-            />
-          }
+          <div className="flex flex-row justify-between w-full lg:w-[50%] mt-3 lg:mt-1.5">
+            <div className="analytics-filter-container">
+              <SelectFilter
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                disabledOption="Select Category"
+                fixOption="All Categories"
+                mainOptions={categories}
+                getOptionValue={(category) => category.id}
+                getOptionLabel={(category) => category.name}
+                addedClassName="ml-3 !w-[150px] xl:!w-[250px] "
+              />
+              {currentWebUser?.position?.toLowerCase() === "super admin" && (
+                <SelectFilter
+                  value={selectedBranch}
+                  onChange={(e) => setSelectedBranch(e.target.value)}
+                  disabledOption="Select Branch"
+                  fixOption="All Branches"
+                  mainOptions={branches}
+                  getOptionValue={(branch) => branch.id}
+                  getOptionLabel={(branch) => branch.name}
+                  addedClassName="ml-3 !w-[150px]  xl:!w-[250px]"
+                />
+              )}
+            </div>
 
             <ExportDropdownPng
               onExport={(format) => {
@@ -317,8 +319,8 @@ export default function Analytics() {
 
         <div className="content-container-analytics">
           <div className="analytics-container-properties">
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
+            <div className="w-[95%]">
+              <h1 className="text-2xl md:text-4xl font-[Poppins] font-bold text-black">
                 Attempts per {attemptsViewMode === "daily" ? "Day" : "Month"}
               </h1>
 
@@ -331,8 +333,8 @@ export default function Analytics() {
               </div>
             </div>
 
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
+            <div className="w-[95%] mt-6">
+              <h1 className="text-2xl md:text-4xl font-[Poppins] font-bold text-black">
                 Accounts Created per{" "}
                 {accountsViewMode === "daily" ? "Day" : "Month"}
               </h1>
@@ -348,7 +350,7 @@ export default function Analytics() {
 
           {/* RIGHT CONT */}
 
-          <div className="analytics-container-properties">
+          <div className="w-full md:w-[50%] bg-white rounded-xl flex flex-col items-center p-5">
             <div className="analytics-content-properties !h-auto">
               <h1 className="analytics-title-text-properties">
                 Analytics for{" "}

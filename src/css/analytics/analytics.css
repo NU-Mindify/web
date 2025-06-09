@@ -7,32 +7,36 @@
 }
 
 .header-container-analytics{
-    @apply w-full h-[120px] bg-white rounded-xl p-5 pr-10;
+    @apply w-full bg-white rounded-xl p-5 pr-10 flex flex-col justify-between
+    lg:h-[120px] lg:flex-row;
 }
 
 .header-container-analytics h1{
     @apply text-[40px] font-[Poppins] font-bold text-[#FFC300];
 }
+.analytics-filter-container{
+    @apply w-full flex flex-col gap-4
+    lg:w-[700px] lg:justify-end sm:flex-row;
+}
 
 .content-container-analytics{
-    @apply gap-4 mt-3 font-[Poppins]
-    flex flex-row;
+    @apply gap-4 mt-3 font-[Poppins] flex flex-col md:flex-row;
 }
 
 .analytics-container-properties{
-    @apply w-[50%] h-full bg-white rounded-xl;
+    @apply w-full md:w-[50%] bg-white rounded-xl flex flex-col items-center py-3;
 }
 
-.analytics-content-properties{
-    @apply flex flex-col w-[95%] h-[373px] p-6 m-3 mt-[-3px];
-}
+/* .analytics-content-properties{
+    @apply flex flex-col w-[95%] p-6 m-3 mt-[-3px];
+} */
 
 .analytics-title-text-properties {
     @apply text-4xl font-[Poppins] font-bold text-black;
 }
 
 .progress-bar-container {
-    @apply flex flex-wrap mt-3 w-full gap-1.5 items-center justify-center p-1
+    @apply flex flex-wrap mt-3 w-full gap-1.5 items-center justify-center p-1;
 }
 
 .analytics-progress-bar {
@@ -43,22 +47,22 @@
 
 .total-attempts-container{
     @apply w-[230px] h-[100px] bg-white flex items-center justify-center flex-col
-    rounded-2xl shadow-[0_3px_10px_rgb(0,0,0,0.2)]
+    rounded-2xl shadow-[0_3px_10px_rgb(0,0,0,0.2)];
 }
 
 .total-attempts-label{
-    @apply text-black font-[Poppins] text-center
+    @apply text-black font-[Poppins] text-center;
 }
 
 .total-attempts-num{
     @apply text-black font-[Poppins] text-[45px]
-    font-bold mt-1
+    font-bold mt-1;
 }
 
 .pie-chart-properties{
-    @apply w-[240px] h-[240px] flex justify-center items-center
+    @apply w-[240px] h-[240px] flex justify-center items-center;
 }
 
 .line-graph-container{
-    @apply w-full h-[210px] flex justify-center items-center mt-8
+    @apply w-full flex justify-center items-center mt-8;
 }

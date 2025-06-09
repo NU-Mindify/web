@@ -402,7 +402,6 @@ export default function Dashboard() {
         <div
           className="leaderboards-container-dashboard"
           style={{
-            maxWidth: "600px",
             overflowX: "auto",
             padding: "1rem",
             backgroundColor: "#fff",
@@ -460,11 +459,11 @@ export default function Dashboard() {
                   className="text-black"
                   style={{ borderBottom: "1px solid #ddd" }}
                 >
-                  <th style={{ padding: "6px" }}>Username</th>
-                  <th style={{ padding: "6px" }}>Branch</th>
-                  <th style={{ padding: "6px" }}>World</th>
-                  <th style={{ padding: "6px" }}>Score (%)</th>
-                  <th style={{ padding: "6px" }}>Time (s)</th>
+                  <th className="leaderboard-th">Username</th>
+                  <th className="leaderboard-th">Branch</th>
+                  <th className="leaderboard-th">World</th>
+                  <th className="leaderboard-th">Score (%)</th>
+                  <th className="leaderboard-th">Time (s)</th>
                 </tr>
               </thead>
               <tbody>
