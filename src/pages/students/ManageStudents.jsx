@@ -194,7 +194,7 @@
           <h1 className="student-title flex flex-row items-center">
             View Students
           </h1>
-          <div className="acc-sub-header-container">
+          <div className="stud-sub-header-container">
             <SearchBar
               value={searchTerm}
               handleChange={(e) => setSearchTerm(e.target.value)}
@@ -203,31 +203,33 @@
               addedClassName="w-[80%] h-[50px] ml-1"
             />
 
+            <div className="flex gap-2">
+              {
+                currentWebUser.position.toLowerCase() === "super admin" &&
+                <SelectFilter
+                  value={selectedBranch}
+                  onChange={(e) => setSelectedBranch(e.target.value)}
+                  disabledOption="Select Branch"
+                  fixOption="All Branches"
+                  mainOptions={branches}
+                  getOptionValue={(branch) => branch.id}
+                  getOptionLabel={(branch) => branch.name}
+                  addedClassName="ml-3"
+                />
+              }
+              
 
-            {
-              currentWebUser.position.toLowerCase() === "super admin" &&
-              <SelectFilter
-                value={selectedBranch}
-                onChange={(e) => setSelectedBranch(e.target.value)}
-                disabledOption="Select Branch"
-                fixOption="All Branches"
-                mainOptions={branches}
-                getOptionValue={(branch) => branch.id}
-                getOptionLabel={(branch) => branch.name}
-                addedClassName="ml-3"
+              <ExportDropdown
+                onExport={(format) => {
+                  if (format === "csv") {
+                    exportToCSV(filteredStudents, "Students_List");
+                  } else if (format === "pdf") {
+                    exportToPDF(filteredStudents, "Students_List");
+                  }
+                }}
               />
-            }
+            </div>
             
-
-            <ExportDropdown
-              onExport={(format) => {
-                if (format === "csv") {
-                  exportToCSV(filteredStudents, "Students_List");
-                } else if (format === "pdf") {
-                  exportToPDF(filteredStudents, "Students_List");
-                }
-              }}
-            />
           </div>
         </div>
         <div className="flex bg-gray-100 p-1 rounded-xl w-[300px] ml-4 mb-8">

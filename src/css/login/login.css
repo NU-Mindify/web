@@ -48,8 +48,8 @@ html, body, #root {
 
 /* ------------------- MAIN CONTAINER ---------------------*/
 .login-main-container {
-  /* background: radial-gradient(circle at center, #4A6FB4 0%, #27298F 70%, #273574 100%); */
-  @apply w-screen h-[100svh] p-5 flex flex-row justify-center items-center bg-red-300;
+  background: radial-gradient(circle at center, #4A6FB4 0%, #27298F 70%, #273574 100%);
+  @apply w-screen h-[100svh] p-5 flex flex-row justify-center items-center;
 }
 
 /********************************* END *******************************/

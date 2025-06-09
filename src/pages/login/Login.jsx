@@ -197,13 +197,13 @@ export default function Login() {
       />
 
       {/* Transitioning Logo */}
-      <div className={`transition-logo ${logoTransitioned ? "moved" : ""} bg-amber-200`}>
+      <div className={`transition-logo ${logoTransitioned ? "moved" : ""}`}>
         <img src={logo} alt="Mindify Logo" className="logo-img" />
       </div>
 
       {/* Login form container */}
       <div
-        className={`relative z-10 w-full h-full flex flex-row justify-center items-stretch transition-opacity duration-1000 bg-amber-800 ${
+        className={`relative z-10 w-full h-full flex flex-row justify-center items-stretch transition-opacity duration-1000 ${
           logoTransitioned ? "opacity-100" : "opacity-0"
         }`}
       >

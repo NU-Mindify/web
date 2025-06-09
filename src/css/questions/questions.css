@@ -19,7 +19,7 @@
 }
 
 .title-left {
-  @apply flex items-center gap-3;
+  @apply flex items-center w-2/3;
 }
 
 .back-button {
@@ -31,11 +31,11 @@
 }
 
 .question-title {
-  @apply text-[40px] font-[Poppins] font-bold text-[#FFC916] pl-4 mt-5;
+  @apply text-[20px] sm:text-[25px] lg:text-[40px] font-[Poppins] font-bold text-[#FFC916] pl-4 mt-5;
 }
 
 .question-count {
-  @apply text-sm font-bold uppercase text-gray-700 pr-5;
+  @apply text-sm font-bold uppercase text-gray-700;
 }
 
 
@@ -46,8 +46,7 @@
 }
 
 .search-bar-question {
-  @apply w-full h-[44px] bg-white flex items-center px-4 rounded-[10px] shadow-md border-0;
-  width: 80%;
+  @apply bg-white flex items-center px-4 rounded-[10px] shadow-md border-0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
@@ -56,7 +55,7 @@
 }
 
 .search-input-question {
-  @apply w-full bg-transparent border-none outline-none text-sm text-gray-800 placeholder-gray-400;
+  @apply w-[500px] h-[44px] bg-transparent border-none outline-none text-sm text-gray-800 placeholder-gray-400;
 }
 
 
@@ -98,8 +97,7 @@
 }
 
 .category-container {
-  @apply w-[95%] relative flex items-center justify-between overflow-hidden cursor-pointer rounded-lg my-2;
-  height: calc((95% / 5) - 20px); 
+  @apply w-[95%] h-[200px] lg:h-[calc((95%/5)-20px)] relative flex items-center justify-between overflow-hidden cursor-pointer rounded-lg my-2;
   border-radius: 10px;
 }
 
@@ -112,11 +110,11 @@
 }
 
 .category-text {
-  @apply w-1/2 h-full flex justify-start  font-[Poppins] items-center cursor-pointer text-3xl font-extrabold z-50 ml-5  text-white;
+  @apply w-1/2 h-full flex justify-start  font-[Poppins] items-center cursor-pointer text-base lg:text-3xl font-extrabold z-50 ml-5  text-white;
 }
 
 .category-quantity {
-  @apply w-1/2 h-full flex justify-end items-center text-xl font-bold z-50 mr-5  text-white;
+  @apply w-1/2 h-full flex justify-end items-center text-sm lg:text-xl font-bold z-50 mr-5  text-white;
 }
 
 
@@ -128,7 +126,7 @@
 
 
 .question-main-container{
-    @apply w-full h-full bg-white flex flex-col;
+    @apply w-full h-full bg-white flex flex-col overflow-y-auto;
 }
 .allquestions-container{
     @apply w-full flex-grow; 

@@ -91,6 +91,8 @@ export default function ManageQuestion() {
 
   const navigate = useNavigate();
 
+  const [searchQuestion, setSearchQuestion] = useState("");
+
   const [category, setCategory] = useState(null);
   const [gotSelected, setGotSelected] = useState(false);
   const [selectedCat, setSelectedCat] = useState(null);
@@ -162,7 +164,7 @@ export default function ManageQuestion() {
     setSubSelected("");
   }
 
-  const [searchQuestion, setSearchQuestion] = useState("");
+  
 
   function Category_Choices({ text, id, onClick, bgImage }) {
     return (
@@ -274,9 +276,12 @@ export default function ManageQuestion() {
                 </button>
                 <h1 className="question-title">{selectedCat}</h1>
               </div>
-              <p className="question-count">
-                Total Questions: {questions.length}
-              </p>
+
+              <div className="w-1/3 h-full">
+                <p className="question-count text-right">
+                  Total Questions: {questions.length}
+                </p>
+              </div>
             </div>
           ) : (
             <h1 className="question-title">Select Category</h1>
@@ -284,9 +289,9 @@ export default function ManageQuestion() {
         </div>
 
         {gotSelected && (
-          <div className="question-controls-container flex flex-col gap-4 pt-4 mb-4">
-            <div className="flex flex-wrap items-center justify-between gap-4 w-full">
-              <div className="question-search-container flex-1 min-w-[200px]">
+          <div className="question-controls-container flex flex-col mt-5 mb-4">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div className="">
                 <div className="search-bar-question border">
                   <button className="search-btn-question">
                     <img src={search} alt="search icon" className="w-4 h-4" />
@@ -294,13 +299,13 @@ export default function ManageQuestion() {
                   <input
                     type="text"
                     placeholder="Search questions..."
-                    className="search-input-question"
+                    className="search-input-question min-w-[200px]"
                     onChange={(e) => setSearchQuestion(e.target.value)}
                   />
                 </div>
               </div>
 
-              <div className="add-ques-container flex gap-2">
+              <div className="flex justify-between md:justify-around gap-2">
                 <Buttons
                   text={
                     <span className="flex items-center">
@@ -309,7 +314,7 @@ export default function ManageQuestion() {
                     </span>
                   }
                   onClick={addQuestion}
-                  addedClassName="btn btn-warning"
+                  addedClassName="btn btn-warning !w-[250px]"
                 />
 
                 <div className="pt-1">
@@ -469,8 +474,6 @@ export default function ManageQuestion() {
           </div>
         </div>
       )}
-
-
     </div>
   );
 }

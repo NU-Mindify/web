@@ -280,8 +280,8 @@ export default function Sidebar() {
                   }}
                   goTo={item.path}
                 />
-
-                {item.id === "question" && isActive && activeQuestion && (
+                {!isMobile &&
+                  item.id === "question" && isActive && activeQuestion && (
                   <ul className="question-category-container">
                     {[
                       { id: "abnormal", label: "Abnormal Psychology" },
@@ -325,6 +325,8 @@ export default function Sidebar() {
                     ))}
                   </ul>
                 )}
+                
+                
               </li>
             );
           })}
