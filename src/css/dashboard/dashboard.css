@@ -77,6 +77,10 @@
   @apply w-full h-[480px] bg-white rounded-xl;
 }
 
+.leaderboard-th{
+  @apply text-[10px] lg:text-sm;
+}
+
 .chart {
   @apply w-full h-full self-center bg-red-400;
 }
