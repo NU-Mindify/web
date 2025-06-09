@@ -6,7 +6,7 @@ import { firebaseAuth } from "../../Firebase";
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
-  signOut,
+  sendEmailVerification
 } from "firebase/auth";
 import { API_URL, branches } from "../../Constants";
 import pattern from "../../assets/forAll/pattern.svg";
@@ -100,8 +100,10 @@ export default function Login() {
       const user = firebaseAuth.currentUser;
       await user.reload();
       if (user.emailVerified === false) {
-        alert("Your Account email is not verified! Please check your email for the verification link.")
+        alert("Your Account email is not verified! Please check your email for the verification link. (verification link re-sent)")
         // signOut(firebaseAuth); [[comment for now para maka login si super admin kasi di pa valid email nya]]
+        sendEmailVerification(user)
+        return;
       }
 
       if (user) {
