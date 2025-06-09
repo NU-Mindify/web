@@ -32,12 +32,16 @@
 
     useEffect(() => {
       fetchStudents();
-    }, []);
+    }, [currentWebUser]);
 
     const fetchStudents = async () => {
       try {
         setLoadingStudents(true);
-        const { data } = await axios.get(`${API_URL}/getUsers`);
+        const { data } = await axios.get(`${API_URL}/getUsers`, {
+          headers: {
+            Authorization: `Bearer ${currentWebUser.token}`,
+          },
+        });
         const sortedStudents = data.sort((a, b) =>
           (a.last_name || "").localeCompare(b.last_name || "")
         );

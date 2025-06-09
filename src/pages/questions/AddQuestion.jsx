@@ -141,7 +141,11 @@ function AddQuestion() {
     }
 
     try {
-      const { data } = await axios.post(`${API_URL}/addQuestion`, allQuestions);
+      const { data } = await axios.post(`${API_URL}/addQuestion`, allQuestions, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
+      });
       console.log(data);
       setValidationMessage("Added Successfully");
       setShowValidationModal(true);

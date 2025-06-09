@@ -111,28 +111,34 @@ export default function Sidebar() {
   // Fetch user info only when UID changes (avoid infinite loop)
   useEffect(() => {
     if (!currentWebUserUID) return;
-
-
-    axios
-      .get(`${API_URL}/getwebuser/${currentWebUserUID}`)
-      .then((response) => {
-        setCurrentWebUser(response.data);
-
-        if (
-          response.data.position?.toLowerCase() === "super admin" ||
-          !response.data.position
-        ) {
-          setCurrentUserBranch("All");
-        } else {
-          setCurrentUserBranch(response.data.branch);
-        }
-
-        localStorage.setItem("webUser", JSON.stringify(response.data));
-      })
-      .catch((error) => {
-        console.log("Error fetching sidebar user:", error);
-      });
+    fetchUserInfo();
+    
+    
   }, [currentWebUserUID, setCurrentWebUser, setCurrentUserBranch]);
+  
+  const fetchUserInfo = async () => {
+    try {
+      const userToken = await getAuth().currentUser.getIdToken()
+      const response = await axios.get(`${API_URL}/getwebuser/${currentWebUserUID}`)
+      const newCurrentWebUser = { ...response.data, token: userToken };
+      setCurrentWebUser(newCurrentWebUser);
+
+      if (
+        response.data.position?.toLowerCase() === "super admin" ||
+        !response.data.position
+      ) {
+        setCurrentUserBranch("All");
+      } else {
+        setCurrentUserBranch(response.data.branch);
+      }
+
+      localStorage.setItem("webUser", JSON.stringify(response.data));
+      console.log(newCurrentWebUser);
+    } catch (error) {
+      console.log("Error fetching sidebar user:", error);
+    }
+    
+  }
 
   const menuItems = [
     {

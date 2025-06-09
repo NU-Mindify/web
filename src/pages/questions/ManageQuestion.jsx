@@ -16,7 +16,7 @@ import back from "../../assets/questions/angle-left.svg";
 import { Plus } from "lucide-react";
 
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
-import { ActiveContext } from "../../contexts/Contexts";
+import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import Buttons from "../../components/buttons/Buttons";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -49,6 +49,7 @@ const categoriesObj = [
 ];
 
 export default function ManageQuestion() {
+  const {currentWebUser} = useContext(UserLoggedInContext)
   const [showArchived, setShowArchived] = useState(false);
   const [restore, setRestore] = useState(false);
 
@@ -98,7 +99,11 @@ export default function ManageQuestion() {
   const getData = async () => {
     try {
       const { data } = await axios.get(
-        `${API_URL}/getQuestions?${category ? `category=${category}` : ""}`
+        `${API_URL}/getQuestions?${category ? `category=${category}` : ""}`, {
+          headers: {
+            Authorization: `Bearer ${currentWebUser.token}`,
+          },
+        }
       );
       return data;
     } catch (error) {
@@ -130,6 +135,10 @@ export default function ManageQuestion() {
       await axios.put(`${API_URL}/deleteQuestion/${questionToDeleteId}`, {
         question_id: questionToDeleteId,
         is_deleted: true,
+      }, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
       });
       setShowDeleteConfirmModal(false);
       setQuestionToDeleteId(null);
@@ -144,6 +153,10 @@ export default function ManageQuestion() {
       await axios.put(`${API_URL}/deleteQuestion/${questionToRestoreId}`, {
         question_id: questionToRestoreId,
         is_deleted: false,
+      }, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
       });
       setShowRestoreConfirmModal(false);
       setQuestionToRestoreId(null);

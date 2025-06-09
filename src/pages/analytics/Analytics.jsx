@@ -76,7 +76,11 @@ export default function Analytics() {
 
   const fetchStudents = async () => {
     try {
-      const response = await axios.get(`${API_URL}/getUsers`);
+      const response = await axios.get(`${API_URL}/getUsers`, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
+      });
       setAllStudents(response.data);
     } catch (error) {
       console.error("Error fetching students data:", error.message);

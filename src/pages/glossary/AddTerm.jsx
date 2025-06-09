@@ -79,7 +79,11 @@ export default function AddTerm() {
       }
     }
 
-    Promise.all(newTerm.map((term) => axios.post(`${API_URL}/addTerm`, term)))
+    Promise.all(newTerm.map((term) => axios.post(`${API_URL}/addTerm`, term, {
+      headers: {
+        Authorization: `Bearer ${currentWebUser.token}`,
+      },
+    })))
       .then(() => {
         setValidationMessage("Added successfully!");
         setShowValidationModal(true);

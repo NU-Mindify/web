@@ -35,11 +35,12 @@ export default function Dashboard() {
   const [leaderboardMode, setLeaderboardMode] = useState("classic");
 
   useEffect(() => {
+    if(!currentWebUser.token) return;
     fetchStudents();
     fetchAttempts();
     fetchTopClassicLeaderboard();
     fetchTopMasteryLeaderboard();
-  }, []);
+  }, [currentWebUser]);
 
   const fetchTopClassicLeaderboard = async () => {
     setLoadingDataClassic(true);
@@ -78,7 +79,11 @@ export default function Dashboard() {
   const fetchStudents = async () => {
     setIsLoading(true);
     axios
-      .get(`${API_URL}/getUsers`)
+      .get(`${API_URL}/getUsers`, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
+      })
       .then((response) => {
         console.log(response.data);
         setStudents(response.data);
@@ -236,7 +241,6 @@ export default function Dashboard() {
     })
     .sort((a, b) => b.count - a.count);
 
-  console.log(branchData);
 
   const formatTime = (seconds) => {
     if (seconds < 60) {
