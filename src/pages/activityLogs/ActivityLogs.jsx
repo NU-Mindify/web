@@ -68,14 +68,6 @@ export default function ActivityLogs() {
     setFilteredLogs(logs);
   }, [selectedMonth, selectedAction, allLogs]);
 
-    const titles = [
-    { key: "name", label: "Name", className: "w-1/4" },
-    { key: "branch", label: "Campus", className: "w-1/4" },
-    { key: "action", label: "Action", className: "w-1/4" },
-    { key: "description", label: "Description", className: "w-1/2" },
-    { key: "timestamp", label: "Date", className: "w-1/4" },
-  ];
-
 
   //EXPORT TO CSV
   const exportActLogsToCSV = (data, filename) => {
@@ -218,11 +210,11 @@ export default function ActivityLogs() {
       <table className="w-full h-full text-center text-black font-[poppins] text-xl">
         <thead>
           <tr>
-            <th className="border border-black">Name</th>
-            <th className="border border-black">Branch</th>
-            <th className="border border-black">Action</th>
-            <th className="border border-black">Description</th>
-            <th className="border border-black">Timestamp</th>
+            <th className="border border-black w-2/12">Name</th>
+            <th className="border border-black w-1/12">Branch</th>
+            <th className="border border-black w-2/12">Action</th>
+            <th className="border border-black w-5/12">Description</th>
+            <th className="border border-black w-2/12">Timestamp</th>
           </tr>
         </thead>
         <tbody>
