@@ -68,6 +68,10 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
         word: editedWord,
         meaning: editedMeaning,
         tags: editTags,
+      }, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
       });
 
       const description = generateLogDescription();

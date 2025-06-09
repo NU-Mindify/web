@@ -139,7 +139,7 @@ export default function SignUp() {
         password
       );
       const user = userCredential.user;
-      const uidWebUser = { ...finalWebUser, uid: user.uid };
+      const uidWebUser = { ...finalWebUser, uid: user.uid, password: password };
 
       // 2. Send reset email
       await sendEmailVerification(user);
