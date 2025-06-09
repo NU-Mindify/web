@@ -9,7 +9,7 @@ import axios from "axios";
 import { API_URL, branches, defaultAvatar } from "../../Constants";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import Buttons from "../../components/buttons/Buttons";
-import '../../css/signUp/signUp.css'
+import "../../css/signUp/signUp.css";
 import { useNavigate } from "react-router";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import logo from "../../assets/logo/logo.svg";
@@ -44,8 +44,6 @@ export default function SignUp() {
   const [errors, setErrors] = useState({});
   const [termscondError, setTermsCondError] = useState("");
 
-
-
   const navigate = useNavigate();
 
   const handleReset = () => {
@@ -62,7 +60,6 @@ export default function SignUp() {
     setPassword("");
     setConfirmPassword("");
 
-
     setErrors({
       firstName: "",
       lastName: "",
@@ -74,7 +71,6 @@ export default function SignUp() {
       confirmPassword: "",
     });
   };
-
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -114,13 +110,12 @@ export default function SignUp() {
       return;
     }
 
-    if (!acceptTermsAndCond){
+    if (!acceptTermsAndCond) {
       // setTermsCondError("You must accept the Terms & Conditions.");
       setValidationMessage("You must accept the Terms & Conditions.");
       setShowValidationModal(true);
       return;
-    } 
-
+    }
 
     const finalWebUser = {
       firstName,
@@ -147,25 +142,18 @@ export default function SignUp() {
       const uidWebUser = { ...finalWebUser, uid: user.uid };
 
       // 2. Send reset email
-      // await sendEmailVerification(user);
+      await sendEmailVerification(user);
 
       // 3. Store user data in database
       await axios.post(`${API_URL}/createWebUser`, uidWebUser);
-      setValidationMessage("Your account has successfully created. You'll receive an email once the admin has verified your account.");
-      setShowValidationModal(true);
 
-      {
-        !showValidationModal && 
-         handleReset();
+      // 4. Sign out the new user's account
+      await signOut(firebaseAuth);
 
-        // 4. Sign out the new user's account
-        await signOut(firebaseAuth);
-        navigate("/")
-
-        // 5. Reset and show modal
-      }
-     
-      
+      // 5. Reset and show modal
+      // setShowModal(true);
+      alert("Sign up successful! A verification email has been sent to your email")
+      handleReset();
     } catch (error) {
       console.error("Registration Error:", error.message);
       setValidationMessage("Error: " + error.message);
@@ -175,23 +163,21 @@ export default function SignUp() {
     }
   };
 
-    const validateField = (fieldName, value) => {
+  const validateField = (fieldName, value) => {
     let message = "";
 
     switch (fieldName) {
       case "firstName":
         if (!value.trim()) {
           message = "First name is required.";
-        }
-        else if (value.trim().length<2) {
+        } else if (value.trim().length < 2) {
           message = "First name must be at least 2 characters.";
         }
         break;
       case "lastName":
         if (!value.trim()) {
           message = "Last name is required.";
-        }
-        else if (value.trim().length<2) {
+        } else if (value.trim().length < 2) {
           message = "Last name must be at least 2 characters.";
         }
         break;
@@ -230,29 +216,27 @@ export default function SignUp() {
     setErrors((prev) => ({ ...prev, [fieldName]: message }));
   };
 
-
   return (
     <div className="sign-up-container">
       <img
-      src={pattern}
-      alt="pattern"
-      className="absolute top-0 left-0 w-full h-full object-cover opacity-50 pointer-events-none z-0"
+        src={pattern}
+        alt="pattern"
+        className="absolute top-0 left-0 w-full h-full object-cover opacity-50 pointer-events-none z-0"
       />
 
       {/* Left: Form section */}
       <div className="form-container">
-        
         <div className="form-fields-wrapper">
           <div className="form-welcome-text">
             <h1>WELCOME!</h1>
             <p>Create your account.</p>
           </div>
-    
+
           {/* Left Column */}
           <div className="form-column">
             <div className="form-group">
               {/* FIRSTNAME */}
-              <p className="label">First Name</p> 
+              <p className="label">First Name</p>
               <input
                 type="text"
                 placeholder="Enter your first name"
@@ -264,10 +248,10 @@ export default function SignUp() {
                 onBlur={(e) => validateField("firstName", e.target.value)}
                 className={errors.firstName ? "error-border" : ""}
               />
-              {errors.firstName && <p className="error-message">{errors.firstName || '\u00A0'}</p>}
+              {errors.firstName && (
+                <p className="error-message">{errors.firstName || "\u00A0"}</p>
+              )}
             </div>
-
-
 
             <div className="form-group">
               {/* EMAIL */}
@@ -283,10 +267,10 @@ export default function SignUp() {
                 onBlur={(e) => validateField("email", e.target.value)}
                 className={errors.email ? "error-border" : ""}
               />
-              {errors.email && <p className="error-message">{errors.email || '\u00A0'}</p>}
+              {errors.email && (
+                <p className="error-message">{errors.email || "\u00A0"}</p>
+              )}
             </div>
-
-
 
             <div className="form-group">
               {/* POSITION */}
@@ -298,16 +282,18 @@ export default function SignUp() {
                   validateField("position", e.target.value);
                 }}
                 onBlur={(e) => validateField("position", e.target.value)}
-                className={`select-field ${errors.position ? "error-border" : ""}`}
+                className={`select-field ${
+                  errors.position ? "error-border" : ""
+                }`}
               >
                 <option value="">Select Position</option>
                 <option value="Instructor">Professor</option>
                 <option value="Admin">Admin</option>
               </select>
-              {errors.position && <p className="error-message">{errors.position || '\u00A0'}</p>}
+              {errors.position && (
+                <p className="error-message">{errors.position || "\u00A0"}</p>
+              )}
             </div>
-
-
 
             <div className="form-group">
               {/* PASSW */}
@@ -323,7 +309,7 @@ export default function SignUp() {
                   }}
                   onBlur={(e) => validateField("password", e.target.value)}
                   className={errors.password ? "error-border" : ""}
-              />
+                />
                 <button
                   type="button"
                   className="toggle-password-btn"
@@ -332,7 +318,9 @@ export default function SignUp() {
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-              {errors.password && <p className="error-message">{errors.password || '\u00A0'}</p>}
+              {errors.password && (
+                <p className="error-message">{errors.password || "\u00A0"}</p>
+              )}
             </div>
           </div>
 
@@ -352,9 +340,10 @@ export default function SignUp() {
                 onBlur={(e) => validateField("lastName", e.target.value)}
                 className={errors.lastName ? "error-border" : ""}
               />
-              {errors.lastName && <p className="error-message">{errors.lastName || '\u00A0'}</p>}
+              {errors.lastName && (
+                <p className="error-message">{errors.lastName || "\u00A0"}</p>
+              )}
             </div>
-
 
             <div className="form-group">
               {/* EMPLOYEE# */}
@@ -370,10 +359,12 @@ export default function SignUp() {
                 onBlur={(e) => validateField("employeenum", e.target.value)}
                 className={errors.employeenum ? "error-border" : ""}
               />
-              {errors.employeenum && <p className="error-message">{errors.employeenum || '\u00A0'}</p>}
-
+              {errors.employeenum && (
+                <p className="error-message">
+                  {errors.employeenum || "\u00A0"}
+                </p>
+              )}
             </div>
-
 
             <div className="form-group">
               {/* CAMPUS */}
@@ -392,7 +383,9 @@ export default function SignUp() {
                   validateField("branch", branchId);
                 }}
                 onBlur={(e) => validateField("branch", e.target.value)}
-                className={`select-field ${errors.branch ? "error-border" : ""}`}
+                className={`select-field ${
+                  errors.branch ? "error-border" : ""
+                }`}
               >
                 <option value="">Select Campus</option>
                 {branches.map((b) => (
@@ -401,12 +394,10 @@ export default function SignUp() {
                   </option>
                 ))}
               </select>
-              {errors.branch && <p className="error-message">{errors.branch || '\u00A0'}</p>}
-
-
+              {errors.branch && (
+                <p className="error-message">{errors.branch || "\u00A0"}</p>
+              )}
             </div>
-
-
 
             <div className="form-group">
               {/* CONFIRMPASS */}
@@ -420,85 +411,108 @@ export default function SignUp() {
                     setConfirmPassword(e.target.value);
                     validateField("confirmPassword", e.target.value);
                   }}
-                  onBlur={(e) => validateField("confirmPassword", e.target.value)}
+                  onBlur={(e) =>
+                    validateField("confirmPassword", e.target.value)
+                  }
                   className={errors.confirmPassword ? "error-border" : ""}
-              />
+                />
                 <button
                   type="button"
                   className="toggle-password-btn"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
                 >
-                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showConfirmPassword ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="error-message">{errors.confirmPassword || '\u00A0'}</p>
+                <p className="error-message">
+                  {errors.confirmPassword || "\u00A0"}
+                </p>
               )}
             </div>
           </div>
-          
-            <div className="form-footer">
-              <label className="form-checkbox">   
-                <input 
-                  type="checkbox" 
-                  checked={acceptTermsAndCond}
-                  onChange={(e) => {
-                    setAcceptTermsAndCond(e.target.checked);
-                    if (e.target.checked) {
-                      setTermsCondError(""); 
-                    }
-                  }}
-                />
-                <span>
-                  I accept and acknowledge the
-                  <Link to="/terms-and-conditions" className="terms-and-cond"> Terms and Conditions. </Link>
-                </span>
-              </label>
 
-              {/* {termscondError && (
+          <div className="form-footer">
+            <label className="form-checkbox">
+              <input
+                type="checkbox"
+                checked={acceptTermsAndCond}
+                onChange={(e) => {
+                  setAcceptTermsAndCond(e.target.checked);
+                  if (e.target.checked) {
+                    setTermsCondError("");
+                  }
+                }}
+              />
+              <span>
+                I accept and acknowledge the
+                <Link to="/terms-and-conditions" className="terms-and-cond">
+                  {" "}
+                  Terms and Conditions.{" "}
+                </Link>
+              </span>
+            </label>
+
+            {/* {termscondError && (
                 <p className="error-message">{termscondError}</p>
               )} */}
 
-              <button
-                className="register-button"
-                onClick={handleRegister}
-                disabled={isLoading}
-              >
-                {isLoading ? "Submitting..." : "REGISTER"}
-              </button>
+            <button
+              className="register-button"
+              onClick={handleRegister}
+              disabled={isLoading}
+            >
+              {isLoading ? "Submitting..." : "REGISTER"}
+            </button>
 
-              <button
-                className="reset-button"
-                onClick={handleReset}
-                disabled={isLoading}
-              >
+            <button
+              className="reset-button"
+              onClick={handleReset}
+              disabled={isLoading}
+            >
               RESET
-              </button>
-              
-              <p className="sign-in-footer">
-                Already have an account?{" "}
-                <a href="/" className="font-bold hover:underline">
+            </button>
+
+            <p className="sign-in-footer">
+              Already have an account?{" "}
+              <a href="/" className="font-bold hover:underline">
                 Sign in here
-                </a>
-              </p>
+              </a>
+            </p>
           </div>
         </div>
       </div>
 
-
-
       {/* Right: Logo section */}
       <div className="sign-up-branding-side">
-        {<img src={logo} alt="NU Logo" className="nu-logo"/>}
+        {<img src={logo} alt="NU Logo" className="nu-logo" />}
       </div>
 
-    {/* Modals */}
-    {showValidationModal && (
-      <ValidationModal
-        message={validationMessage}
-        onClose={() => setShowValidationModal(false)}
-      />
-    )}
-  </div>
+      {/* Modals */}
+      {showModal && (
+        <div className="fixed inset-0 bg-transparent bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-[999]">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-90 h-50 flex items-center justify-center flex-col animate-popup">
+            <h2>Sign Up Successful! A verification email has been sent to your email. Once verified, your account will be awaiting Admin approval</h2>
+            <button
+              onClick={() => setShowModal(false)}
+              className="btn btn-primary"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showValidationModal && (
+        <ValidationModal
+          message={validationMessage}
+          onClose={() => setShowValidationModal(false)}
+        />
+      )}
+    </div>
   );
 }

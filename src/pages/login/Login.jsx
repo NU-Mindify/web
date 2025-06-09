@@ -6,6 +6,7 @@ import { firebaseAuth } from "../../Firebase";
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  signOut,
 } from "firebase/auth";
 import { API_URL, branches } from "../../Constants";
 import pattern from "../../assets/forAll/pattern.svg";
@@ -89,7 +90,7 @@ export default function Login() {
       const verifyData = response.data;
 
       if (verifyData.isApproved !== true) {
-        setValidationMessage("Your Account is not verified yet.");
+        setValidationMessage("Your Account is awaiting Admin approval.");
         setShowValidationModal(true);
         return;
       }
@@ -97,6 +98,11 @@ export default function Login() {
       // Proceed with Firebase login
       await signInWithEmailAndPassword(firebaseAuth, email, password);
       const user = firebaseAuth.currentUser;
+      await user.reload();
+      if (user.emailVerified === false) {
+        alert("Your Account email is not verified! Please check your email for the verification link.")
+        signOut(firebaseAuth);
+      }
 
       if (user) {
         const token = await user.getIdToken();

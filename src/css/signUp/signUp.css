@@ -8,20 +8,27 @@
 .sign-up-header-cont h1{
     @apply text-[40px] font-[Poppins] font-bold text-black h-[50px] pl-3 mt-3;
 } */
- 
-html, body, #root {
+
+html,
+body,
+#root {
   height: 100vh;
   margin: 0;
   padding: 0;
-  font-family: 'Poppins';
+  font-family: "Poppins";
 }
 
 .sign-up-container {
-    background: radial-gradient(circle at center, #4A6FB4 0%, #27298F 70%, #273574 100%);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    @apply w-screen h-screen p-5 flex flex-col lg:flex-row justify-center items-center;
+  background: radial-gradient(
+    circle at center,
+    #4a6fb4 0%,
+    #27298f 70%,
+    #273574 100%
+  );
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  @apply w-screen h-screen p-5 flex flex-col lg:flex-row justify-center items-center;
 }
 
 /* Left Side (Form) */
@@ -57,11 +64,10 @@ html, body, #root {
   gap: 20px;
   flex-wrap: wrap;
   color: #000000;
-  border-radius: 20px; 
+  border-radius: 20px;
   z-index: 2;
   position: relative;
 }
-
 
 .form-column {
   flex: 1;
@@ -75,7 +81,7 @@ html, body, #root {
 }
 
 .form-welcome-text h1 {
-  color: #35408E;
+  color: #35408e;
   font-weight: bold;
   font-size: 24px;
   margin-bottom: 5px;
@@ -92,7 +98,6 @@ html, body, #root {
   margin-bottom: 15px;
   position: relative;
   height: 88px;
-
 }
 
 /* .spanner {
@@ -124,7 +129,7 @@ html, body, #root {
 }
 
 .password-input-wrapper input {
-  padding-right: 40px; 
+  padding-right: 40px;
   width: 100%;
 }
 
@@ -156,16 +161,16 @@ html, body, #root {
   width: 100%;
 }
 
-.terms-and-cond{
-    @apply text-black text-sm;
+.terms-and-cond {
+  @apply text-black text-sm;
 }
 
-.terms-and-cond:hover{
-    @apply text-blue-800 underline;
+.terms-and-cond:hover {
+  @apply text-blue-800 underline;
 }
 
-.sign-in-footer{
-    @apply text-sm text-center;
+.sign-in-footer {
+  @apply text-sm text-center;
 }
 
 .form-checkbox {
@@ -177,7 +182,6 @@ html, body, #root {
 .form-checkbox input {
   margin-right: 10px;
 }
-
 
 /* Right Side (logo) */
 .sign-up-branding-side {
@@ -193,7 +197,6 @@ html, body, #root {
   margin-bottom: 20px;
 }
 
-
 /* Buttons */
 .register-button {
   @apply btn rounded-xl mt-[5px] h-[40px] bg-[#FFC300] text-black 
@@ -201,7 +204,7 @@ html, body, #root {
 }
 
 .register-button:hover {
-    filter: brightness(1.1);
+  filter: brightness(1.1);
 }
 
 .reset-button {
@@ -210,7 +213,20 @@ html, body, #root {
 }
 
 .reset-button:hover {
-    filter: brightness(1.5);
+  filter: brightness(1.5);
 }
 
+@keyframes popup {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
+.animate-popup {
+  animation: popup 0.3s ease forwards;
+}
