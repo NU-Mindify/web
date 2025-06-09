@@ -139,6 +139,18 @@ export default function Login() {
         default:
           message = "An unexpected error occurred. Please try again.";
       }
+
+      try {
+        await axios.post(`${API_URL}/addLogs`, {
+          name: `--`,
+          branch: "--",
+          action: `Sign in attempt`,
+          description: `Someone tried to sign in with ${email}. Error: ${message}`,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+
       setValidationMessage(message);
       setShowValidationModal(true);
     } finally {
