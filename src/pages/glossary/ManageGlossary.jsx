@@ -57,7 +57,11 @@ export default function ManageGlossary() {
   const getAllTerms = async () => {
     try {
       setLoadingTerms(true);
-      const response = await axios.get(`${API_URL}/getTerms`);
+      const response = await axios.get(`${API_URL}/getTerms`, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
+      });
       return response.data || [];
     } catch (error) {
       console.error(`Error: ${error}`);
@@ -74,7 +78,11 @@ export default function ManageGlossary() {
     setIsLoading(true);
     try {
       const res = await axios.get(
-        `${API_URL}/getLimitedTerms/${page * pageSize}/${(page + 1) * pageSize}`
+        `${API_URL}/getLimitedTerms/${page * pageSize}/${(page + 1) * pageSize}`, {
+          headers: {
+            Authorization: `Bearer ${currentWebUser.token}`,
+          },
+        }
       );
       const newTerms = res.data;
       if (newTerms.length < pageSize) setHasMore(false);
@@ -90,7 +98,7 @@ export default function ManageGlossary() {
   useEffect(() => {
     fetchMoreTerms();
     getAllTerms().then(setAllTerms);
-  }, []);
+  }, [currentWebUser]);
 
   useEffect(() => {
     const container = glossaryBodyRef.current;
@@ -231,21 +239,25 @@ export default function ManageGlossary() {
             addedClassName="w-[80%] h-[50px]"
           />
 
-          <Buttons
-            text="Add Term"
-            onClick={() => navigate("/addterm")}
-            addedClassName="btn btn-warning"
-          />
 
-          <ExportDropdown
-            onExport={(format) => {
-              if (format === "csv") {
-                exportGlossaryToCSV(allTerms, "Glossary_Terms");
-              } else if (format === "pdf") {
-                exportGlossaryToPDF(allTerms, "Glossary Terms");
-              }
-            }}
-          />
+          <div className="flex justify-between w-full mt-3 lg:w-auto lg:mt-0">
+            <Buttons
+              text="Add Term"
+              onClick={() => navigate("/addterm")}
+              addedClassName="btn btn-warning"
+            />
+
+            <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") {
+                  exportGlossaryToCSV(allTerms, "Glossary_Terms");
+                } else if (format === "pdf") {
+                  exportGlossaryToPDF(allTerms, "Glossary Terms");
+                }
+              }}
+            />
+          </div>
+          
         </div>
 
         <div className="glossary-letters-btn-container">

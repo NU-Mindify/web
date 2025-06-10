@@ -68,6 +68,10 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
         word: editedWord,
         meaning: editedMeaning,
         tags: editTags,
+      }, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
       });
 
       const description = generateLogDescription();
@@ -97,6 +101,10 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
       await axios.put(`${API_URL}/deleteTerm/${_id}`, {
         term_id: _id,
         is_deleted: true,
+      }, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
       });
 
       onTermUpdated?.();

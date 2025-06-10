@@ -36,10 +36,22 @@ export default function Leaderboard() {
   const [selectedCategoryClassic, setselectedCategoryClassic] = useState("");
   const [selectedCategoryMastery, setselectedCategoryMastery] = useState("");
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
+
+  const [showClassic, setShowClassic] = useState(true); // This state will now only affect mobile view
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1025);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     fetchTopClassicLeaderboard();
     fetchTopMasteryLeaderboard();
-  }, []);
+  }, [selectedCategoryClassic, selectedCategoryMastery]); // Add categories to dependency array
 
   //function to normalize names for search (remove commas, trim, lowercase)
   const normalizeName = (name) => {
@@ -53,7 +65,7 @@ export default function Leaderboard() {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
         params: {
           mode: "classic",
-          category: selectedCategoryClassic
+          category: selectedCategoryClassic,
         },
       });
       setClassicLeaderboards(response.data);
@@ -71,7 +83,7 @@ export default function Leaderboard() {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
         params: {
           mode: "mastery",
-          category: selectedCategoryMastery
+          category: selectedCategoryMastery,
         },
       });
 
@@ -178,7 +190,7 @@ export default function Leaderboard() {
       classicSelectedBranch === "all" ||
       !classicSelectedBranch ||
       leader.user_id?.branch === classicSelectedBranch;
-      
+
     const matchesCategory =
       selectedCategoryClassic === "all" ||
       !selectedCategoryClassic ||
@@ -385,368 +397,382 @@ export default function Leaderboard() {
 
   return (
     <>
-      <div className="leaderboard-body">
-        <div className="classic-cont">
-          <div className="leaderboard-titles-cont">
-            <h1 className="leaderboard-title classic-title">Classic</h1>
-          </div>
+      {isMobile && (
+        <div className="flex bg-gray-200 p-1 rounded-xl w-full mb-4">
+          <button
+            className={`text-black flex justify-center items-center w-1/2 px-4 py-2 rounded-lg transition-all duration-200
+      ${
+        showClassic
+          ? "bg-white font-semibold shadow"
+          : "opacity-60 hover:opacity-100"
+      }`}
+            onClick={() => setShowClassic(true)}
+            disabled={showClassic}
+          >
+            Competitive Mode
+          </button>
 
-          <h2 className="leaderboard-subtitle">
-            <i>Top 30 performing students in Classic Mode</i>
-          </h2>
+          <button
+            className={`text-black flex justify-center items-center w-1/2 px-4 py-2 rounded-lg transition-all duration-200
+      ${
+        !showClassic
+          ? "bg-white font-semibold shadow"
+          : "opacity-60 hover:opacity-100"
+      }`}
+            onClick={() => setShowClassic(false)}
+            disabled={!showClassic}
+          >
+            Mastery Mode
+          </button>
+        </div>
+      )}
 
-          <div className="search-bar-cont-leaderboards">
-            <div className="search-bar-leaderboards">
-              <button className="search-btn-leaderboards">
-                <img src={search} alt="search"></img>
-              </button>
-              <input
-                type="text"
-                placeholder="Search for a student"
-                className="search-input-leaderboards"
-                value={searchClassic}
-                onChange={handleClassicSearchChange}
-              />
+      <div
+        className={`leaderboard-body grid gap-2 ${
+          isMobile ? `grid-cols-1` : `grid-cols-2`
+        }`}
+      >
+        {/* Render Classic Leaderboard */}
+        {(showClassic || !isMobile) && (
+          <div className={"classic-cont"}>
+            <div className="leaderboard-titles-cont">
+              <h1 className="leaderboard-title classic-title">Classic</h1>
             </div>
-            {classicSuggestions.length > 0 && searchClassic.length > 0 && (
-              <ul className="suggestions-dropdown text-black font-[Poppins]">
-                {classicSuggestions.map((suggestion) => (
-                  <li
-                    key={suggestion.id} // Use the unique ID from the suggestion
-                    onClick={() => {
-                      setSearchClassic(suggestion.name);
-                      setClassicSuggestions([]); // Clear suggestions after selection
-                    }}
-                  >
-                    {suggestion.name}
-                  </li>
-                ))}
-              </ul>
-            )}
 
-            {/* <SearchBar
-              value={searchClassic}
-              handleChange={(e) => {
-                handleClassicSearchChange(e.target.value);
-                setShowSuggestions(true);
-              }}
-              placeholder="Search for a user"
-              icon={searchIcon}
-              suggestions={searchSuggestions}
-              showSuggestions={showSuggestions}
-              onSuggestionSelect={(user) => {
-                setSearchQuery(
-                  `${user.lastName.toUpperCase()}, ${user.firstName}`
-                );
-                setShowSuggestions(false);
-              }}
-              addedClassName="w-[80%] h-[50px]"
-            /> */}
+            <h2 className="leaderboard-subtitle">
+              <i>Top 30 performing students in Classic Mode</i>
+            </h2>
 
-            <div className="ml-5">
-              <ExportDropdown
-                onExport={(format) => {
-                  if (format === "csv") {
-                    exportToCSV(classicSortingLeaders, "Classic_Leaderboard");
-                  } else if (format === "pdf") {
-                    exportToPDF(classicSortingLeaders, "Classic Leaderboard");
-                  }
-                }}
-              />
+            <div className="search-bar-cont-leaderboards">
+              <div className="search-bar-leaderboards">
+                <button className="search-btn-leaderboards">
+                  <img src={search} alt="search"></img>
+                </button>
+                <input
+                  type="text"
+                  placeholder="Search for a student"
+                  className="search-input-leaderboards"
+                  value={searchClassic}
+                  onChange={handleClassicSearchChange}
+                />
+              </div>
+              {classicSuggestions.length > 0 && searchClassic.length > 0 && (
+                <ul className="suggestions-dropdown text-black font-[Poppins]">
+                  {classicSuggestions.map((suggestion) => (
+                    <li
+                      key={suggestion.id} // Use the unique ID from the suggestion
+                      onClick={() => {
+                        setSearchClassic(suggestion.name);
+                        setClassicSuggestions([]); // Clear suggestions after selection
+                      }}
+                    >
+                      {suggestion.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <div className="ml-5">
+                <ExportDropdown
+                  onExport={(format) => {
+                    if (format === "csv") {
+                      exportToCSV(classicSortingLeaders, "Classic_Leaderboard");
+                    } else if (format === "pdf") {
+                      exportToPDF(classicSortingLeaders, "Classic Leaderboard");
+                    }
+                  }}
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="w-full flex flex-row ml-4 mt-[-10px] mb-3">
-
-            {
-              currentWebUser.position.toLowerCase() === "super admin" && 
+            <div className="w-full flex flex-row ml-4 mt-[-10px] mb-3">
+              {currentWebUser.position.toLowerCase() === "super admin" && (
+                <SelectFilter
+                  value={classicSelectedBranch}
+                  onChange={(e) => setClassicSelectedBranch(e.target.value)}
+                  disabledOption="Select Branch"
+                  fixOption="All Branches"
+                  mainOptions={branches}
+                  getOptionValue={(branch) => branch.id}
+                  getOptionLabel={(branch) => branch.name}
+                  addedClassName=""
+                />
+              )}
 
               <SelectFilter
-                value={classicSelectedBranch}
-                onChange={(e) => setClassicSelectedBranch(e.target.value)}
-                disabledOption="Select Branch"
-                fixOption="All Branches"
-                mainOptions={branches}
-                getOptionValue={(branch) => branch.id}
-                getOptionLabel={(branch) => branch.name}
-                addedClassName=""
+                value={selectedCategoryClassic}
+                onChange={(e) => setselectedCategoryClassic(e.target.value)}
+                disabledOption="Select Category"
+                fixOption="All Categories"
+                mainOptions={categories}
+                getOptionValue={(categories) => categories.id}
+                getOptionLabel={(categories) => categories.name}
+                addedClassName="ml-3"
               />
-            }
-            
-
-            <SelectFilter
-              value={selectedCategoryClassic}
-              onChange={(e) => setselectedCategoryClassic(e.target.value)}
-              disabledOption="Select Category"
-              fixOption="All Categories"
-              mainOptions={categories}
-              getOptionValue={(categories) => categories.id}
-              getOptionLabel={(categories) => categories.name}
-              addedClassName="ml-3"
-            />
-          </div>
-
-          <div className="leaderboard-contents-container">
-            <div className="content-header">
-              <h1 className="title-header">Rank</h1>
-              <h1 className="title-header">Name</h1>
-              <h1 className="title-header">Campus</h1>
-              <h1 className="title-header">World</h1>
-              <h1 className="title-header">Score</h1>
-              <h1 className="title-header">Time</h1>
             </div>
-            {loadingDataClassic ? (
-              <div className="loading-overlay-leaderboards">
-                <div className="spinner"></div>
-                <p>Fetching data...</p>
+
+            <div className="leaderboard-contents-container">
+              <div className="content-header">
+                <h1 className="title-header">Rank</h1>
+                <h1 className="title-header">Name</h1>
+                <h1 className="title-header">Campus</h1>
+                <h1 className="title-header">World</h1>
+                <h1 className="title-header">Score</h1>
+                <h1 className="title-header">Time</h1>
               </div>
-            ) : classicSortingLeaders.length === 0 ? (
-              <h1 className="text-black mt-5 w-full text-3xl text-center">
-                No data Found
-              </h1>
-            ) : (
-              <div className="leaders-main-container">
-                {classicSortingLeaders
-                  .filter((leader) =>
-                    classicSelectedBranch === "all" || !classicSelectedBranch
-                      ? true
-                      : leader.user_id?.branch === classicSelectedBranch
-                  )
-                  .map((leader) => (
-                    <div
-                      key={leader._id}
-                      className="leaders-container bg-gray-100 rounded-xl mt-2"
-                    >
-                      <div className="leader-info text-black leaders-content-font">
-                        {leader.rank === 1
-                          ? "🥇"
-                          : leader.rank === 2
-                          ? "🥈"
-                          : leader.rank === 3
-                          ? "🥉"
-                          : leader.rank}
-                      </div>
+              {loadingDataClassic ? (
+                <div className="loading-overlay-leaderboards">
+                  <div className="spinner"></div>
+                  <p>Fetching data...</p>
+                </div>
+              ) : classicSortingLeaders.length === 0 ? (
+                <h1 className="text-black mt-5 w-full text-3xl text-center">
+                  No data Found
+                </h1>
+              ) : (
+                <div className="leaders-main-container">
+                  {classicSortingLeaders
+                    .filter((leader) =>
+                      classicSelectedBranch === "all" || !classicSelectedBranch
+                        ? true
+                        : leader.user_id?.branch === classicSelectedBranch
+                    )
+                    .map((leader) => (
                       <div
-                        className="leader-info font-bold"
-                        style={{ color: "#0068DD" }}
+                        key={leader._id}
+                        className="leaders-container bg-gray-100 rounded-xl mt-2"
                       >
-                        {leader.user_id?.last_name.toUpperCase()},{" "}
-                        {leader.user_id?.first_name}
-                      </div>
+                        <div className="leader-info text-black leaders-content-font">
+                          {leader.rank === 1
+                            ? "🥇"
+                            : leader.rank === 2
+                            ? "🥈"
+                            : leader.rank === 3
+                            ? "🥉"
+                            : leader.rank}
+                        </div>
+                        <div
+                          className="leader-info font-bold"
+                          style={{ color: "#0068DD" }}
+                        >
+                          {leader.user_id?.last_name.toUpperCase()},{" "}
+                          {leader.user_id?.first_name}
+                        </div>
 
-                      <div className="leader-info text-black leaders-content-font">
-                        {branches.find(
-                          (branch) => branch.id === leader.user_id?.branch
-                        )?.name || "Unknown Branch"}
-                      </div>
+                        <div className="leader-info text-black leaders-content-font">
+                          {branches.find(
+                            (branch) => branch.id === leader.user_id?.branch
+                          )?.name || "Unknown Branch"}
+                        </div>
 
-                      <div className="leader-info text-black leaders-content-font">
-                        {leader.category === "developmental"
-                          ? "Developmental Psychology"
-                          : leader.category === "abnormal"
-                          ? "Abnormal Psychology"
-                          : leader.category === "psychological"
-                          ? "Psychological Psychology"
-                          : leader.category === "industrial"
-                          ? "Industrial Psychology"
-                          : leader.category === "general"
-                          ? "General Psychology"
-                          : leader.category}
-                      </div>
+                        <div className="leader-info text-black leaders-content-font">
+                          {leader.category === "developmental"
+                            ? "Developmental Psychology"
+                            : leader.category === "abnormal"
+                            ? "Abnormal Psychology"
+                            : leader.category === "psychological"
+                            ? "Psychological Psychology"
+                            : leader.category === "industrial"
+                            ? "Industrial Psychology"
+                            : leader.category === "general"
+                            ? "General Psychology"
+                            : leader.category}
+                        </div>
 
-                      <div className="leader-info text-black font-bold leaders-content-font">
-                        {leader.total_items > 0
-                          ? `${(
-                              (leader.correct / leader.total_items) *
-                              100
-                            ).toFixed(0)}%`
-                          : "N/A"}
-                      </div>
+                        <div className="leader-info text-black font-bold leaders-content-font">
+                          {leader.total_items > 0
+                            ? `${(
+                                (leader.correct / leader.total_items) *
+                                100
+                              ).toFixed(0)}%`
+                            : "N/A"}
+                        </div>
 
-                      <div className="leader-info text-black leaders-content-font">
-                        {leader.time_completion > 60
-                          ? `${Math.floor(
-                              leader.time_completion / 60
-                            )}m ${Math.round(leader.time_completion % 60)}s`
-                          : `${Math.round(leader.time_completion)}s`}
+                        <div className="leader-info text-black leaders-content-font">
+                          {leader.time_completion > 60
+                            ? `${Math.floor(
+                                leader.time_completion / 60
+                              )}m ${Math.round(leader.time_completion % 60)}s`
+                            : `${Math.round(leader.time_completion)}s`}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Render Mastery Leaderboard */}
+        {(!showClassic || !isMobile) && (
+          <div className="mastery-cont">
+            <div className="leaderboard-titles-cont">
+              <h1 className="leaderboard-title mastery-title">Mastery</h1>
+            </div>
+
+            <h2 className="leaderboard-subtitle">
+              <i>Top 30 performing students in Mastery Mode</i>
+            </h2>
+
+            <div className="search-bar-cont-leaderboards">
+              <div className="search-bar-leaderboards">
+                <button className="search-btn-leaderboards">
+                  <img src={search} alt="search"></img>
+                </button>
+                <input
+                  type="text"
+                  placeholder="Search for a student"
+                  className="search-input-leaderboards"
+                  value={searchMastery}
+                  onChange={handleMasterySearchChange}
+                />
               </div>
-            )}
-          </div>
-        </div>
+              {masterySuggestions.length > 0 && searchMastery.length > 0 && (
+                <ul className="suggestions-dropdown text-black font-[Poppins]">
+                  {masterySuggestions.map((suggestion) => (
+                    <li
+                      key={suggestion.id} // Use the unique ID from the suggestion
+                      onClick={() => {
+                        setSearchMastery(suggestion.name);
+                        setMasterySuggestions([]);
+                      }}
+                    >
+                      {suggestion.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-        <div className="mastery-cont">
-          <div className="leaderboard-titles-cont">
-            <h1 className="leaderboard-title mastery-title">Mastery</h1>
-          </div>
-
-          <h2 className="leaderboard-subtitle">
-            <i>Top 30 performing students in Mastery Mode</i>
-          </h2>
-
-          <div className="search-bar-cont-leaderboards">
-            <div className="search-bar-leaderboards">
-              <button className="search-btn-leaderboards">
-                <img src={search} alt="search"></img>
-              </button>
-              <input
-                type="text"
-                placeholder="Search for a student"
-                className="search-input-leaderboards"
-                value={searchMastery}
-                onChange={handleMasterySearchChange}
-              />
+              <div className="ml-5">
+                <ExportDropdown
+                  onExport={(format) => {
+                    if (format === "csv") {
+                      exportToCSV(masterySortingLeaders, "Mastery_Leaderboard");
+                    } else if (format === "pdf") {
+                      exportToPDF(masterySortingLeaders, "Mastery Leaderboard");
+                    }
+                  }}
+                />
+              </div>
             </div>
-            {masterySuggestions.length > 0 && searchMastery.length > 0 && (
-              <ul className="suggestions-dropdown text-black font-[Poppins]">
-                {masterySuggestions.map((suggestion) => (
-                  <li
-                    key={suggestion.id} // Use the unique ID from the suggestion
-                    onClick={() => {
-                      setSearchMastery(suggestion.name);
-                      setMasterySuggestions([]);
-                    }}
-                  >
-                    {suggestion.name}
-                  </li>
-                ))}
-              </ul>
-            )}
 
-            <div className="ml-5">
-              <ExportDropdown
-                onExport={(format) => {
-                  if (format === "csv") {
-                    exportToCSV(masterySortingLeaders, "Mastery_Leaderboard");
-                  } else if (format === "pdf") {
-                    exportToPDF(masterySortingLeaders, "Mastery Leaderboard");
-                  }
-                }}
-              />
-            </div>
-          </div>
+            <div className="w-full flex flex-row ml-4 mt-[-10px] mb-3">
+              {currentWebUser.position.toLowerCase() === "super admin" && (
+                <SelectFilter
+                  value={masterySelectedBranch}
+                  onChange={(e) => setMasterySelectedBranch(e.target.value)}
+                  disabledOption="Select Branch"
+                  fixOption="All Branches"
+                  mainOptions={branches}
+                  getOptionValue={(branch) => branch.id}
+                  getOptionLabel={(branch) => branch.name}
+                  addedClassName=""
+                />
+              )}
 
-          <div className="w-full flex flex-row ml-4 mt-[-10px] mb-3">
-
-            {
-              currentWebUser.position.toLowerCase() === "super admin" && 
               <SelectFilter
-                value={masterySelectedBranch}
-                onChange={(e) => setMasterySelectedBranch(e.target.value)}
-                disabledOption="Select Branch"
-                fixOption="All Branches"
-                mainOptions={branches}
-                getOptionValue={(branch) => branch.id}
-                getOptionLabel={(branch) => branch.name}
-                addedClassName=""
+                value={selectedCategoryMastery}
+                onChange={(e) => setselectedCategoryMastery(e.target.value)}
+                disabledOption="Select Category"
+                fixOption="All Categories"
+                mainOptions={categories}
+                getOptionValue={(categories) => categories.id}
+                getOptionLabel={(categories) => categories.name}
+                addedClassName="ml-3"
               />
-            }
-            
-
-            <SelectFilter
-              value={selectedCategoryMastery}
-              onChange={(e) => setselectedCategoryMastery(e.target.value)}
-              disabledOption="Select Category"
-              fixOption="All Categories"
-              mainOptions={categories}
-              getOptionValue={(categories) => categories.id}
-              getOptionLabel={(categories) => categories.name}
-              addedClassName="ml-3"
-            />
-          </div>
-
-          <div className="leaderboard-contents-container">
-            <div className="content-header">
-              <h1 className="title-header">Rank</h1>
-              <h1 className="title-header">Name</h1>
-              <h1 className="title-header">Campus</h1>
-              <h1 className="title-header">World</h1>
-              <h1 className="title-header">Score</h1>
-              <h1 className="title-header">Time</h1>
             </div>
 
-            {loadingDataMastery ? (
-              <div className="loading-overlay-leaderboards">
-                <div className="spinner"></div>
-                <p>Fetching data...</p>
+            <div className="leaderboard-contents-container">
+              <div className="content-header">
+                <h1 className="title-header">Rank</h1>
+                <h1 className="title-header">Name</h1>
+                <h1 className="title-header">Campus</h1>
+                <h1 className="title-header">World</h1>
+                <h1 className="title-header">Score</h1>
+                <h1 className="title-header">Time</h1>
               </div>
-            ) : masterySortingLeaders.length === 0 ? (
-              <h1 className="text-black mt-5 w-full text-3xl text-center">
-                No data Found
-              </h1>
-            ) : (
-              <div className="leaders-main-container">
-                {masterySortingLeaders
-                  .filter((leader) =>
-                    masterySelectedBranch === "all" || !masterySelectedBranch
-                      ? true
-                      : leader.user_id?.branch === masterySelectedBranch
-                  )
-                  .map((leader) => (
-                    <div
-                      key={leader._id}
-                      className="leaders-container bg-gray-100 rounded-xl mt-2"
-                    >
-                      <div className="leader-info text-black leaders-content-font">
-                        {leader.rank === 1
-                          ? "🥇"
-                          : leader.rank === 2
-                          ? "🥈"
-                          : leader.rank === 3
-                          ? "🥉"
-                          : leader.rank}
-                      </div>
+
+              {loadingDataMastery ? (
+                <div className="loading-overlay-leaderboards">
+                  <div className="spinner"></div>
+                  <p>Fetching data...</p>
+                </div>
+              ) : masterySortingLeaders.length === 0 ? (
+                <h1 className="text-black mt-5 w-full text-3xl text-center">
+                  No data Found
+                </h1>
+              ) : (
+                <div className="leaders-main-container">
+                  {masterySortingLeaders
+                    .filter((leader) =>
+                      masterySelectedBranch === "all" || !masterySelectedBranch
+                        ? true
+                        : leader.user_id?.branch === masterySelectedBranch
+                    )
+                    .map((leader) => (
                       <div
-                        className="leader-info font-bold"
-                        style={{ color: "#0068DD" }}
+                        key={leader._id}
+                        className="leaders-container bg-gray-100 rounded-xl mt-2"
                       >
-                        {leader.user_id?.last_name.toUpperCase()},{" "}
-                        {leader.user_id?.first_name}
-                      </div>
+                        <div className="leader-info text-black leaders-content-font">
+                          {leader.rank === 1
+                            ? "🥇"
+                            : leader.rank === 2
+                            ? "🥈"
+                            : leader.rank === 3
+                            ? "🥉"
+                            : leader.rank}
+                        </div>
+                        <div
+                          className="leader-info font-bold"
+                          style={{ color: "#0068DD" }}
+                        >
+                          {leader.user_id?.last_name.toUpperCase()},{" "}
+                          {leader.user_id?.first_name}
+                        </div>
 
-                      <div className="leader-info text-black leaders-content-font">
-                        {branches.find(
-                          (branch) => branch.id === leader.user_id?.branch
-                        )?.name || "Unknown Branch"}
-                      </div>
+                        <div className="leader-info text-black leaders-content-font">
+                          {branches.find(
+                            (branch) => branch.id === leader.user_id?.branch
+                          )?.name || "Unknown Branch"}
+                        </div>
 
-                      <div className="leader-info text-black leaders-content-font">
-                        {leader.category === "developmental"
-                          ? "Developmental Psychology"
-                          : leader.category === "abnormal"
-                          ? "Abnormal Psychology"
-                          : leader.category === "psychological"
-                          ? "Psychological Psychology"
-                          : leader.category === "industrial"
-                          ? "Industrial Psychology"
-                          : leader.category === "general"
-                          ? "General Psychology"
-                          : leader.category}
-                      </div>
-                      <div className="leader-info text-black font-bold leaders-content-font">
-                        {leader.total_items > 0
-                          ? `${(
-                              (leader.correct / leader.total_items) *
-                              100
-                            ).toFixed(0)}%`
-                          : "N/A"}
-                      </div>
+                        <div className="leader-info text-black leaders-content-font">
+                          {leader.category === "developmental"
+                            ? "Developmental Psychology"
+                            : leader.category === "abnormal"
+                            ? "Abnormal Psychology"
+                            : leader.category === "psychological"
+                            ? "Psychological Psychology"
+                            : leader.category === "industrial"
+                            ? "Industrial Psychology"
+                            : leader.category === "general"
+                            ? "General Psychology"
+                            : leader.category}
+                        </div>
+                        <div className="leader-info text-black font-bold leaders-content-font">
+                          {leader.total_items > 0
+                            ? `${(
+                                (leader.correct / leader.total_items) *
+                                100
+                              ).toFixed(0)}%`
+                            : "N/A"}
+                        </div>
 
-                      <div className="leader-info text-black leaders-content-font">
-                        {leader.time_completion > 60
-                          ? `${Math.floor(
-                              leader.time_completion / 60
-                            )}m ${Math.round(leader.time_completion % 60)}s`
-                          : `${Math.round(leader.time_completion)}s`}
+                        <div className="leader-info text-black leaders-content-font">
+                          {leader.time_completion > 60
+                            ? `${Math.floor(
+                                leader.time_completion / 60
+                              )}m ${Math.round(leader.time_completion % 60)}s`
+                            : `${Math.round(leader.time_completion)}s`}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-              </div>
-            )}
+                    ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

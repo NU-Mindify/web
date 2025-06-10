@@ -6,6 +6,7 @@ import { firebaseAuth } from "../../Firebase";
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  sendEmailVerification
 } from "firebase/auth";
 import { API_URL, branches } from "../../Constants";
 import pattern from "../../assets/forAll/pattern.svg";
@@ -89,7 +90,7 @@ export default function Login() {
       const verifyData = response.data;
 
       if (verifyData.isApproved !== true) {
-        setValidationMessage("Your Account is not verified yet.");
+        setValidationMessage("Your Account is awaiting Admin approval.");
         setShowValidationModal(true);
         return;
       }
@@ -97,6 +98,13 @@ export default function Login() {
       // Proceed with Firebase login
       await signInWithEmailAndPassword(firebaseAuth, email, password);
       const user = firebaseAuth.currentUser;
+      await user.reload();
+      if (user.emailVerified === false) {
+        alert("Your Account email is not verified! Please check your email for the verification link. (verification link re-sent)")
+        // signOut(firebaseAuth); [[comment for now para maka login si super admin kasi di pa valid email nya]]
+        sendEmailVerification(user)
+        return;
+      }
 
       if (user) {
         const token = await user.getIdToken();
@@ -139,6 +147,18 @@ export default function Login() {
         default:
           message = "An unexpected error occurred. Please try again.";
       }
+
+      try {
+        await axios.post(`${API_URL}/addLogs`, {
+          name: `--`,
+          branch: "--",
+          action: `Sign in attempt`,
+          description: `Someone tried to sign in with ${email}. Error: ${message}`,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+
       setValidationMessage(message);
       setShowValidationModal(true);
     } finally {
@@ -175,7 +195,7 @@ export default function Login() {
       <img
         src={pattern}
         alt="pattern"
-        className="absolute top-0 left-0 w-full h-full object-cover opacity-50 pointer-events-none z-0"
+        className="absolute top-0 left-0 w-full h-full object-cover opacity-50 pointer-events-none z-50"
       />
 
       {/* Transitioning Logo */}

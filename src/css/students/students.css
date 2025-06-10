@@ -17,6 +17,9 @@
 }
 
 
+.stud-sub-header-container {
+  @apply w-full h-auto flex flex-row justify-start items-center gap-4 mt-3;
+}
 
 
 

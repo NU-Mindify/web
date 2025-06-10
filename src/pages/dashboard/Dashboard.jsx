@@ -35,11 +35,12 @@ export default function Dashboard() {
   const [leaderboardMode, setLeaderboardMode] = useState("classic");
 
   useEffect(() => {
+    if(!currentWebUser.token) return;
     fetchStudents();
     fetchAttempts();
     fetchTopClassicLeaderboard();
     fetchTopMasteryLeaderboard();
-  }, []);
+  }, [currentWebUser]);
 
   const fetchTopClassicLeaderboard = async () => {
     setLoadingDataClassic(true);
@@ -78,7 +79,11 @@ export default function Dashboard() {
   const fetchStudents = async () => {
     setIsLoading(true);
     axios
-      .get(`${API_URL}/getUsers`)
+      .get(`${API_URL}/getUsers`, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
+      })
       .then((response) => {
         console.log(response.data);
         setStudents(response.data);
@@ -236,7 +241,6 @@ export default function Dashboard() {
     })
     .sort((a, b) => b.count - a.count);
 
-  console.log(branchData);
 
   const formatTime = (seconds) => {
     if (seconds < 60) {
@@ -402,7 +406,6 @@ export default function Dashboard() {
         <div
           className="leaderboards-container-dashboard"
           style={{
-            maxWidth: "600px",
             overflowX: "auto",
             padding: "1rem",
             backgroundColor: "#fff",
@@ -460,11 +463,11 @@ export default function Dashboard() {
                   className="text-black"
                   style={{ borderBottom: "1px solid #ddd" }}
                 >
-                  <th style={{ padding: "6px" }}>Username</th>
-                  <th style={{ padding: "6px" }}>Branch</th>
-                  <th style={{ padding: "6px" }}>World</th>
-                  <th style={{ padding: "6px" }}>Score (%)</th>
-                  <th style={{ padding: "6px" }}>Time (s)</th>
+                  <th className="leaderboard-th">Username</th>
+                  <th className="leaderboard-th">Branch</th>
+                  <th className="leaderboard-th">World</th>
+                  <th className="leaderboard-th">Score (%)</th>
+                  <th className="leaderboard-th">Time (s)</th>
                 </tr>
               </thead>
               <tbody>

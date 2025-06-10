@@ -16,12 +16,11 @@
 }
 
 .glossary-sub-header-container {
-  @apply w-full h-auto flex flex-row justify-evenly items-center mt-3 px-1;
+  @apply w-full h-auto flex flex-col lg:flex-row justify-evenly items-center mt-3 px-1 mb-4 lg:mb-2;
 }
 
-
 .glossary-letters-btn-container {
-  @apply font-[Poppins] hidden md:w-[90%] md:h-[80px] md:flex md:justify-around md:items-center md:min-w-[500px];
+  @apply font-[Poppins] hidden lg:w-[90%] lg:h-[80px] lg:flex lg:justify-around lg:items-center lg:min-w-[500px];
 }
 
 .navigator-buttons {
@@ -32,9 +31,12 @@
   @apply text-black text-xl my-2 md:text-3xl lg:text-[40px];
 }
 
+
+
 /* ------------------- MAIN BODY ---------------- */
 .glossary-body {
-  @apply w-full h-[calc(100%-146px)] overflow-y-auto px-2 rounded-xl bg-white md:h-[calc(100%-212px)] mt-5 pb-[100px];
+  /* Added overflow-x-auto to enable horizontal scrolling when content exceeds width */
+  @apply w-full h-[calc(100%-146px)] overflow-y-auto px-2 rounded-xl bg-white md:h-[calc(100%-212px)] mt-5 pb-[100px] overflow-x-auto;
   scrollbar-width: thin;
   scrollbar-color: black transparent;
 }
@@ -51,14 +53,17 @@
 .glossary-body::-webkit-scrollbar-track {
   background: black;
 }
+
+
 /* ------------------- BODY CONTENTS ---------------- */
 
-.header-details-container{
+.header-details-container {
   @apply w-full flex justify-center items-center mt-2 sticky top-0 z-50 font-[Poppins] flex-col bg-white;
 }
 
 .header-details {
-  @apply grid grid-cols-[1.5fr_3fr_1fr] text-2xl font-medium text-black h-[60px] items-center border-b-2 border-black w-11/12 ;
+  /* Added min-w for the grid layout to ensure minimum width before scrolling */
+  @apply grid grid-cols-[1.5fr_3fr_1fr] text-2xl font-medium text-black h-[60px] items-center border-b-2 border-black w-11/12 min-w-[700px]; /* Adjust min-w value as needed */
 }
 
 .header-title {
@@ -75,15 +80,16 @@
 
 /* Non-active word container */
 .per-word-container {
-  @apply w-11/12 grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-300 border-1 border-black;
-    @apply transform scale-100 transition-transform duration-300 ease-in-out;
+  /* Added min-w for the grid layout to ensure minimum width before scrolling */
+  @apply w-11/12 grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-300 border-1 border-black min-w-[700px]; /* Adjust min-w value to match or be slightly less than header-details */
+  @apply transform scale-100 transition-transform duration-300 ease-in-out;
 }
+
 .active-per-word-container {
-  @apply w-11/12 h-auto grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 bg-[#35408E] ;
+  /* Added min-w for the grid layout to ensure minimum width before scrolling */
+  @apply w-11/12 h-auto grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 bg-[#35408E] min-w-[700px]; /* Adjust min-w value to match or be slightly less than header-details */
   @apply transition-transform duration-300 ease-in-out transform scale-108;
-
 }
-
 
 .word-container {
   @apply flex-1 h-full text-black text-base whitespace-nowrap overflow-hidden text-ellipsis p-2;
@@ -101,15 +107,9 @@
   @apply flex-1 max-h-[1000px] text-base overflow-hidden p-2 flex items-center text-white;
 }
 
-
-
-
 .action-container {
   @apply w-full h-full flex justify-around items-center pl-3;
 }
-
-
-
 
 .dropdown {
   @apply flex justify-center items-center transition-transform duration-300 ease-in-out cursor-pointer transform;
@@ -123,19 +123,11 @@
   @apply cursor-pointer w-[25px] h-[25px];
 }
 
-
-.per-word-container button img{
+.per-word-container button img {
   @apply w-[40px] aspect-square;
 }
 
-.active-per-word-container button img{
+.active-per-word-container button img {
   @apply w-[40px] aspect-square;
   filter: invert(1) brightness(2) contrast(100);
 }
-
-
-
-
-
-
-
