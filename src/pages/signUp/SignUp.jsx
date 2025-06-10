@@ -301,7 +301,7 @@ export default function SignUp() {
                 className={`select-field ${errors.position ? "error-border" : ""}`}
               >
                 <option value="">Select Position</option>
-                <option value="Instructor">Professor</option>
+                <option value="Professor">Professor</option>
                 <option value="Admin">Admin</option>
               </select>
               {errors.position && <p className="error-message">{errors.position || '\u00A0'}</p>}

@@ -202,7 +202,7 @@ export default function ActivityLogs() {
             getOptionLabel={(opt) => opt.label}
           />
 
-          <div className="ml-225 mr-1 mt-1">
+          <div className="ml-200 mr-1 mt-1">
             <ExportDropdown
               onExport={(format) => {
                 if (format === "csv") exportActLogsToCSV(filteredLogs, "Activity_Logs");
