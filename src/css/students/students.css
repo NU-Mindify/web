@@ -4,7 +4,7 @@
 
 
 .students-main-container{
-  @apply font-[Poppins] p-3 flex flex-col h-full w-full bg-white;
+  @apply font-[Poppins] p-3 flex flex-col h-screen lg:h-full w-full bg-white;
 }
 
 

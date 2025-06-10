@@ -35,7 +35,7 @@ export default function Dashboard() {
   const [leaderboardMode, setLeaderboardMode] = useState("classic");
 
   useEffect(() => {
-    if(!currentWebUser.token) return;
+    if(!currentWebUser?.token) return;
     fetchStudents();
     fetchAttempts();
     fetchTopClassicLeaderboard();
@@ -259,7 +259,7 @@ export default function Dashboard() {
         <h2 className="header-greeting-dashboard">
           {`Hi, ${currentWebUser.firstName} 
           ${
-            currentWebUser.position.toLowerCase() === "super admin"
+            currentWebUser?.position?.toLowerCase() === "super admin"
               ? "My lord"
               : `from ${branch}`
           }. 

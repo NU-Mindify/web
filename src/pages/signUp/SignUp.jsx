@@ -143,10 +143,12 @@ export default function SignUp() {
 
       // 2. Send reset email
       await sendEmailVerification(user);
-
+      console.log(uidWebUser);
+      
       // 3. Store user data in database
-      await axios.post(`${API_URL}/createWebUser`, uidWebUser);
-
+      const {data:added} = await axios.post(`${API_URL}/createWebUser`, uidWebUser);
+      console.log(added);
+      
       // 4. Sign out the new user's account
       await signOut(firebaseAuth);
 
@@ -287,8 +289,8 @@ export default function SignUp() {
                 }`}
               >
                 <option value="">Select Position</option>
-                <option value="Instructor">Professor</option>
-                <option value="Admin">Admin</option>
+                <option value="Professor">Professor</option>
+                <option value="Sub Admin">Admin</option>
               </select>
               {errors.position && (
                 <p className="error-message">{errors.position || "\u00A0"}</p>
@@ -358,6 +360,8 @@ export default function SignUp() {
                 }}
                 onBlur={(e) => validateField("employeenum", e.target.value)}
                 className={errors.employeenum ? "error-border" : ""}
+                min={1}
+                max={999999}
               />
               {errors.employeenum && (
                 <p className="error-message">

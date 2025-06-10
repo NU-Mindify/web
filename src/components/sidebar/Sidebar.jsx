@@ -119,10 +119,13 @@ export default function Sidebar() {
   const fetchUserInfo = async () => {
     try {
       const userToken = await getAuth().currentUser.getIdToken()
+      console.log("token", userToken);
+      
+      console.log("webuser", currentWebUserUID);
       const response = await axios.get(`${API_URL}/getwebuser/${currentWebUserUID}`)
       const newCurrentWebUser = { ...response.data, token: userToken };
       setCurrentWebUser(newCurrentWebUser);
-
+      
       if (
         response.data.position?.toLowerCase() === "super admin" ||
         !response.data.position

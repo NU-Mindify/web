@@ -6,7 +6,8 @@
 /* Main Container */
 .users-main-container {
   /* Added overflow-x-auto to enable horizontal scrolling when content exceeds width */
-  @apply w-full flex-1 overflow-x-auto overflow-y-auto flex flex-col lg:items-center transition-transform duration-500 ease-in-out;
+  @apply w-full h-[500px] overflow-x-auto overflow-y-auto flex flex-col transition-transform duration-500 ease-in-out
+  lg:flex-1 lg:items-center;
   scrollbar-width: thin;
   scrollbar-color: black transparent;
 }
@@ -33,8 +34,7 @@
 }
 
 .titles-table th {
-  /* Ensures each header cell has a minimum width, preventing content from squishing */
-  @apply text-xl text-black min-w-[150px]; /* Adjust this value based on your content */
+  @apply text-xl text-black min-w-[150px]; 
 }
 
 .contentsTable-thead {
@@ -75,7 +75,6 @@
 
 /* All user table, excluding the titles */
 .user-table {
-  /* Set a minimum width for the main content table to match the header */
   @apply w-full table-fixed min-w-[900px];
 }
 

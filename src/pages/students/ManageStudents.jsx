@@ -307,6 +307,8 @@
     );
   }
 
+
+  
   function CardActiveContent({student, fetchUsers, setCardActive}) {
     const [loadingData, setLoadingData] = useState(false);
     const [competitionModeData, setCompetitionModeData] = useState([]);

@@ -15,7 +15,7 @@ import AccountManagement from "./pages/accounts/AccountManagement";
 import Login from "./pages/login/Login";
 import EditProfile from "./pages/profile/EditProfile";
 import EditGlossary from "./pages/glossary/EditGlossary";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, sendEmailVerification, signOut } from "firebase/auth";
 import { firebaseAuth } from "./Firebase";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AddQuestion from "./pages/questions/AddQuestion";
@@ -55,6 +55,15 @@ function App() {
     onAuthStateChanged(firebaseAuth, (user) => {
       setIsSplash(true);
       if (user) {
+        console.log(user);
+        
+        if(!user.emailVerified){
+          verify(user)
+          console.log("user not verified");
+          
+          // signOut(firebaseAuth)
+          return;
+        }
         // console.log(user);
         localStorage.setItem("userUID", user.uid);
         setCurrentWebUserUID(user.uid);
@@ -68,6 +77,12 @@ function App() {
     });
   }, []);
 
+  const verify = async (user) => {
+    await sendEmailVerification(user)
+    alert("Your Account email is not verified! Please check your email for the verification link.")
+    await signOut(firebaseAuth)
+
+  }
   // useEffect(() => {
   //   const currentPath = window.location.pathname
 
