@@ -194,6 +194,17 @@ export default function ActivityLogs() {
             getOptionValue={(opt) => opt.value}
             getOptionLabel={(opt) => opt.label}
           />
+
+
+          <div className="ml-200 mr-1 mt-1">
+            <ExportDropdown
+              onExport={(format) => {
+                if (format === "csv") exportActLogsToCSV(filteredLogs, "Activity_Logs");
+                else if (format === "pdf") exportActLogsToPDF(filteredLogs, "Activity_Logs");
+              }}
+            />  
+
+
           </div>
 
 
