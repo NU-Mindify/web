@@ -259,5 +259,7 @@ export default function ActivityLogs() {
         </tbody>
       </table>
     </div>
+    </div>
+
   );
 }

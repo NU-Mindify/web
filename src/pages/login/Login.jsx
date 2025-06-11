@@ -197,7 +197,7 @@ export default function Login() {
       <img
         src={pattern}
         alt="pattern"
-        className="absolute top-0 left-0 w-full h-full object-cover opacity-50 pointer-events-none z-50"
+        className="absolute top-0 left-0 w-full h-full object-cover opacity-60 pointer-events-none z-50"
       />
 
       {/* Transitioning Logo */}
@@ -207,7 +207,7 @@ export default function Login() {
 
       {/* Login form container */}
       <div
-        className={`relative z-10 w-full h-full flex flex-row justify-center items-stretch transition-opacity duration-1000 ${
+        className={`relative z-50 w-full h-full flex flex-row justify-center items-stretch transition-opacity duration-1000 ${
           logoTransitioned ? "opacity-100" : "opacity-0"
         }`}
       >
