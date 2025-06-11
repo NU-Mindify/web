@@ -5,7 +5,6 @@
 
 .question-header{
     @apply w-full h-auto  mb-0 flex flex-col justify-center items-center p-2;
-    @apply w-full h-auto  mb-0 flex flex-col justify-center items-center p-2;
 }
 
 /* ------------------- QUESTION HEADER ---------------- */
@@ -46,7 +45,7 @@
 }
 
 .search-bar-question {
-  @apply bg-white flex items-center px-4 rounded-[10px] shadow-md border-0;
+  @apply bg-white flex items-center px-4 rounded-[10px] shadow-md border-0 ;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
@@ -125,9 +124,10 @@
 
 
 
-.question-main-container{
-    @apply w-full h-full bg-white flex flex-col overflow-y-auto;
+.question-main-container {
+  @apply w-full h-full bg-white flex flex-col px-2;
 }
+
 .allquestions-container{
     @apply w-full flex-grow; 
 }

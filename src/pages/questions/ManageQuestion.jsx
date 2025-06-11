@@ -290,7 +290,7 @@ export default function ManageQuestion() {
                 <h1 className="question-title">{selectedCat}</h1>
               </div>
 
-              <div className="w-1/3 h-full">
+              <div className="w-1/3 h-full mr-5">
                 <p className="question-count text-right">
                   Total Questions: {questions.length}
                 </p>
@@ -303,38 +303,34 @@ export default function ManageQuestion() {
 
         {gotSelected && (
           <div className="question-controls-container flex flex-col mt-5 mb-4">
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <div className="">
-                <div className="search-bar-question border">
-                  <button className="search-btn-question">
-                    <img src={search} alt="search icon" className="w-4 h-4" />
-                  </button>
-                  <input
-                    type="text"
-                    placeholder="Search questions..."
-                    className="search-input-question min-w-[200px]"
-                    onChange={(e) => setSearchQuestion(e.target.value)}
-                  />
-                </div>
-              </div>
+            <div className="flex flex-wrap justify-between items-center gap-3">
 
-              <div className="flex justify-between md:justify-around gap-2">
-                <Buttons
-                  text={
-                    <span className="flex items-center">
-                      <Plus className="w-5 h-5 text-white mr-2" />
-                      Add Question
-                    </span>
-                  }
-                  onClick={addQuestion}
-                  addedClassName="btn btn-warning !w-[250px]"
+            <div className="flex-1 min-w-[250px]">
+              <div className="search-bar-question border">
+                <button className="search-btn-question">
+                  <img src={search} alt="search icon" className="w-4 h-4" />
+                </button>
+                <input
+                  type="text"
+                  placeholder="Search questions..."
+                  className="search-input-question w-full"
+                  onChange={(e) => setSearchQuestion(e.target.value)}
                 />
-
-                <div className="pt-1">
-                  <ExportDropdown />
-                </div>
               </div>
             </div>
+
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <Buttons
+                text={<span className="flex items-center">Add Question</span>}
+                onClick={addQuestion}
+                addedClassName="btn btn-warning !w-[200px]"
+              />
+              <div className="pb-2">
+                <ExportDropdown />
+              </div>
+            </div>
+          </div>
+
 
             <div className="flex flex-wrap items-center gap-4 w-full justify-start">
               <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
