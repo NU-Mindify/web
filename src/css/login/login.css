@@ -186,16 +186,17 @@ html, body, #root {
 }
 
 .forget-pass:hover{
-  @apply text-blue-800 underline;
+  @apply text-blue-800 underline hover:text-[#FFA500] transition;
 }
 
-.checkbox {
-  border: 1px solid black;
-  @apply text-[8px] h-[15px] w-[10px] text-black rounded-[3px];
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
 }
 
 .login-btn {
-  @apply btn rounded-xl mt-[15px] h-[40px] bg-[#FFC300] text-black 
+  @apply btn rounded-xl mt-[15px] h-[40px] bg-[#FFC300] text-white 
          sm:btn-sm md:btn-md lg:btn-lg;
 
 

@@ -51,16 +51,6 @@ export default function AccountsCreatedChart({
 
   return (
     <div className="w-full">
-      <div className="flex justify-end mb-2">
-        <button
-          onClick={() =>
-            setViewMode(viewMode === "daily" ? "monthly" : "daily")
-          }
-          className="bg-[#35408E] text-white px-4 py-1 rounded cursor-pointer hover:bg-[#FFBF1A] hover:text-black"
-        >
-          Switch to {viewMode === "daily" ? "Monthly" : "Daily"}
-        </button>
-      </div>
 
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={groupedData} className="text-black">

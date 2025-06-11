@@ -158,7 +158,7 @@ export default function ApproveAccount() {
           <h1 className="add-account-title">Pending Account</h1>
         </div>
 
-        <div className="acc-sub-header-container">
+        <div className="acc-sub-header-container mb-8 px-5">
           <SearchBar
             value={searchQuery}
             handleChange={(e) => {
@@ -205,7 +205,6 @@ export default function ApproveAccount() {
             />
           )}
 
-          <img src={download} alt="export" className="acc-export-icon" />
         </div>
       </div>
 

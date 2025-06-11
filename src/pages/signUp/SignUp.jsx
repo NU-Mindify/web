@@ -481,12 +481,17 @@ export default function SignUp() {
               RESET
             </button>
 
-            <p className="sign-in-footer">
-              Already have an account?{" "}
-              <a href="/" className="font-bold hover:underline">
-                Sign in here
-              </a>
-            </p>
+              <div className="mt-5 text-center">
+                <span className="text-black text-sm">
+                  Already have an account?{" "}
+                  <button
+                    className="text-[#35408E] underline font-bold hover:text-[#FFA500] transition"
+                    onClick={() => navigate("/")}
+                  >
+                    Sign In here.
+                  </button>
+                </span>
+              </div>
           </div>
         </div>
       </div>

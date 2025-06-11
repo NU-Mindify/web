@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -43,16 +43,6 @@ export default function AttemptsChart({ attempts, viewMode, setViewMode }) {
 
   return (
     <div className="w-full">
-      <div className="flex justify-end mb-2">
-        <button
-          onClick={() =>
-            setViewMode((prev) => (prev === "daily" ? "monthly" : "daily"))
-          }
-          className="bg-[#35408E] text-white px-4 py-1 rounded cursor-pointer hover:bg-[#FFBF1A] hover:text-black"
-        >
-          Switch to {viewMode === "daily" ? "Monthly" : "Daily"}
-        </button>
-      </div>
 
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={groupAttempts} className="text-black">

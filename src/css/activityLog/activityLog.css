@@ -5,7 +5,7 @@
 .logs-main-container {
   @apply font-[Poppins] p-3 flex flex-col w-full bg-white;
   
-  height: 100vh;         
+  min-height: 100vh;        
   overflow-y: auto; 
   overflow-x: auto;     
   scrollbar-width: thin;

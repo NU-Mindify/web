@@ -8,6 +8,8 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import logo from "../../assets/logo/logo.png";
 import { UserLoggedInContext } from "../../contexts/Contexts";
+import chevronIcon from "../../assets/forAll/chevron.svg";
+import samplepic from "../../assets/students/sample-minji.svg";
 
 export default function ActivityLogs() {
   const [allLogs, setAllLogs] = useState([]);
@@ -15,6 +17,12 @@ export default function ActivityLogs() {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
+
+  const [cardActive, setCardActive] = useState(null);
+
+  const toggleCard = (index) => {
+    setCardActive((prev) => (prev === index ? null : index));
+  };
 
   const months = [
     "January",
@@ -174,40 +182,31 @@ export default function ActivityLogs() {
         <h1 className="logs-title">Activity Logs</h1>
 
         <div className="flex flex-wrap items-center justify-between w-full mb-7 mt-5 px-4">
+
           <div className="flex gap-6">
-          <SelectFilter
-            value={selectedAction}
-            onChange={(e) => setSelectedAction(e.target.value)}
-            fixOption=""
-            disabledOption="Select Action"
-            mainOptions={actionOptions}
-            getOptionValue={(opt) => opt.value}
-            getOptionLabel={(opt) => opt.label}
-          />
+            <SelectFilter
+              value={selectedAction}
+              onChange={(e) => setSelectedAction(e.target.value)}
+              fixOption=""
+              disabledOption="Select Action"
+              mainOptions={actionOptions}
+              getOptionValue={(opt) => opt.value}
+              getOptionLabel={(opt) => opt.label}
+            />
 
-          <SelectFilter
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            fixOption=""
-            disabledOption="Select Month"
-            mainOptions={monthOptions}
-            getOptionValue={(opt) => opt.value}
-            getOptionLabel={(opt) => opt.label}
-          />
-
-
-          <div className="ml-200 mr-1 mt-1">
-            <ExportDropdown
-              onExport={(format) => {
-                if (format === "csv") exportActLogsToCSV(filteredLogs, "Activity_Logs");
-                else if (format === "pdf") exportActLogsToPDF(filteredLogs, "Activity_Logs");
-              }}
-            />  
-
-
+            <SelectFilter
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              fixOption=""
+              disabledOption="Select Month"
+              mainOptions={monthOptions}
+              getOptionValue={(opt) => opt.value}
+              getOptionLabel={(opt) => opt.label}
+            />
           </div>
 
-
+      
+          <div className="mt-1">
             <ExportDropdown
               onExport={(format) => {
                 if (format === "csv")
@@ -216,48 +215,89 @@ export default function ActivityLogs() {
                   exportActLogsToPDF(filteredLogs, "Activity_Logs");
               }}
             />
-
+          </div>
         </div>
+
+          <div className="logs-main-container h-screen overflow-y-auto">
+            <div className="users-main-container px-10">
+            
+            <div className="user-table font-bold text-[20px] flex justify-between items-center pb-2 mb-2">
+              <div className="w-3/11">Name</div>
+              <div className="w-[22%]">Branch</div>
+              <div className="w-[22%]">Action</div>
+              <div className="w-3/9">Description</div>
+              <div className="w-3/11">Timestamp</div>
+              <div className="w-[50px]"></div>
+            </div>
+
+            {filteredLogs.map((log, index) => (
+              <div key={index} className="user-card">
+                <div className="user-table flex justify-between items-center">
+                  
+                  <div className="user-name-cell w-3/12 flex items-center">
+                    <img
+                      src={log.useravatar || samplepic}
+                      alt={log.name || "User"}
+                      className="mini-avatar"
+                    />
+                    <span className="text-[18px] font-medium ml-2">
+                      {log.name || "--"}
+                    </span>
+                  </div>
+
+                  <div className="w-[20%] text-[18px]">
+                    {branches.find((b) => b.id === log.branch)?.name || "Unknown Branch"}
+                  </div>
+
+                  <div className="w-[20%] text-[18px]">{log.action}</div>
+
+                  <div
+                    className={`w-3/10 text-[18px] mr-5 ${
+                      cardActive === index
+                        ? "whitespace-normal break-words"
+                        : "overflow-hidden whitespace-nowrap text-ellipsis"
+                    }`}
+                    title={cardActive === index ? "" : log.description}
+                  >
+                    {log.description || "-"}
+                  </div>
+
+                  <div className="w-3/13 text-[18px]">
+                    {new Date(log.createdAt).toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    })}
+                  </div>
+
+                  <div className="w-[40px] flex justify-end mr-5">
+                    {log.description && log.description.length > 60 && (
+                      <button
+                        type="button"
+                        className={`acc-chevron transition-transform duration-300 ${
+                          cardActive === index ? "rotate-180" : "rotate-0"
+                        }`}
+                        aria-label="Toggle details"
+                        onClick={() => toggleCard(index)}
+                      >
+                        <img
+                          src={chevronIcon}
+                          alt="toggle details"
+                          className="chevron-icon"
+                        />
+                      </button>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+            ))}
+          </div>
       </div>
 
-      <table className="w-full h-full text-center text-black font-[poppins] text-xl">
-        <thead>
-          <tr>
-            <th className="border border-black w-2/12 min-w-[150px]">Name</th>
-            <th className="border border-black w-1/12 min-w-[120px]">Branch</th>
-            <th className="border border-black w-2/12 min-w-[100px]">Action</th>
-            <th className="border border-black w-5/12 min-w-[250px]">
-              Description
-            </th>
-            <th className="border border-black w-2/12 min-w-[150px]">
-              Timestamp
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredLogs.map((log, index) => (
-            <tr key={index}>
-              <td className="h-[100px]">{log.name}</td>
-              <td className="h-[100px]">
-                {branches.find((b) => b.id === log.branch)?.name ||
-                  "Unknown Branch"}
-              </td>
-              <td className="h-[100px]">{log.action}</td>
-              <td className="h-[100px]">{log.description}</td>
-              <td className="h-[100px]">
-                {new Date(log.createdAt).toLocaleString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit",
-                  hour12: true,
-                })}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
     </div>
 

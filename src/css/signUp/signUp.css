@@ -95,7 +95,7 @@ body,
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   position: relative;
   height: 88px;
 }
@@ -154,7 +154,6 @@ body,
 }
 
 .form-footer {
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -195,11 +194,12 @@ body,
 .nu-logo {
   width: 600px;
   margin-bottom: 20px;
+  margin-left: 50px;
 }
 
 /* Buttons */
 .register-button {
-  @apply btn rounded-xl mt-[5px] h-[40px] bg-[#FFC300] text-black 
+  @apply btn rounded-xl mt-[5px] h-[40px] bg-[#FFC300] text-white
          sm:btn-sm md:btn-md lg:btn-lg;
 }
 
@@ -208,7 +208,7 @@ body,
 }
 
 .reset-button {
-  @apply btn rounded-xl mt-[5px] h-[40px] bg-[#FF3F42] text-black 
+  @apply btn rounded-xl mt-[5px] h-[40px] bg-[#FF3F42] text-white
          sm:btn-sm md:btn-md lg:btn-lg;
 }
 

@@ -289,8 +289,10 @@ export default function Login() {
               </label>
 
               <div className="remember-container">
-                <input type="checkbox" className="checkbox" />
-                <p className="remember-txt">Remember me</p>
+                <label className="form-checkbox">
+                  <input type="checkbox" />
+                  <span className="whitespace-nowrap">Remember me</span>
+                </label>
                 <button
                   className="forget-pass"
                   onClick={() => setShowResetModal(true)}
@@ -306,23 +308,19 @@ export default function Login() {
               >
                 {isLoading ? "Signing you in..." : "Sign In"}
               </button>
-
-              <div className="flex items-center w-full mt-5">
-                <div className="flex-grow h-px bg-black"></div>
-                <span className="px-4 text-black text-xs">
-                  OR NO ACCOUNT YET?
+             
+              <div className="mt-5 text-center">
+                <span className="text-black text-sm">
+                  Don’t have an account yet?{" "}
+                  <button
+                    className="text-[#35408E] underline font-bold hover:text-[#FFA500] transition"
+                    onClick={() => navigate("/signup")}
+                  >
+                    Sign Up here.
+                  </button>
                 </span>
-                <div className="flex-grow h-px bg-black"></div>
               </div>
 
-              <button
-                className="login-btn"
-                onClick={() => {
-                  navigate("/signup");
-                }}
-              >
-                Sign Up
-              </button>
             </div>
           </div>
         </div>

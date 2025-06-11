@@ -93,16 +93,15 @@
 
 
 
-
 /*------------------------- HEADER CONTAINER --------------------------*/
 .add-account-header{
-  @apply w-full h-[100px] flex flex-row px-5 items-center pt-4 pl-7;
-}
+  @apply w-full flex flex-row items-center mb-5 mt-3;
+} 
 
 
 /*------------------------- TITLE AND BACK BUTTON --------------------------*/
 .add-account-title{
-  @apply text-[40px] font-[Poppins] font-bold text-black ml-5;
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFC916] h-[50px];
 }
 .view-acc-btn{
   @apply w-[50px] h-[50px] text-white font-[Poppins] flex justify-center items-center rotate-90;
@@ -117,7 +116,6 @@
 .add-account-content{
   @apply flex-1 w-full;
 }
-
 
 
 .user-details-container h1{

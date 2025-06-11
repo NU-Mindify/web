@@ -281,7 +281,7 @@ export default function Analytics() {
           </h1>
 
           <div className="flex flex-row justify-between w-full lg:w-[50%] mt-3 lg:mt-1.5">
-            <div className="analytics-filter-container">
+            <div className="analytics-filter-container mr-5">
               <SelectFilter
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
@@ -324,24 +324,82 @@ export default function Analytics() {
         <div className="content-container-analytics">
           <div className="analytics-container-properties">
             <div className="w-[95%]">
-              <h1 className="text-2xl md:text-4xl font-[Poppins] font-bold text-black">
-                Attempts per {attemptsViewMode === "daily" ? "Day" : "Month"}
-              </h1>
+              <div className="w-full">
+                <div className="flex items-center justify-between mb-2">
+                  <h1 className="text-lg md:text-2xl font-[Poppins] font-bold text-black">
+                    Attempts per {attemptsViewMode === "daily" ? "Day" : "Month"}
+                  </h1>
 
-              <div className="line-graph-container">
-                <AttemptsChart
-                  attempts={filteredAttempts.concat(filteredMasteryAttempts)}
-                  viewMode={attemptsViewMode}
-                  setViewMode={setAttemptsViewMode}
-                />
-              </div>
+                  <div className="flex bg-[#F5F6F8] p-[2px] rounded-lg w-[180px]">
+                    <button
+                      onClick={() => setAttemptsViewMode("daily")}
+                      className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
+                        ${
+                          attemptsViewMode === "daily"
+                            ? "bg-white text-[#FFA500] shadow-sm"
+                            : "bg-transparent text-gray-400"
+                        }`}
+                    >
+                      Daily
+                    </button>
+
+                    <button
+                      onClick={() => setAttemptsViewMode("monthly")}
+                      className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
+                        ${
+                          attemptsViewMode === "monthly"
+                            ? "bg-white text-[#FFD700] shadow-sm"
+                            : "bg-transparent text-gray-400"
+                        }`}
+                    >
+                      Monthly
+                    </button>
+                  </div>
+                </div>
+
+                <div className="line-graph-container">
+                  <AttemptsChart
+                    attempts={filteredAttempts.concat(filteredMasteryAttempts)}
+                    viewMode={attemptsViewMode}
+                    setViewMode={setAttemptsViewMode}
+                  />
+                </div>
+            </div>
             </div>
 
             <div className="w-[95%] mt-6">
-              <h1 className="text-2xl md:text-4xl font-[Poppins] font-bold text-black">
-                Accounts Created per{" "}
-                {accountsViewMode === "daily" ? "Day" : "Month"}
-              </h1>
+              <div className="flex items-center justify-between mb-2">
+                <h1 className="text-lg md:text-2xl font-[Poppins] font-bold text-black">
+                  Accounts Created per {accountsViewMode === "daily" ? "Day" : "Month"}
+                </h1>
+
+                <div className="flex bg-[#F5F6F8] p-[2px] rounded-lg w-[180px]">
+                  <button
+                    onClick={() => setAccountsViewMode("daily")}
+                    className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
+                      ${
+                        accountsViewMode === "daily"
+                          ? "bg-white text-[#FFA500] shadow-sm"
+                          : "bg-transparent text-gray-400"
+                      }`}
+                  >
+                    Daily
+                  </button>
+
+                  <button
+                    onClick={() => setAccountsViewMode("monthly")}
+                    className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
+                      ${
+                        accountsViewMode === "monthly"
+                          ? "bg-white text-[#FFD700] shadow-sm"
+                          : "bg-transparent text-gray-400"
+                      }`}
+                  >
+                    Monthly
+                  </button>
+                </div>
+              </div>
+
               <div className="line-graph-container">
                 <AccountsCreatedChart
                   accounts={allStudents}
@@ -350,6 +408,7 @@ export default function Analytics() {
                 />
               </div>
             </div>
+
           </div>
 
           {/* RIGHT CONT */}
