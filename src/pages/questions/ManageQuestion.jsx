@@ -282,7 +282,7 @@ export default function ManageQuestion() {
             <div className="title-content">
               <div className="title-left">
                 <button
-                  className="back-button cursor-pointer"
+                  className="back-button cursor-pointer mt-5"
                   onClick={handleBack}
                 >
                   <img src={back} alt="back arrow" className="back-icon" />
