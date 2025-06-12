@@ -1,19 +1,71 @@
-.branches-table-container {
-  margin-top: 2rem;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+@reference "tailwindcss";
+@plugin "daisyui";
+
+*{
+  @apply text-black;
 }
 
-.branches-table {
-  width: 100%;
-  border-collapse: collapse;
+
+.campus-main-container{
+  @apply font-[Poppins] p-3 flex flex-col w-full bg-white;
+  min-height: 100vh;   
 }
 
-.branches-table th,
-.branches-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
+.campus-header{
+  @apply w-full h-auto p-1
 }
 
-.branches-table th {
-  background-color: #f2f2f2;
+.campus-title {
+  @apply text-[40px] font-[Poppins] font-bold text-[#FFC916] h-[50px] pl-3 mt-3;
 }
+
+
+.campus-form-container {
+  @apply border border-gray-500 p-6 rounded-md w-full mt-6;
+}
+
+.form-title {
+  @apply text-sm font-bold mb-2;
+}
+
+.required-label::after {
+  content: ' *';
+  @apply text-red-500 font-bold;
+}
+
+.form-row {
+   @apply flex flex-row gap-6 w-full;
+}
+
+.input-group {
+  @apply flex flex-col w-full;
+}
+
+.input-group label {
+  @apply font-medium mb-1 text-black;
+}
+
+.input-group input {
+  @apply p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400;
+}
+
+.button-row {
+  @apply flex justify-center gap-5 mt-6;
+}
+
+
+.branches-list-container {
+  @apply w-full;
+}
+
+.branch-card {
+  @apply text-black;
+}
+
+
+.campus-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
+}
+
