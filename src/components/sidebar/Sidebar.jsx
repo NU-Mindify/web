@@ -343,21 +343,14 @@ export default function Sidebar() {
       </div>
 
       <dialog id="logout_modal" className="modal">
-        <form method="dialog" className="modal-box text-center font-[Poppins]">
+        <form method="dialog" className="modal-box text-center font-[Poppins] bg-white">
           <h3 className="font-bold text-lg mb-4">
             Are you sure you want to logout?
           </h3>
           <div className="flex justify-center gap-4">
             <button
               type="button"
-              className="btn btn-outline btn-error"
-              onClick={() => document.getElementById("logout_modal")?.close()}
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary text-black"
+              className="btn btn-primary text-white"
               onClick={async () => {
                 await axios.post(`${API_URL}/addLogs`, {
                   name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
@@ -370,6 +363,13 @@ export default function Sidebar() {
               }}
             >
               Confirm
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline btn-error"
+              onClick={() => document.getElementById("logout_modal")?.close()}
+            >
+              Cancel
             </button>
           </div>
         </form>
