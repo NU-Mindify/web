@@ -252,7 +252,7 @@ export default function ActivityLogs() {
                   <div className="w-[20%] text-[18px]">{log.action}</div>
 
                   <div
-                    className={`w-3/10 text-[18px] mr-5 ${
+                    className={`w-3/10 text-[18px] mr-5 text-center ${
                       cardActive === index
                         ? "whitespace-normal break-words"
                         : "overflow-hidden whitespace-nowrap text-ellipsis"

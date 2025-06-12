@@ -2,6 +2,10 @@
 @reference "tailwindcss";
 @plugin "daisyui";
 
+*{
+  @apply text-black;
+}
+
 .logs-main-container {
   @apply font-[Poppins] p-3 flex flex-col w-full bg-white;
   
