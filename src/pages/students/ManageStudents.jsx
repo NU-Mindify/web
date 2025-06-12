@@ -607,7 +607,7 @@
           unarchiveUser && 
           <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%] flex items-center justify-center">
             <div className="confirm-dialog flex justify-center items-center flex-col">
-              <h2>Confirm Delete</h2>
+              <h2>Confirm Unarchive</h2>
               <p className="text-black text-base">
                 Are you sure you want to unarchive "
                 <strong>
