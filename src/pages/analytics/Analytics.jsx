@@ -336,8 +336,8 @@ export default function Analytics() {
                       className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                         ${
                           attemptsViewMode === "daily"
-                            ? "bg-white text-[#FFA500] shadow-sm"
-                            : "bg-transparent text-gray-400"
+                            ? "bg-white !text-blue-900 shadow-sm"
+                            : "bg-transparent !text-gray-400"
                         }`}
                     >
                       Daily
@@ -348,8 +348,8 @@ export default function Analytics() {
                       className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                         ${
                           attemptsViewMode === "monthly"
-                            ? "bg-white text-[#FFD700] shadow-sm"
-                            : "bg-transparent text-gray-400"
+                            ? "bg-white !text-blue-900 shadow-sm"
+                            : "bg-transparent !text-gray-400"
                         }`}
                     >
                       Monthly
@@ -379,8 +379,8 @@ export default function Analytics() {
                     className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                       ${
                         accountsViewMode === "daily"
-                          ? "bg-white text-[#FFA500] shadow-sm"
-                          : "bg-transparent text-gray-400"
+                          ? "bg-white !text-blue-900 shadow-sm"
+                          : "bg-transparent !text-gray-400"
                       }`}
                   >
                     Daily
@@ -391,8 +391,8 @@ export default function Analytics() {
                     className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                       ${
                         accountsViewMode === "monthly"
-                          ? "bg-white text-[#FFD700] shadow-sm"
-                          : "bg-transparent text-gray-400"
+                          ? "bg-white !text-blue-900 shadow-sm"
+                          : "bg-transparent !text-gray-400"
                       }`}
                   >
                     Monthly
