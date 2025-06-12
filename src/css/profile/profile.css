@@ -64,14 +64,10 @@ body,
 }
 
 .edit-btn-properties {
-  @apply w-[250px] h-[60px] focus:outline-none text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-lg px-5 py-2 me-2 mb-2 dark:focus:ring-yellow-900 cursor-pointer font-[Poppins]
-    md:w-[250px]
-    lg:w-[250px];
+  @apply focus:outline-none rounded-lg text-lg px-5 py-2 me-2 mb-2 cursor-pointer;
 }
 .edit-btn-properties-disabled {
-  @apply w-[250px] h-[60px] focus:outline-none text-black bg-yellow-400  focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-lg px-5 py-2 me-2 mb-2 dark:focus:ring-yellow-900 cursor-not-allowed font-[Poppins]
-    md:w-[250px]
-    lg:w-[250px];
+  @apply  focus:outline-none rounded-lg text-lg px-5 py-2 me-2 mb-2 cursor-not-allowed;
 }
 
 .username-properties {

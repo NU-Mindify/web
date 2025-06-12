@@ -15,6 +15,9 @@ import ValidationModal from "../../components/ValidationModal/ValidationModal";
 import OldPasswordModal from "../../components/OldPassModal/OldPasswordModal";
 import NewPasswordModal from "../../components/NewPassModal/NewPasswordModal";
 
+import editprofile from "../../assets/profile/editprofileButton.svg";
+import changepass from "../../assets/profile/changepassButton.svg";
+
 import { UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function Profile() {
@@ -209,11 +212,11 @@ export default function Profile() {
           </div>
 
           <div className="edit-btn-prof-settings w-full">
-            <button class="edit-btn-properties shadow-md" onClick={handleEditProfile}>
-              Edit Profile
+            <button class="edit-btn-properties" onClick={handleEditProfile}>
+              <img src={editprofile} className="editprof-btn" alt="edit-btn-icon"/>
             </button>
-            <button class="edit-btn-properties shadow-md" onClick={handlePasswordChange}>
-              Change Password
+            <button class="edit-btn-properties" onClick={handlePasswordChange}>
+              <img src={changepass} className="changepass-btn" alt="changepass-btn-icon"/>
             </button>
           </div>
         </div>

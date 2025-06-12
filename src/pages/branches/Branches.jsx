@@ -10,6 +10,8 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import logo from "../../assets/logo/logo.png";
 import { UserLoggedInContext } from "../../contexts/Contexts";
+import submit from "../../assets/branches/submitButton.svg";
+import reset from "../../assets/branches/resetButton.svg";
 
 export default function Branches() {
   const [newBranch, setNewBranch] = useState({
@@ -228,19 +230,30 @@ export default function Branches() {
         </div>
 
         <div className="button-row">
-          <Buttons
+          {/* <Buttons
             onClick={handleAddBranch}
             text={"Submit"}
             disabled={false}
             addedClassName="btn btn-success"
-          />
+          /> */}
+          <button className="cursor-pointer"
+             onClick={handleAddBranch}
+             disabled={false}
+           >
+             <img src={submit} alt="submit-btn-icon"/>
+          </button>
 
-          <Buttons
+          {/* <Buttons
             onClick={handleReset}
             text={"Reset"}
             // disabled={isLoading}
             addedClassName="btn btn-warning ml-5"
-          />
+          /> */}
+          <button className="cursor-pointer"
+            onClick={handleReset}
+          >
+            <img src={reset} alt="reset-btn-icon"/>
+          </button>
         </div>
       </div>
       </div>

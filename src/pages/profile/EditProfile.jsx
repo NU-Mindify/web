@@ -8,6 +8,8 @@ import { UserLoggedInContext } from "../../contexts/Contexts";
 import { supabase } from "../../supabase";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import Buttons from "../../components/buttons/Buttons.jsx";
+import saveprofile from "../../assets/profile/saveprofileButton.svg";
+import cancel from "../../assets/profile/cancelButton.svg";
 
 export default function EditProfile() {
   const { currentWebUser, setCurrentWebUser, setCurrentWebUserUID } =
@@ -163,9 +165,9 @@ export default function EditProfile() {
               />
               <label
                 htmlFor="upload-btn"
-                className="btn btn-warning w-[200px] rounded-full text-black font-[Poppins] h-[50px] px-4 flex items-center justify-center text-center cursor-pointer"
+                className="btn btn-warning w-[200px] rounded-xl !text-white text-xl bg-[#FFC916] border-[#FFC916] font-[Poppins] h-[50px] px-4 flex items-center justify-center text-center cursor-pointer"
               >
-                Upload Image
+                UPLOAD IMAGE
               </label>
             </div>
           </div>
@@ -270,7 +272,7 @@ export default function EditProfile() {
 
           <div className="edit-btn-prof-settings">
             <button
-              className={`shadow-md ${
+              className={`${
                 !hasChanges() || !editWebUser.useravatar
                   ? "edit-btn-properties-disabled"
                   : "edit-btn-properties"
@@ -278,13 +280,13 @@ export default function EditProfile() {
               onClick={handleUpdateProfile}
               disabled={!hasChanges() || !editWebUser.useravatar}
             >
-              SAVE PROFILE
+              <img src={saveprofile}  alt="saveprofile-btn-icon"/>
             </button>
             <button
-              className="edit-btn-properties mt-1 shadow-md"
+              className="edit-btn-properties mt-1"
               onClick={handleCancelEdit}
             >
-              CANCEL
+              <img src={cancel}  alt="cancel-btn-icon"/>
             </button>
           </div>
         </div>
