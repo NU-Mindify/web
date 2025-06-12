@@ -321,9 +321,9 @@ export default function ManageQuestion() {
 
             <div className="flex items-center gap-3 flex-shrink-0">
               <Buttons
-                text={<span className="flex items-center">Add Question</span>}
+                text={<span className="flex items-center !text-white">Add Question</span>}
                 onClick={addQuestion}
-                addedClassName="btn btn-warning !w-[200px]"
+                addedClassName="btn btn-warning !w-[200px] !text-white"
               />
               <div className="pb-2">
                 <ExportDropdown />
