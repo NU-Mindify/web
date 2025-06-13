@@ -376,10 +376,7 @@ export default function Analytics() {
 
   return (
     <>
-      <div
-        className="main-container-analytics"
-        id="main-cont-analytics"
-      >
+      <div className="main-container-analytics" id="main-cont-analytics">
         <div className="header-container-analytics">
           <h1 className="h-full w-full !text-[32px]">
             Analytics for{" "}
@@ -616,25 +613,30 @@ export default function Analytics() {
           </div>
 
           <div className="w-full mb-5 flex flex-col  items-center">
-            <div className="w-full flex gap-10">
-              <button
-                disabled={showCompe}
-                onClick={() => {
-                  setMode("competition");
-                  setShowCompe(!showCompe);
-                }}
-              >
-                Show Competition
-              </button>
-              <button
-                disabled={!showCompe}
-                onClick={() => {
-                  setShowCompe(!showCompe);
-                  setMode("mastery");
-                }}
-              >
-                Show Mastery
-              </button>
+            <div className="w-full flex justify-center mb-4">
+              <div className="flex bg-gray-100 p-1 rounded-full w-fit shadow-inner">
+                <button
+                  onClick={() => {
+                    setMode("competition");
+                    setShowCompe(true);
+                  }}
+                  className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200
+        ${showCompe ? "bg-blue-600 text-white shadow-md" : "text-gray-500"}`}
+                >
+                  Competition
+                </button>
+
+                <button
+                  onClick={() => {
+                    setMode("mastery");
+                    setShowCompe(false);
+                  }}
+                  className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200
+        ${!showCompe ? "bg-blue-600 text-white shadow-md" : "text-gray-500"}`}
+                >
+                  Mastery
+                </button>
+              </div>
             </div>
 
             <table className="w-[95%] bg-white text-left px-5">
@@ -650,11 +652,17 @@ export default function Analytics() {
                 {totalScorePerCampus
                   .sort((a, b) => b.averageScore - a.averageScore)
                   .map((campus, index) => (
-                    <tr
-                      key={campus.branch}
-                    >
+                    <tr key={campus.branch}>
                       <td>
-                        {index === 0 ? <span>🥇</span> : index === 1 ? <span>🥈</span> : index === 2 ? <span>🥉</span> : index + 1}
+                        {index === 0 ? (
+                          <span>🥇</span>
+                        ) : index === 1 ? (
+                          <span>🥈</span>
+                        ) : index === 2 ? (
+                          <span>🥉</span>
+                        ) : (
+                          index + 1
+                        )}
                       </td>
                       <td>
                         {
