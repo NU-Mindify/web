@@ -20,7 +20,7 @@
 }
 
 .content-container-analytics{
-    @apply gap-4 mt-3 font-[Poppins] flex flex-col md:flex-row;
+    @apply gap-4 mt-3 font-[Poppins] flex flex-col;
 }
 
 .analytics-container-properties{

@@ -22,7 +22,11 @@ export default function Analytics() {
   const [masteryAttempts, setMasteryAttempts] = useState([]);
   const [allStudents, setAllStudents] = useState([]);
 
-  const [selectedBranch, setSelectedBranch] = useState(currentWebUser.position.toLowerCase() === "super admin" ? "all":currentWebUser.branch);
+  const [selectedBranch, setSelectedBranch] = useState(
+    currentWebUser.position.toLowerCase() === "super admin"
+      ? "all"
+      : currentWebUser.branch
+  );
   const [selectedCategory, setSelectedCategory] = useState("all");
 
   const [attemptsViewMode, setAttemptsViewMode] = useState("daily");
@@ -270,9 +274,112 @@ export default function Analytics() {
     document.body.removeChild(link);
   };
 
+  const [mode, setMode] = useState("competition");
+
+  const [showCompe, setShowCompe] = useState(true);
+
+  const [totalScorePerCampus, setTotalScorePerCampus] = useState([
+    { branch: "manila", totalStudents: 0, averageScore: 0 },
+    { branch: "baliwag", totalStudents: 0, averageScore: 0 },
+    { branch: "cebu", totalStudents: 0, averageScore: 0 },
+    { branch: "fairview", totalStudents: 0, averageScore: 0 },
+    { branch: "eastortigas", totalStudents: 0, averageScore: 0 },
+    { branch: "laspinas", totalStudents: 0, averageScore: 0 },
+    { branch: "lipa", totalStudents: 0, averageScore: 0 },
+    { branch: "clark", totalStudents: 0, averageScore: 0 },
+    { branch: "laguna", totalStudents: 0, averageScore: 0 },
+    { branch: "dasmarinas", totalStudents: 0, averageScore: 0 },
+    { branch: "bacolod", totalStudents: 0, averageScore: 0 },
+    { branch: "alabang", totalStudents: 0, averageScore: 0 },
+    { branch: "iloilo", totalStudents: 0, averageScore: 0 },
+    { branch: "moa", totalStudents: 0, averageScore: 0 },
+  ]);
+
+  useEffect(() => {
+    fetchPerformanceOnCampuses();
+  }, [mode]);
+
+  const fetchPerformanceOnCampuses = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getLeaderboard?mode=${mode}`
+      );
+      const data = response.data;
+
+      const highestScoresMap = new Map();
+
+      data.forEach((entry) => {
+        const user = entry.user_id;
+        if (!user || !user._id) return;
+
+        const userId = user._id;
+        const correct = entry.correct;
+
+        const existing = highestScoresMap.get(userId);
+
+        if (!existing || correct > existing.correct) {
+          highestScoresMap.set(userId, {
+            user_id: userId,
+            correct,
+            username: user.username,
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            branch: user.branch,
+            avatar: user.avatar,
+          });
+        }
+      });
+
+      const highestScoresArray = Array.from(highestScoresMap.values());
+      console.log("all student and their high score", highestScoresArray);
+
+      const branchStatsMap = new Map();
+      highestScoresArray.forEach((student) => {
+        const branch = student.branch;
+        if (!branchStatsMap.has(branch)) {
+          branchStatsMap.set(branch, {
+            branch,
+            totalStudents: 0,
+            totalScore: 0,
+          });
+        }
+
+        const branchData = branchStatsMap.get(branch);
+        branchData.totalStudents += 1;
+        branchData.totalScore += student.correct;
+      });
+
+      setTotalScorePerCampus((prevState) =>
+        prevState.map((campus) => {
+          const match = branchStatsMap.get(campus.branch);
+          if (match) {
+            const { totalStudents, totalScore } = match;
+            return {
+              ...campus,
+              totalStudents,
+              averageScore: totalStudents ? totalScore / totalStudents : 0,
+            };
+          } else {
+            return {
+              ...campus,
+              totalStudents: 0,
+              averageScore: 0,
+            };
+          }
+        })
+      );
+    } catch (error) {
+      console.error("Error fetching analytics data:", error.message);
+    }
+  };
+
   return (
     <>
-      <div className="main-container-analytics" id="main-cont-analytics">
+      <div
+        className="main-container-analytics"
+        id="main-cont-analytics"
+      >
         <div className="header-container-analytics">
           <h1 className="h-full w-full !text-[32px]">
             Analytics for{" "}
@@ -322,35 +429,83 @@ export default function Analytics() {
         </div>
 
         <div className="content-container-analytics">
-          <div className="analytics-container-properties">
-            <div className="w-[95%]">
-              <div className="w-full">
-                <div className="flex items-center justify-between mb-2">
-                  <h1 className="text-lg md:text-2xl font-[Poppins] font-bold text-black">
-                    Attempts per {attemptsViewMode === "daily" ? "Day" : "Month"}
-                  </h1>
+          <div className="w-full flex flex-col md:flex-row px-5 py-3 gap-5">
+            <div className="analytics-container-properties">
+              <div className="w-[95%]">
+                <div className="w-full">
+                  <div className="flex items-center justify-between mb-2">
+                    <h1 className="text-lg md:text-2xl font-[Poppins] font-bold text-black">
+                      Attempts per{" "}
+                      {attemptsViewMode === "daily" ? "Day" : "Month"}
+                    </h1>
 
-                  <div className="flex bg-[#F5F6F8] p-[2px] rounded-lg w-[180px]">
-                    <button
-                      onClick={() => setAttemptsViewMode("daily")}
-                      className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
+                    <div className="flex bg-[#F5F6F8] p-[2px] rounded-lg w-[180px]">
+                      <button
+                        onClick={() => setAttemptsViewMode("daily")}
+                        className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                         ${
                           attemptsViewMode === "daily"
                             ? "bg-white !text-blue-900 shadow-sm"
                             : "bg-transparent !text-gray-400"
                         }`}
-                    >
-                      Daily
-                    </button>
+                      >
+                        Daily
+                      </button>
 
-                    <button
-                      onClick={() => setAttemptsViewMode("monthly")}
-                      className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
+                      <button
+                        onClick={() => setAttemptsViewMode("monthly")}
+                        className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                         ${
                           attemptsViewMode === "monthly"
                             ? "bg-white !text-blue-900 shadow-sm"
                             : "bg-transparent !text-gray-400"
                         }`}
+                      >
+                        Monthly
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="line-graph-container">
+                    <AttemptsChart
+                      attempts={filteredAttempts.concat(
+                        filteredMasteryAttempts
+                      )}
+                      viewMode={attemptsViewMode}
+                      setViewMode={setAttemptsViewMode}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-[95%] mt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <h1 className="text-lg md:text-2xl font-[Poppins] font-bold text-black">
+                    Accounts Created per{" "}
+                    {accountsViewMode === "daily" ? "Day" : "Month"}
+                  </h1>
+
+                  <div className="flex bg-[#F5F6F8] p-[2px] rounded-lg w-[180px]">
+                    <button
+                      onClick={() => setAccountsViewMode("daily")}
+                      className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
+                      ${
+                        accountsViewMode === "daily"
+                          ? "bg-white !text-blue-900 shadow-sm"
+                          : "bg-transparent !text-gray-400"
+                      }`}
+                    >
+                      Daily
+                    </button>
+
+                    <button
+                      onClick={() => setAccountsViewMode("monthly")}
+                      className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
+                      ${
+                        accountsViewMode === "monthly"
+                          ? "bg-white !text-blue-900 shadow-sm"
+                          : "bg-transparent !text-gray-400"
+                      }`}
                     >
                       Monthly
                     </button>
@@ -358,141 +513,161 @@ export default function Analytics() {
                 </div>
 
                 <div className="line-graph-container">
-                  <AttemptsChart
-                    attempts={filteredAttempts.concat(filteredMasteryAttempts)}
-                    viewMode={attemptsViewMode}
-                    setViewMode={setAttemptsViewMode}
+                  <AccountsCreatedChart
+                    accounts={allStudents}
+                    viewMode={accountsViewMode}
+                    setViewMode={setAccountsViewMode}
                   />
                 </div>
-            </div>
+              </div>
             </div>
 
-            <div className="w-[95%] mt-6">
-              <div className="flex items-center justify-between mb-2">
-                <h1 className="text-lg md:text-2xl font-[Poppins] font-bold text-black">
-                  Accounts Created per {accountsViewMode === "daily" ? "Day" : "Month"}
+            {/* RIGHT CONT */}
+
+            <div className="w-full md:w-[50%] bg-white rounded-xl flex flex-col items-center p-5">
+              <div className="analytics-content-properties !h-auto">
+                <h1 className="analytics-title-text-properties">
+                  Analytics for{" "}
+                  {categories.find(
+                    (category) => category.id === selectedCategory
+                  )?.name || "All Categories"}
                 </h1>
 
-                <div className="flex bg-[#F5F6F8] p-[2px] rounded-lg w-[180px]">
-                  <button
-                    onClick={() => setAccountsViewMode("daily")}
-                    className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
-                      ${
-                        accountsViewMode === "daily"
-                          ? "bg-white !text-blue-900 shadow-sm"
-                          : "bg-transparent !text-gray-400"
-                      }`}
-                  >
-                    Daily
-                  </button>
+                <div className="progress-bar-container">
+                  <div className="total-attempts-container">
+                    <h1 className="total-attempts-label">
+                      Competition Attempts
+                    </h1>
+                    <p className="total-attempts-num">
+                      <CountUp end={competitionAttempts.length} />
+                    </p>
+                  </div>
 
-                  <button
-                    onClick={() => setAccountsViewMode("monthly")}
-                    className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
-                      ${
-                        accountsViewMode === "monthly"
-                          ? "bg-white !text-blue-900 shadow-sm"
-                          : "bg-transparent !text-gray-400"
-                      }`}
-                  >
-                    Monthly
-                  </button>
+                  <div className="total-attempts-container">
+                    <h1 className="total-attempts-label">Review Attempts</h1>
+                    <p className="total-attempts-num">
+                      <CountUp end={reviewAttempts.length} />
+                    </p>
+                  </div>
+
+                  <div className="total-attempts-container">
+                    <h1 className="total-attempts-label">Mastery Attempts</h1>
+                    <p className="total-attempts-num">
+                      <CountUp end={filteredMasteryAttempts.length} />
+                    </p>
+                  </div>
+
+                  <div className="total-attempts-container">
+                    <h1 className="total-attempts-label">
+                      Competition Average Score
+                    </h1>
+                    <p className="total-attempts-num">
+                      <CountUp end={competitionAvgPercent.toFixed(0)} />%
+                    </p>
+                  </div>
+
+                  <div className="total-attempts-container">
+                    <h1 className="total-attempts-label">
+                      Review Average Score
+                    </h1>
+                    <p className="total-attempts-num">
+                      <CountUp end={reviewAvgPercent.toFixed(0)} />%
+                    </p>
+                  </div>
+
+                  <div className="total-attempts-container">
+                    <h1 className="total-attempts-label">
+                      Mastery Average Score
+                    </h1>
+                    <p className="total-attempts-num">
+                      <CountUp end={filteredMasteryAvgPercent.toFixed(0)} />%
+                    </p>
+                  </div>
+
+                  <div className="total-attempts-container">
+                    <h1 className="total-attempts-label">Total Attempts</h1>
+                    <p className="total-attempts-num">
+                      <CountUp end={totalFilteredAttemptsCount} />
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="line-graph-container">
-                <AccountsCreatedChart
-                  accounts={allStudents}
-                  viewMode={accountsViewMode}
-                  setViewMode={setAccountsViewMode}
-                />
+              <div className="analytics-content-properties">
+                <h1 className="analytics-title-text-properties">
+                  {" "}
+                  {categories.find(
+                    (category) => category.id === selectedCategory
+                  )?.name || "All Categories"}
+                </h1>
+                <p className="text-black font-[Poppins]">
+                  Takers vs Non-Takers
+                </p>
+                <div className="w-[100%] flex items-center justify-center">
+                  <div className="pie-chart-properties">
+                    <PieChartAttempts
+                      allStudents={filteredStudents}
+                      attemptedStudents={filteredAttemptedStudents}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-
           </div>
 
-          {/* RIGHT CONT */}
-
-          <div className="w-full md:w-[50%] bg-white rounded-xl flex flex-col items-center p-5">
-            <div className="analytics-content-properties !h-auto">
-              <h1 className="analytics-title-text-properties">
-                Analytics for{" "}
-                {categories.find((category) => category.id === selectedCategory)
-                  ?.name || "All Categories"}
-              </h1>
-
-              <div className="progress-bar-container">
-                <div className="total-attempts-container">
-                  <h1 className="total-attempts-label">Competition Attempts</h1>
-                  <p className="total-attempts-num">
-                    <CountUp end={competitionAttempts.length} />
-                  </p>
-                </div>
-
-                <div className="total-attempts-container">
-                  <h1 className="total-attempts-label">Review Attempts</h1>
-                  <p className="total-attempts-num">
-                    <CountUp end={reviewAttempts.length} />
-                  </p>
-                </div>
-
-                <div className="total-attempts-container">
-                  <h1 className="total-attempts-label">Mastery Attempts</h1>
-                  <p className="total-attempts-num">
-                    <CountUp end={filteredMasteryAttempts.length} />
-                  </p>
-                </div>
-
-                <div className="total-attempts-container">
-                  <h1 className="total-attempts-label">
-                    Competition Average Score
-                  </h1>
-                  <p className="total-attempts-num">
-                    <CountUp end={competitionAvgPercent.toFixed(0)} />%
-                  </p>
-                </div>
-
-                <div className="total-attempts-container">
-                  <h1 className="total-attempts-label">Review Average Score</h1>
-                  <p className="total-attempts-num">
-                    <CountUp end={reviewAvgPercent.toFixed(0)} />%
-                  </p>
-                </div>
-
-                <div className="total-attempts-container">
-                  <h1 className="total-attempts-label">
-                    Mastery Average Score
-                  </h1>
-                  <p className="total-attempts-num">
-                    <CountUp end={filteredMasteryAvgPercent.toFixed(0)} />%
-                  </p>
-                </div>
-
-                <div className="total-attempts-container">
-                  <h1 className="total-attempts-label">Total Attempts</h1>
-                  <p className="total-attempts-num">
-                    <CountUp end={totalFilteredAttemptsCount} />
-                  </p>
-                </div>
-              </div>
+          <div className="w-full mb-5 flex flex-col  items-center">
+            <div className="w-full flex gap-10">
+              <button
+                disabled={showCompe}
+                onClick={() => {
+                  setMode("competition");
+                  setShowCompe(!showCompe);
+                }}
+              >
+                Show Competition
+              </button>
+              <button
+                disabled={!showCompe}
+                onClick={() => {
+                  setShowCompe(!showCompe);
+                  setMode("mastery");
+                }}
+              >
+                Show Mastery
+              </button>
             </div>
 
-            <div className="analytics-content-properties">
-              <h1 className="analytics-title-text-properties">
-                {" "}
-                {categories.find((category) => category.id === selectedCategory)
-                  ?.name || "All Categories"}
-              </h1>
-              <p className="text-black font-[Poppins]">Takers vs Non-Takers</p>
-              <div className="w-[100%] flex items-center justify-center">
-                <div className="pie-chart-properties">
-                  <PieChartAttempts
-                    allStudents={filteredStudents}
-                    attemptedStudents={filteredAttemptedStudents}
-                  />
-                </div>
-              </div>
-            </div>
+            <table className="w-[95%] bg-white text-left px-5">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Campus</th>
+                  <th>Total Students</th>
+                  <th>Average Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {totalScorePerCampus
+                  .sort((a, b) => b.averageScore - a.averageScore)
+                  .map((campus, index) => (
+                    <tr
+                      key={campus.branch}
+                    >
+                      <td>
+                        {index === 0 ? <span>🥇</span> : index === 1 ? <span>🥈</span> : index === 2 ? <span>🥉</span> : index + 1}
+                      </td>
+                      <td>
+                        {
+                          branches.find((branch) => branch.id === campus.branch)
+                            ?.name
+                        }
+                      </td>
+                      <td>{campus.totalStudents}</td>
+                      <td>{campus.averageScore.toFixed(2)}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
