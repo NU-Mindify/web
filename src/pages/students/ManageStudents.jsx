@@ -86,7 +86,7 @@
       indexOfFirstStudent,
       indexOfLastStudent
     );
-
+    
     const titles = [
       { key: "name", label: "Name", className: "flex flex-row items-center" },
       { key: "stud_id", label: "Student ID", className: "w-1/4" },

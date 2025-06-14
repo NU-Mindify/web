@@ -1,6 +1,7 @@
 import samplepic from "../../assets/students/sample-minji.svg";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import settingsIcon from "../../assets/forAll/settings.svg";
+import { avatars } from "../../Constants"
 import "./userContentsTable.css";
 
 export default function UserContentsTable({
@@ -61,6 +62,7 @@ export default function UserContentsTable({
                 data
                 .map((user) => {
                   const userId = user.uid || user.student_id;
+                  console.log(user.avatar)
 
                   return (
                     <div
@@ -78,7 +80,7 @@ export default function UserContentsTable({
                                   return (
                                     <td key={key} className="user-name-cell">
                                       <img
-                                        src={user.useravatar || samplepic}
+                                        src={user.useravatar || avatars[user.avatar] || samplepic}
                                         alt={user.firstName || user.first_name}
                                         className="mini-avatar"
                                       />
