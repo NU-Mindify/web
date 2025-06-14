@@ -58,6 +58,8 @@ export default function ApproveAccount() {
       }
 
       setUnApproveAccounts(pendingUsers);
+      // console.log(pendingUsers.length);
+      
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {

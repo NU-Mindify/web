@@ -6,13 +6,18 @@ import BarGraph from "../../components/barGraph/BarGraph";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { API_URL, categories, modes, levels, branches } from "../../Constants";
+import { useNavigate } from "react-router-dom";
 import CountUp from "../../components/CountUp/CountUp";
 
 export default function Dashboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);
+  const navigate = useNavigate();
 
   const [studentCount, setStudentCount] = useState(0);
   const [students, setStudents] = useState([]);
+
+  const [pendingUsers, setPendingUsers] = useState([]);
+  const [pendingUserCount, setPendingUserCount] = useState(0);
 
   const [attempts, setAttempts] = useState([]);
   const [avgScoresByWorld, setAvgScoresByWorld] = useState({});
@@ -35,11 +40,12 @@ export default function Dashboard() {
   const [leaderboardMode, setLeaderboardMode] = useState("classic");
 
   useEffect(() => {
-    if(!currentWebUser?.token) return;
+    if (!currentWebUser?.token) return;
     fetchStudents();
     fetchAttempts();
     fetchTopClassicLeaderboard();
     fetchTopMasteryLeaderboard();
+    fetchPendingUsers();
   }, [currentWebUser]);
 
   const fetchTopClassicLeaderboard = async () => {
@@ -94,6 +100,27 @@ export default function Dashboard() {
       .finally(() => {
         setIsLoading(false);
       });
+  };
+
+  //set amount of pending users
+  useEffect(() => {
+    setPendingUserCount(pendingUsers.length);
+  }, [pendingUsers]);
+
+  //fetch pending users data
+  const fetchPendingUsers = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/getWebUsers/`);
+      let pendingUsers = res.data.filter((user) => user.isApproved === false);
+
+      setPendingUsers(pendingUsers);
+      console.log("Pending Users: " + pendingUsers);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   //fetch attempts data
@@ -173,8 +200,9 @@ export default function Dashboard() {
 
     if (bottomCategory) {
       setMostChallengingWorld(bottomCategory);
-      setMostChallengingWorldScore(parseFloat(((lowestAvg / 8) * 100).toFixed(2)));
-
+      setMostChallengingWorldScore(
+        parseFloat(((lowestAvg / 8) * 100).toFixed(2))
+      );
     } else {
       setMostChallengingWorld("N/A");
       setMostChallengingWorldScore(null);
@@ -213,7 +241,9 @@ export default function Dashboard() {
 
     if (topCategory) {
       setBestPerformingWorld(topCategory);
-      setBestPerformingWorldScore(parseFloat(((highestAvg / 8) * 100).toFixed(2)));
+      setBestPerformingWorldScore(
+        parseFloat(((highestAvg / 8) * 100).toFixed(2))
+      );
     } else {
       setBestPerformingWorld("N/A");
       setBestPerformingWorldScore(null);
@@ -240,7 +270,6 @@ export default function Dashboard() {
       };
     })
     .sort((a, b) => b.count - a.count);
-
 
   const formatTime = (seconds) => {
     if (seconds < 60) {
@@ -353,11 +382,23 @@ export default function Dashboard() {
               <p>Fetching data...</p>
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-2 text-black font-[Poppins]">
-                Best Performing World
-              </h1>
-              {bestPerformingWorld === "N/A" ? (
+            <div className="w-full h-full flex items-center justify-center flex-col cursor-pointer" onClick={() => navigate("/account/approval")}>
+              {isLoading ? (
+                <div className="loading-overlay-dashboard">
+                  <div className="spinner"></div>
+                  <p>Fetching data...</p>
+                </div>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center flex-col">
+                  <h1 className="dashboard-title mb-2 font-[Poppins] text-[23px]">
+                    Pending Accounts
+                  </h1>
+                  <h1 className="dashboard-title font-[Poppins] font-bold text-[50px] mt-3">
+                    <CountUp end={pendingUserCount} />
+                  </h1>
+                </div>
+              )}
+              {/* {bestPerformingWorld === "N/A" ? (
                 <h2 className="text-3xl font-bold">No Data</h2>
               ) : (
                 <>
@@ -371,7 +412,7 @@ export default function Dashboard() {
                     <CountUp end={bestPerformingWorldScore} decimals={2} />%
                   </h2>
                 </>
-              )}
+              )} */}
             </div>
           )}
         </div>
@@ -412,31 +453,31 @@ export default function Dashboard() {
             borderRadius: "8px",
           }}
         >
-        <div className="flex bg-[#F5F6F8] p-1 rounded-xl w-[300px] mb-4">
-          <button
-            onClick={() => setLeaderboardMode("classic")}
-            className={`w-1/2 py-2  rounded-xl font-semibold 
+          <div className="flex bg-[#F5F6F8] p-1 rounded-xl w-[300px] mb-4">
+            <button
+              onClick={() => setLeaderboardMode("classic")}
+              className={`w-1/2 py-2  rounded-xl font-semibold 
               ${
                 leaderboardMode === "classic"
                   ? "bg-white  text-[#FFA500] shadow-sm"
                   : "bg-transparent text-gray-400"
               }`}
-          >
-            Competition
-          </button>
+            >
+              Competition
+            </button>
 
-          <button
-            onClick={() => setLeaderboardMode("mastery")}
-            className={`w-1/2 py-2  rounded-xl font-semibold
+            <button
+              onClick={() => setLeaderboardMode("mastery")}
+              className={`w-1/2 py-2  rounded-xl font-semibold
               ${
                 leaderboardMode === "mastery"
                   ? "bg-white text-[#FFD700] shadow-sm"
                   : "bg-transparent text-gray-400"
               }`}
-          >
-            Mastery
-          </button>
-        </div>
+            >
+              Mastery
+            </button>
+          </div>
 
           {(
             leaderboardMode === "classic"
