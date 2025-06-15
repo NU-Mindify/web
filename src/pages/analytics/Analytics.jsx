@@ -275,7 +275,6 @@ export default function Analytics() {
   };
 
   const [mode, setMode] = useState("competition");
-
   const [showCompe, setShowCompe] = useState(true);
 
   const [totalScorePerCampus, setTotalScorePerCampus] = useState([
@@ -294,6 +293,8 @@ export default function Analytics() {
     { branch: "iloilo", totalStudents: 0, averageScore: 0 },
     { branch: "moa", totalStudents: 0, averageScore: 0 },
   ]);
+
+  
 
   useEffect(() => {
     fetchPerformanceOnCampuses();
@@ -373,6 +374,9 @@ export default function Analytics() {
       console.error("Error fetching analytics data:", error.message);
     }
   };
+
+
+
 
   return (
     <>

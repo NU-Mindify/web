@@ -38,7 +38,7 @@ export default function Leaderboard() {
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
 
-  const [showClassic, setShowClassic] = useState(true); // This state will now only affect mobile view
+  const [showClassic, setShowClassic] = useState(true); 
 
   useEffect(() => {
     const handleResize = () => {
@@ -51,7 +51,7 @@ export default function Leaderboard() {
   useEffect(() => {
     fetchTopClassicLeaderboard();
     fetchTopMasteryLeaderboard();
-  }, [selectedCategoryClassic, selectedCategoryMastery]); // Add categories to dependency array
+  }, [selectedCategoryClassic, selectedCategoryMastery]); 
 
   //function to normalize names for search (remove commas, trim, lowercase)
   const normalizeName = (name) => {
@@ -62,11 +62,14 @@ export default function Leaderboard() {
   const fetchTopClassicLeaderboard = async () => {
     setLoadingDataClassic(true);
     try {
+      const params = {
+        mode: "classic",
+      };
+      if (selectedCategoryClassic && selectedCategoryClassic !== "all") {
+        params.category = selectedCategoryClassic;
+      }
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
-        params: {
-          mode: "classic",
-          category: selectedCategoryClassic,
-        },
+        params,
       });
       setClassicLeaderboards(response.data);
     } catch (error) {
@@ -80,11 +83,14 @@ export default function Leaderboard() {
   const fetchTopMasteryLeaderboard = async () => {
     setLoadingDataMastery(true);
     try {
+      const params = {
+        mode: "mastery",
+      };
+      if (selectedCategoryMastery && selectedCategoryMastery !== "all") {
+        params.category = selectedCategoryMastery;
+      }
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
-        params: {
-          mode: "mastery",
-          category: selectedCategoryMastery,
-        },
+        params,
       });
 
       setLeaderboardsMastery(response.data);
