@@ -315,6 +315,7 @@
     const [masteryModeData, setMasteryModeData] = useState([]);
     const [reviewModeData, setReviewModeData] = useState([]);
     const { currentWebUser } = useContext(UserLoggedInContext);
+    const [userBadges, setUserBadges] = useState([])
 
     const studentId = student._id;
 
@@ -334,14 +335,36 @@
           );
           setMasteryModeData(hundredItemsOnly);
           setReviewModeData(data.filter((data) => data.mode === "review"));
+
+
         } catch (error) {
-          console.error("Error fetching analytics data:", error.message);
+          console.error("Error fetching student data:", error.message);
         } finally {
           setLoadingData(false);
         }
       };
       if (studentId) fetchAttempts();
     }, [studentId]);
+
+
+    useEffect(() => {
+      fetchUserBadges()
+    }, [])
+
+    
+
+    const fetchUserBadges = async () => {
+      try {
+          const { data } = await axios.get(
+            `${API_URL}/getUserBadges?user_id=${studentId}`
+          );
+          setUserBadges(data)
+          console.log("badges", data);
+          
+        } catch (error) {
+          console.error("Error fetching user badges:", error.message);
+        }
+    }
 
     const getClassicHighestScores = () => {
       const grouped = {};
@@ -390,7 +413,6 @@
     const [unarchiveUser, setUnarchiveUser] = useState(false);
 
     const handleDeleteStudent = async () =>{
-      console.log(student._id);
       
       try {
         await axios.put(`${API_URL}/deleteUser/${student._id}`, {
@@ -435,6 +457,12 @@
         setUnarchiveUser(false);
       }
     };
+
+
+
+
+
+
 
     return (
       <>
@@ -542,6 +570,7 @@
                               studentLastName: student.last_name,
                               studentId: student.student_id,
                               studentBranch: student.branch,
+                              studentBadges: userBadges
                             },
                           });
                         }}

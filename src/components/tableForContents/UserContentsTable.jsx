@@ -62,7 +62,6 @@ export default function UserContentsTable({
                 data
                 .map((user) => {
                   const userId = user.uid || user.student_id;
-                  console.log(user.avatar)
 
                   return (
                     <div

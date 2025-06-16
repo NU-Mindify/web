@@ -15,6 +15,8 @@ export default function ShowMoreDetails() {
   const studentFirstName = location.state?.studentFirstName;
   const studentLastName = location.state?.studentLastName;
   const studentId = location.state?.studentId;
+  const studentBadges = location.state?.studentBadges;
+
   const studentBranch =
     branches.find((b) => b.id === location.state?.studentBranch)?.name ||
     "Unknown Branch";
@@ -298,12 +300,16 @@ export default function ShowMoreDetails() {
           </div>
 
 
-          <div className="w-full h-[200px] bg-green-400">
+          <div className="w-full">
             <h1 className="text-2xl font-bold text-black mt-5">Badges Acquired</h1>
-            <div className="w-fullh h-[150px] bg-amber-200 flex flex-row flex-wrap">
-                <div className="w-[50px] h-[50px] bg-red-500">
-                  
-                </div>
+            <div className="w-full flex flex-row flex-wrap justify-center gap-5">
+                  {
+                    studentBadges.map((badges) => (
+                      <div className="w-[100px] h-[100px]">
+                      <img src={badges.badge_id.filepath} alt="badge" />
+                      </div>
+                    ))
+                  }
             </div>
           </div>
         </div>
