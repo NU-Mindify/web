@@ -224,7 +224,7 @@ export default function ShowMoreDetails() {
                         })}
                       </div>
                       <div className="w-full h-auto flex justify-center items-center mt-2">
-                        <div className="per-level-stats-container border-1 border-black p-2 rounded-xl bg-red-300">
+                        <div className="per-level-stats-container border-1 border-black p-2 rounded-xl">
                           <table className="w-full text-center text-black">
                             <tr>
                               <td></td>
@@ -295,6 +295,16 @@ export default function ShowMoreDetails() {
                 })}
               </tr>
             </table>
+          </div>
+
+
+          <div className="w-full h-[200px] bg-green-400">
+            <h1 className="text-2xl font-bold text-black mt-5">Badges Acquired</h1>
+            <div className="w-fullh h-[150px] bg-amber-200 flex flex-row flex-wrap">
+                <div className="w-[50px] h-[50px] bg-red-500">
+                  
+                </div>
+            </div>
           </div>
         </div>
       </div>
