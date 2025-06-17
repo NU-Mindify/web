@@ -8,6 +8,7 @@ import ValidationModal from "../../components/ValidationModal/ValidationModal.js
 import Buttons from "../../components/buttons/Buttons.jsx";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import closebtn from "../../assets/glossary/close-btn.svg";
+import Papa from "papaparse";
 import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
 
 import add from "../../assets/questions/addQuestionbtn.svg";
@@ -15,7 +16,6 @@ import edit from "../../assets/questions/editQuestionbtn.svg";
 import saveBTN from "../../assets/questions/savebtn.svg";
 import remove from "../../assets/questions/removeQuestionbtn.svg";
 import save from "../../assets/questions/saveQuestionbtn.svg";
-
 
 function AddQuestion() {
   const nav = useNavigate();
@@ -46,10 +46,9 @@ function AddQuestion() {
   }, [category]);
 
   useEffect(() => {
-  console.log("allQuestions.length =", allQuestions.length);
-  console.log("showBackConfirmModal =", showBackConfirmModal);
-}, [allQuestions, showBackConfirmModal]);
-
+    console.log("allQuestions.length =", allQuestions.length);
+    console.log("showBackConfirmModal =", showBackConfirmModal);
+  }, [allQuestions, showBackConfirmModal]);
 
   const getInitialQuestionState = () => ({
     question: "",
@@ -141,11 +140,15 @@ function AddQuestion() {
     }
 
     try {
-      const { data } = await axios.post(`${API_URL}/addQuestion`, allQuestions, {
-        headers: {
-          Authorization: `Bearer ${currentWebUser.token}`,
-        },
-      });
+      const { data } = await axios.post(
+        `${API_URL}/addQuestion`,
+        allQuestions,
+        {
+          headers: {
+            Authorization: `Bearer ${currentWebUser.token}`,
+          },
+        }
+      );
       console.log(data);
       setValidationMessage("Added Successfully");
       setShowValidationModal(true);
@@ -159,7 +162,7 @@ function AddQuestion() {
           action: "Add Question",
           description: `${currentWebUser.firstName} Added question "${q.question}" to category "${q.category}"`,
         });
-      };
+      }
     } catch (error) {
       console.error(error);
       setValidationMessage(
@@ -215,6 +218,78 @@ function AddQuestion() {
     setAllQuestions(updatedQuestions);
   };
 
+  const handleCSVUploadQuestions = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      transformHeader: header => header.trim().replace(/\s+/g, " "),
+      complete: (results) => {
+        const parsedQuestions = results.data
+          .filter(
+            (row) =>
+              row["Level"]?.trim() &&
+              row["Items"]?.trim() &&
+              row["A"]?.trim() &&
+              row["B"]?.trim() &&
+              row["C"]?.trim() &&
+              row["D"]?.trim() &&
+              row["CORRECT ANSWERS"]?.trim() &&
+              row["RATIONALE"]?.trim()
+          )
+          .map((row) => {
+            const correctAnswer = row["CORRECT ANSWERS"].trim().toLowerCase();
+            const level = parseInt(row["Level"]);
+
+            return {
+              question: row["Items"].trim(),
+              difficulty: "Easy",
+              level: isNaN(level) ? 1 : level,
+              rationale: row["RATIONALE"].trim(),
+              answer: correctAnswer,
+              category: "", 
+              choices: [
+                {
+                  letter: "a",
+                  text: row["A"].trim(),
+                  rationale: "", 
+                  isCorrect: correctAnswer === "a",
+                },
+                {
+                  letter: "b",
+                  text: row["B"].trim(),
+                  rationale: "",
+                  isCorrect: correctAnswer === "b",
+                },
+                {
+                  letter: "c",
+                  text: row["C"].trim(),
+                  rationale: "",
+                  isCorrect: correctAnswer === "c",
+                },
+                {
+                  letter: "d",
+                  text: row["D"].trim(),
+                  rationale: "",
+                  isCorrect: correctAnswer === "d",
+                },
+              ],
+            };
+          });
+
+        if (parsedQuestions.length === 0) {
+          setValidationMessage("No valid questions found in the CSV.");
+          setShowValidationModal(true);
+          return;
+        }
+
+        setAllQuestions((prev) => [...prev, ...parsedQuestions]);
+      },
+    });
+  };
+
   return (
     <div className="add-ques-main-container">
       <div className="inputs-question-container">
@@ -228,43 +303,57 @@ function AddQuestion() {
         <div className="add-ques-header">
           <div className="add-ques-sub-header">
             <h1>Add Question</h1>
-              <button
-                className="w-[50px] h-[50px]"
-                onClick={() => {
-                  const hasUnsavedInput = () => {
-                    const formHasInput =
-                      question.question.trim() !== "" ||
-                      question.choices.some(
-                        (c) => c.text.trim() !== "" || c.rationale.trim() !== ""
-                      ) ||
-                      question.rationale.trim() !== "" ||
-                      question.difficulty.trim() !== "" ||
-                      question.level !== 1;
+            <button
+              className="w-[50px] h-[50px]"
+              onClick={() => {
+                const hasUnsavedInput = () => {
+                  const formHasInput =
+                    question.question.trim() !== "" ||
+                    question.choices.some(
+                      (c) => c.text.trim() !== "" || c.rationale.trim() !== ""
+                    ) ||
+                    question.rationale.trim() !== "" ||
+                    question.difficulty.trim() !== "" ||
+                    question.level !== 1;
 
-                    const listHasQuestions = allQuestions.length > 0;
+                  const listHasQuestions = allQuestions.length > 0;
 
-                    return formHasInput || listHasQuestions;
-                  };
+                  return formHasInput || listHasQuestions;
+                };
 
-                  if (hasUnsavedInput()) {
-                    setShowBackConfirmModal(true);
-                  } else {
-                    nav("/question", {
-                      state: { category, categoryName, catSelected: true },
-                    });
-                  }
-                }}
-              >
-                <img src={closebtn} alt="close" />
-              </button>
-
+                if (hasUnsavedInput()) {
+                  setShowBackConfirmModal(true);
+                } else {
+                  nav("/question", {
+                    state: { category, categoryName, catSelected: true },
+                  });
+                }
+              }}
+            >
+              <img src={closebtn} alt="close" />
+            </button>
           </div>
 
           <h3>Create Question for {categoryName}</h3>
         </div>
 
         <div className="ques-container">
-          <h3 className="w-full">Question<span>*</span></h3>
+          <input
+            id="upload-btn"
+            type="file"
+            accept=".csv"
+            onChange={handleCSVUploadQuestions}
+            className="hidden"
+          />
+          <label
+            htmlFor="upload-btn"
+            className="btn btn-warning w-[230px] rounded-xl !text-white text-xl bg-[#FFC916] border-[#FFC916] font-[Poppins] h-[50px] px-4 flex items-center justify-center text-center cursor-pointer"
+          >
+            UPLOAD CSV FILE
+          </label>
+          <h3 className="w-full">
+            Question<span>*</span>
+          </h3>
           <textarea
             id="Question"
             placeholder="Type here..."
@@ -278,7 +367,9 @@ function AddQuestion() {
 
         <div className="select-container">
           <div>
-            <h3>Level:<span>*</span></h3>
+            <h3>
+              Level:<span>*</span>
+            </h3>
             <select
               id="levelSelect"
               disabled={isFormDisabled}
@@ -296,7 +387,9 @@ function AddQuestion() {
           </div>
 
           <div>
-            <h3>Difficulty:<span>*</span></h3>
+            <h3>
+              Difficulty:<span>*</span>
+            </h3>
             <select
               id="difficultySelect"
               disabled={isFormDisabled}
@@ -315,7 +408,9 @@ function AddQuestion() {
         </div>
 
         <div className="option-container">
-          <h3 className="text-lg font-semibold w-full">Options<span>*</span></h3>
+          <h3 className="text-lg font-semibold w-full">
+            Options<span>*</span>
+          </h3>
 
           {question.choices.map((choice, idx) => {
             const isCorrect = question.answer === choice.letter;
@@ -364,7 +459,9 @@ function AddQuestion() {
         </div>
 
         <div className="overall-rationale-container">
-          <h3 className="w-full text-black">Rationale:<span>*</span></h3>
+          <h3 className="w-full text-black">
+            Rationale:<span>*</span>
+          </h3>
           <textarea
             id="Rationale"
             placeholder="Type the rationale here..."
@@ -377,16 +474,8 @@ function AddQuestion() {
         </div>
 
         <div className="add-btn-container">
-          {/* <Buttons
-            text="Add Question"
-            onClick={handleAddQuestion}
-            addedClassName="btn btn-success"
-          /> */}
-          <button
-            className="add-btn-container"
-            onClick={handleAddQuestion}
-          >
-            <img src={add} className="add-btn" alt="add-btn-icon"/>
+          <button className="add-btn-container" onClick={handleAddQuestion}>
+            <img src={add} className="add-btn" alt="add-btn-icon" />
           </button>
         </div>
       </div>
@@ -477,40 +566,16 @@ function AddQuestion() {
 
                   <div className="question-btn-container">
                     {onEdit ? (
-                      // <Buttons
-                      //   text="Save"
-                      //   onClick={() => {
-                      //     setOnEdit(!onEdit);
-                      //   }}
-                      //   addedClassName="btn btn-warning"
-                      // />
-                    <button
-                      className=""
-                      onClick={() => setOnEdit(!onEdit)}
-                    >
-                      <img src={saveBTN} className="" alt="save-btn-icon" />
-                    </button>
-
+                      <button className="" onClick={() => setOnEdit(!onEdit)}>
+                        <img src={saveBTN} className="" alt="save-btn-icon" />
+                      </button>
                     ) : (
-                      // <Buttons
-                      //   text="Edit"
-                      //   onClick={() => {
-                      //     setOnEdit(!onEdit);
-                      //   }}
-                      //   addedClassName="btn btn-warning"
-                        
-                      // />
-
-                    <button
-                      className=""
-                      onClick={() => setOnEdit(!onEdit)}
-                    >
-                      <img src={edit} className="" alt="edit-btn-icon" />
-                    </button>
-
+                      <button className="" onClick={() => setOnEdit(!onEdit)}>
+                        <img src={edit} className="" alt="edit-btn-icon" />
+                      </button>
                     )}
                     <button
-                      className=""                       
+                      className=""
                       onClick={() => {
                         if (
                           confirm(
@@ -520,9 +585,13 @@ function AddQuestion() {
                           handleRemoveQuestion(idx);
                         }
                       }}
-                        addedClassName="btn btn-error"
-                      >
-                        <img src={remove} className="remove-btn" alt="remove-btn-icon"/>
+                      addedClassName="btn btn-error"
+                    >
+                      <img
+                        src={remove}
+                        className="remove-btn"
+                        alt="remove-btn-icon"
+                      />
                     </button>
                   </div>
                 </div>
@@ -532,11 +601,11 @@ function AddQuestion() {
         </div>
         <div className="w-full flex justify-center py-4">
           <button
-            className="success-btn"         
+            className="success-btn"
             onClick={addToDB}
             addedClassName="btn btn-success"
           >
-          <img src={save} className="save-ques-btn" alt="save-btn-icon"/>
+            <img src={save} className="save-ques-btn" alt="save-btn-icon" />
           </button>
         </div>
 
@@ -566,14 +635,16 @@ function AddQuestion() {
                 >
                   Yes, Go Back
                 </button>
-                <button className="btn-cancel" onClick={() => setShowBackConfirmModal(false)}>
+                <button
+                  className="btn-cancel"
+                  onClick={() => setShowBackConfirmModal(false)}
+                >
                   Cancel
                 </button>
               </div>
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

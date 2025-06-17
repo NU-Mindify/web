@@ -7,8 +7,8 @@ import closebtn from "../../assets/glossary/close-btn.svg";
 import deletebtn from "../../assets/glossary/delete-icon.svg";
 import Buttons from "../../components/buttons/Buttons";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+import Papa from "papaparse";
 import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
-
 
 export default function AddTerm() {
   const [newTerm, setNewTerm] = useState([
@@ -50,7 +50,7 @@ export default function AddTerm() {
       setTermToDeleteIndex(index);
       setShowDeleteConfirmModal(true);
     } else {
-      // no input, delete immediately
+      // no , delete immediately
       const updatedTerms = newTerm.filter((_, i) => i !== index);
       setNewTerm(updatedTerms);
     }
@@ -79,11 +79,15 @@ export default function AddTerm() {
       }
     }
 
-    Promise.all(newTerm.map((term) => axios.post(`${API_URL}/addTerm`, term, {
-      headers: {
-        Authorization: `Bearer ${currentWebUser.token}`,
-      },
-    })))
+    Promise.all(
+      newTerm.map((term) =>
+        axios.post(`${API_URL}/addTerm`, term, {
+          headers: {
+            Authorization: `Bearer ${currentWebUser.token}`,
+          },
+        })
+      )
+    )
       .then(() => {
         setValidationMessage("Added successfully!");
         setShowValidationModal(true);
@@ -108,23 +112,48 @@ export default function AddTerm() {
       });
   };
 
+  const handleBack = () => {
+    const hasUnsavedInput = newTerm.some(
+      (term) =>
+        term.word.trim() !== "" ||
+        term.meaning.trim() !== "" ||
+        (Array.isArray(term.tags)
+          ? term.tags.length > 0
+          : term.tags.trim() !== "")
+    );
 
-    const handleBack = () => {
-      const hasUnsavedInput = newTerm.some(
-        (term) =>
-          term.word.trim() !== "" ||
-          term.meaning.trim() !== "" ||
-          (Array.isArray(term.tags) ? term.tags.length > 0 : term.tags.trim() !== "")
-      );
+    if (hasUnsavedInput) {
+      setShowBackConfirmModal(true);
+    } else {
+      navigate("/glossary");
+    }
+  };
 
-      if (hasUnsavedInput) {
-        setShowBackConfirmModal(true);
-      } else {
-        navigate("/glossary");
-      }
-    };
+  const handleCSVUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        const parsedData = results.data
+          .filter((row) => {
+            return row.word?.trim() && row.meaning?.trim() && row.tags?.trim();
+          })
+          .map((row) => ({
+            word: capitalize(row.word || ""),
+            meaning: capitalize(row.meaning || ""),
+            tags: row.tags || "",
+            is_deleted: false,
+          }));
 
+        setNewTerm((prev) => [...prev, ...parsedData]);
+      },
+    });
+  };
+
+  const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
   return (
     <div className="add-term-page-wrapper">
@@ -214,6 +243,19 @@ export default function AddTerm() {
           >
             + Add more term
           </button>
+          <input
+            id="upload-btn"
+            type="file"
+            accept=".csv"
+            onChange={handleCSVUpload}
+            className="hidden"
+          />
+          <label
+            htmlFor="upload-btn"
+            className="btn btn-warning w-[230px] rounded-xl !text-white text-xl bg-[#FFC916] border-[#FFC916] font-[Poppins] h-[50px] px-4 flex items-center justify-center text-center cursor-pointer"
+          >
+            UPLOAD CSV FILE
+          </label>
         </div>
 
         <div className="create-container">
@@ -268,14 +310,16 @@ export default function AddTerm() {
               >
                 Yes, Go Back
               </button>
-              <button className="btn-cancel" onClick={() => setShowBackConfirmModal(false)}>
+              <button
+                className="btn-cancel"
+                onClick={() => setShowBackConfirmModal(false)}
+              >
                 Cancel
               </button>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }

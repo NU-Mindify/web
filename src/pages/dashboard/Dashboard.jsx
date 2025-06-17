@@ -25,6 +25,9 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAttempts, setIsLoadingAttempts] = useState(false);
 
+  const [topBadges, setTopBadges] = useState([]);
+  const [loadingBadges, setLoadingBadges] = useState(false);
+
   const [mostChallengingWorld, setMostChallengingWorld] = useState(null);
   const [mostChallengingWorldScore, setMostChallengingWorldScore] =
     useState(null);
@@ -75,6 +78,26 @@ export default function Dashboard() {
       setLoadingDataMastery(false);
     }
   };
+
+  //fetch badges data
+
+  const fetchTopBadges = async () => {
+    setLoadingBadges(true);
+    try {
+      const response = await axios.get(`${API_URL}/getTopEarnedBadges`);
+      setTopBadges(response.data); // Adjust according to your API response structure
+    } catch (error) {
+      console.error("Error fetching top badges:", error.message);
+    } finally {
+      setLoadingBadges(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!currentWebUser?.token) return;
+    fetchTopBadges();
+  }, [currentWebUser]);
+
 
   //set amount of students
   useEffect(() => {
@@ -441,9 +464,45 @@ export default function Dashboard() {
             </div>
           )}
         </div>
-        <div className="badges-container-dashboard">
-          <h1 className="text-black">Badges Placeholder</h1>
-        </div>
+
+      
+      <div className="badges-container-dashboard">
+        <h1 className="text-black">Top Badges</h1>
+        {loadingBadges ? (
+          <div className="loading-overlay-dashboard">
+            <div className="spinner"></div>
+            <p>Loading badges...</p>
+          </div>
+        ) : (
+          <ul className="badge-list-dashboard">
+            {topBadges.length === 0 ? (
+              <li>No badges earned yet.</li>
+            ) : (
+              topBadges.map((badge, idx) => (
+                <li key={badge.id || idx} className="badge-list-item-dashboard">
+                  <img src={badge.iconUrl} alt={badge.name} className="badge-icon-dashboard" />
+                  <div className="badge-info-dashboard">
+                    <div className="badge-title-dashboard">{badge.name}</div>
+                    <div className="badge-level-dashboard">Level {badge.level || 1}</div>
+                    <div className="badge-progress-bar-dashboard">
+                      <div
+                        className="badge-progress-fill-dashboard"
+                        style={{ width: `${badge.percentage || 0}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="badge-percentage-dashboard">
+                    <span className="badge-percentage-value-dashboard">
+                      {badge.percentage ? badge.percentage.toFixed(2) : "0.00"}%
+                    </span>
+                  </div>
+                </li>
+              ))
+            )}
+          </ul>
+        )}
+      </div>
+
         <div
           className="leaderboards-container-dashboard"
           style={{
