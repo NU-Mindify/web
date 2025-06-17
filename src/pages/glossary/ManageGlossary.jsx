@@ -39,6 +39,8 @@ export default function ManageGlossary() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState(null);
   const [showArchived, setShowArchived] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+
 
   const pageSize = 20;
 
@@ -212,6 +214,92 @@ export default function ManageGlossary() {
     );
   };
 
+
+  const [uploadedTerms, setUploadedTerms] = useState([]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const text = e.target.result;
+        const lines = text.split("\n").filter(line => line.trim() !== "");
+        const newTermsFromCSV = [];
+
+        for (let i = 1; i < lines.length; i++) { 
+          const [word, meaning] = lines[i].split(",").map(s => s.trim());
+          if (word && meaning) {
+            newTermsFromCSV.push({
+              word: word,
+              meaning: meaning,
+              tags: [],
+              is_deleted: false
+            });
+          }
+        }
+        setUploadedTerms(newTermsFromCSV);
+      };
+      reader.readAsText(file);
+    } else {
+      setSelectedFile(null);
+      setUploadedTerms([]);
+    }
+  };
+
+  
+
+
+  const handleConfirmCSVUpload = () => {
+    if (uploadedTerms.length === 0) {
+      alert("No terms parsed from the CSV file. Please check the file content and format (e.g., 'Term,Definition').");
+
+      return;
+    }
+
+    for (const term of uploadedTerms) {
+      if (!term.word.trim() || !term.meaning.trim()) {
+        alert("Please ensure all terms in the CSV have a word and a definition.");
+
+        return;
+      }
+    }
+
+    Promise.all(uploadedTerms.map((term) => axios.post(`${API_URL}/addTerm`, term, {
+      headers: {
+        Authorization: `Bearer ${currentWebUser.token}`,
+      },
+    })))
+      .then(() => {
+        alert("Terms from CSV added successfully!");
+
+        setSelectedFile(null);
+        setUploadedTerms([]);
+
+        Promise.all(
+          uploadedTerms.map((term) =>
+            axios.post(`${API_URL}/addLogs`, {
+              name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+              branch: currentWebUser.branch,
+              action: "Add Term from CSV",
+              description: `${currentWebUser.firstName} added a term "${term.word}" with meaning "${term.meaning}" from CSV upload.`,
+            })
+          )
+        );
+
+        setPage(0);
+        setScrollTerms([]);
+        fetchMoreTerms();
+        getAllTerms().then(setAllTerms);
+
+      })
+      .catch((error) => {
+        console.error("Error adding terms from CSV:", error);
+        alert("Failed to add terms from CSV. Please try again.");
+      });
+  };
+
   return (
     <>
       <div className="header">
@@ -236,11 +324,35 @@ export default function ManageGlossary() {
             //   );
             //   setShowSuggestions(false);
             // }}
-            addedClassName="w-[80%] h-[50px]"
+            addedClassName="w-[70%] h-[50px]"
           />
 
 
           <div className="flex justify-between w-full mt-3 lg:w-auto lg:mt-0">
+            <div className="flex items-center gap-2">
+                <label className="bg-black cursor-pointer !text-white px-4 py-2 rounded">
+                    Upload CSV
+                    <input
+                        type="file"
+                        className="hidden"
+                        accept=".csv" 
+                        onChange={handleFileChange}
+                    />
+                </label>
+
+                {selectedFile && uploadedTerms.length > 0 && (
+                    <Buttons
+                        text={`Upload ${uploadedTerms.length} Terms`} 
+                        onClick={handleConfirmCSVUpload}
+                        addedClassName="btn btn-primary"
+                    />
+                )}
+                
+                {selectedFile && uploadedTerms.length === 0 && (
+                  <p className="text-sm text-gray-500">Parsing CSV...</p>
+                )}
+            </div>
+
             <Buttons
               text="Add Term"
               onClick={() => navigate("/addterm")}
@@ -257,7 +369,7 @@ export default function ManageGlossary() {
               }}
             />
           </div>
-          
+
         </div>
 
         <div className="glossary-letters-btn-container">

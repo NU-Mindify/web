@@ -49,7 +49,7 @@ const categoriesObj = [
 ];
 
 export default function ManageQuestion() {
-  const {currentWebUser} = useContext(UserLoggedInContext)
+  const { currentWebUser } = useContext(UserLoggedInContext);
   const [showArchived, setShowArchived] = useState(false);
   const [restore, setRestore] = useState(false);
 
@@ -62,6 +62,126 @@ export default function ManageQuestion() {
   const [questionToRestoreId, setQuestionToRestoreId] = useState(null);
   const queryClient = useQueryClient();
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadedQuestions, setUploadedQuestions] = useState([]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const text = e.target.result;
+        const lines = text.split("\n").filter((line) => line.trim() !== "");
+
+        const headers = lines[0].split(",").map((h) => h.trim());
+        const newQuestionsFromCSV = [];
+
+        for (let i = 1; i < lines.length; i++) {
+          const values = lines[i].split(",").map((s) => s.trim());
+          const rowData = {};
+          headers.forEach((header, index) => {
+            rowData[header] = values[index];
+          });
+
+          if (!rowData["Question"] || !rowData["Overall Rationale"] || !rowData["Category"] || !rowData["Level"]) {
+            console.warn(`Skipping row ${i + 1} due to missing essential data.`);
+            continue;
+          }
+
+          const choices = [];
+          let correctAnswerLetter = "";
+
+          const choiceLetters = ['a', 'b', 'c', 'd'];
+          for (let j = 0; j < 4; j++) {
+            const choiceTextCol = `Choice ${String.fromCharCode(65 + j)} Text`;
+            const choiceIsCorrectCol = `Choice ${String.fromCharCode(65 + j)} isCorrect`;
+
+            if (rowData[choiceTextCol] !== undefined && rowData[choiceIsCorrectCol] !== undefined) {
+              const isCorrect = rowData[choiceIsCorrectCol].toLowerCase() === 'true';
+              choices.push({
+                letter: choiceLetters[j],
+                text: rowData[choiceTextCol],
+                isCorrect: isCorrect,
+              });
+              if (isCorrect) {
+                correctAnswerLetter = choiceLetters[j];
+              }
+            }
+          }
+
+          const questionObj = {
+            question: rowData["Question"],
+            choices: choices,
+            rationale: rowData["Overall Rationale"],
+            category: rowData["Category"],
+            level: parseInt(rowData["Level"], 0),
+            answer: correctAnswerLetter,
+            difficulty: rowData["Difficulty"] || "Unknown"
+          };
+          newQuestionsFromCSV.push(questionObj);
+        }
+        setUploadedQuestions(newQuestionsFromCSV);
+      };
+      reader.readAsText(file);
+    } else {
+      setSelectedFile(null);
+      setUploadedQuestions([]);
+    }
+  };
+
+  const handleConfirmCSVUpload = () => {
+    console.log("questions are", uploadedQuestions);
+    
+    if (uploadedQuestions.length === 0) {
+      alert(
+        "No questions parsed from the CSV file. Please check the file content and format."
+      );
+      return;
+    }
+
+
+    for (const question of uploadedQuestions) {
+      if (
+        !question.question.trim() ||
+        question.choices.length === 0 ||
+        !question.rationale.trim() ||
+        !question.category.trim() ||
+        isNaN(question.level)
+      ) {
+        alert("Please ensure all questions in the CSV have a question, choices, rationale, category, and a valid numeric level.");
+        return;
+      }
+    }
+
+    axios
+      .post(`${API_URL}/addQuestion`, uploadedQuestions, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
+      })
+      .then(() => {
+        alert("Questions from CSV added successfully!");
+        setSelectedFile(null);
+        setUploadedQuestions([]);
+
+        Promise.all(
+          uploadedQuestions.map((q) =>
+            axios.post(`${API_URL}/addLogs`, {
+              name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+              branch: currentWebUser.branch,
+              action: "Add Question from CSV",
+              description: `${currentWebUser.firstName} Added question "${q.question}" to category "${q.category}" from CSV upload.`,
+            })
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error adding questions from CSV:", error);
+        alert(`Failed to add questions from CSV. Please try again. Error: ${error.response?.data?.error?.message || error.message}`);
+      });
+  };
 
   useEffect(() => {
     getTotalQuestion();
@@ -101,7 +221,8 @@ export default function ManageQuestion() {
   const getData = async () => {
     try {
       const { data } = await axios.get(
-        `${API_URL}/getQuestions?${category ? `category=${category}` : ""}`, {
+        `${API_URL}/getQuestions?${category ? `category=${category}` : ""}`,
+        {
           headers: {
             Authorization: `Bearer ${currentWebUser.token}`,
           },
@@ -134,32 +255,40 @@ export default function ManageQuestion() {
 
   const confirmDeleteQuestion = async () => {
     try {
-      await axios.put(`${API_URL}/deleteQuestion/${questionToDeleteId}`, {
-        question_id: questionToDeleteId,
-        is_deleted: true,
-      }, {
-        headers: {
-          Authorization: `Bearer ${currentWebUser.token}`,
+      await axios.put(
+        `${API_URL}/deleteQuestion/${questionToDeleteId}`,
+        {
+          question_id: questionToDeleteId,
+          is_deleted: true,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${currentWebUser.token}`,
+          },
+        }
+      );
       setShowDeleteConfirmModal(false);
       setQuestionToDeleteId(null);
-      queryClient.invalidateQueries(["questionsList", category]); 
+      queryClient.invalidateQueries(["questionsList", category]);
     } catch (error) {
       console.error("Error deleting question:", error);
     }
   };
 
-    const confirmRestoreQuestion = async () => {
+  const confirmRestoreQuestion = async () => {
     try {
-      await axios.put(`${API_URL}/deleteQuestion/${questionToRestoreId}`, {
-        question_id: questionToRestoreId,
-        is_deleted: false,
-      }, {
-        headers: {
-          Authorization: `Bearer ${currentWebUser.token}`,
+      await axios.put(
+        `${API_URL}/deleteQuestion/${questionToRestoreId}`,
+        {
+          question_id: questionToRestoreId,
+          is_deleted: false,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${currentWebUser.token}`,
+          },
+        }
+      );
       setShowRestoreConfirmModal(false);
       setQuestionToRestoreId(null);
       queryClient.invalidateQueries(["questionsList", category]);
@@ -176,8 +305,6 @@ export default function ManageQuestion() {
     setGotSelected(false);
     setSubSelected("");
   }
-
-  
 
   function Category_Choices({ text, id, onClick, bgImage }) {
     return (
@@ -258,15 +385,15 @@ export default function ManageQuestion() {
           ) : (
             <div className="question-actions">
               <button className="btn-action">Edit</button>
-                <button
-                  onClick={() => {
-                    setQuestionToDeleteId(data._id);
-                    setShowDeleteConfirmModal(true);
-                  }}
-                  className="btn-action"
-                >
-                  Delete
-                </button>
+              <button
+                onClick={() => {
+                  setQuestionToDeleteId(data._id);
+                  setShowDeleteConfirmModal(true);
+                }}
+                className="btn-action"
+              >
+                Delete
+              </button>
             </div>
           )}
         </div>
@@ -304,33 +431,56 @@ export default function ManageQuestion() {
         {gotSelected && (
           <div className="question-controls-container flex flex-col mt-5 mb-4">
             <div className="flex flex-wrap justify-between items-center gap-3">
+              <div className="flex-1 min-w-[250px]">
+                <div className="search-bar-question border">
+                  <button className="search-btn-question">
+                    <img src={search} alt="search icon" className="w-4 h-4" />
+                  </button>
+                  <input
+                    type="text"
+                    placeholder="Search questions..."
+                    className="search-input-question w-full"
+                    onChange={(e) => setSearchQuestion(e.target.value)}
+                  />
+                </div>
+              </div>
 
-            <div className="flex-1 min-w-[250px]">
-              <div className="search-bar-question border">
-                <button className="search-btn-question">
-                  <img src={search} alt="search icon" className="w-4 h-4" />
-                </button>
-                <input
-                  type="text"
-                  placeholder="Search questions..."
-                  className="search-input-question w-full"
-                  onChange={(e) => setSearchQuestion(e.target.value)}
+              <div className="flex items-center gap-3 flex-shrink-0">
+                <div className="flex items-center gap-2">
+                  <label className="bg-black cursor-pointer !text-white px-4 py-2 rounded">
+                    Upload CSV
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept=".csv"
+                      onChange={handleFileChange}
+                    />
+                  </label>
+                  {selectedFile && uploadedQuestions.length > 0 && (
+                    <Buttons
+                      text={`Upload ${uploadedQuestions.length} Questions`}
+                      onClick={handleConfirmCSVUpload}
+                      addedClassName="btn btn-primary"
+                    />
+                  )}
+                  {selectedFile && uploadedQuestions.length === 0 && (
+                    <p className="text-sm text-gray-500">Parsing CSV...</p>
+                  )}
+                </div>
+                <Buttons
+                  text={
+                    <span className="flex items-center !text-white">
+                      Add Question
+                    </span>
+                  }
+                  onClick={addQuestion}
+                  addedClassName="btn btn-warning !w-[200px] !text-white"
                 />
+                <div className="pb-2">
+                  <ExportDropdown />
+                </div>
               </div>
             </div>
-
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <Buttons
-                text={<span className="flex items-center !text-white">Add Question</span>}
-                onClick={addQuestion}
-                addedClassName="btn btn-warning !w-[200px] !text-white"
-              />
-              <div className="pb-2">
-                <ExportDropdown />
-              </div>
-            </div>
-          </div>
-
 
             <div className="flex flex-wrap items-center gap-4 w-full justify-start">
               <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">

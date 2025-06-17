@@ -217,6 +217,7 @@ export default function AddTerm() {
         </div>
 
         <div className="create-container">
+          
           <Buttons
             text="Add Terms"
             onClick={handleCreateNewTerm}
