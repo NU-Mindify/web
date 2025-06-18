@@ -294,8 +294,6 @@ export default function Analytics() {
     { branch: "moa", totalStudents: 0, averageScore: 0 },
   ]);
 
-  
-
   useEffect(() => {
     fetchPerformanceOnCampuses();
   }, [mode]);
@@ -306,22 +304,40 @@ export default function Analytics() {
         `${API_URL}/getLeaderboard?mode=${mode}`
       );
       const data = response.data;
+      console.log("the data are", data);
 
-      const highestScoresMap = new Map();
+      const userLevelHighScoresMap = new Map();
 
       data.forEach((entry) => {
         const user = entry.user_id;
         if (!user || !user._id) return;
 
+        console.log("entry", entry);
+
         const userId = user._id;
         const correct = entry.correct;
+        const total_items = entry.total_items;
+        const time_completion = entry.time_completion;
 
-        const existing = highestScoresMap.get(userId);
+        const groupingKey = mode === 'mastery' ? entry.category : entry.level;
 
-        if (!existing || correct > existing.correct) {
-          highestScoresMap.set(userId, {
+
+        if (!userLevelHighScoresMap.has(userId)) {
+          userLevelHighScoresMap.set(userId, new Map());
+        }
+
+        const userScoresByGroupingKey = userLevelHighScoresMap.get(userId);
+        const existingScoreForGroupingKey = userScoresByGroupingKey.get(groupingKey);
+
+
+        if (!existingScoreForGroupingKey || correct > existingScoreForGroupingKey.correct) {
+          userScoresByGroupingKey.set(groupingKey, {
             user_id: userId,
             correct,
+            total_items,
+            time_completion,
+            level: entry.level ?? null,
+            category: entry.category ?? null, 
             username: user.username,
             email: user.email,
             first_name: user.first_name,
@@ -332,11 +348,43 @@ export default function Analytics() {
         }
       });
 
-      const highestScoresArray = Array.from(highestScoresMap.values());
-      console.log("all student and their high score", highestScoresArray);
+
+      const allHighScores = [];
+      userLevelHighScoresMap.forEach((groupingKeyScoresMap) => {
+        groupingKeyScoresMap.forEach((scoreEntry) => {
+          allHighScores.push(scoreEntry);
+        });
+      });
+
+      console.log("All high scores for all users across all levels/categories:", allHighScores);
+
+
+      const highScoresPerGroupingKeyMap = new Map();
+
+      allHighScores.forEach((student) => {
+
+        const finalGroupingKey = mode === 'mastery' ? student.category : student.level;
+
+
+        const keyToUse = finalGroupingKey ?? 'Uncategorized'; 
+
+        if (!highScoresPerGroupingKeyMap.has(keyToUse)) {
+          highScoresPerGroupingKeyMap.set(keyToUse, []);
+        }
+        highScoresPerGroupingKeyMap.get(keyToUse).push(student);
+      });
+
+      highScoresPerGroupingKeyMap.forEach((students) => {
+        students.sort((a, b) => b.correct - a.correct);
+      });
+
+      const highScoresPerGroup = Object.fromEntries(highScoresPerGroupingKeyMap);
+      console.log("All high scores grouped by level/category:", highScoresPerGroup);
+
+
 
       const branchStatsMap = new Map();
-      highestScoresArray.forEach((student) => {
+      allHighScores.forEach((student) => {
         const branch = student.branch;
         if (!branchStatsMap.has(branch)) {
           branchStatsMap.set(branch, {
@@ -374,9 +422,6 @@ export default function Analytics() {
       console.error("Error fetching analytics data:", error.message);
     }
   };
-
-
-
 
   return (
     <>
@@ -618,7 +663,7 @@ export default function Analytics() {
 
           <div className="w-full mb-5 flex flex-col  items-center">
             <div className="w-full flex justify-center mb-4">
-              <div className="flex bg-gray-100 p-1 rounded-full w-fit shadow-inner">
+              <div className="flex bg-gray-100 p-1 rounded-full w-fit shadow-inner flex-row">
                 <button
                   onClick={() => {
                     setMode("competition");
@@ -641,6 +686,32 @@ export default function Analytics() {
                   Mastery
                 </button>
               </div>
+
+              <select defaultValue="" className="!w-[300px] !h-[60px]">
+                <option value="all" hidden>
+                  Filter by Category
+                </option>
+                <option value="">All Categories</option>
+                <option value="developmental">Developmental Psychology</option>
+                <option value="abnormal">Abnormal Psychology</option>
+                <option value="industrial">Industrial Psychology</option>
+                <option value="general">General Psychology</option>
+                <option value="psychological">Psychological Assessment</option>
+              </select>
+
+              {showCompe && (
+                <select defaultValue="" className="!w-[300px] !h-[60px]">
+                  <option value="all" hidden>
+                    Filter by Level
+                  </option>
+                  <option value="">All Levels</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              )}
             </div>
 
             <table className="w-[95%] bg-white text-left px-5">
