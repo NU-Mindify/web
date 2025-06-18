@@ -41,7 +41,7 @@ function AddQuestion() {
 
   useEffect(() => {
     if (category) {
-      setQuestion(getInitialQuestionState());
+      setQuestion(getInitialQuestionState()); 
     }
   }, [category]);
 
@@ -225,7 +225,7 @@ function AddQuestion() {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
-      transformHeader: header => header.trim().replace(/\s+/g, " "),
+      transformHeader: (header) => header.trim().replace(/\s+/g, " "),
       complete: (results) => {
         const parsedQuestions = results.data
           .filter(
@@ -245,34 +245,34 @@ function AddQuestion() {
 
             return {
               question: row["Items"].trim(),
-              difficulty: "Easy",
+              difficulty: "easy",
               level: isNaN(level) ? 1 : level,
               rationale: row["RATIONALE"].trim(),
               answer: correctAnswer,
-              category: "", 
+              category: category, 
               choices: [
                 {
                   letter: "a",
                   text: row["A"].trim(),
-                  rationale: "", 
+                  rationale: row["A_Rationale"]?.trim() || "",
                   isCorrect: correctAnswer === "a",
                 },
                 {
                   letter: "b",
                   text: row["B"].trim(),
-                  rationale: "",
+                  rationale: row["B_Rationale"]?.trim() || "",
                   isCorrect: correctAnswer === "b",
                 },
                 {
                   letter: "c",
                   text: row["C"].trim(),
-                  rationale: "",
+                  rationale: row["C_Rationale"]?.trim() || "",
                   isCorrect: correctAnswer === "c",
                 },
                 {
                   letter: "d",
                   text: row["D"].trim(),
-                  rationale: "",
+                  rationale: row["D_Rationale"]?.trim() || "",
                   isCorrect: correctAnswer === "d",
                 },
               ],
