@@ -275,6 +275,7 @@ export default function Analytics() {
   };
 
   const [mode, setMode] = useState("competition");
+  const [level, setLevel] = useState(1)
   const [showCompe, setShowCompe] = useState(true);
 
   const [totalScorePerCampus, setTotalScorePerCampus] = useState([
@@ -296,12 +297,13 @@ export default function Analytics() {
 
   useEffect(() => {
     fetchPerformanceOnCampuses();
-  }, [mode]);
+  }, [mode, level, categories]);
 
   const fetchPerformanceOnCampuses = async () => {
     try {
       const response = await axios.get(
-        `${API_URL}/getLeaderboard?mode=${mode}`
+        `${API_URL}/getLeaderboard?mode=${mode}&category=${categories}&level=${level}`
+        
       );
       const data = response.data;
       console.log("the data are", data);
