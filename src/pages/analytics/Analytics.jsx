@@ -275,7 +275,8 @@ export default function Analytics() {
   };
 
   const [mode, setMode] = useState("competition");
-  const [level, setLevel] = useState(1)
+  const [level, setLevel] = useState(1);
+  const [category, setCateogry] = useState("developmental");
   const [showCompe, setShowCompe] = useState(true);
 
   const [totalScorePerCampus, setTotalScorePerCampus] = useState([
@@ -297,14 +298,23 @@ export default function Analytics() {
 
   useEffect(() => {
     fetchPerformanceOnCampuses();
-  }, [mode, level, categories]);
+  }, [mode, level, category]);
 
   const fetchPerformanceOnCampuses = async () => {
+    let categoryToUse = selectedCategory;
+    if (selectedCategory === "all") {
+      categoryToUse = "";
+    }
+
     try {
-      const response = await axios.get(
-        `${API_URL}/getLeaderboard?mode=${mode}&category=${categories}&level=${level}`
-        
-      );
+      
+      let query = `${API_URL}/getLeaderboard?mode=${mode}&category=${category}`;
+      if (showCompe) {
+        query += `&level=${level}`;
+      }
+
+      const response = await axios.get(query);
+
       const data = response.data;
       console.log("the data are", data);
 
@@ -321,25 +331,27 @@ export default function Analytics() {
         const total_items = entry.total_items;
         const time_completion = entry.time_completion;
 
-        const groupingKey = mode === 'mastery' ? entry.category : entry.level;
-
+        const groupingKey = mode === "mastery" ? entry.category : entry.level;
 
         if (!userLevelHighScoresMap.has(userId)) {
           userLevelHighScoresMap.set(userId, new Map());
         }
 
         const userScoresByGroupingKey = userLevelHighScoresMap.get(userId);
-        const existingScoreForGroupingKey = userScoresByGroupingKey.get(groupingKey);
+        const existingScoreForGroupingKey =
+          userScoresByGroupingKey.get(groupingKey);
 
-
-        if (!existingScoreForGroupingKey || correct > existingScoreForGroupingKey.correct) {
+        if (
+          !existingScoreForGroupingKey ||
+          correct > existingScoreForGroupingKey.correct
+        ) {
           userScoresByGroupingKey.set(groupingKey, {
             user_id: userId,
             correct,
             total_items,
             time_completion,
             level: entry.level ?? null,
-            category: entry.category ?? null, 
+            category: entry.category ?? null,
             username: user.username,
             email: user.email,
             first_name: user.first_name,
@@ -350,7 +362,6 @@ export default function Analytics() {
         }
       });
 
-
       const allHighScores = [];
       userLevelHighScoresMap.forEach((groupingKeyScoresMap) => {
         groupingKeyScoresMap.forEach((scoreEntry) => {
@@ -358,32 +369,36 @@ export default function Analytics() {
         });
       });
 
-      console.log("All high scores for all users across all levels/categories:", allHighScores);
-
+      console.log(
+        "All high scores for all users across all levels/categories:",
+        allHighScores
+      );
 
       const highScoresPerGroupingKeyMap = new Map();
 
+      const totalItemsPerGroupingKey = new Map();
+
       allHighScores.forEach((student) => {
+        const groupingKey =
+          mode === "mastery" ? student.category : student.level;
+        const keyToUse = groupingKey ?? "Uncategorized";
 
-        const finalGroupingKey = mode === 'mastery' ? student.category : student.level;
-
-
-        const keyToUse = finalGroupingKey ?? 'Uncategorized'; 
-
-        if (!highScoresPerGroupingKeyMap.has(keyToUse)) {
-          highScoresPerGroupingKeyMap.set(keyToUse, []);
+        if (!totalItemsPerGroupingKey.has(keyToUse)) {
+          totalItemsPerGroupingKey.set(keyToUse, student.total_items || 0);
         }
-        highScoresPerGroupingKeyMap.get(keyToUse).push(student);
       });
 
       highScoresPerGroupingKeyMap.forEach((students) => {
         students.sort((a, b) => b.correct - a.correct);
       });
 
-      const highScoresPerGroup = Object.fromEntries(highScoresPerGroupingKeyMap);
-      console.log("All high scores grouped by level/category:", highScoresPerGroup);
-
-
+      const highScoresPerGroup = Object.fromEntries(
+        highScoresPerGroupingKeyMap
+      );
+      console.log(
+        "All high scores grouped by level/category:",
+        highScoresPerGroup
+      );
 
       const branchStatsMap = new Map();
       allHighScores.forEach((student) => {
@@ -399,6 +414,7 @@ export default function Analytics() {
         const branchData = branchStatsMap.get(branch);
         branchData.totalStudents += 1;
         branchData.totalScore += student.correct;
+        console.log("branchData", branchData);
       });
 
       setTotalScorePerCampus((prevState) =>
@@ -406,10 +422,19 @@ export default function Analytics() {
           const match = branchStatsMap.get(campus.branch);
           if (match) {
             const { totalStudents, totalScore } = match;
+
+            const groupingKey = mode === "mastery" ? categoryToUse : level;
+            const keyToUse = groupingKey || "Uncategorized";
+            const totalItems = totalItemsPerGroupingKey.get(keyToUse) || 1;
+
+            const avgScore = totalStudents
+              ? totalScore / (totalStudents * totalItems)
+              : 0;
+
             return {
               ...campus,
               totalStudents,
-              averageScore: totalStudents ? totalScore / totalStudents : 0,
+              averageScore: avgScore,
             };
           } else {
             return {
@@ -748,7 +773,7 @@ export default function Analytics() {
                         }
                       </td>
                       <td>{campus.totalStudents}</td>
-                      <td>{campus.averageScore.toFixed(2)}</td>
+                      <td>{Math.round(campus.averageScore * 100)}%</td>
                     </tr>
                   ))}
               </tbody>
