@@ -1,0 +1,184 @@
+@reference "tailwindcss";
+@plugin "daisyui";
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+/* Chrome, Safari, Edge (WebKit) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+body {
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
+/* Optional: ensure body/containers can scroll */
+html, body {
+  overflow-y: auto;
+}
+
+
+/* ==== Header Styles ==== */
+.landing-container {
+  @apply w-full bg-white text-gray-800 flex flex-col;
+}
+
+.landing-header {
+  @apply w-full px-6 py-4 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md bg-white/10 border-b border-white/20;
+}
+
+.mindify-img {
+  @apply w-20 h-auto block;
+}
+
+.nav-links {
+  @apply hidden md:flex space-x-6;
+}
+
+.nav-links a {
+  @apply text-gray-700 hover:text-yellow-400 transition;
+}
+
+.auth-buttons {
+  @apply flex space-x-4;
+}
+
+
+/* ==== Hero Section ==== */
+.hero-section {
+  @apply h-screen flex flex-col-reverse md:flex-row items-center justify-center px-8 py-12 bg-gradient-to-b from-white to-[#35408E] rounded-3xl;
+}
+
+.hero-section h1 {
+  @apply text-4xl md:text-5xl font-bold leading-tight;
+}
+
+.text-yellow {
+  @apply text-yellow-400;
+}
+
+.text-indigo {
+  @apply text-indigo-700;
+}
+
+.highlight {
+  @apply text-yellow-500 font-semibold;
+}
+
+.hero-section p {
+  @apply text-gray-100 text-lg;
+}
+
+.store-buttons {
+  @apply flex space-x-4 mt-4;
+}
+
+.store-buttons img {
+  @apply h-12;
+}
+
+.image-container {
+  @apply relative md:w-1/2 flex justify-center items-center h-full;
+}
+
+.phone-image {
+  @apply absolute w-[460px] md:w-[480px] drop-shadow-2xl;
+}
+
+.phone1 {
+  transform: rotate(-5deg) translateX(-60px) translateY(10px);
+ 
+}
+
+.phone2 {
+  transform: rotate(10deg) translateX(60px) translateY(-30px) scale(1.30);
+
+}
+
+.image-container:hover .phone1 {
+  transform: rotate(-2deg) translateX(-55px) translateY(10px) scale(1);
+}
+
+.image-container:hover .phone2 {
+  transform: rotate(6deg) translateX(55px) translateY(-50px) scale(1.30);
+}
+
+/* NU Campuses Section */
+.nu-campuses-section {
+  @apply flex flex-col items-center justify-center bg-white py-12;
+  overflow: hidden;
+}
+
+.campus-title {
+  @apply text-lg md:text-xl font-semibold mb-4 text-black;
+}
+
+.campus-marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.campus-marquee::before,
+.campus-marquee::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 80px;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.campus-marquee::before {
+  left: 0;
+  background: linear-gradient(to right, white, transparent);
+}
+
+.campus-marquee::after {
+  right: 0;
+  background: linear-gradient(to left, white, transparent);
+}
+
+
+.campus-list {
+  display: flex;
+  white-space: nowrap;
+  animation: scrollLeft 20s linear infinite;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.campus-list li {
+  display: inline-block;
+  margin: 0 2rem;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #000;
+  opacity: 0.6;
+  transition: opacity 0.20s ease;
+}
+
+.campus-list li:hover {
+  opacity: 1;
+}
+
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* ==== About NU Section ==== */
+.about-nu-section {
+  @apply w-full bg-white py-16 px-6 flex flex-col items-center justify-center text-center;
+}
+
+.about-title {
+  @apply text-lg md:text-xl font-bold text-black mb-4;
+}
