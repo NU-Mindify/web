@@ -28,6 +28,8 @@ import ActivityLogs from "./pages/activityLogs/ActivityLogs";
 import SignUp from "./pages/signUp/SignUp";
 import ApproveAccount from "./pages/accounts/ApproveAccount";
 import Branches from "./pages/branches/Branches";
+import Landing from "./pages/landingpage/landing";
+
 
 const queryClient = new QueryClient();
 
@@ -130,7 +132,8 @@ function App() {
           <BrowserRouter>
             {!currentWebUserUID && !isSplash ? (
               <Routes>
-                <Route path="/" element={<Login />} />
+                <Route path="/" element={<Landing />} />
+                <Route path="/login" element={<Login />} />
                 <Route
                   path="/terms-and-conditions"
                   element={<TermsAndConditions />}
