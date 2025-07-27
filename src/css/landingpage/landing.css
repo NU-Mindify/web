@@ -47,7 +47,7 @@ html, body {
 
 /* ==== Hero Section ==== */
 .hero-section {
-  @apply h-screen flex flex-col-reverse md:flex-row items-center justify-center px-8 py-12 bg-gradient-to-b from-white to-[#35408E] rounded-3xl;
+  @apply h-screen flex flex-col-reverse md:flex-row items-center justify-center px-8 py-12 bg-gradient-to-b from-white to-[#35408E] rounded-3xl scroll-mt-15;
 }
 
 .hero-section h1 {
@@ -176,9 +176,53 @@ html, body {
 
 /* ==== About NU Section ==== */
 .about-nu-section {
-  @apply w-full bg-white py-16 px-6 flex flex-col items-center justify-center text-center;
+  @apply px-4 py-8 text-center bg-white scroll-mt-15;
 }
 
 .about-title {
-  @apply text-lg md:text-xl font-bold text-black mb-4;
+  @apply text-xl font-bold text-[#222] mb-2;
+}
+
+.about-nu-section p {
+  @apply mx-auto text-lg max-w-[600px] leading-relaxed text-[#333] pt-4 pb-2;
+}
+
+.phone-scroll-container {
+  @apply overflow-x-auto whitespace-nowrap py-2;
+}
+
+.phone-scroll-wrapper {
+  @apply flex overflow-x-auto px-[30px] py-[30px] gap-[55px] w-full;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.phone-scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.phone-item {
+  @apply flex flex-col items-center pt-5 opacity-50;
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out;
+}
+
+.phone-item img {
+  @apply block w-[230px];
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.phone-item.active {
+  @apply opacity-100;
+  transform: scale(1.15);
+}
+
+/* ==== App Feature Section ==== */
+.features-section {
+  @apply px-4 py-8 text-center bg-white scroll-mt-15;
+}
+
+.features-title {
+  @apply text-xl font-bold text-[#222] mb-2;
 }
