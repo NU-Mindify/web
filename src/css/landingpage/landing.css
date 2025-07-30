@@ -3,17 +3,15 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
-/* Chrome, Safari, Edge (WebKit) */
 ::-webkit-scrollbar {
   display: none;
 }
 
-/* Firefox */
+
 body {
-  scrollbar-width: none; /* Hides scrollbar in Firefox */
+  scrollbar-width: none; 
 }
 
-/* Optional: ensure body/containers can scroll */
 html, body {
   overflow-y: auto;
 }
@@ -218,11 +216,175 @@ html, body {
   transform: scale(1.15);
 }
 
+
 /* ==== App Feature Section ==== */
 .features-section {
-  @apply px-4 py-8 text-center bg-white scroll-mt-15;
+  @apply px-4 py-16 bg-white scroll-mt-6;
 }
 
 .features-title {
-  @apply text-xl font-bold text-[#222] mb-2;
+  @apply text-xl font-bold text-[#222] mb-2 text-center;
 }
+
+.features-subtitle {
+  @apply text-2xl md:text-3xl font-semibold leading-relaxed mb-3 text-center;
+}
+
+.yellow {
+  color: #FFC300;
+}
+
+.blue {
+  color: #444EB2;
+}
+
+.features-grid {
+  @apply w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-start;
+}
+
+/* ==== Left Column (Worlds, Glossary) ==== */
+.features-left {
+  @apply flex flex-col gap-12 text-right items-end pt-20;
+  align-items: flex-end;
+  justify-content: center;
+  margin-left: 0;
+}
+
+
+/* ==== Center (Phone + Avatar) ==== */
+.features-center {
+  @apply flex flex-col items-center justify-center;
+}
+
+/* Phone Image*/
+.features-image {
+  @apply mb-4;
+}
+.features-image img {
+  @apply w-[250px] md:w-[260px];
+  object-fit: contain;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Avatar Customization Styling */
+.features-avatar {
+  @apply flex flex-col items-center text-center;
+}
+
+.feature-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.feature-title {
+  @apply text-base md:text-lg font-bold text-gray-800 transition-colors duration-700;
+}
+
+.feature-box:hover .feature-title {
+  @apply text-[#444EB2]; 
+}
+
+.feature-description {
+  @apply text-sm text-gray-600 leading-relaxed relative;
+}
+
+/* ==== Right Column (Mindmap, Ask Mindi) ==== */
+.features-right {
+  @apply flex flex-col gap-12 text-left items-end pt-20;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.feature-box {
+  @apply flex flex-col gap-2;
+}
+
+.feature-box.items-end {
+  align-items: flex-end;
+  text-align: right;
+}
+.feature-box.items-center {
+  align-items: center;
+  text-align: center;
+}
+.feature-box.items-start {
+  align-items: flex-start;
+  text-align: left;
+}
+
+
+/* ==== Download App Section ==== */
+.download-section {
+  @apply bg-white py-16 px-4 flex justify-center scroll-mt-5;
+}
+
+.download-content {
+  @apply flex flex-col items-center text-center max-w-4xl mx-auto;
+}
+
+.download-title {
+  @apply text-xl font-bold text-[#222] mb-2 text-center mb-10;
+}
+
+.download-heading {
+  @apply relative text-3xl md:text-4xl font-extrabold mb-4 text-center z-20;
+}
+
+.download-description {
+  @apply text-gray-600 max-w-xl mb-6 text-center z-20;
+}
+
+.phone {
+  @apply absolute w-[140px] md:w-[180px] transition-transform duration-500;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+}
+
+.phone-left {
+  left: 50%;
+  transform: translateX(-115%) rotate(-10deg) scale(1.5);
+  bottom: 0;
+}
+
+.phone-center {
+  left: 50%;
+  transform: translateX(-50%) scale(1.5);
+  bottom: 60px;
+  z-index: 5;
+}
+
+.phone-right {
+  right: 50%;
+  transform: translateX(115%) rotate(10deg) scale(1.5);
+  bottom: 0;
+}
+
+
+/* ==== FAQ Section ==== */
+
+.faq-section {
+  @apply px-4 py-16 bg-white scroll-mt-6;
+}
+
+.faq-title {
+  @apply text-xl font-bold text-[#222] mb-2 text-center;
+}
+
+.faq-subtitle {
+  @apply text-2xl md:text-3xl font-semibold leading-relaxed mb-3 text-center;
+}
+
+
+
+
