@@ -1,4 +1,4 @@
-import "../../css/Landingpage/landing.css";
+import "../../css/landingpage/landing.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import phone1 from "../../assets/landingpage/phone1.png";
