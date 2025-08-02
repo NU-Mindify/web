@@ -453,8 +453,9 @@ export default function Analytics() {
   return (
     <>
       <div className="main-container-analytics" id="main-cont-analytics">
+        
         <div className="header-container-analytics">
-          <h1 className="h-full w-full !text-[32px]">
+          <h1 className="h-full w-full !text-[40px]">
             Analytics for{" "}
             {branches.find((branch) => branch.id === selectedBranch)?.name ||
               "All Branches"}
@@ -502,7 +503,7 @@ export default function Analytics() {
         </div>
 
         <div className="content-container-analytics">
-          <div className="w-full flex flex-col md:flex-row px-5 py-3 gap-5">
+          <div className="w-full flex flex-col md:flex-row px-1 py-3 gap-6">
             <div className="analytics-container-properties">
               <div className="w-[95%]">
                 <div className="w-full">
@@ -518,7 +519,7 @@ export default function Analytics() {
                         className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                         ${
                           attemptsViewMode === "daily"
-                            ? "bg-white !text-blue-900 shadow-sm"
+                            ? "bg-[#FFC300] !text-black-900 shadow-sm"
                             : "bg-transparent !text-gray-400"
                         }`}
                       >
@@ -530,7 +531,7 @@ export default function Analytics() {
                         className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                         ${
                           attemptsViewMode === "monthly"
-                            ? "bg-white !text-blue-900 shadow-sm"
+                            ? "bg-[#FFC300] !text-black-900 shadow-sm"
                             : "bg-transparent !text-gray-400"
                         }`}
                       >
@@ -564,7 +565,7 @@ export default function Analytics() {
                       className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                       ${
                         accountsViewMode === "daily"
-                          ? "bg-white !text-blue-900 shadow-sm"
+                          ? "bg-[#FFC300] !text-black-900 shadow-sm"
                           : "bg-transparent !text-gray-400"
                       }`}
                     >
@@ -576,7 +577,7 @@ export default function Analytics() {
                       className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                       ${
                         accountsViewMode === "monthly"
-                          ? "bg-white !text-blue-900 shadow-sm"
+                          ? "bg-[#FFC300] !text-black-900 shadow-sm"
                           : "bg-transparent !text-gray-400"
                       }`}
                     >

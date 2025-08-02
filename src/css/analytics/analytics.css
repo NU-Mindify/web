@@ -12,7 +12,7 @@
 }
 
 .header-container-analytics h1{
-    @apply text-[40px] font-[Poppins] font-bold text-[#FFC300];
+    @apply font-[Poppins] font-bold text-[#FFC300];
 }
 .analytics-filter-container{
     @apply w-full flex flex-col gap-4
@@ -20,7 +20,7 @@
 }
 
 .content-container-analytics{
-    @apply gap-4 mt-3 font-[Poppins] flex flex-col;
+    @apply gap-2 mt-3 font-[Poppins] flex flex-col;
 }
 
 .analytics-container-properties{

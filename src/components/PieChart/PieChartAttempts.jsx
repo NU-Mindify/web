@@ -14,7 +14,7 @@ const PieChartAttempts = ({ allStudents = [], attemptedStudents = [] }) => {
       {
         label: "Students",
         data: [attemptedCount, notAttemptedCount],
-        backgroundColor: [" #FFBF1A", "#35408E"],
+        backgroundColor: [" #FFC300", "#35408E"],
         borderWidth: 1,
       },
     ],
