@@ -203,12 +203,12 @@ html, body {
   @apply flex flex-col items-center pt-5 opacity-50;
   flex: 0 0 auto;
   scroll-snap-align: center;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out;
+  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out;
 }
 
 .phone-item img {
   @apply block w-[230px];
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .phone-item.active {
