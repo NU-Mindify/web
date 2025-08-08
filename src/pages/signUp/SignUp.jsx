@@ -16,6 +16,7 @@ import logo from "../../assets/logo/logo.svg";
 import pattern from "../../assets/forAll/pattern.svg";
 import { Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
+import TermsAndConditions from "../login/TermsAndConditions.jsx";
 
 export default function SignUp() {
   const [newWebUser, setNewWebUser] = useState({
@@ -44,6 +45,8 @@ export default function SignUp() {
   const [errors, setErrors] = useState({});
   const [termscondError, setTermsCondError] = useState("");
 
+  const [showTermsModal, setShowTermsModal] = useState(false);
+
   const navigate = useNavigate();
 
   const handleReset = () => {
@@ -59,6 +62,7 @@ export default function SignUp() {
 
     setPassword("");
     setConfirmPassword("");
+    setAcceptTermsAndCond("");
 
     setErrors({
       firstName: "",
@@ -104,8 +108,11 @@ export default function SignUp() {
       return;
     }
 
-    if (password.length < 6) {
-      setValidationMessage("Password must be at least 6 characters long.");
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
+    if (!passwordRegex.test(password)) {
+      setValidationMessage(
+        "Password must be at least 6 characters long, contain at least one uppercase letter, and one special character."
+      );
       setShowValidationModal(true);
       return;
     }
@@ -144,17 +151,22 @@ export default function SignUp() {
       // 2. Send reset email
       await sendEmailVerification(user);
       console.log(uidWebUser);
-      
+
       // 3. Store user data in database
-      const {data:added} = await axios.post(`${API_URL}/createWebUser`, uidWebUser);
+      const { data: added } = await axios.post(
+        `${API_URL}/createWebUser`,
+        uidWebUser
+      );
       console.log(added);
-      
+
       // 4. Sign out the new user's account
       await signOut(firebaseAuth);
 
       // 5. Reset and show modal
       // setShowModal(true);
-      alert("Sign up successful! A verification email has been sent to your email")
+      alert(
+        "Sign up successful! A verification email has been sent to your email"
+      );
       handleReset();
     } catch (error) {
       console.error("Registration Error:", error.message);
@@ -216,6 +228,20 @@ export default function SignUp() {
     }
 
     setErrors((prev) => ({ ...prev, [fieldName]: message }));
+  };
+
+  const isFormEmpty = () => {
+    return (
+      !newWebUser.firstName &&
+      !newWebUser.lastName &&
+      !newWebUser.email &&
+      !newWebUser.employeenum &&
+      !newWebUser.position &&
+      !newWebUser.branch &&
+      !password &&
+      !confirmPassword &&
+      !acceptTermsAndCond
+    );
   };
 
   return (
@@ -453,11 +479,10 @@ export default function SignUp() {
                 }}
               />
               <span>
-                I accept and acknowledge the
-                <Link to="/terms-and-conditions" className="terms-and-cond">
-                  {" "}
-                  Terms and Conditions.{" "}
-                </Link>
+                I accept and acknowledge the{" "}
+                <span onClick={() => setShowTermsModal(true)} className="terms-and-cond cursor-pointer">
+                  Terms and Conditions
+                </span>
               </span>
             </label>
 
@@ -476,22 +501,22 @@ export default function SignUp() {
             <button
               className="reset-button"
               onClick={handleReset}
-              disabled={isLoading}
+              disabled={isLoading || isFormEmpty()}
             >
               RESET
             </button>
 
-              <div className="mt-5 text-center">
-                <span className="text-black text-sm">
-                  Already have an account?{" "}
-                  <button
-                    className="text-[#35408E] underline font-bold hover:text-[#FFA500] transition"
-                    onClick={() => navigate("/login")}
-                  >
-                    Sign In here.
-                  </button>
-                </span>
-              </div>
+            <div className="mt-5 text-center">
+              <span className="text-black text-sm">
+                Already have an account?{" "}
+                <button
+                  className="text-[#35408E] underline font-bold hover:text-[#FFA500] transition cursor-pointer"
+                  onClick={() => navigate("/login")}
+                >
+                  Sign In here.
+                </button>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -505,7 +530,10 @@ export default function SignUp() {
       {showModal && (
         <div className="fixed inset-0 bg-transparent bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-[999]">
           <div className="bg-white p-6 rounded-lg shadow-lg w-90 h-50 flex items-center justify-center flex-col animate-popup">
-            <h2>Sign Up Successful! A verification email has been sent to your email. Once verified, your account will be awaiting Admin approval</h2>
+            <h2>
+              Sign Up Successful! A verification email has been sent to your
+              email. Once verified, your account will be awaiting Admin approval
+            </h2>
             <button
               onClick={() => setShowModal(false)}
               className="btn btn-primary"
@@ -521,6 +549,45 @@ export default function SignUp() {
           message={validationMessage}
           onClose={() => setShowValidationModal(false)}
         />
+      )}
+
+      {showTermsModal && (
+        <div
+          className="fixed inset-0 bg-white/30 backdrop-blur-sm flex justify-center items-center z-50"
+          onClick={() => setShowTermsModal(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-lg w-11/12 md:w-2/3 lg:w-1/2 max-h-[80vh] flex flex-col"
+          >
+            {/* Header */}
+            <div className="p-4 border-b flex justify-between items-center">
+              <h2 className="text-xl font-bold">Terms and Conditions</h2>
+              <button
+                onClick={() => setShowTermsModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-lg font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-4 overflow-y-auto flex-1">
+              <div className="prose max-w-none">
+                <TermsAndConditions />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t flex justify-end">
+              <button
+                onClick={() => setShowTermsModal(false)}
+                className="btn bg-[#FFC300] text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

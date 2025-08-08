@@ -161,10 +161,6 @@ body,
 }
 
 .terms-and-cond {
-  @apply text-black text-sm;
-}
-
-.terms-and-cond:hover {
   @apply text-blue-800 underline;
 }
 
@@ -189,6 +185,7 @@ body,
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index:1;
 }
 
 .nu-logo {
@@ -229,4 +226,13 @@ body,
 
 .animate-popup {
   animation: popup 0.3s ease forwards;
+}
+
+.reset-button:disabled {
+  background-color: #b0b0b0 !important; 
+  color: #ffffff !important;            
+  opacity: 0.8 !important;               
+  cursor: not-allowed !important;        
+  display: inline-block !important;      
+  visibility: visible !important;
 }

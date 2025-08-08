@@ -313,7 +313,7 @@ export default function Login() {
                 <span className="text-black text-sm">
                   Don’t have an account yet?{" "}
                   <button
-                    className="text-[#35408E] underline font-bold hover:text-[#FFA500] transition"
+                    className="text-[#35408E] underline font-bold hover:text-[#FFA500] transition cursor-pointer"
                     onClick={() => navigate("/signup")}
                   >
                     Sign Up here.
