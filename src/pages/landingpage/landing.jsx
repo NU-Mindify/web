@@ -174,9 +174,9 @@ const faqs = [
         </nav>
 
         <div className="auth-buttons">
-          {/* <button className="login-btn" onClick={() => navigate("/login")}>
+          <button className="login-btn" onClick={() => navigate("/login")}>
             Sign In
-          </button> */}
+          </button>
         </div>
       </header>
 

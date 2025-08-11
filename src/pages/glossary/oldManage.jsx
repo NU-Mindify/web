@@ -43,7 +43,7 @@ export default function ManageGlossary() {
 
   const pageSize = 20;
 
-
+  // Toggle dropdown
   const handleDropdown = (word) => {
     setActiveTermWord(activeTermWord === word ? null : word);
   };
@@ -92,7 +92,7 @@ export default function ManageGlossary() {
       if (newTerms.length < pageSize) setHasMore(false);
 
       setScrollTerms((prev) => [...prev, ...newTerms]);
-      setPage(targetPage + 1); 
+      setPage(targetPage + 1); // move to next page
     } catch (err) {
       console.error("Error fetching terms:", err);
     } finally {
@@ -131,17 +131,12 @@ export default function ManageGlossary() {
         );
 
   const groupedTerms = displayedTerms.reduce((acc, term) => {
-    
-    
     if (!term.word) return acc;
     const firstLetter = term.word[0].toUpperCase();
     if (!acc[firstLetter]) acc[firstLetter] = [];
     acc[firstLetter].push(term);
     return acc;
   }, {});
-
-  console.log("Grouped Terms:", groupedTerms);
-  
 
   //EXPORT TO CSV
   const exportGlossaryToCSV = (data, filename) => {
@@ -308,7 +303,7 @@ export default function ManageGlossary() {
         setHasMore(true);
         setPage(0);
         setTimeout(() => {
-          fetchMoreTerms(0); 
+          fetchMoreTerms(0); // explicitly fetch first page
         }, 0);
       })
       .catch((error) => {
@@ -426,32 +421,28 @@ export default function ManageGlossary() {
           </div>
         </div>
 
-{
-    loadingTerms ? (
-        <div className="loading-overlay-accounts !mt-10">
+        {loadingTerms ? (
+          <div className="loading-overlay-accounts !mt-10">
             <div className="spinner"></div>
             <p>Fetching data...</p>
-        </div>
-    ) : (
-        searchTerm === "" && displayedTerms.length === 0 ? (
-            <p className="text-gray-400 italic">No terms to show.</p>
+          </div>
+        ) : searchTerm === "" && displayedTerms.length === 0 ? (
+          <p className="text-gray-400 italic">No terms to show.</p>
         ) : (
-            letters.map((letter) =>
-                groupedTerms[letter] ? (
-                    <GlossaryLetterSection
-                        key={letter}
-                        letter={letter}
-                        terms={groupedTerms[letter]}
-                        activeTermWord={activeTermWord}
-                        onEdit={handlesEdit}
-                        onToggleDropdown={handleDropdown}
-                        termRefs={termRefs}
-                    />
-                ) : null
-            )
-        )
-    )
-}
+          letters.map((letter) =>
+            groupedTerms[letter] ? (
+              <GlossaryLetterSection
+                key={letter}
+                letter={letter}
+                terms={groupedTerms[letter]}
+                activeTermWord={activeTermWord}
+                onEdit={handlesEdit}
+                onToggleDropdown={handleDropdown}
+                termRefs={termRefs}
+              />
+            ) : null
+          )
+        )}
 
         {showEditModal && selectedTerm && (
           <EditGlossary
