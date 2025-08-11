@@ -43,7 +43,6 @@ export default function ManageGlossary() {
 
   const pageSize = 20;
 
-
   const handleDropdown = (word) => {
     setActiveTermWord(activeTermWord === word ? null : word);
   };
@@ -73,40 +72,110 @@ export default function ManageGlossary() {
   };
 
   // Fetch terms in batches for infinite scroll
+
   const fetchMoreTerms = async (targetPage = page) => {
     if (isLoading || !hasMore) return;
 
+    if (!currentWebUser?.token) {
+      console.error("No authentication token found.");
+      return;
+    }
+
     setIsLoading(true);
+
     try {
-      const res = await axios.get(`${API_URL}/getLimitedTerms/${page * pageSize}/${pageSize}`,
+      console.log(
+        `Fetching page: ${targetPage} (offset: ${
+          targetPage * pageSize
+        }) with token:`,
+        currentWebUser.token
+      );
+
+      const res = await axios.get(
+        `${API_URL}/getLimitedTerms/${targetPage * pageSize}/${pageSize}`,
         {
           headers: {
             Authorization: `Bearer ${currentWebUser.token}`,
           },
         }
       );
-      const newTerms = res.data;
-      console.log("20 TERMS ARE:", newTerms);
-      
 
-      if (newTerms.length < pageSize) setHasMore(false);
+      const newTerms = res.data;
+      console.log(
+        `Page ${targetPage} returned ${newTerms.length} terms`,
+        newTerms
+      );
+
+      if (newTerms.length < pageSize) {
+        setHasMore(false);
+      }
 
       setScrollTerms((prev) => [...prev, ...newTerms]);
-      setPage(targetPage + 1); 
+      setPage(targetPage + 1); // increment page for next call
     } catch (err) {
-      console.error("Error fetching terms:", err);
+      if (err.response?.status === 401) {
+        console.error(
+          "Unauthorized: Token may have expired or is invalid.",
+          err
+        );
+      } else {
+        console.error("Error fetching terms:", err);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
+  // const fetchMoreTerms = async (targetPage = page) => {              -----------[OLD CODE]----------
+  //   if (isLoading || !hasMore) return;
+
+  //   setIsLoading(true);
+  //   try {
+  //     const res = await axios.get(`${API_URL}/getLimitedTerms/${page * pageSize}/${pageSize}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${currentWebUser.token}`,
+  //         },
+  //       }
+  //     );
+  //     const newTerms = res.data;
+  //     console.log("20 TERMS ARE:", newTerms);
+
+  //     if (newTerms.length < pageSize) setHasMore(false);
+
+  //     setScrollTerms((prev) => [...prev, ...newTerms]);
+  //     setPage(targetPage + 1);
+  //   } catch (err) {
+  //     console.error("Error fetching terms:", err);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   useEffect(() => {
+    if (!currentWebUser?.token) return;
+
     setPage(0);
     setScrollTerms([]);
     setHasMore(true);
+
     fetchMoreTerms(0);
-    getAllTerms().then(setAllTerms);
-  }, [currentWebUser]);
+    getAllTerms().then((terms) => {
+      setAllTerms(terms);
+
+      if (terms.length > 0) {
+        setScrollTerms(terms.slice(0, 20)); 
+      }
+    });
+  }, [currentWebUser?.token]);
+
+  // useEffect(() => {                    -----------[OLD CODE]----------
+  //   setPage(0);
+  //   setScrollTerms([]);
+  //   setHasMore(true);
+  //   fetchMoreTerms(0);
+  //   getAllTerms().then(setAllTerms);
+  // }, [currentWebUser]);
 
   useEffect(() => {
     const container = glossaryBodyRef.current;
@@ -131,8 +200,6 @@ export default function ManageGlossary() {
         );
 
   const groupedTerms = displayedTerms.reduce((acc, term) => {
-    
-    
     if (!term.word) return acc;
     const firstLetter = term.word[0].toUpperCase();
     if (!acc[firstLetter]) acc[firstLetter] = [];
@@ -141,7 +208,6 @@ export default function ManageGlossary() {
   }, {});
 
   console.log("Grouped Terms:", groupedTerms);
-  
 
   //EXPORT TO CSV
   const exportGlossaryToCSV = (data, filename) => {
@@ -308,7 +374,7 @@ export default function ManageGlossary() {
         setHasMore(true);
         setPage(0);
         setTimeout(() => {
-          fetchMoreTerms(0); 
+          fetchMoreTerms(0);
         }, 0);
       })
       .catch((error) => {
@@ -426,32 +492,28 @@ export default function ManageGlossary() {
           </div>
         </div>
 
-{
-    loadingTerms ? (
-        <div className="loading-overlay-accounts !mt-10">
+        {loadingTerms ? (
+          <div className="loading-overlay-accounts !mt-10">
             <div className="spinner"></div>
             <p>Fetching data...</p>
-        </div>
-    ) : (
-        searchTerm === "" && displayedTerms.length === 0 ? (
-            <p className="text-gray-400 italic">No terms to show.</p>
+          </div>
+        ) : searchTerm === "" && displayedTerms.length === 0 ? (
+          <p className="text-gray-400 italic">No terms to show.</p>
         ) : (
-            letters.map((letter) =>
-                groupedTerms[letter] ? (
-                    <GlossaryLetterSection
-                        key={letter}
-                        letter={letter}
-                        terms={groupedTerms[letter]}
-                        activeTermWord={activeTermWord}
-                        onEdit={handlesEdit}
-                        onToggleDropdown={handleDropdown}
-                        termRefs={termRefs}
-                    />
-                ) : null
-            )
-        )
-    )
-}
+          letters.map((letter) =>
+            groupedTerms[letter] ? (
+              <GlossaryLetterSection
+                key={letter}
+                letter={letter}
+                terms={groupedTerms[letter]}
+                activeTermWord={activeTermWord}
+                onEdit={handlesEdit}
+                onToggleDropdown={handleDropdown}
+                termRefs={termRefs}
+              />
+            ) : null
+          )
+        )}
 
         {showEditModal && selectedTerm && (
           <EditGlossary
