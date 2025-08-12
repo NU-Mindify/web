@@ -95,6 +95,12 @@ export default function Login() {
         setShowValidationModal(true);
         return;
       }
+      
+      if (verifyData.is_deleted == true) {
+        setValidationMessage("Your Account has been Archived.");
+        setShowValidationModal(true);
+        return;
+      }
 
       if (verifyData.isApproved !== true) {
         setValidationMessage("Your Account is awaiting Admin approval.");
