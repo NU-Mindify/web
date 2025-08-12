@@ -186,13 +186,19 @@ export default function SignUp() {
           message = "First name is required.";
         } else if (value.trim().length < 2) {
           message = "First name must be at least 2 characters.";
+        } else if (!/^[\p{L} \p{M}'-]+$/u.test(value.trim())) {
+          message =
+            "First name can only contain letters, spaces, apostrophes, and hyphens.";
         }
         break;
       case "lastName":
         if (!value.trim()) {
           message = "Last name is required.";
-        } else if (value.trim().length < 2) {
-          message = "Last name must be at least 2 characters.";
+        } else if (value.trim().length < 1) {
+          message = "Last name must be at least 1 character.";
+        } else if (!/^[\p{L} \p{M}'-]+$/u.test(value.trim())) {
+          message =
+            "Last name can only contain letters, spaces, apostrophes, and hyphens.";
         }
         break;
       case "branch":
@@ -480,7 +486,10 @@ export default function SignUp() {
               />
               <span>
                 I accept and acknowledge the{" "}
-                <span onClick={() => setShowTermsModal(true)} className="terms-and-cond cursor-pointer">
+                <span
+                  onClick={() => setShowTermsModal(true)}
+                  className="terms-and-cond cursor-pointer"
+                >
                   Terms and Conditions
                 </span>
               </span>

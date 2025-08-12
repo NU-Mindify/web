@@ -100,7 +100,7 @@ export default function Sidebar() {
           "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
         setSelected("login");
         setActive(false);
-        navigate("/");
+        navigate("/login");
       })
       .catch((error) => {
         console.log(error);

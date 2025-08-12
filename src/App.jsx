@@ -139,7 +139,7 @@ function App() {
                   element={<TermsAndConditions />}
                 />
                 <Route path="/signup" element={<SignUp />} />
-                <Route path="*" element={<Navigate to="/" />} />
+                <Route path="*" element={<Navigate to="/login" />} />
               </Routes>
             ) : !isSplash ? (
               <div className="main-container">

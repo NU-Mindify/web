@@ -7,7 +7,7 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   sendEmailVerification,
-  signOut
+  signOut,
 } from "firebase/auth";
 import { API_URL, branches } from "../../Constants";
 import pattern from "../../assets/forAll/pattern.svg";
@@ -74,6 +74,7 @@ export default function Login() {
         setShowValidationModal(true);
         return;
       }
+
       if (
         !email.endsWith(matchedBranch.extension) &&
         !email.endsWith(allowedExceptionDomain)
@@ -86,9 +87,14 @@ export default function Login() {
         return;
       }
 
-      // 🔽 Move API call here BEFORE checking isApproved
       const response = await axios.get(`${API_URL}/login/${email}`);
       const verifyData = response.data;
+
+      if (!verifyData) {
+        setValidationMessage(`Account not found at NU ${branch.toUpperCase()}`);
+        setShowValidationModal(true);
+        return;
+      }
 
       if (verifyData.isApproved !== true) {
         setValidationMessage("Your Account is awaiting Admin approval.");
@@ -96,15 +102,17 @@ export default function Login() {
         return;
       }
 
-      // Proceed with Firebase login
       await signInWithEmailAndPassword(firebaseAuth, email, password);
       const user = firebaseAuth.currentUser;
       await user.reload();
-      if (user.emailVerified === false) {
-        // alert("Your Account email is not verified! Please check your email for the verification link. (verification link re-sent)")
-        // signOut(firebaseAuth); [[comment for now para maka login si super admin kasi di pa valid email nya]]
-        // signOut(firebaseAuth)
-        // sendEmailVerification(user)
+
+      if (!user.emailVerified) {
+        // alert(
+        //   "Your Account email is not verified! Please check your email for the verification link. (verification link re-sent)"
+        // );
+        //       signOut(firebaseAuth);             [[comment for now para maka login si super admin kasi di pa valid email nya]]
+        //       signOut(firebaseAuth)
+        //       sendEmailVerification(user)
         return;
       }
 
@@ -125,40 +133,36 @@ export default function Login() {
       }
     } catch (error) {
       let message;
-      console.log(error);
 
-      switch (error.code) {
-        case "auth/invalid-email":
-          message = "Invalid email address format.";
-          break;
-        case "auth/user-disabled":
-          message = "This account has been disabled.";
-          break;
-        case "auth/user-not-found":
-          message = "No account found with this email.";
-          break;
-        case "auth/invalid-credential":
-          message = "Invalid email or password.";
-          break;
-        case "auth/email-already-in-use":
-          message = "Email is already associated with another account.";
-          break;
-        case "auth/weak-password":
-          message = "Password should be at least 6 characters.";
-          break;
-        default:
-          message = "An unexpected error occurred. Please try again.";
-      }
-
-      try {
-        await axios.post(`${API_URL}/addLogs`, {
-          name: `--`,
-          branch: "--",
-          action: `Sign in attempt`,
-          description: `Someone tried to sign in with ${email}. Error: ${message}`,
-        });
-      } catch (error) {
-        console.error(error);
+      if (error.response) {
+        // Axios API error
+        message = error.response.data?.message || "Account not found.";
+      } else if (error.code) {
+        // Firebase Auth error
+        switch (error.code) {
+          case "auth/invalid-email":
+            message = "Invalid email address format.";
+            break;
+          case "auth/user-disabled":
+            message = "This account has been disabled.";
+            break;
+          case "auth/user-not-found":
+            message = "No account found with this email.";
+            break;
+          case "auth/invalid-credential":
+            message = "Invalid email or password.";
+            break;
+          case "auth/email-already-in-use":
+            message = "Email is already associated with another account.";
+            break;
+          case "auth/weak-password":
+            message = "Password should be at least 6 characters.";
+            break;
+          default:
+            message = "An unexpected authentication error occurred.";
+        }
+      } else {
+        message = "An unexpected error occurred. Please try again.";
       }
 
       setValidationMessage(message);
@@ -308,7 +312,7 @@ export default function Login() {
               >
                 {isLoading ? "Signing you in..." : "Sign In"}
               </button>
-             
+
               <div className="mt-5 text-center">
                 <span className="text-black text-sm">
                   Don’t have an account yet?{" "}
@@ -320,7 +324,6 @@ export default function Login() {
                   </button>
                 </span>
               </div>
-
             </div>
           </div>
         </div>

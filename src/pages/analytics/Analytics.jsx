@@ -487,7 +487,7 @@ export default function Analytics() {
               )}
             </div>
 
-            <ExportDropdownPng
+            {/* <ExportDropdownPng          [[COMMENTED FOR NOW AS I AM STIL FIGURING OUT HOW TO EXPORT THIS WHOLE PAGE TO PDF -j]]
               onExport={(format) => {
                 if (format === "csv") {
                   exportAttemptsAccountsCSV(
@@ -498,7 +498,7 @@ export default function Analytics() {
                   );
                 }
               }}
-            />
+            /> */}
           </div>
         </div>
 
