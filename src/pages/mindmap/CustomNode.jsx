@@ -11,11 +11,13 @@ const CustomNode = ({ data }) => {
   };
 
   return (
-    <button className="custom-node" onClick={handleClick} >
+    <button className="custom-node " onClick={handleClick}>
       <Handle type="target" position={Position.Top} />
       <div className="custom-node-content">
         <strong>{data.label}</strong>
-        <div className="text-[6px]">{data.description}</div>
+        <div className="text-[8px]" style={{ textShadow: `0px 0px 12px ${data.color || "black"}` }}>
+          {data.description}
+        </div>
       </div>
       <Handle type="source" position={Position.Bottom} />
     </button>
