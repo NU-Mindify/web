@@ -1,5 +1,5 @@
 import "./index.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/sidebar/Sidebar";
 import { ActiveContext } from "./contexts/Contexts";
@@ -15,7 +15,11 @@ import AccountManagement from "./pages/accounts/AccountManagement";
 import Login from "./pages/login/Login";
 import EditProfile from "./pages/profile/EditProfile";
 import EditGlossary from "./pages/glossary/EditGlossary";
-import { onAuthStateChanged, sendEmailVerification, signOut } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  sendEmailVerification,
+  signOut,
+} from "firebase/auth";
 import { firebaseAuth } from "./Firebase";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AddQuestion from "./pages/questions/AddQuestion";
@@ -29,7 +33,6 @@ import SignUp from "./pages/signUp/SignUp";
 import ApproveAccount from "./pages/accounts/ApproveAccount";
 import Branches from "./pages/branches/Branches";
 import Landing from "./pages/landingpage/landing";
-
 
 const queryClient = new QueryClient();
 
@@ -53,20 +56,35 @@ function App() {
 
   const [isSplash, setIsSplash] = useState(true);
 
+  const hasShownVerify = useRef(false);
+
   useEffect(() => {
-    onAuthStateChanged(firebaseAuth, (user) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
       setIsSplash(true);
+
       if (user) {
-        console.log(user);
-        
-        if(!user.emailVerified){
-          verify(user)
-          console.log("user not verified");
-          
-          // signOut(firebaseAuth)
+        if (!user.emailVerified && !hasShownVerify.current) {
+          hasShownVerify.current = true; // prevent double alert
+
+          // Check if user metadata shows they just signed up
+          const creationTime = new Date(user.metadata.creationTime).getTime();
+          const lastSignInTime = new Date(
+            user.metadata.lastSignInTime
+          ).getTime();
+          const justSignedUp = creationTime === lastSignInTime;
+
+          if (justSignedUp) {
+            // First time — send email
+            await sendEmailVerification(user);
+          }
+
+          alert(
+            "Your Account email is awaiting verification, Please check your email for the verification link."
+          );
+          await signOut(firebaseAuth);
           return;
         }
-        // console.log(user);
+
         localStorage.setItem("userUID", user.uid);
         setCurrentWebUserUID(user.uid);
         console.log("current web user uid: " + currentWebUserUID);
@@ -77,14 +95,42 @@ function App() {
         setIsSplash(false);
       }
     });
+
+    return () => unsubscribe();
   }, []);
 
-  const verify = async (user) => {
-    await sendEmailVerification(user)
-    alert("Your Account email is not verified! Please check your email for the verification link.")
-    await signOut(firebaseAuth)
+  // useEffect(() => {                                               [[OLD CODE]]
+  //   onAuthStateChanged(firebaseAuth, (user) => {
+  //     setIsSplash(true);
+  //     if (user) {
+  //       console.log(user);
 
-  }
+  //       if(!user.emailVerified){
+  //         verify(user)
+  //         console.log("user not verified");
+
+  //         // signOut(firebaseAuth)
+  //         return;
+  //       }
+  //       // console.log(user);
+  //       localStorage.setItem("userUID", user.uid);
+  //       setCurrentWebUserUID(user.uid);
+  //       console.log("current web user uid: " + currentWebUserUID);
+  //       setIsSplash(false);
+  //     } else {
+  //       localStorage.removeItem("userUID");
+  //       setCurrentWebUserUID(null);
+  //       setIsSplash(false);
+  //     }
+  //   });
+  // }, []);
+
+  // const verify = async (user) => {
+  //   await sendEmailVerification(user)
+  //   alert("Your Account email is not verified! Please check your email for the verification link.")
+  //   await signOut(firebaseAuth)
+
+  // }
   // useEffect(() => {
   //   const currentPath = window.location.pathname
 
@@ -161,15 +207,24 @@ function App() {
                     <Route path="/students" element={<ManageStudents />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/account" element={<AccountManagement />} />
-                    <Route path="/account/approval" element={<ApproveAccount />} />
+                    <Route
+                      path="/account/approval"
+                      element={<ApproveAccount />}
+                    />
                     <Route path="/profile/edit/:id" element={<EditProfile />} />
                     <Route path="/glossary/edit" element={<EditGlossary />} />
                     <Route path="/addterm" element={<AddTerm />} />
                     <Route path="/logs" element={<ActivityLogs />} />
                     <Route path="/addaccount" element={<AddAccount />} />
-                    <Route path="/students/overall" element={<ShowMoreDetails />} />
+                    <Route
+                      path="/students/overall"
+                      element={<ShowMoreDetails />}
+                    />
                     <Route path="/branches" element={<Branches />} />
-                    <Route path="/termsAndCondition" element={<TermsAndConditions />} />
+                    <Route
+                      path="/termsAndCondition"
+                      element={<TermsAndConditions />}
+                    />
 
                     <Route path="*" element={<Navigate to="/" />} />
                   </Routes>
