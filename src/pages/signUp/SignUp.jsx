@@ -164,9 +164,9 @@ export default function SignUp() {
 
       // 5. Reset and show modal
       // setShowModal(true);
-      alert(
-        "Sign up successful! A verification email has been sent to your email"
-      );
+      // alert(
+      //   "Sign up successful! A verification email has been sent to your email"
+      // );
       handleReset();
     } catch (error) {
       console.error("Registration Error:", error.message);
@@ -212,7 +212,11 @@ export default function SignUp() {
         }
         break;
       case "employeenum":
-        if (!value.trim()) message = "Employee number is required.";
+        if (!value.trim()) {
+          message = "Employee number is required.";
+        } else if (!/^20\d{2}-\d{6}$/.test(value.trim())) {
+          message = "Must be in format 20XX-XXXXXX";
+        }
         break;
       case "position":
         if (!value) message = "Position is required.";
@@ -288,21 +292,35 @@ export default function SignUp() {
             </div>
 
             <div className="form-group">
-              {/* EMAIL */}
-              <p className="label">Email</p>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={newWebUser.email}
+              {/* CAMPUS */}
+              <p className="label">Campus</p>
+              <select
+                value={newWebUser.branch}
                 onChange={(e) => {
-                  setNewWebUser({ ...newWebUser, email: e.target.value });
-                  validateField("email", e.target.value);
+                  const branchId = e.target.value;
+                  const branch = branches.find((b) => b.id === branchId);
+                  const extension = branch?.extension || "";
+                  setNewWebUser((prev) => ({
+                    ...prev,
+                    branch: branchId,
+                    email: extension,
+                  }));
+                  validateField("branch", branchId);
                 }}
-                onBlur={(e) => validateField("email", e.target.value)}
-                className={errors.email ? "error-border" : ""}
-              />
-              {errors.email && (
-                <p className="error-message">{errors.email || "\u00A0"}</p>
+                onBlur={(e) => validateField("branch", e.target.value)}
+                className={`select-field ${
+                  errors.branch ? "error-border" : ""
+                }`}
+              >
+                <option value="">Select Campus</option>
+                {branches.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
+              {errors.branch && (
+                <p className="error-message">{errors.branch || "\u00A0"}</p>
               )}
             </div>
 
@@ -380,58 +398,48 @@ export default function SignUp() {
             </div>
 
             <div className="form-group">
+              {/* EMAIL */}
+              <p className="label">Email</p>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={newWebUser.email}
+                onChange={(e) => {
+                  setNewWebUser({ ...newWebUser, email: e.target.value });
+                  validateField("email", e.target.value);
+                }}
+                onBlur={(e) => validateField("email", e.target.value)}
+                className={errors.email ? "error-border" : ""}
+              />
+              {errors.email && (
+                <p className="error-message">{errors.email || "\u00A0"}</p>
+              )}
+            </div>
+
+            <div className="form-group">
               {/* EMPLOYEE# */}
               <p className="label">Employee Number</p>
               <input
-                type="number"
-                placeholder="Enter employee number"
+                type="text"
+                placeholder="20XX-XXXXXX"
                 value={newWebUser.employeenum}
                 onChange={(e) => {
-                  setNewWebUser({ ...newWebUser, employeenum: e.target.value });
-                  validateField("employeenum", e.target.value);
+                  const value = e.target.value;
+                  // Allow only digits and dash, auto-format if needed
+                  if (/^[0-9-]*$/.test(value)) {
+                    setNewWebUser({ ...newWebUser, employeenum: value });
+                    validateField("employeenum", value);
+                  }
                 }}
                 onBlur={(e) => validateField("employeenum", e.target.value)}
                 className={errors.employeenum ? "error-border" : ""}
-                min={1}
-                max={999999}
+                pattern="^20\d{2}-\d{6}$"
+                title="Format: 20XX-XXXXXX"
               />
               {errors.employeenum && (
                 <p className="error-message">
                   {errors.employeenum || "\u00A0"}
                 </p>
-              )}
-            </div>
-
-            <div className="form-group">
-              {/* CAMPUS */}
-              <p className="label">Campus</p>
-              <select
-                value={newWebUser.branch}
-                onChange={(e) => {
-                  const branchId = e.target.value;
-                  const branch = branches.find((b) => b.id === branchId);
-                  const extension = branch?.extension || "";
-                  setNewWebUser((prev) => ({
-                    ...prev,
-                    branch: branchId,
-                    email: extension,
-                  }));
-                  validateField("branch", branchId);
-                }}
-                onBlur={(e) => validateField("branch", e.target.value)}
-                className={`select-field ${
-                  errors.branch ? "error-border" : ""
-                }`}
-              >
-                <option value="">Select Campus</option>
-                {branches.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.name}
-                  </option>
-                ))}
-              </select>
-              {errors.branch && (
-                <p className="error-message">{errors.branch || "\u00A0"}</p>
               )}
             </div>
 
