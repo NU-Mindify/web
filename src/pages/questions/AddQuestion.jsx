@@ -63,6 +63,7 @@ function AddQuestion() {
     difficulty: "",
     level: 1,
     answer: "a",
+     timer: 0,
   });
 
   const [question, setQuestion] = useState(getInitialQuestionState);
@@ -74,8 +75,17 @@ function AddQuestion() {
       rationale,
       difficulty,
       level,
+      timer,
     } = question;
 
+    if (!timer || timer <= 0) {
+    setValidationMessage("Please enter a valid timer (greater than 0).");
+    setShowValidationModal(true);
+    return;
+  }
+
+
+  
     for (const choice of choices) {
       if (
         !choice.text ||
@@ -404,6 +414,24 @@ function AddQuestion() {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <h3>
+              Timer:<span>*</span>
+            </h3>
+            <input
+              className="w-60 h-12 border-b-2 border-black"
+              type="number"
+              min="0"
+              max="300"
+              placeholder="Enter time in seconds"
+              disabled={isFormDisabled}
+              value={question.timer || ""}
+              onChange={(e) =>
+                setQuestion({ ...question, timer: parseInt(e.target.value) })
+              }
+            />
           </div>
         </div>
 

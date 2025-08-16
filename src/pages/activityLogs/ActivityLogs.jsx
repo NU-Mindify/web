@@ -10,6 +10,8 @@ import logo from "../../assets/logo/logo.png";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import samplepic from "../../assets/students/sample-minji.svg";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function ActivityLogs() {
   const [allLogs, setAllLogs] = useState([]);
@@ -38,6 +40,8 @@ export default function ActivityLogs() {
     "November",
     "December",
   ];
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -53,9 +57,14 @@ export default function ActivityLogs() {
   }, []);
 
   const actions = Array.from(new Set(allLogs.map((log) => log.action)));
-  const actionOptions = [{ label: "All", value: "All" }, ...actions.map((a) => ({ label: a, value: a }))];
-  const monthOptions = [{ label: "All", value: "All" }, ...months.map((m) => ({ label: m, value: m }))];
-
+  const actionOptions = [
+    { label: "All", value: "All" },
+    ...actions.map((a) => ({ label: a, value: a })),
+  ];
+  const monthOptions = [
+    { label: "All", value: "All" },
+    ...months.map((m) => ({ label: m, value: m })),
+  ];
 
   useEffect(() => {
     let logs = allLogs;
@@ -73,9 +82,18 @@ export default function ActivityLogs() {
       logs = logs.filter((log) => log.action === selectedAction);
     }
 
-    setFilteredLogs(logs);
-  }, [selectedMonth, selectedAction, allLogs]);
+    if (startDate && endDate) {
+  logs = logs.filter((log) => {
+    const logDate = new Date(log.createdAt);
+    const inclusiveEndDate = new Date(endDate);
+    inclusiveEndDate.setHours(23, 59, 59, 999);
+    return logDate >= startDate && logDate <= inclusiveEndDate;
+  });
+}
 
+
+    setFilteredLogs(logs);
+  }, [selectedMonth, selectedAction, startDate, endDate, allLogs]);
 
   //EXPORT TO CSV
   const exportActLogsToCSV = (data, filename) => {
@@ -116,7 +134,6 @@ export default function ActivityLogs() {
     document.body.removeChild(link);
   };
 
-
   //convert logo to base64 para lumabas sa pdf
   const getBase64FromUrl = async (url) => {
     const response = await fetch(url);
@@ -129,7 +146,6 @@ export default function ActivityLogs() {
       reader.readAsDataURL(blob);
     });
   };
-
 
   //EXPORT TO PDF
   const exportActLogsToPDF = async (data, title) => {
@@ -171,10 +187,13 @@ export default function ActivityLogs() {
     });
 
     doc.save(
-      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${currentWebUser.lastName}.pdf`
+      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
+        currentWebUser.lastName
+      }.pdf`
     );
   };
 
+  
 
   return (
     <div className="logs-main-container">
@@ -182,7 +201,6 @@ export default function ActivityLogs() {
         <h1 className="logs-title">Activity Logs</h1>
 
         <div className="flex flex-wrap items-center justify-between w-full mb-7 mt-5 px-4">
-
           <div className="flex gap-6">
             <SelectFilter
               value={selectedAction}
@@ -203,9 +221,31 @@ export default function ActivityLogs() {
               getOptionValue={(opt) => opt.value}
               getOptionLabel={(opt) => opt.label}
             />
+
+            <div className="flex items-center gap-2">
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText="Start Date"
+                className="border px-3 py-2 rounded"
+              />
+              <span>to</span>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                placeholderText="End Date"
+                className="border px-3 py-2 rounded"
+              />
+            </div>
           </div>
 
-      
           <div className="mt-1">
             <ExportDropdown
               onExport={(format) => {
@@ -218,9 +258,8 @@ export default function ActivityLogs() {
           </div>
         </div>
 
-          <div className="logs-main-container h-screen overflow-y-auto">
-            <div className="users-main-container px-10">
-            
+        <div className="logs-main-container h-screen overflow-y-auto">
+          <div className="users-main-container px-10">
             <div className="user-table font-bold text-[20px] flex justify-between items-center pb-2 mb-2">
               <div className="w-3/11">Name</div>
               <div className="w-[22%]">Branch</div>
@@ -233,7 +272,6 @@ export default function ActivityLogs() {
             {filteredLogs.map((log, index) => (
               <div key={index} className="user-card">
                 <div className="user-table flex justify-between items-center">
-                  
                   <div className="user-name-cell w-3/12 flex items-center">
                     <img
                       src={log.useravatar || samplepic}
@@ -246,7 +284,8 @@ export default function ActivityLogs() {
                   </div>
 
                   <div className="w-[20%] text-[18px]">
-                    {branches.find((b) => b.id === log.branch)?.name || "Unknown Branch"}
+                    {branches.find((b) => b.id === log.branch)?.name ||
+                      "Unknown Branch"}
                   </div>
 
                   <div className="w-[20%] text-[18px]">{log.action}</div>
@@ -291,15 +330,12 @@ export default function ActivityLogs() {
                       </button>
                     )}
                   </div>
-
                 </div>
               </div>
             ))}
           </div>
+        </div>
       </div>
-
     </div>
-    </div>
-
   );
 }

@@ -43,7 +43,6 @@ export default function ManageGlossary() {
 
   const pageSize = 20;
 
-  // Toggle dropdown
   const handleDropdown = (word) => {
     setActiveTermWord(activeTermWord === word ? null : word);
   };
@@ -73,40 +72,110 @@ export default function ManageGlossary() {
   };
 
   // Fetch terms in batches for infinite scroll
+
   const fetchMoreTerms = async (targetPage = page) => {
     if (isLoading || !hasMore) return;
 
+    if (!currentWebUser?.token) {
+      console.error("No authentication token found.");
+      return;
+    }
+
     setIsLoading(true);
+
     try {
-      const res = await axios.get(`${API_URL}/getLimitedTerms/${page * pageSize}/${pageSize}`,
+      console.log(
+        `Fetching page: ${targetPage} (offset: ${
+          targetPage * pageSize
+        }) with token:`,
+        currentWebUser.token
+      );
+
+      const res = await axios.get(
+        `${API_URL}/getLimitedTerms/${targetPage * pageSize}/${pageSize}`,
         {
           headers: {
             Authorization: `Bearer ${currentWebUser.token}`,
           },
         }
       );
-      const newTerms = res.data;
-      console.log("20 TERMS ARE:", newTerms);
-      
 
-      if (newTerms.length < pageSize) setHasMore(false);
+      const newTerms = res.data;
+      console.log(
+        `Page ${targetPage} returned ${newTerms.length} terms`,
+        newTerms
+      );
+
+      if (newTerms.length < pageSize) {
+        setHasMore(false);
+      }
 
       setScrollTerms((prev) => [...prev, ...newTerms]);
-      setPage(targetPage + 1); // move to next page
+      setPage(targetPage + 1); // increment page for next call
     } catch (err) {
-      console.error("Error fetching terms:", err);
+      if (err.response?.status === 401) {
+        console.error(
+          "Unauthorized: Token may have expired or is invalid.",
+          err
+        );
+      } else {
+        console.error("Error fetching terms:", err);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
+  // const fetchMoreTerms = async (targetPage = page) => {              -----------[OLD CODE]----------
+  //   if (isLoading || !hasMore) return;
+
+  //   setIsLoading(true);
+  //   try {
+  //     const res = await axios.get(`${API_URL}/getLimitedTerms/${page * pageSize}/${pageSize}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${currentWebUser.token}`,
+  //         },
+  //       }
+  //     );
+  //     const newTerms = res.data;
+  //     console.log("20 TERMS ARE:", newTerms);
+
+  //     if (newTerms.length < pageSize) setHasMore(false);
+
+  //     setScrollTerms((prev) => [...prev, ...newTerms]);
+  //     setPage(targetPage + 1);
+  //   } catch (err) {
+  //     console.error("Error fetching terms:", err);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   useEffect(() => {
+    if (!currentWebUser?.token) return;
+
     setPage(0);
     setScrollTerms([]);
     setHasMore(true);
+
     fetchMoreTerms(0);
-    getAllTerms().then(setAllTerms);
-  }, [currentWebUser]);
+    getAllTerms().then((terms) => {
+      setAllTerms(terms);
+
+      if (terms.length > 0) {
+        setScrollTerms(terms.slice(0, 20)); 
+      }
+    });
+  }, [currentWebUser?.token]);
+
+  // useEffect(() => {                    -----------[OLD CODE]----------
+  //   setPage(0);
+  //   setScrollTerms([]);
+  //   setHasMore(true);
+  //   fetchMoreTerms(0);
+  //   getAllTerms().then(setAllTerms);
+  // }, [currentWebUser]);
 
   useEffect(() => {
     const container = glossaryBodyRef.current;
@@ -137,6 +206,8 @@ export default function ManageGlossary() {
     acc[firstLetter].push(term);
     return acc;
   }, {});
+
+  console.log("Grouped Terms:", groupedTerms);
 
   //EXPORT TO CSV
   const exportGlossaryToCSV = (data, filename) => {
@@ -303,7 +374,7 @@ export default function ManageGlossary() {
         setHasMore(true);
         setPage(0);
         setTimeout(() => {
-          fetchMoreTerms(0); // explicitly fetch first page
+          fetchMoreTerms(0);
         }, 0);
       })
       .catch((error) => {

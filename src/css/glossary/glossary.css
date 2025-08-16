@@ -63,7 +63,7 @@
 
 .header-details {
   /* Added min-w for the grid layout to ensure minimum width before scrolling */
-  @apply grid grid-cols-[1.5fr_3fr_1fr] text-2xl font-medium text-black h-[60px] lg:items-center border-b-2 border-black w-11/12 min-w-[700px]; /* Adjust min-w value as needed */
+  @apply grid grid-cols-[2fr_3fr_1fr] text-2xl font-medium text-black h-[60px] lg:items-center border-b-2 border-black w-11/12 min-w-[700px]; /* Adjust min-w value as needed */
 }
 
 .header-title {
@@ -130,4 +130,10 @@
 .active-per-word-container button img {
   @apply w-[40px] aspect-square;
   filter: invert(1) brightness(2) contrast(100);
+}
+
+
+
+.letter-card{
+  @apply w-full bg-green-500 overflow-hidden;
 }
