@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { use, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import search from "../../assets/search/search.svg";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -56,6 +56,7 @@ export default function ManageQuestion() {
   const { subSelected, setSubSelected } = useContext(ActiveContext);
 
   const [totalQuestion, setTotalQuestion] = useState([]);
+  const [totalDeletedQuestion, setTotalDeletedQuestion] = useState([]);
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
   const [questionToDeleteId, setQuestionToDeleteId] = useState(null);
   const [showRestoreConfirmModal, setShowRestoreConfirmModal] = useState(false);
@@ -185,13 +186,24 @@ export default function ManageQuestion() {
 
   useEffect(() => {
     getTotalQuestion();
+    getTotalDeletedQuestion();
   }, []);
 
   const getTotalQuestion = async () => {
     try {
       const { data } = await axios.get(`${API_URL}/getTotalQuestions`);
       setTotalQuestion(data);
-      console.log(data);
+      console.log("total quest", data);
+    } catch (error) {
+      console.error("Error fetching total questions:", error);
+    }
+  };
+
+  const getTotalDeletedQuestion = async () => {
+    try {
+      const { data } = await axios.get(`${API_URL}/getTotalDeletedQuestions`);
+      setTotalDeletedQuestion(data);
+      console.log("total deleted quest", data);
     } catch (error) {
       console.error("Error fetching total questions:", error);
     }
@@ -221,13 +233,15 @@ export default function ManageQuestion() {
   const getData = async () => {
     try {
       const { data } = await axios.get(
-        `${API_URL}/getQuestions?${category ? `category=${category}` : ""}`,
+        `${API_URL}/getQuestionsWeb?${category ? `category=${category}` : ""}`,
         {
           headers: {
             Authorization: `Bearer ${currentWebUser.token}`,
           },
         }
       );
+      console.log("category questions", data);
+      
       return data;
     } catch (error) {
       console.error(error);
@@ -419,7 +433,9 @@ export default function ManageQuestion() {
 
               <div className="w-1/3 h-full mr-5">
                 <p className="question-count text-right">
-                  Total Questions: {questions.length}
+                  Total Questions: 
+                  {showArchived ? totalDeletedQuestion.find((cat) => cat._id === subSelected)?.count || 0
+                  : totalQuestion.find((cat) => cat._id === subSelected)?.count || 0}
                 </p>
               </div>
             </div>
