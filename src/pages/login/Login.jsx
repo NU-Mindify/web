@@ -95,7 +95,7 @@ export default function Login() {
         setShowValidationModal(true);
         return;
       }
-      
+
       if (verifyData.is_deleted == true) {
         setValidationMessage("Your Account has been Archived.");
         setShowValidationModal(true);
@@ -261,7 +261,11 @@ export default function Login() {
                   onChange={(e) => {
                     const value = e.target.value;
                     setEmail(value);
-                    setIsEmailValid(value.includes(".edu.ph"));
+
+                    // validate: must contain "@" and ".edu.ph"
+                    const isValid =
+                      value.includes("@") && value.includes(".edu.ph");
+                    setIsEmailValid(isValid);
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {

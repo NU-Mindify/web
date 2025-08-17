@@ -170,8 +170,43 @@ export default function SignUp() {
       handleReset();
     } catch (error) {
       console.error("Registration Error:", error.message);
-      setValidationMessage("Error: " + error.message);
-      setShowValidationModal(true);
+      if (error.code) {
+        switch (error.code) {
+          case "auth/invalid-email":
+            setValidationMessage("Error: Invalid email address format.");
+            setShowValidationModal(true);
+            break;
+          case "auth/user-disabled":
+            setValidationMessage("Error: This account has been disabled.");
+            setShowValidationModal(true);
+            break;
+          case "auth/user-not-found":
+            setValidationMessage("Error: No account found with this email.");
+            setShowValidationModal(true);
+            break;
+          case "auth/invalid-credential":
+            setValidationMessage("Error: Invalid email or password.");
+            setShowValidationModal(true);
+            break;
+          case "auth/email-already-in-use":
+            setValidationMessage(
+              "Error: Email is already associated with another account."
+            );
+            setShowValidationModal(true);
+            break;
+          case "auth/weak-password":
+            setValidationMessage(
+              "Error: Password should be at least 6 characters."
+            );
+            setShowValidationModal(true);
+            break;
+          default:
+            setValidationMessage(
+              "Error: An unexpected authentication error occured."
+            );
+            setShowValidationModal(true);
+        }
+      }
     } finally {
       setIsLoading(false);
     }
@@ -481,7 +516,7 @@ export default function SignUp() {
           </div>
 
           <div className="form-footer">
-            <label className="form-checkbox">
+            <div className="form-checkbox">
               <input
                 type="checkbox"
                 checked={acceptTermsAndCond}
@@ -495,18 +530,17 @@ export default function SignUp() {
               <span>
                 I accept and acknowledge the{" "}
                 <span
-                  onClick={() => setShowTermsModal(true)}
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent label/checkbox behavior
+                    setShowTermsModal(true);
+                  }}
                   className="terms-and-cond cursor-pointer"
                 >
                   Terms and Conditions
                 </span>
               </span>
-            </label>
-
-            {/* {termscondError && (
-                <p className="error-message">{termscondError}</p>
-              )} */}
-
+            </div>
+            
             <button
               className="register-button"
               onClick={handleRegister}
