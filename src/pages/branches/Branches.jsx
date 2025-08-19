@@ -14,6 +14,8 @@ import submit from "../../assets/branches/submitButton.svg";
 import reset from "../../assets/branches/resetButton.svg";
 
 export default function Branches() {
+
+  
   const [newBranch, setNewBranch] = useState({
     id: "",
     name: "",
@@ -33,7 +35,7 @@ export default function Branches() {
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
-  const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
+  const { setCurrentWebUser, currentWebUser } = useContext(UserLoggedInContext);
 
   const handleReset = () => {
     setNewBranch({
@@ -201,7 +203,6 @@ export default function Branches() {
                 setNewBranch({
                   ...newBranch,
                   id: idValue,
-                  extension: `@nu-${idValue}.edu.ph`,
                 });
               }}
             />
@@ -223,8 +224,11 @@ export default function Branches() {
             <label className="required-label">Email Extension</label>
             <input
               type="text"
-              value={`@nu-${newBranch.id}.edu.ph`}
-              readOnly
+              value={newBranch.extension}
+              onChange={(e) =>
+                setNewBranch({ ...newBranch, extension: e.target.value })
+              }
+              placeholder="Enter Email Extension"
             />
           </div>
         </div>
@@ -267,7 +271,7 @@ export default function Branches() {
             <div className="w-[42%]">Email Extension</div>
           </div>
 
-          <div className="campus-scroll-container max-h-[400px] overflow-y-auto pr-2 bg-white rounded-md">
+          <div className="campus-scroll-container max-h-[250px] overflow-y-auto pr-2 bg-white rounded-md">
             {branchList.map((branch, index) => (
               <div
                 key={index}
