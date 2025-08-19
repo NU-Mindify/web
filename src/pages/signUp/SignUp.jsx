@@ -124,6 +124,14 @@ export default function SignUp() {
       return;
     }
 
+    const branchData = branches.find((b) => b.id === branch);
+    const extension = branchData?.extension || "";
+    if (extension && !email.endsWith(extension)) {
+      setValidationMessage(`Email must match branch domain: ${extension}`);
+      setShowValidationModal(true);
+      return;
+    }
+
     const finalWebUser = {
       firstName,
       lastName,
@@ -242,8 +250,15 @@ export default function SignUp() {
       case "email":
         if (!value.trim()) {
           message = "Email is required.";
-        } else if (!/\S+@\S+\.\S+/.test(value)) {
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
           message = "Invalid email format.";
+        } else {
+          const branchData = branches.find((b) => b.id === newWebUser.branch);
+          const extension = branchData?.extension || "";
+
+          if (extension && !value.endsWith(extension)) {
+            message = `Email must match branch domain: ${extension}`;
+          }
         }
         break;
       case "employeenum":
@@ -540,7 +555,7 @@ export default function SignUp() {
                 </span>
               </span>
             </div>
-            
+
             <button
               className="register-button"
               onClick={handleRegister}
