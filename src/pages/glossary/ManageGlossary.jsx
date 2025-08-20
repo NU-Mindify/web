@@ -1,27 +1,25 @@
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import edit from "../../assets/glossary/edit.svg";
 import dropdown from "../../assets/glossary/dropdown.svg";
 import "../../css/glossary/glossary.css";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { API_URL } from "../../Constants";
-import EditGlossary from "./EditGlossary";
 import SearchBar from "../../components/searchbar/SearchBar";
 import searchIcon from "../../assets/students/search-01.svg";
-import download from "../../assets/leaderboard/file-export.svg";
 import Buttons from "../../components/buttons/Buttons";
-import { useContext } from "react";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import logo from "../../assets/logo/logo.png";
+import EditGlossary from "./EditGlossary";
 
 export default function ManageGlossary() {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const navigate = useNavigate();
 
-  const { currentWebUser = { firstName: "Admin", lastName: "" } } =
+  const { currentWebUser = { firstName: "Admin", lastName: "", token: "" } } =
     useContext(UserLoggedInContext) || {};
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,23 +27,35 @@ export default function ManageGlossary() {
   const [allTerms, setAllTerms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // For tracking which term's dropdown is open or which term is active
+  const [activeTermWord, setActiveTermWord] = useState(null);
+
   const termsPerPage = 20;
 
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedTerm, setSelectedTerm] = useState(null);
+  const [showArchived, setShowArchived] = useState(false);
 
   const getAllTerms = async () => {
     try {
       setLoadingTerms(true);
-      const response = await axios.get(`${API_URL}/getTerms`, {
+
+      const endpoint = showArchived ? "getDeletedTerms" : "getTerms";
+
+      const response = await axios.get(`${API_URL}/${endpoint}`, {
         headers: {
-          Authorization: `Bearer ${currentWebUser.token}`,
+          Authorization: `Bearer ${currentWebUser?.token || ""}`,
         },
       });
 
-      setAllTerms(response.data);
-      
-
+      if (response.data) {
+        setAllTerms(response.data);
+      } else {
+        setAllTerms([]); // fallback if response is empty
+      }
     } catch (error) {
       console.error("Error fetching terms:", error);
+      setAllTerms([]); // prevent stale state on error
     } finally {
       setLoadingTerms(false);
     }
@@ -55,41 +65,40 @@ export default function ManageGlossary() {
     if (currentWebUser?.token) {
       getAllTerms();
     }
-  }, [currentWebUser]);
+  }, [currentWebUser, showArchived]);
 
-
-const filteredTerms = !searchTerm
-  ? allTerms
-  : allTerms.filter((term) => {
-      if (!term.word) return false;
-      if (searchTerm.length === 1 && /^[A-Z]$/.test(searchTerm)) {
-        return term.word[0].toUpperCase() === searchTerm;
-      }
-      return term.word.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-
-
-
+  const filteredTerms = !searchTerm
+    ? allTerms
+    : allTerms.filter((term) => {
+        if (!term.word) return false;
+        if (searchTerm.length === 1 && /^[A-Z]$/.test(searchTerm)) {
+          return term.word[0].toUpperCase() === searchTerm;
+        }
+        return term.word.toLowerCase().includes(searchTerm.toLowerCase());
+      });
 
   const totalPages = Math.ceil(filteredTerms.length / termsPerPage) || 1;
   const indexOfLastTerm = currentPage * termsPerPage;
   const indexOfFirstTerm = indexOfLastTerm - termsPerPage;
   const currentTerms = filteredTerms.slice(indexOfFirstTerm, indexOfLastTerm);
 
-
+  // Group terms by first letter within current page
   const groupedTerms = letters.map((letter) => ({
     letter,
     terms: currentTerms.filter(
-      (term) =>
-        term.word && term.word[0].toUpperCase() === letter
+      (term) => term.word && term.word[0].toUpperCase() === letter
     ),
   }));
 
-  
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  const handlesEdit = (_id, word, meaning, tags) => {
+    setSelectedTerm({ _id, word, meaning, tags });
+    setShowEditModal(true);
   };
 
   const exportGlossaryToCSV = (data, filename) => {
@@ -119,61 +128,68 @@ const filteredTerms = !searchTerm
     document.body.removeChild(link);
   };
 
+  //convert logo to base64 for pdf
+  const getBase64FromUrl = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
 
-  //convert logo to base64 para lumabas sa pdf
-    const getBase64FromUrl = async (url) => {
-      const response = await fetch(url);
-      const blob = await response.blob();
-  
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-    };
-  
-    //EXPORT TO PDF
-    const exportGlossaryToPDF = async (data, title) => {
-      let logoBase64 = "";
-      try {
-        logoBase64 = await getBase64FromUrl(logo);
-      } catch (error) {
-        console.error("Error converting logo:", error);
-      }
-  
-      const now = new Date().toLocaleString();
-      const doc = new jsPDF();
-      doc.text(`${title}`, 14, 10);
-      doc.text(
-        `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
-        14,
-        18
-      );
-      doc.text(`Exported on: ${now}`, 14, 26);
-  
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const logoWidth = 30;
-      const logoHeight = 15;
-      const xPos = pageWidth - logoWidth - 10;
-      if (logoBase64) {
-        doc.addImage(logoBase64, "PNG", xPos, 10, logoWidth, logoHeight);
-      }
-  
-      const rows = data.map((term) => [term.word, term.meaning]);
-  
-      autoTable(doc, {
-        head: [["Term", "Definition"]],
-        body: rows,
-        startY: 30,
-      });
-  
-      doc.save(
-        `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
-          currentWebUser.lastName
-        }.pdf`
-      );
-    };
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  //EXPORT TO PDF
+  const exportGlossaryToPDF = async (data, title) => {
+    let logoBase64 = "";
+    try {
+      logoBase64 = await getBase64FromUrl(logo);
+    } catch (error) {
+      console.error("Error converting logo:", error);
+    }
+
+    const now = new Date().toLocaleString();
+    const doc = new jsPDF();
+    doc.text(`${title}`, 14, 10);
+    doc.text(
+      `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+      14,
+      18
+    );
+    doc.text(`Exported on: ${now}`, 14, 26);
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const logoWidth = 30;
+    const logoHeight = 15;
+    const xPos = pageWidth - logoWidth - 10;
+    if (logoBase64) {
+      doc.addImage(logoBase64, "PNG", xPos, 10, logoWidth, logoHeight);
+    }
+
+    const rows = data.map((term) => [term.word, term.meaning]);
+
+    autoTable(doc, {
+      head: [["Term", "Definition"]],
+      body: rows,
+      startY: 30,
+    });
+
+    doc.save(
+      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
+        currentWebUser.lastName
+      }.pdf`
+    );
+  };
+
+  const onToggleDropdown = (word) => {
+    if (activeTermWord === word) {
+      setActiveTermWord(null);
+    } else {
+      setActiveTermWord(word);
+    }
+  };
 
   return (
     <>
@@ -233,44 +249,119 @@ const filteredTerms = !searchTerm
       <div className="glossary-body">
         <div className="header-details-container">
           <div className="w-full mb-3">
-            <div className="flex bg-gray-100 p-1 rounded-xl w-[300px] mt-5 sticky top-0">
-              <button onClick={() => setSearchTerm("")}>All Terms</button>
-              <button>Archive</button>
+            <div className="flex bg-gray-100 p-1 rounded-xl w-[300px] ml-15 mt-5 sticky top-0">
+              <button
+                onClick={() => {
+                  setShowArchived(false);
+                  setCurrentPage(1); // reset page when switching to All Terms
+                }}
+                className={`all-archive-btn ${
+                  !showArchived ? "active" : ""
+                } w-1/2`}
+              >
+                All Terms
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowArchived(true);
+                  setCurrentPage(1); // reset page when switching to Archive
+                }}
+                className={`all-archive-btn ${
+                  showArchived ? "active" : ""
+                } w-1/2`}
+              >
+                Archive
+              </button>
             </div>
           </div>
 
           {/* Table headers */}
-          <div className="header-details !bg-red-400">
+          <div className="header-details">
             <div className="header-title">Terminology</div>
             <div className="header-title">Definition</div>
             <div className="header-title">Action</div>
           </div>
 
           {/* Terms list */}
-          <div className="!bg-blue-400 w-11/12 flex-grow overflow-auto">
-            {groupedTerms.some((g) => g.terms.length > 0) ? (
-              groupedTerms.map(
-                ({ letter, terms }) =>
-                  terms.length > 0 && (
-                    <div className="letter-card" key={letter}>
-                      <div className="flex justify-between border-y p-1">
-                        <h1 className="font-bold text-4xl">{letter}</h1>
-                      </div>
-                      {terms.map((t) => (
+          <div className="w-11/12 flex-grow overflow-auto">
+            {loadingTerms ? (
+              <p>Loading terms...</p>
+            ) : groupedTerms.some((g) => g.terms.length > 0) ? (
+              groupedTerms.map(({ letter, terms }) =>
+                terms.length > 0 ? (
+                  <div
+                    key={letter}
+                    className="flex flex-col justify-center items-center"
+                  >
+                    <h3 className="letter-heading w-11/12 text-6xl my-2">
+                      {letter}
+                    </h3>
+                    {terms.map((term) => (
+                      <div
+                        key={term._id}
+                        className={
+                          activeTermWord === term.word
+                            ? "active-per-word-container"
+                            : "per-word-container"
+                        }
+                      >
+                        <div className="word-container">{term.word}</div>
                         <div
-                          key={t._id}
-                          className="grid grid-cols-[2fr_3fr_1fr] mb-5"
+                          className={
+                            activeTermWord === term.word
+                              ? "active-meaning-container"
+                              : "meaning-container"
+                          }
                         >
-                          <div>{t.word}</div>
-                          <div>{t.meaning}</div>
-                          <button>Edit</button>
+                          {term.meaning}
                         </div>
-                      ))}
-                    </div>
-                  )
+
+                        <div className="action-container">
+                          <button
+                            type="button"
+                            className="editIcon"
+                            onClick={() =>
+                              handlesEdit(
+                                term._id,
+                                term.word,
+                                term.meaning,
+                                term.tags
+                              )
+                            }
+                          >
+                            <img src={edit} alt="edit icon" />
+                          </button>
+
+                          <button
+                            type="button"
+                            className={
+                              activeTermWord === term.word
+                                ? "active-dropdown"
+                                : "dropdown"
+                            }
+                            onClick={() => onToggleDropdown(term.word)}
+                          >
+                            <img src={dropdown} alt="dropdown icon" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : null
               )
             ) : (
-              <p className="p-4 text-gray-200">No terms found.</p>
+              <p>No terms found.</p>
+            )}
+
+            {showEditModal && selectedTerm && (
+              <EditGlossary
+                term={selectedTerm}
+                onClose={() => setShowEditModal(false)}
+                onTermUpdated={() => {
+                  getAllTerms().then(allTerms);
+                }}
+              />
             )}
           </div>
 
