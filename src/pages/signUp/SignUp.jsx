@@ -264,8 +264,8 @@ export default function SignUp() {
       case "employeenum":
         if (!value.trim()) {
           message = "Employee number is required.";
-        } else if (!/^20\d{2}-\d{6}$/.test(value.trim())) {
-          message = "Must be in format XX-XXXXXX";
+        } else if (!/\d{2}-\d{4}$/.test(value.trim())) {
+          message = "Must be in format XX-XXXX";
         }
         break;
       case "position":
@@ -473,18 +473,26 @@ export default function SignUp() {
                 type="text"
                 placeholder="XX-XXXX"
                 value={newWebUser.employeenum}
+                maxLength={7} 
                 onChange={(e) => {
-                  const value = e.target.value;
-                  // Allow only digits and dash, auto-format if needed
-                  if (/^[0-9-]*$/.test(value)) {
-                    setNewWebUser({ ...newWebUser, employeenum: value });
-                    validateField("employeenum", value);
+                  let value = e.target.value.replace(/[^0-9]/g, ""); 
+
+                  if (
+                    value.length === 2 &&
+                    !newWebUser.employeenum.includes("-")
+                  ) {
+                    value = value + "-";
+                  } else if (value.length > 2) {
+                    value = value.slice(0, 2) + "-" + value.slice(2, 6);
                   }
+
+                  setNewWebUser({ ...newWebUser, employeenum: value });
+                  validateField("employeenum", value);
                 }}
                 onBlur={(e) => validateField("employeenum", e.target.value)}
                 className={errors.employeenum ? "error-border" : ""}
-                pattern="^20\d{2}-\d{6}$"
-                title="Format: 20XX-XXXX"
+                pattern="^\d{2}-\d{4}$"
+                title="Format: XX-XXXX (e.g. 12-3456)"
               />
               {errors.employeenum && (
                 <p className="error-message">
