@@ -14,6 +14,7 @@ import industrial from "../../assets/questions/industrial.png";
 import psychological from "../../assets/questions/psychologicalBG.png";
 import back from "../../assets/questions/angle-left.svg";
 import { Plus } from "lucide-react";
+import EditQuestion from "./EditQuestion";
 
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
@@ -62,9 +63,14 @@ export default function ManageQuestion() {
   const [showRestoreConfirmModal, setShowRestoreConfirmModal] = useState(false);
   const [questionToRestoreId, setQuestionToRestoreId] = useState(null);
   const queryClient = useQueryClient();
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadedQuestions, setUploadedQuestions] = useState([]);
+  
+  const [editingQuestion, setEditingQuestion] = useState(null);
+  const [originalQuestion, setOriginalQuestion] = useState(null);
+
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -320,9 +326,44 @@ export default function ManageQuestion() {
     setSubSelected("");
   }
 
+  
+const handleSave = async () => {
+  if (!editingQuestion?._id) {
+    alert("No question selected");
+    return;
+  }
+
+  try {
+    const payload = {
+      question_id: editingQuestion._id,
+      updates: {
+        question: editingQuestion.question,
+        choices: editingQuestion.choices,
+        rationale: editingQuestion.rationale,
+        category: editingQuestion.category,
+        level: editingQuestion.level,
+        answer: editingQuestion.answer,
+        difficulty: editingQuestion.difficulty,
+        timer: editingQuestion.timer ?? null,
+      },
+    };
+
+    await axios.patch(`${API_URL}/updateQuestion`, payload, {
+      headers: { Authorization: `Bearer ${currentWebUser.token}` },
+    });
+
+    setShowEditModal(false);
+    
+    queryClient.invalidateQueries(["questionsList", category]);
+  } catch (err) {
+    console.error("Failed to update question:", err.response?.data || err.message);
+    alert("Failed to update question. Please try again.");
+  }
+};
+
+
   function Category_Choices({ text, id, onClick, bgImage }) {
     return (
-      // eslint-disable-next-line jsx-a11y/click-events-have-key-events
       <div className="category-container" onClick={onClick} key={id}>
         <img src={bgImage} className="category-bg" alt="bgImages" />
         <h1 className="category-text">{text}</h1>
@@ -388,8 +429,9 @@ export default function ManageQuestion() {
               </button>
               <button
                 onClick={() => {
-                  setQuestionToRestoreId(data._id);
-                  setShowRestoreConfirmModal(true);
+                  setEditingQuestion(data);  
+                  setOriginalQuestion(JSON.parse(JSON.stringify(data))); 
+                  setShowEditModal(true);
                 }}
                 className="btn-action"
               >
@@ -398,7 +440,18 @@ export default function ManageQuestion() {
             </div>
           ) : (
             <div className="question-actions">
-              <button className="btn-action">Edit</button>
+              <button
+                className="btn-action"
+                onClick={() => {
+                  setEditingQuestion(JSON.parse(JSON.stringify(data))); 
+                  setOriginalQuestion(JSON.parse(JSON.stringify(data))); 
+                  setShowEditModal(true);  
+                }}
+              >
+                Edit
+              </button>
+
+
               <button
                 onClick={() => {
                   setQuestionToDeleteId(data._id);
@@ -649,6 +702,37 @@ export default function ManageQuestion() {
           </div>
         </div>
       )}
+
+      <EditQuestion
+        question={editingQuestion}
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onSave={handleSave}
+        onChange={(field, value, idx) => {
+          setEditingQuestion(prev => {
+            if (!prev) return prev;
+            const updated = { ...prev };
+
+            if (field === "choiceText") {
+              const choices = [...updated.choices];
+              choices[idx] = { ...choices[idx], text: value };
+              updated.choices = choices;
+            } else if (field === "choiceRationale") {
+              const choices = [...updated.choices];
+              choices[idx] = { ...choices[idx], rationale: value };
+              updated.choices = choices;
+            } else {
+              updated[field] = value;
+            }
+            return updated;
+          });
+        }}
+        hasChanges={
+          originalQuestion &&
+          JSON.stringify(originalQuestion) !== JSON.stringify(editingQuestion)
+        }
+      />
+
     </div>
   );
 }
