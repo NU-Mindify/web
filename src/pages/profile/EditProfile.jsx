@@ -24,11 +24,13 @@ export default function EditProfile() {
     location.state?.webUser || null
   );
   const [showModal, setShowModal] = useState(false);
+  const [showSaveConfirmModal, setShowSaveConfirmModal] = useState(false);
 
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
 
   const [isUploading, setIsUploading] = useState(false);
+  const [profilePicChanged, setProfilePicChanged] = useState(false);
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
@@ -129,8 +131,18 @@ export default function EditProfile() {
       useravatar: `${data.publicUrl}?t=${timestamp}`,
     });
 
+    setProfilePicChanged(true);
     setIsUploading(false);
   };
+
+  const handleSaveClick = () => {
+  if (profilePicChanged) {
+    setShowSaveConfirmModal(true); 
+  } else {
+    handleUpdateProfile(); 
+  }
+};
+
 
   return (
     <>
@@ -277,7 +289,7 @@ export default function EditProfile() {
                   ? "edit-btn-properties-disabled"
                   : "edit-btn-properties"
               }`}
-              onClick={handleUpdateProfile}
+              onClick={handleSaveClick}
               disabled={!hasChanges() || !editWebUser.useravatar}
             >
               <img src={saveprofile}  alt="saveprofile-btn-icon"/>
@@ -290,12 +302,42 @@ export default function EditProfile() {
             </button>
           </div>
         </div>
+
         {showValidationModal && (
           <ValidationModal
             message={validationMessage}
             onClose={() => setShowValidationModal(false)}
           />
         )}
+
+        {showSaveConfirmModal && (
+          <div className="modal-overlay confirm-delete-popup">
+            <div className="confirm-dialog">
+              <div className="flex justify-center">
+                <h2>Profile Picture Changed</h2>
+              </div>
+              <p>Would you like to save changes?</p>
+              <div className="popup-buttons">
+                <button
+                  className="btn btn-success"
+                  onClick={() => {
+                    setShowSaveConfirmModal(false);
+                    handleUpdateProfile();
+                  }}
+                >
+                  Yes
+                </button>
+                <button
+                  className="btn-cancel"
+                  onClick={() => setShowSaveConfirmModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </>
   );

@@ -16,6 +16,9 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
   const [editedMeaning, setEditedMeaning] = useState(meaning);
   const [editTags, setEditTags] = useState(tags);
   const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showRequiredPopup, setShowRequiredPopup] = useState(false);
+
 
   const hasChanges = () => {
     const originalTags = tags.map((tag) => tag.trim()).sort();
@@ -62,6 +65,11 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
   };
 
   const handleSave = async () => {
+    if (!editedWord.trim() || !editedMeaning.trim()) {
+      setShowRequiredPopup(true);
+      return;
+    }
+
     try {
       await axios.put(`${API_URL}/updateTerm/${_id}`, {
         term_id: _id,
@@ -180,6 +188,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
               />
             </div>
           </div>
+          
 
           <div className="buttons">
             {hasChanges() ? (
@@ -201,6 +210,26 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
               onClick={confirmDelete}
               addedClassName="btn btn-error"
             />
+
+            {showRequiredPopup && (
+            <div className="modal-overlay confirm-delete-popup">
+              <div className="confirm-dialog">
+                <div className="flex justify-center">
+                  <h2>Missing Fields</h2>
+                </div>
+                <p>Please fill in required fields.</p>
+                <div className="popup-buttons">
+                  <button
+                    className="btn btn-success"
+                    onClick={() => setShowRequiredPopup(false)}
+                  >
+                    OK
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
 
             {showDeleteConfirm && (
               <div className="modal-overlay confirm-delete-popup">

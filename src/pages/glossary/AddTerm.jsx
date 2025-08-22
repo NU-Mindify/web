@@ -72,8 +72,12 @@ export default function AddTerm() {
 
   const handleCreateNewTerm = () => {
     for (const term of newTerm) {
-      if (!term.word.trim() || !term.meaning.trim() || !term.tags) {
-        setValidationMessage("Please fill out all required fields.");
+      if (
+        !term.word.trim() ||
+        !term.meaning.trim() ||
+        (Array.isArray(term.tags) ? term.tags.length === 0 : !term.tags.trim())
+      ) {
+        setValidationMessage("Please fill in all required fields.");
         setShowValidationModal(true);
         return;
       }
