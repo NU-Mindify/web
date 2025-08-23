@@ -26,11 +26,13 @@ export default function EditProfile() {
     location.state?.webUser || null
   );
   const [showModal, setShowModal] = useState(false);
+  const [showSaveConfirmModal, setShowSaveConfirmModal] = useState(false);
 
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
 
   const [isUploading, setIsUploading] = useState(false);
+  const [profilePicChanged, setProfilePicChanged] = useState(false);
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
@@ -309,6 +311,7 @@ export default function EditProfile() {
             </button>
           </div>
         </div>
+
         {showValidationModal && (
           <ValidationModal
             message={validationMessage}

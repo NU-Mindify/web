@@ -1,0 +1,101 @@
+@reference "tailwindcss";
+@plugin "daisyui";
+
+.modal-overlay {
+  @apply fixed inset-0 flex justify-center items-center z-[1000];
+}
+
+.edit-question-container {
+  @apply bg-white rounded-xl p-6 w-8/12 shadow-[0_10px_25px_rgba(0,0,0,0.3)];
+  max-height: 90vh; 
+  overflow-y: auto; 
+}
+
+
+.edit-header {
+  @apply flex justify-between items-center;
+}
+
+.back-btn {
+  @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer;
+}
+
+.edit-title {
+  @apply font-[Poppins] text-[#FFC916] font-bold text-[25px]
+  md:text-[40px];
+}
+
+.edit-content {
+  @apply flex flex-col gap-5 my-7 font-[Poppins];
+}
+
+.edit-content h1 {
+  @apply block font-bold text-black mb-1;
+}
+
+.edit-input {
+  border: 2px solid black;
+  @apply w-full h-[60px] text-[#000000] my-3;
+}
+
+.edit-textarea {
+  @apply w-full h-[250px] text-[#000000] max-h-[250px] min-h-[100px];
+}
+
+.edit-input,
+.edit-textarea {
+  @apply w-full rounded-md border border-gray-300 p-3 text-black;
+}
+
+.buttons {
+  @apply flex justify-center items-center gap-6;
+}
+
+.save-btn {
+  @apply w-[150px] h-[50px] min-h-[50px] cursor-pointer mt-3;
+}
+
+.save-btn:hover {
+  filter: brightness(1.1);
+}
+
+.delete-btn {
+  @apply w-[150px] h-[50px] min-h-[50px] min-w-[100px] cursor-pointer mt-3;
+}
+
+.delete-btn:hover {
+  filter: brightness(1.6);
+}
+
+.confirm-delete-popup {
+  @apply fixed inset-0 z-50 flex items-center justify-center;
+}
+
+.confirm-dialog {
+  @apply bg-white rounded-2xl p-6 w-full max-w-md shadow-lg text-center;
+}
+
+.confirm-dialog h2 {
+  @apply font-[Poppins] text-xl font-semibold mb-4 text-[#FFC916];
+}
+
+.confirm-dialog p {
+  @apply mb-6;
+}
+
+.popup-buttons {
+  @apply flex justify-center gap-4;
+}
+
+.btn-delete {
+  @apply text-white font-bold px-6 py-3 rounded-md text-sm shadow transition duration-200;
+  background-color: #ff5e7d;
+}
+
+.btn-delete:hover {
+  background-color: #ee5576;
+}
+
+.btn-cancel {
+  @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold px-6 py-3 rounded-md text-sm shadow transition duration-200;
+}
