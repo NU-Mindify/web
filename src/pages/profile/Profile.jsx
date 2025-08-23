@@ -135,7 +135,7 @@ export default function Profile() {
     const complexityRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/;
     if (!complexityRegex.test(newPassword)) {
       setValidationMessage(
-        "Password must include an uppercase letter, a number, and a special character."
+        "Password must be at least 6 characters long and include at least one uppercase letter, one number, and one special character."
       );
       setShowValidationModal(true);
       return;
