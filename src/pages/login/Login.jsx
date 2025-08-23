@@ -8,6 +8,7 @@ import {
   sendPasswordResetEmail,
   sendEmailVerification,
   signOut,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { API_URL, branches } from "../../Constants";
 import pattern from "../../assets/forAll/pattern.svg";
@@ -187,15 +188,36 @@ export default function Login() {
 
     setResetLoading(true);
     try {
+      const signInMethods = await fetchSignInMethodsForEmail(
+        firebaseAuth,
+        resetEmail
+      );
+      if (signInMethods.length === 0) {
+        setValidationMessage("Account not registered.");
+        setShowValidationModal(true);
+        setResetLoading(false);
+        return;
+      }
       await sendPasswordResetEmail(firebaseAuth, resetEmail);
       setValidationMessage("Password reset email sent! Check your inbox.");
       setShowValidationModal(true);
       setShowResetModal(false);
       setResetEmail("");
     } catch (error) {
-      setValidationMessage(
-        "Error sending password reset email. Please try again."
-      );
+      let errorMessage =
+        "Error sending password reset email. Please try again.";
+
+      if (error.code === "auth/invalid-email") {
+        errorMessage = "Invalid email address format.";
+      } else if (error.code === "auth/user-not-found") {
+        errorMessage = "Email not registered.";
+      } else if (error.code === "auth/too-many-requests") {
+        errorMessage = "Too many requests. Please try again later.";
+      } else if (error.code === "auth/network-request-failed") {
+        errorMessage = "Network error. Please check your connection.";
+      }
+
+      setValidationMessage(errorMessage);
       setShowValidationModal(true);
     } finally {
       setResetLoading(false);
@@ -325,7 +347,7 @@ export default function Login() {
 
               <div className="mt-5 text-center">
                 <span className="text-black text-sm">
-                  Don’t have an account yet?{" "}
+                  Don't have an account yet?{" "}
                   <button
                     className="text-[#35408E] underline font-bold hover:text-[#FFA500] transition cursor-pointer"
                     onClick={() => navigate("/signup")}
@@ -360,7 +382,7 @@ export default function Login() {
               </button>
               <button
                 onClick={handlePasswordReset}
-                className="px-4 py-2 btn bg-[#35408E] hover:bg-blue-700"
+                className="px-4 py-2 btn bg-[#FFC300] "
                 disabled={resetLoading}
               >
                 {resetLoading ? "Sending..." : "Send Email"}

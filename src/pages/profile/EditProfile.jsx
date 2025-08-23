@@ -7,9 +7,11 @@ import { UserLoggedInContext } from "../../contexts/Contexts";
 
 import { supabase } from "../../supabase";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+import OkCancelModal from "../../components/OkCancelModal/OkCancelModal.jsx";
 import Buttons from "../../components/buttons/Buttons.jsx";
 import saveprofile from "../../assets/profile/saveprofileButton.svg";
 import cancel from "../../assets/profile/cancelButton.svg";
+import { set } from "date-fns";
 
 export default function EditProfile() {
   const { currentWebUser, setCurrentWebUser, setCurrentWebUserUID } =
@@ -32,6 +34,10 @@ export default function EditProfile() {
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
+  const [OkCancelModalMessage, setOkCancelModalMessage] = useState("");
+  const [showOkCancelModal, setShowOkCancelModal] = useState(false);
+  const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [discardModalMessage, setDiscardModalMessage] = useState("");
 
   useEffect(() => {
     if (location.state?.webUser) {
@@ -68,7 +74,6 @@ export default function EditProfile() {
       const updatedUser = await axios.get(
         `${API_URL}/getwebuser/${editWebUser.uid}`
       );
-
       setCurrentWebUser(updatedUser.data);
       setCurrentWebUserUID(updatedUser.data.uid);
       localStorage.setItem("userUID", updatedUser.data.uid);
@@ -83,8 +88,6 @@ export default function EditProfile() {
       setInitialWebUser(updatedUser.data);
       setEditWebUser(updatedUser.data);
 
-      setShowModal(true);
-      navigate("/profile");
     } catch (error) {
       console.error(error);
       setValidationMessage("Update Unsuccessful!");
@@ -93,7 +96,12 @@ export default function EditProfile() {
   };
 
   const handleCancelEdit = () => {
-    navigate("/profile");
+    if (hasChanges) {
+      setDiscardModalMessage("Changes made will not be saved. Continue?");
+      setShowDiscardModal(true);
+    } else {
+      navigate("/profile");
+    }
   };
 
   const handleFileUpload = async (e) => {
@@ -129,7 +137,15 @@ export default function EditProfile() {
       useravatar: `${data.publicUrl}?t=${timestamp}`,
     });
 
+    setValidationMessage("Image uploaded successfully");
+    setShowValidationModal(true);
+
     setIsUploading(false);
+  };
+
+  const handleSaveClick = () => {
+    setOkCancelModalMessage("Would you like to save changes?");
+    setShowOkCancelModal(true);
   };
 
   return (
@@ -270,23 +286,26 @@ export default function EditProfile() {
             </div>
           </div>
 
-          <div className="edit-btn-prof-settings">
+          <div className="flex justify-center gap-6 mt-6">
             <button
-              className={`${
+              className={`py-5 px-10 rounded-2xl text-2xl font-extrabold transition ${
                 !hasChanges() || !editWebUser.useravatar
-                  ? "edit-btn-properties-disabled"
-                  : "edit-btn-properties"
+                  ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                  : "bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
               }`}
-              onClick={handleUpdateProfile}
+              style={{ width: "330px" }}
+              onClick={handleSaveClick}
               disabled={!hasChanges() || !editWebUser.useravatar}
             >
-              <img src={saveprofile}  alt="saveprofile-btn-icon"/>
+              SAVE PROFILE
             </button>
+
             <button
-              className="edit-btn-properties mt-1"
+              className="bg-red-500 text-white hover:bg-red-600 py-5 px-10 rounded-2xl text-2xl font-extrabold transition cursor-pointer"
+              style={{ width: "330px" }}
               onClick={handleCancelEdit}
             >
-              <img src={cancel}  alt="cancel-btn-icon"/>
+              CANCEL
             </button>
           </div>
         </div>
@@ -294,6 +313,29 @@ export default function EditProfile() {
           <ValidationModal
             message={validationMessage}
             onClose={() => setShowValidationModal(false)}
+          />
+        )}
+
+        {showOkCancelModal && (
+          <OkCancelModal
+            message={OkCancelModalMessage}
+            onConfirm={async () => {
+              setShowOkCancelModal(false);
+              await handleUpdateProfile(); // <-- Update only if confirmed
+              navigate("/profile");
+            }}
+            onCancel={() => setShowOkCancelModal(false)}
+          />
+        )}
+
+        {showDiscardModal && (
+          <OkCancelModal
+            message={discardModalMessage}
+            onConfirm={() => {
+              setShowDiscardModal(false);
+              navigate("/profile");
+            }}
+            onCancel={() => setShowDiscardModal(false)}
           />
         )}
       </div>

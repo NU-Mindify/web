@@ -12,7 +12,7 @@ export default function ValidationModal({ message, onClose }) {
         <p className="text-black text-center font-[Poppins] mb-4">{message}</p>
         <button
           onClick={onClose}
-          className="px-4 py-2 btn bg-[#35408E] hover:bg-[#FFBF1A] !text-white font-[Poppins] w-full"
+          className="px-4 py-2 btn bg-[#FFBF1A] hover:bg-[#35408E] !text-white font-[Poppins] w-full"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               onClose(e);

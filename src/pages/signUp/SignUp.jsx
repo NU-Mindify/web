@@ -124,13 +124,32 @@ export default function SignUp() {
       return;
     }
 
+    //TO ALLOW STUDENT EMAILS FOR NOW
     const branchData = branches.find((b) => b.id === branch);
     const extension = branchData?.extension || "";
-    if (extension && !email.endsWith(extension)) {
-      setValidationMessage(`Email must match branch domain: ${extension}`);
+    const allowedStudentDomain = "@students.nu-moa.edu.ph";
+
+    if (
+      extension &&
+      !email.endsWith(extension) &&
+      !email.endsWith(allowedStudentDomain)
+    ) {
+      setValidationMessage(
+        `Email must match branch domain: ${extension} or student domain: ${allowedStudentDomain}`
+      );
       setShowValidationModal(true);
       return;
     }
+
+    // [[OLD CODE - ADD BACK IF TESTING IS DONE]]
+
+    // const branchData = branches.find((b) => b.id === branch);
+    // const extension = branchData?.extension || "";
+    // if (extension && !email.endsWith(extension)) {
+    //   setValidationMessage(`Email must match branch domain: ${extension}`);
+    //   setShowValidationModal(true);
+    //   return;
+    // }
 
     const finalWebUser = {
       firstName,
@@ -156,7 +175,7 @@ export default function SignUp() {
       const user = userCredential.user;
       const uidWebUser = { ...finalWebUser, uid: user.uid, password: password };
 
-      // 2. Send reset email
+      // 2. Send email verification
       await sendEmailVerification(user);
       console.log(uidWebUser);
 
@@ -255,9 +274,14 @@ export default function SignUp() {
         } else {
           const branchData = branches.find((b) => b.id === newWebUser.branch);
           const extension = branchData?.extension || "";
+          const allowedStudentDomain = "@students.nu-moa.edu.ph";
 
-          if (extension && !value.endsWith(extension)) {
-            message = `Email must match branch domain: ${extension}`;
+          if (
+            extension &&
+            !value.endsWith(extension) &&
+            !value.endsWith(allowedStudentDomain)
+          ) {
+            message = `Email must match branch domain: ${extension} or student domain: ${allowedStudentDomain}`;
           }
         }
         break;
@@ -473,9 +497,9 @@ export default function SignUp() {
                 type="text"
                 placeholder="XX-XXXX"
                 value={newWebUser.employeenum}
-                maxLength={7} 
+                maxLength={7}
                 onChange={(e) => {
-                  let value = e.target.value.replace(/[^0-9]/g, ""); 
+                  let value = e.target.value.replace(/[^0-9]/g, "");
 
                   if (
                     value.length === 2 &&

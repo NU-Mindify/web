@@ -41,8 +41,10 @@ export default function Profile() {
 
   const [showOldPasswordModal, setShowOldPasswordModal] = useState(false);
   const [showNewPasswordModal, setShowNewPasswordModal] = useState(false);
+
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const user = firebaseAuth.currentUser;
 
@@ -75,34 +77,88 @@ export default function Profile() {
   };
 
   const handlePasswordChange = () => {
+    setOldPassword("");
     setShowOldPasswordModal(true);
   };
 
   const handleOldPasswordSubmit = async () => {
+    if (!oldPassword) {
+      setValidationMessage("Please enter your current password.");
+      setShowValidationModal(true);
+      return;
+    }
+
+    if (oldPassword.length < 6) {
+      setValidationMessage("Password must be at least 6 characters long.");
+      setShowValidationModal(true);
+      return;
+    }
+
     const credential = EmailAuthProvider.credential(webUser.email, oldPassword);
+
     try {
       await reauthenticateWithCredential(user, credential);
+
       setShowOldPasswordModal(false);
-      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
       setShowNewPasswordModal(true);
     } catch (error) {
-      setShowOldPasswordModal(false);
+      console.error(error);
+
       setValidationMessage("Incorrect old password.");
-      setOldPassword("");
       setShowValidationModal(true);
     }
   };
 
   const handleNewPasswordSubmit = async () => {
+    if (!newPassword || !confirmPassword) {
+      setValidationMessage("Please fill out both fields.");
+      setShowValidationModal(true);
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setValidationMessage("Password must be at least 6 characters long.");
+      setShowValidationModal(true);
+      return;
+    }
+
+    if (newPassword === oldPassword) {
+      setValidationMessage(
+        "New password cannot be the same as your old password."
+      );
+      setShowValidationModal(true);
+      return;
+    }
+
+    const complexityRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/;
+    if (!complexityRegex.test(newPassword)) {
+      setValidationMessage(
+        "Password must include an uppercase letter, a number, and a special character."
+      );
+      setShowValidationModal(true);
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setValidationMessage("Passwords do not match.");
+      setShowValidationModal(true);
+      return;
+    }
+
     try {
       await updatePassword(user, newPassword);
       setShowNewPasswordModal(false);
       setNewPassword("");
+      setConfirmPassword("");
       setValidationMessage("Password successfully changed.");
       setShowValidationModal(true);
     } catch (error) {
+      console.error(error);
       setValidationMessage("Failed to change password.");
       setNewPassword("");
+      setConfirmPassword("");
       setShowValidationModal(true);
     }
   };
@@ -127,10 +183,6 @@ export default function Profile() {
                 {webUser.firstName} {webUser.lastName}
               </h1>
             </div>
-
-            {/* <div className='edit-btn-container-prof-settings'>
-                            <button class="edit-btn-properties" onClick={handleEditProfile}>Edit Profile</button>
-                        </div> */}
           </div>
 
           <div className="forms-container">
@@ -212,11 +264,17 @@ export default function Profile() {
           </div>
 
           <div className="edit-btn-prof-settings w-full">
-            <button class="edit-btn-properties" onClick={handleEditProfile}>
-              <img src={editprofile} className="editprof-btn" alt="edit-btn-icon"/>
+            <button
+              className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+              onClick={handleEditProfile}
+            >
+              EDIT PROFILE
             </button>
-            <button class="edit-btn-properties" onClick={handlePasswordChange}>
-              <img src={changepass} className="changepass-btn" alt="changepass-btn-icon"/>
+            <button
+              className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+              onClick={handlePasswordChange}
+            >
+              CHANGE PASSWORD
             </button>
           </div>
         </div>
@@ -240,6 +298,8 @@ export default function Profile() {
           <NewPasswordModal
             password={newPassword}
             setPassword={setNewPassword}
+            confirmPassword={confirmPassword}
+            setConfirmPassword={setConfirmPassword}
             onClose={() => setShowNewPasswordModal(false)}
             onSubmit={handleNewPasswordSubmit}
           />

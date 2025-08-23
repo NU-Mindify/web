@@ -196,7 +196,7 @@ html, body, #root {
 }
 
 .login-btn {
-  @apply btn rounded-xl mt-[15px] h-[40px] bg-[#FFC300] text-white 
+  @apply btn rounded-xl mt-[15px] h-[40px] bg-[#FFC300] text-black 
          sm:btn-sm md:btn-md lg:btn-lg;
 
 
