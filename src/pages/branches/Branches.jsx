@@ -14,8 +14,6 @@ import submit from "../../assets/branches/submitButton.svg";
 import reset from "../../assets/branches/resetButton.svg";
 
 export default function Branches() {
-
-  
   const [newBranch, setNewBranch] = useState({
     id: "",
     name: "",
@@ -55,6 +53,21 @@ export default function Branches() {
       return;
     }
 
+    const idRegex = /^[A-Za-z]+$/;
+    if (!idRegex.test(newBranch.id)) {
+      setValidationMessage(
+        "Branch ID can only contain letters (no numbers or special characters)."
+      );
+      setShowValidationModal(true);
+      return;
+    }
+
+    if (!newBranch.extension.startsWith("@")) {
+      setValidationMessage("Email extension must start with '@'.");
+      setShowValidationModal(true);
+      return;
+    }
+
     const isDuplicate = branchList.some((branch) => branch.id === newBranch.id);
     if (isDuplicate) {
       setValidationMessage("Branch ID already exists.");
@@ -88,7 +101,7 @@ export default function Branches() {
     const rows = branches.map((branch) => [
       branch.id || "",
       branch.name || "",
-      branch.extension || ""
+      branch.extension || "",
     ]);
 
     const csvContent =
@@ -153,7 +166,7 @@ export default function Branches() {
     const rows = branches.map((branch) => [
       branch.id || "",
       branch.name || "",
-      branch.extension || ""
+      branch.extension || "",
     ]);
 
     autoTable(doc, {
@@ -163,10 +176,11 @@ export default function Branches() {
     });
 
     doc.save(
-      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${currentWebUser.lastName}.pdf`
+      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
+        currentWebUser.lastName
+      }.pdf`
     );
   };
-
 
   return (
     <div className="campus-main-container">
@@ -184,84 +198,102 @@ export default function Branches() {
         />
       </div>
 
-
       <div className="px-5">
+        <div className="campus-form-container">
+          <h3 className="form-title">ADD CAMPUS</h3>
+          <hr className="border-b border-gray-300 mb-4" />
 
-      <div className="campus-form-container">
-        <h3 className="form-title">ADD CAMPUS</h3>
-        <hr className="border-b border-gray-300 mb-4" />
+          <div className="form-row">
+            <div className="input-group">
+              <label className="required-label"> Campus ID </label>
+              <input
+                type="text"
+                placeholder="Enter Branch ID"
+                value={newBranch.id}
+                onChange={(e) => {
+                  const idValue = e.target.value;
 
-        <div className="form-row">
-          <div className="input-group">
-            <label className="required-label"> Campus ID </label>
-            <input
-              type="text"
-              placeholder="Enter Campus ID"
-              value={newBranch.id}
-              onChange={(e) => {
-                const idValue = e.target.value;
-                setNewBranch({
-                  ...newBranch,
-                  id: idValue,
-                });
-              }}
-            />
+                  // Only allow letters
+                  const lettersOnly = /^[A-Za-z]*$/;
+                  if (!lettersOnly.test(idValue)) return;
+
+                  // Capitalize first letter for Campus Name
+                  const capitalizedId =
+                    idValue.charAt(0).toUpperCase() +
+                    idValue.slice(1).toLowerCase();
+
+                  setNewBranch({
+                    ...newBranch,
+                    id: idValue,
+                    name: idValue ? `NU ${capitalizedId}` : "",
+                    extension: idValue
+                      ? `@nu-${idValue.toLowerCase()}.edu.ph`
+                      : "",
+                  });
+                }}
+              />
+            </div>
+
+            <div className="input-group">
+              <label className="required-label">Campus Name</label>
+              <input
+                className="cursor-not-allowed"
+                type="text"
+                placeholder="Campus Name"
+                value={newBranch.name}
+                readOnly
+              />
+            </div>
+
+            <div className="input-group">
+              <label className="required-label">Email Extension</label>
+              <input
+                className="cursor-not-allowed"
+                type="text"
+                placeholder="Email Extension"
+                value={newBranch.extension}
+                readOnly
+              />
+            </div>
           </div>
 
-          <div className="input-group">
-            <label className="required-label">Campus Name</label>
-            <input
-              type="text"
-              placeholder="Enter Campus Name"
-              value={newBranch.name}
-              onChange={(e) =>
-                setNewBranch({ ...newBranch, name: e.target.value })
-              }
-            />
-          </div>
-
-          <div className="input-group">
-            <label className="required-label">Email Extension</label>
-            <input
-              type="text"
-              value={newBranch.extension}
-              onChange={(e) =>
-                setNewBranch({ ...newBranch, extension: e.target.value })
-              }
-              placeholder="Enter Email Extension"
-            />
-          </div>
-        </div>
-
-        <div className="button-row">
-          {/* <Buttons
+          <div className="button-row">
+            {/* <Buttons
             onClick={handleAddBranch}
             text={"Submit"}
             disabled={false}
             addedClassName="btn btn-success"
           /> */}
-          <button className="cursor-pointer"
-             onClick={handleAddBranch}
-             disabled={false}
-           >
-             <img src={submit} alt="submit-btn-icon"/>
-          </button>
+            <button
+              onClick={handleAddBranch}
+              className="w-[260px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+              disabled={false}
+            >
+              Submit
+            </button>
 
-          {/* <Buttons
+            {/* <Buttons
             onClick={handleReset}
             text={"Reset"}
             // disabled={isLoading}
             addedClassName="btn btn-warning ml-5"
           /> */}
-          <button className="cursor-pointer"
-            onClick={handleReset}
-          >
-            <img src={reset} alt="reset-btn-icon"/>
-          </button>
+            <button
+              className={`w-[260px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition ${
+                newBranch.id || newBranch.name || newBranch.extension
+                  ? "bg-red-500 hover:bg-red-600 cursor-pointer"
+                  : "bg-red-300 cursor-not-allowed"
+              } text-black`}
+              onClick={handleReset}
+              disabled={
+                !newBranch.id && !newBranch.name && !newBranch.extension
+              }
+            >
+              Reset
+            </button>
+          </div>
         </div>
       </div>
-      </div>
-
 
       {branchList.length > 0 && (
         <div className="campuses-main-container px-10">
@@ -277,7 +309,9 @@ export default function Branches() {
                 key={index}
                 className="campus-card flex justify-between items-center px-5 py-4 mb-3 border border-gray-600 rounded-lg bg-white text-black"
               >
-                <div className="w-[25%] text-[17px] font-medium">{branch.id}</div>
+                <div className="w-[25%] text-[17px] font-medium">
+                  {branch.id}
+                </div>
                 <div className="w-[35%] text-[17px]">{branch.name}</div>
                 <div className="w-[40%] text-[17px]">{branch.extension}</div>
               </div>
@@ -286,9 +320,6 @@ export default function Branches() {
         </div>
       )}
 
-
-
-    
       {showValidationModal && (
         <ValidationModal
           message={validationMessage}
