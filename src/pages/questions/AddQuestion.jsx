@@ -32,6 +32,61 @@ function AddQuestion() {
 
   const [onEdit, setOnEdit] = useState(false);
 
+  const [validationErrors, setValidationErrors] = useState({
+    question: "",
+    choices: ["", "", "", ""],
+    rationale: "",
+    difficulty: "",
+    level: "",
+    timer: "",
+  });
+
+  const validateQuestion = (q = question) => {
+    const errors = {
+      question: "",
+      choices: ["", "", "", ""],
+      rationale: "",
+      difficulty: "",
+      level: "",
+      timer: "",
+    };
+
+    if (!q.question.trim()) errors.question = "Please enter a question.";
+
+    if (!q.rationale.trim())
+      errors.rationale = "Please enter an overall rationale.";
+
+    if (!q.difficulty.trim())
+      errors.difficulty = "Please select a difficulty level.";
+
+    if (!q.level || q.level < 1) errors.level = "Please select a valid level.";
+
+    if (!q.timer || q.timer <= 0) errors.timer = "Please enter a number.";
+
+    const choiceTexts = [];
+    q.choices.forEach((c, i) => {
+      if (!c.text.trim())
+        errors.choices[
+          i
+        ] = `Choice ${c.letter.toUpperCase()} answer is required.`;
+      else if (choiceTexts.includes(c.text.trim().toLowerCase()))
+        errors.choices[i] = "Duplicate choice text is not allowed.";
+
+      if (!c.rationale.trim())
+        errors.choices[i] += errors.choices[i]
+          ? " Rationale is required."
+          : "Rationale is required.";
+
+      choiceTexts.push(c.text.trim().toLowerCase());
+    });
+
+    setValidationErrors(errors);
+
+    return !Object.values(errors).some(
+      (e) => e || (Array.isArray(e) && e.some((x) => x))
+    );
+  };
+
   useEffect(() => {
     const categoryFromState = location.state?.category;
     const categoryNameFromState = location.state?.categoryName;
@@ -41,7 +96,7 @@ function AddQuestion() {
 
   useEffect(() => {
     if (category) {
-      setQuestion(getInitialQuestionState()); 
+      setQuestion(getInitialQuestionState());
     }
   }, [category]);
 
@@ -61,82 +116,109 @@ function AddQuestion() {
     rationale: "",
     category: category,
     difficulty: "",
-    level: 1,
+    level: "",
     answer: "a",
-     timer: 0,
+    timer: 0,
   });
 
   const [question, setQuestion] = useState(getInitialQuestionState);
 
   const handleAddQuestion = () => {
-    const {
-      question: questionText,
-      choices,
-      rationale,
-      difficulty,
-      level,
-      timer,
-    } = question;
-
-    if (!timer || timer <= 0) {
-    setValidationMessage("Please enter a valid timer (greater than 0).");
-    setShowValidationModal(true);
-    return;
-  }
-
-
-  
-    for (const choice of choices) {
-      if (
-        !choice.text ||
-        !choice.text.trim() ||
-        !choice.rationale ||
-        !choice.rationale.trim()
-      ) {
-        setValidationMessage("All choices must have both text and rationale.");
-        setShowValidationModal(true);
-        return;
-      }
-    }
-
-    const choiceTexts = choices.map((c) => c.text.trim().toLowerCase());
-    const hasDuplicate = new Set(choiceTexts).size !== choiceTexts.length;
-    if (hasDuplicate) {
-      setValidationMessage("Duplicate choice texts are not allowed.");
+    if (Object.keys(validationErrors).length > 0) {
+      setValidationMessage(
+        "Please fill up all required fields*."
+      );
       setShowValidationModal(true);
       return;
     }
 
-    if (!questionText.trim()) {
-      setValidationMessage("Please enter a question.");
+    const emptyChoice = question.choices.some(
+      (c) => !c.text.trim() || !c.rationale.trim()
+    );
+    if (emptyChoice) {
+      setValidationMessage(
+        "Please fill up all required fields*."
+      );
       setShowValidationModal(true);
       return;
     }
 
-    if (!difficulty.trim()) {
-      setValidationMessage("Please select a difficulty level.");
-      setShowValidationModal(true);
-      return;
-    }
-
-    if (!level || level < 1) {
-      setValidationMessage("Please select a valid level.");
-      setShowValidationModal(true);
-      return;
-    }
-
-    if (!rationale.trim()) {
-      setValidationMessage("Please enter an overall rationale.");
-      setShowValidationModal(true);
-      return;
-    }
-
+    // If no errors, add the question
     const questionCopy = JSON.parse(JSON.stringify(question));
     setAllQuestions((prev) => [...prev, questionCopy]);
     setQuestion(getInitialQuestionState());
+    setValidationErrors({}); // clear any previous errors
 
     console.log("Added:", questionCopy);
   };
+
+  // const handleAddQuestion = () => { [[OLD CODE KEEPING JUST IN CASE]]
+  //   const {
+  //     question: questionText,
+  //     choices,
+  //     rationale,
+  //     difficulty,
+  //     level,
+  //     timer,
+  //   } = question;
+
+  //   if (!timer || timer <= 0) {
+  //     setValidationMessage("Please enter a valid timer (greater than 0).");
+  //     setShowValidationModal(true);
+  //     return;
+  //   }
+
+  //   for (const choice of choices) {
+  //     if (
+  //       !choice.text ||
+  //       !choice.text.trim() ||
+  //       !choice.rationale ||
+  //       !choice.rationale.trim()
+  //     ) {
+  //       setValidationMessage("All choices must have both text and rationale.");
+  //       setShowValidationModal(true);
+  //       return;
+  //     }
+  //   }
+
+  //   const choiceTexts = choices.map((c) => c.text.trim().toLowerCase());
+  //   const hasDuplicate = new Set(choiceTexts).size !== choiceTexts.length;
+  //   if (hasDuplicate) {
+  //     setValidationMessage("Duplicate choice texts are not allowed.");
+  //     setShowValidationModal(true);
+  //     return;
+  //   }
+
+  //   if (!questionText.trim()) {
+  //     setValidationMessage("Please enter a question.");
+  //     setShowValidationModal(true);
+  //     return;
+  //   }
+
+  //   if (!difficulty.trim()) {
+  //     setValidationMessage("Please select a difficulty level.");
+  //     setShowValidationModal(true);
+  //     return;
+  //   }
+
+  //   if (!level || level < 1) {
+  //     setValidationMessage("Please select a valid level.");
+  //     setShowValidationModal(true);
+  //     return;
+  //   }
+
+  //   if (!rationale.trim()) {
+  //     setValidationMessage("Please enter an overall rationale.");
+  //     setShowValidationModal(true);
+  //     return;
+  //   }
+
+  //   const questionCopy = JSON.parse(JSON.stringify(question));
+  //   setAllQuestions((prev) => [...prev, questionCopy]);
+  //   setQuestion(getInitialQuestionState());
+
+  //   console.log("Added:", questionCopy);
+  // };
 
   const addToDB = async () => {
     setIsFormDisabled(true);
@@ -187,13 +269,17 @@ function AddQuestion() {
   const onChoiceChange = (e, index) => {
     const newChoices = [...question.choices];
     newChoices[index].text = e.target.value;
-    setQuestion({ ...question, choices: newChoices });
+    const newQ = { ...question, choices: newChoices };
+    setQuestion(newQ);
+    validateQuestion(newQ);
   };
 
   const onChoiceChangeRationale = (e, index) => {
     const newChoices = [...question.choices];
     newChoices[index].rationale = e.target.value;
-    setQuestion({ ...question, choices: newChoices });
+    const newQ = { ...question, choices: newChoices };
+    setQuestion(newQ);
+    validateQuestion(newQ);
   };
 
   const onAnswerChange = (e) => {
@@ -259,7 +345,7 @@ function AddQuestion() {
               level: isNaN(level) ? 1 : level,
               rationale: row["RATIONALE"].trim(),
               answer: correctAnswer,
-              category: category, 
+              category: category,
               choices: [
                 {
                   letter: "a",
@@ -357,7 +443,7 @@ function AddQuestion() {
           />
           <label
             htmlFor="upload-btn"
-            className="btn btn-warning w-[230px] rounded-xl !text-white text-xl bg-[#FFC916] border-[#FFC916] font-[Poppins] h-[50px] px-4 flex items-center justify-center text-center cursor-pointer"
+            className="w-[330px] py-5 px-10 rounded-2xl text-2xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
           >
             UPLOAD CSV FILE
           </label>
@@ -369,13 +455,122 @@ function AddQuestion() {
             placeholder="Type here..."
             disabled={isFormDisabled}
             value={question.question}
-            onChange={(e) =>
-              setQuestion({ ...question, question: e.target.value })
-            }
+            onChange={(e) => {
+              const newQ = { ...question, question: e.target.value };
+              setQuestion(newQ);
+              validateQuestion(newQ);
+            }}
           ></textarea>
+          {validationErrors.question && (
+            <span className="text-red-600">{validationErrors.question}</span>
+          )}
         </div>
 
-        <div className="select-container">
+        <div className="select-container flex gap-6">
+          {/* Level */}
+          <div className="flex flex-col">
+            <h3>
+              Level:<span>*</span>
+            </h3>
+            <select
+              id="levelSelect"
+              disabled={isFormDisabled}
+              value={question.level || ""}
+              onChange={(e) => {
+                const newLevel = e.target.value ? parseInt(e.target.value) : "";
+                const newQ = { ...question, level: newLevel };
+                setQuestion(newQ);
+                validateQuestion(newQ);
+              }}
+              className="w-[200px] h-[40px] mt-2 border border-gray-400 rounded px-2"
+            >
+              <option value="">Select a Level</option>
+              {[...Array(10)].map((_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {i + 1}
+                </option>
+              ))}
+            </select>
+            <div className="h-[20px] mt-1">
+              {validationErrors.level && (
+                <span className="text-red-600">{validationErrors.level}</span>
+              )}
+            </div>
+          </div>
+
+          {/* Difficulty */}
+          <div className="flex flex-col">
+            <h3>
+              Difficulty:<span>*</span>
+            </h3>
+            <select
+              id="difficultySelect"
+              disabled={isFormDisabled}
+              value={question.difficulty}
+              onChange={(e) => {
+                const newQ = { ...question, difficulty: e.target.value };
+                setQuestion(newQ);
+                validateQuestion(newQ);
+              }}
+              className="w-[200px] h-[40px] mt-2 border border-gray-400 rounded px-2"
+            >
+              <option value="">Select a Difficulty</option>
+              <option value="easy">Easy</option>
+              <option value="average">Average</option>
+              <option value="difficult">Difficult</option>
+            </select>
+            <div className="h-[20px] mt-1">
+              {validationErrors.difficulty && (
+                <span className="text-red-600">
+                  {validationErrors.difficulty}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Timer */}
+          <div className="flex flex-col">
+            <h3>
+              Timer:<span>*</span>
+            </h3>
+            <input
+              type="number"
+              min="0"
+              max="99"
+              placeholder="Enter time in seconds"
+              className="w-[200px] h-[40px] mt-2 border border-gray-400 rounded px-2"
+              disabled={isFormDisabled}
+              value={question.timer || ""}
+              onChange={(e) => {
+                let value = e.target.value.replace(/\D/g, "").slice(0, 2);
+                setQuestion({ ...question, timer: value });
+              }}
+              onKeyDown={(e) => {
+                if (
+                  [
+                    "Backspace",
+                    "Tab",
+                    "ArrowLeft",
+                    "ArrowRight",
+                    "Delete",
+                  ].includes(e.key)
+                ) {
+                  return;
+                }
+                if (!/^\d$/.test(e.key)) {
+                  e.preventDefault();
+                }
+              }}
+            />
+            <div className="h-[20px] mt-1">
+              {validationErrors.timer && (
+                <span className="text-red-600">{validationErrors.timer}</span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* <div className="select-container"> [[OLD CODE KEEPING JUST IN CASE]]
           <div>
             <h3>
               Level:<span>*</span>
@@ -383,17 +578,25 @@ function AddQuestion() {
             <select
               id="levelSelect"
               disabled={isFormDisabled}
-              value={question.level}
-              onChange={(e) =>
-                setQuestion({ ...question, level: parseInt(e.target.value) })
-              }
+              value={question.level || ""} 
+              onChange={(e) => {
+                const newLevel = e.target.value ? parseInt(e.target.value) : "";
+                const newQ = { ...question, level: newLevel };
+                setQuestion(newQ);
+                validateQuestion(newQ); 
+              }}
             >
+              <option value="">Select a Level</option>{" "}
               {[...Array(10)].map((_, i) => (
                 <option key={i + 1} value={i + 1}>
                   {i + 1}
                 </option>
               ))}
             </select>
+
+            {validationErrors.level && (
+              <span className="text-red-600">{validationErrors.level}</span>
+            )}
           </div>
 
           <div>
@@ -404,16 +607,23 @@ function AddQuestion() {
               id="difficultySelect"
               disabled={isFormDisabled}
               value={question.difficulty}
-              onChange={(e) =>
-                setQuestion({ ...question, difficulty: e.target.value })
-              }
+              onChange={(e) => {
+                const newQ = { ...question, difficulty: e.target.value };
+                setQuestion(newQ);
+                validateQuestion(newQ);
+              }}
             >
-              {["easy", "average", "difficult"].map((val) => (
-                <option key={val} value={val}>
-                  {val.charAt(0).toUpperCase() + val.slice(1)}
-                </option>
-              ))}
+              <option value="">Select a Difficulty</option>{" "}
+              <option value="easy">Easy</option>
+              <option value="average">Average</option>
+              <option value="difficult">Difficult</option>
             </select>
+
+            {validationErrors.difficulty && (
+              <span className="text-red-600">
+                {validationErrors.difficulty}
+              </span>
+            )}
           </div>
 
           <div>
@@ -421,19 +631,26 @@ function AddQuestion() {
               Timer:<span>*</span>
             </h3>
             <input
-              className="w-60 h-12 border-b-2 border-black"
               type="number"
               min="0"
               max="300"
               placeholder="Enter time in seconds"
+              className="w-[200px] h-[30px] mt-2 border border-gray-400 rounded px-2"
               disabled={isFormDisabled}
               value={question.timer || ""}
-              onChange={(e) =>
-                setQuestion({ ...question, timer: parseInt(e.target.value) })
-              }
+              onChange={(e) => {
+                const newQ = { ...question, timer: parseInt(e.target.value) };
+                setQuestion(newQ);
+                validateQuestion(newQ);
+              }}
             />
+            <div className="h-[20px]">
+              {validationErrors.timer && (
+                <span className="text-red-600">{validationErrors.timer}</span>
+              )}
+            </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="option-container">
           <h3 className="text-lg font-semibold w-full">
@@ -480,6 +697,11 @@ function AddQuestion() {
                     value={choice.rationale}
                     onChange={(e) => onChoiceChangeRationale(e, idx)}
                   />
+                  {validationErrors.choices[idx] && (
+                    <span className="text-red-600">
+                      {validationErrors.choices[idx]}
+                    </span>
+                  )}
                 </div>
               </div>
             );
@@ -495,15 +717,24 @@ function AddQuestion() {
             placeholder="Type the rationale here..."
             disabled={isFormDisabled}
             value={question.rationale}
-            onChange={(e) =>
-              setQuestion({ ...question, rationale: e.target.value })
-            }
+            onChange={(e) => {
+              const newQ = { ...question, rationale: e.target.value };
+              setQuestion(newQ);
+              validateQuestion(newQ);
+            }}
           ></textarea>
+          {validationErrors.rationale && (
+            <span className="text-red-600">{validationErrors.rationale}</span>
+          )}
         </div>
 
         <div className="add-btn-container">
-          <button className="add-btn-container" onClick={handleAddQuestion}>
-            <img src={add} className="add-btn" alt="add-btn-icon" />
+          <button
+            className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+            onClick={handleAddQuestion}
+          >
+            ADD QUESTION
+            {/* <img src={add} className="add-btn" alt="add-btn-icon" /> */}
           </button>
         </div>
       </div>
@@ -594,16 +825,24 @@ function AddQuestion() {
 
                   <div className="question-btn-container">
                     {onEdit ? (
-                      <button className="" onClick={() => setOnEdit(!onEdit)}>
-                        <img src={saveBTN} className="" alt="save-btn-icon" />
+                      <button
+                        className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+                        onClick={() => setOnEdit(!onEdit)}
+                      >
+                        SAVE QUESTION
+                        {/* <img src={saveBTN} className="" alt="save-btn-icon" /> */}
                       </button>
                     ) : (
-                      <button className="" onClick={() => setOnEdit(!onEdit)}>
-                        <img src={edit} className="" alt="edit-btn-icon" />
+                      <button
+                        className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+                        onClick={() => setOnEdit(!onEdit)}
+                      >
+                        EDIT QUESTION
+                        {/* <img src={edit} className="" alt="edit-btn-icon" /> */}
                       </button>
                     )}
                     <button
-                      className=""
+                      className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-red-500 text-black hover:bg-red-600 cursor-pointer"
                       onClick={() => {
                         if (
                           confirm(
@@ -615,11 +854,12 @@ function AddQuestion() {
                       }}
                       addedClassName="btn btn-error"
                     >
-                      <img
+                      REMOVE
+                      {/* <img
                         src={remove}
                         className="remove-btn"
                         alt="remove-btn-icon"
-                      />
+                      /> */}
                     </button>
                   </div>
                 </div>
@@ -629,11 +869,12 @@ function AddQuestion() {
         </div>
         <div className="w-full flex justify-center py-4">
           <button
-            className="success-btn"
+            className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
             onClick={addToDB}
             addedClassName="btn btn-success"
           >
-            <img src={save} className="save-ques-btn" alt="save-btn-icon" />
+            SAVE QUESTION
+            {/* <img src={save} className="save-ques-btn" alt="save-btn-icon" /> */}
           </button>
         </div>
 
