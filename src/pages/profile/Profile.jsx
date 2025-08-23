@@ -118,12 +118,6 @@ export default function Profile() {
       return;
     }
 
-    if (newPassword.length < 6) {
-      setValidationMessage("Password must be at least 6 characters long.");
-      setShowValidationModal(true);
-      return;
-    }
-
     if (newPassword === oldPassword) {
       setValidationMessage(
         "New password cannot be the same as your old password."
