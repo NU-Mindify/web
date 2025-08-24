@@ -47,6 +47,7 @@
           (a.last_name || "").localeCompare(b.last_name || "")
         );
         setStudents(sortedStudents);
+        
         setCardActive(null);
       } catch (error) {
         console.error("Error fetching students:", error);
@@ -318,8 +319,16 @@
     const [reviewModeData, setReviewModeData] = useState([]);
     const { currentWebUser } = useContext(UserLoggedInContext);
     const [userBadges, setUserBadges] = useState([])
+    const [recentAct, setRecentAct ] = useState();
 
     const studentId = student._id;
+
+    const getMostRecentAttempt = (attempts) => {
+  if (!attempts || attempts.length === 0) return null;
+  return attempts[attempts.length - 1]; // ✅ last attempt in array
+};
+
+
 
     useEffect(() => {
       const fetchAttempts = async () => {
@@ -338,6 +347,11 @@
           setMasteryModeData(hundredItemsOnly);
           setReviewModeData(data.filter((data) => data.mode === "review"));
 
+          const recent = getMostRecentAttempt(data);
+          setRecentAct(recent);
+          console.log("recent is", recent);
+          
+
 
         } catch (error) {
           console.error("Error fetching student data:", error.message);
@@ -348,6 +362,7 @@
       if (studentId) fetchAttempts();
     }, [studentId]);
 
+    
 
     useEffect(() => {
       fetchUserBadges()
@@ -573,6 +588,7 @@
                               studentId: student.student_id,
                               studentBranch: student.branch,
                               studentBadges: userBadges,
+                              recentAct: recentAct,
                               studentAvatar: student.avatar,
                               studentCloth: student.cloth,
                             },

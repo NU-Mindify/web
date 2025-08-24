@@ -19,6 +19,9 @@ export default function ShowMoreDetails() {
   const studentBadges = location.state?.studentBadges;
   const studentAvatar = location.state?.studentAvatar;
   const studentCloth = location.state?.studentCloth;
+  const recentAct = location.state?.recentAct;
+
+  
 
   const studentBranch =
     branches.find((b) => b.id === location.state?.studentBranch)?.name ||
@@ -150,6 +153,19 @@ export default function ShowMoreDetails() {
               </td>
             </tr>
           </table>
+        </div>
+
+        <div className="w-full h-auto py-3">
+          <h1 className="text-2xl font-bold">Recent Activity</h1>
+          <h1>Level: {recentAct.level}</h1>
+          <h1>Category: {categories.find((cat) => cat.id === recentAct.category)?.name}</h1>
+          <h1>Score: {recentAct.correct}/{recentAct.total_items}</h1>
+          <h1>Time: {recentAct.time_completion}</h1>
+
+
+
+
+
         </div>
         <div className="competition-mode-container">
           <table className="competition-mode-table text-black mt-3">
