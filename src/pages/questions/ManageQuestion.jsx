@@ -699,7 +699,7 @@ export default function ManageQuestion() {
           originalQuestion &&
           JSON.stringify(originalQuestion) !== JSON.stringify(editingQuestion)
         }
-        queryClient={queryClient}   // 👈 pass it
+        queryClient={queryClient}
         category={category}   
       />
 

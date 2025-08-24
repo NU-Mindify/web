@@ -6,7 +6,15 @@ import "../../css/questions/editQuestion.css";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import { API_URL, categories } from "../../Constants";
 
-function EditQuestion({ question, isOpen, onClose, onChange, hasChanges, queryClient, category }) {
+function EditQuestion({
+  question,
+  isOpen,
+  onClose,
+  onChange,
+  hasChanges,
+  queryClient,
+  category,
+}) {
   const [showValidation, setShowValidation] = useState(false);
   const [validationMessage, setValidationMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,63 +22,55 @@ function EditQuestion({ question, isOpen, onClose, onChange, hasChanges, queryCl
   if (!isOpen) return null;
 
   const handleSaveClick = async () => {
-    // Collect missing fields
-    const missing = [];
-
-    if (!question.question?.trim()) missing.push("Question text");
-    if (!question.category) missing.push("Category");
-    if (!question.level) missing.push("Level");
-    if (!question.difficulty) missing.push("Difficulty");
-    if (!question.timer && question.timer !== 0) missing.push("Timer");
-    if (!question.rationale) missing.push("Rationale");
-
-    // Check choices
-    question.choices.forEach((c, i) => {
-      if (!c.text?.trim()) missing.push(`Choice ${c.letter} text`);
-    });
-
-    // Ensure an answer is selected
-    if (!question.answer) missing.push("Correct Answer");
-
-    // If missing, show validation
-    if (missing.length > 0) {
-      setValidationMessage(`Please fill in: ${missing.join(", ")}`);
+    if (
+      !question.question?.trim() ||
+      !question.category ||
+      !question.level ||
+      !question.difficulty ||
+      question.timer === null ||
+      question.timer === undefined ||
+      !question.rationale ||
+      question.choices.some((c) => !c.text?.trim()) ||
+      !question.answer
+    ) {
+      setValidationMessage("Please fill in all the input fields");
       setShowValidation(true);
       return;
     }
 
     try {
-    setLoading(true);
+      setLoading(true);
 
-    const payload = {
-      question: question.question,
-      category: question.category,
-      level: question.level,
-      timer: question.timer,
-      difficulty: question.difficulty,
-      choices: question.choices.map((c) => ({
-        letter: c.letter,
-        text: c.text,
-        rationale: c.rationale || "",
-        isCorrect: question.answer === c.letter,
-      })),
-      rationale: question.rationale || "",
-      answer: question.answer,
-      is_deleted: question.is_deleted || false,
-    };
+      const payload = {
+        question: question.question,
+        category: question.category,
+        level: question.level,
+        timer: question.timer,
+        difficulty: question.difficulty,
+        choices: question.choices.map((c) => ({
+          letter: c.letter,
+          text: c.text,
+          rationale: c.rationale || "",
+          isCorrect: question.answer === c.letter,
+        })),
+        rationale: question.rationale || "",
+        answer: question.answer,
+        is_deleted: question.is_deleted || false,
+      };
 
-    await axios.put(`${API_URL}/updateQuestion/${question._id}`, payload);
+      await axios.put(`${API_URL}/updateQuestion/${question._id}`, payload);
 
-    // 🔄 Refresh question list
-    queryClient.invalidateQueries(["questionsList", category]);
+      // 🔄 Refresh question list
+      queryClient.invalidateQueries(["questionsList", category]);
 
-    onClose();
-  } catch (err) {
-    console.error("Failed to update question:", err);
-    alert("Failed to update question. Please try again.");
-  } finally {
-    setLoading(false);
-  }
+      onClose();
+    } catch (err) {
+      console.error("Failed to update question:", err);
+      setValidationMessage("Please fill in all the input fields");
+      setShowValidation(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -99,7 +99,9 @@ function EditQuestion({ question, isOpen, onClose, onChange, hasChanges, queryCl
             value={question.category || ""}
             onChange={(e) => onChange("category", e.target.value)}
           >
-            <option value="" hidden>Select Category</option>
+            <option value="" hidden>
+              Select Category
+            </option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
@@ -128,7 +130,9 @@ function EditQuestion({ question, isOpen, onClose, onChange, hasChanges, queryCl
             value={question.difficulty}
             onChange={(e) => onChange("difficulty", e.target.value)}
           >
-            <option value="" hidden>Select Difficulty</option>
+            <option value="" hidden>
+              Select Difficulty
+            </option>
             {["easy", "average", "difficult"].map((val) => (
               <option key={val} value={val}>
                 {val.charAt(0).toUpperCase() + val.slice(1)}
