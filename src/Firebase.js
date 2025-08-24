@@ -3,11 +3,10 @@ import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FB_API,
-  authDomain: "nu-mindify.firebaseapp.com",
-  databaseURL: import.meta.env.VITE_DB,
-  projectId: "nu-mindify",
-  storageBucket: "nu-mindify.firebasestorage.app",
-  messagingSenderId: "342146446671",
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.SENDER_ID,
   appId: import.meta.env.VITE_APPID,
 };
 
