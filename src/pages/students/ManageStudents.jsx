@@ -32,6 +32,7 @@
 
     useEffect(() => {
       fetchStudents();
+      
     }, [currentWebUser]);
 
     const fetchStudents = async () => {
@@ -56,6 +57,7 @@
 
     const filteredStudents = students
       .filter((student) => {
+        // console.log("STUDENT CLOTH: "+student.cloth);
         const matchesSearch =
           student.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           student.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -570,7 +572,9 @@
                               studentLastName: student.last_name,
                               studentId: student.student_id,
                               studentBranch: student.branch,
-                              studentBadges: userBadges
+                              studentBadges: userBadges,
+                              studentAvatar: student.avatar,
+                              studentCloth: student.cloth,
                             },
                           });
                         }}

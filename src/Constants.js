@@ -2,7 +2,6 @@ import axios from "axios"
 
 export const API_URL = import.meta.env.VITE_URL
 
-
 export let branches = []
 
 import b1 from "../src/assets/avatar/b1.svg"
@@ -27,7 +26,7 @@ import g8 from "../src/assets/avatar/g8.svg"
 import g9 from "../src/assets/avatar/g9.svg"
 import g10 from "../src/assets/avatar/g10.svg"
 
-export const avatars = [
+export const avatars = {
   b1, b2,
   b3, b4,
   b5, b6,
@@ -39,8 +38,23 @@ export const avatars = [
   g5, g6,
   g7, g8,
   g9, g10,
-]
+}
 
+import blue_tie_pants from "../src/assets/clothes/blue_tie_pants.svg"
+import black_suit_tie from "../src/assets/clothes/black_suit_tie.svg"
+import white_coat from "../src/assets/clothes/white_coat.svg"
+import white_sweater from "../src/assets/clothes/white_sweater.svg"
+import white_formal from "../src/assets/clothes/white_formal.svg"
+import gray_necklace from "../src/assets/clothes/gray_necklace.svg"
+import female_unform from "../src/assets/clothes/female_unform.svg"
+import male_unform from "../src/assets/clothes/male_unform.svg"
+
+export const clothes = {
+  blue_tie_pants, black_suit_tie,
+  white_coat, white_sweater,
+  white_formal, gray_necklace,
+  female_unform, male_unform
+}
 
 export const fetchBranches = async () => {
   try {

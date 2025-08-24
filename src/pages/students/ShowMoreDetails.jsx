@@ -2,7 +2,8 @@ import { useLocation, useNavigate } from "react-router";
 import "../../css/students/showMoreDetails.css";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import samplepic from "../../assets/students/sample-minji.svg";
-import { branches, categories } from "../../Constants";
+import { branches, categories, clothes } from "../../Constants";
+import { avatarBodies } from "../../AvatarBody";
 
 export default function ShowMoreDetails() {
   const location = useLocation();
@@ -16,6 +17,8 @@ export default function ShowMoreDetails() {
   const studentLastName = location.state?.studentLastName;
   const studentId = location.state?.studentId;
   const studentBadges = location.state?.studentBadges;
+  const studentAvatar = location.state?.studentAvatar;
+  const studentCloth = location.state?.studentCloth;
 
   const studentBranch =
     branches.find((b) => b.id === location.state?.studentBranch)?.name ||
@@ -110,11 +113,27 @@ export default function ShowMoreDetails() {
           <table className="profile-pic-details-table">
             <tr>
               <td>
-                <div className="w-full h-full flex justify-center items-center">
+                <div className="relative w-[130px] h-[130px]">
+
+                  {/* Avatar Body */}
                   <img
-                    src={samplepic}
+                    src={avatarBodies[studentAvatar] || samplepic}
                     alt={studentFirstName}
-                    className="!h-[130px] !w-[130px] aspect-square"
+                    className="absolute inset-0 w-full h-full object-contain z-0"
+                  />
+
+                  {/* Clothing */}
+                  <img
+                    src={clothes[studentCloth] || samplepic}
+                    alt={`${studentFirstName} clothing`}
+                    className="absolute z-10 object-contain"
+                    style={{
+                      width: "55%", 
+                      height: "55%",
+                      top: "45%", 
+                      left: "23%",
+                      position: "absolute",
+                    }}
                   />
                 </div>
               </td>
@@ -299,17 +318,16 @@ export default function ShowMoreDetails() {
             </table>
           </div>
 
-
           <div className="w-full">
-            <h1 className="text-2xl font-bold text-black mt-5">Badges Acquired</h1>
+            <h1 className="text-2xl font-bold text-black mt-5">
+              Badges Acquired
+            </h1>
             <div className="w-full flex flex-row flex-wrap justify-center gap-5">
-                  {
-                    studentBadges.map((badges) => (
-                      <div className="w-[100px] h-[100px]">
-                      <img src={badges.badge_id.filepath} alt="badge" />
-                      </div>
-                    ))
-                  }
+              {studentBadges.map((badges) => (
+                <div className="w-[100px] h-[100px]">
+                  <img src={badges.badge_id.filepath} alt="badge" />
+                </div>
+              ))}
             </div>
           </div>
         </div>
