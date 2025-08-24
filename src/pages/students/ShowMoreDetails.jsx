@@ -155,18 +155,14 @@ export default function ShowMoreDetails() {
           </table>
         </div>
 
-        <div className="w-full h-auto py-3">
+        {/* <div className="w-full h-auto py-3">
           <h1 className="text-2xl font-bold">Recent Activity</h1>
           <h1>Level: {recentAct.level}</h1>
           <h1>Category: {categories.find((cat) => cat.id === recentAct.category)?.name}</h1>
           <h1>Score: {recentAct.correct}/{recentAct.total_items}</h1>
           <h1>Time: {recentAct.time_completion}</h1>
+        </div> */}
 
-
-
-
-
-        </div>
         <div className="competition-mode-container">
           <table className="competition-mode-table text-black mt-3">
             <tr>
