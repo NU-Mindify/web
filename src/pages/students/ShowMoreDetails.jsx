@@ -21,8 +21,6 @@ export default function ShowMoreDetails() {
   const studentCloth = location.state?.studentCloth;
   const recentAct = location.state?.recentAct;
 
-  
-
   const studentBranch =
     branches.find((b) => b.id === location.state?.studentBranch)?.name ||
     "Unknown Branch";
@@ -117,7 +115,6 @@ export default function ShowMoreDetails() {
             <tr>
               <td>
                 <div className="relative w-[130px] h-[130px]">
-
                   {/* Avatar Body */}
                   <img
                     src={avatarBodies[studentAvatar] || samplepic}
@@ -131,9 +128,9 @@ export default function ShowMoreDetails() {
                     alt={`${studentFirstName} clothing`}
                     className="absolute z-10 object-contain"
                     style={{
-                      width: "55%", 
+                      width: "55%",
                       height: "55%",
-                      top: "45%", 
+                      top: "45%",
                       left: "23%",
                       position: "absolute",
                     }}
@@ -155,13 +152,20 @@ export default function ShowMoreDetails() {
           </table>
         </div>
 
-        {/* <div className="w-full h-auto py-3">
-          <h1 className="text-2xl font-bold">Recent Activity</h1>
-          <h1>Level: {recentAct.level}</h1>
-          <h1>Category: {categories.find((cat) => cat.id === recentAct.category)?.name}</h1>
-          <h1>Score: {recentAct.correct}/{recentAct.total_items}</h1>
-          <h1>Time: {recentAct.time_completion}</h1>
-        </div> */}
+        {recentAct && (
+          <div className="w-full h-auto py-3">
+            <h1 className="text-2xl font-bold">Recent Activity</h1>
+            <h1>Level: {recentAct.level}</h1>
+            <h1>
+              Category:{" "}
+              {categories.find((cat) => cat.id === recentAct.category)?.name}
+            </h1>
+            <h1>
+              Score: {recentAct.correct}/{recentAct.total_items}
+            </h1>
+            <h1>Time: {recentAct.time_completion}</h1>
+          </div>
+        )}
 
         <div className="competition-mode-container">
           <table className="competition-mode-table text-black mt-3">
