@@ -12,6 +12,8 @@ import mindifyLogo from "../../assets/logo/logo.svg";
 
 export default function Dashboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);
+  console.log("Current Web User:", currentWebUser);
+
   const navigate = useNavigate();
 
   const [studentCount, setStudentCount] = useState(0);
@@ -98,7 +100,6 @@ export default function Dashboard() {
     if (!currentWebUser?.token) return;
     fetchTopBadges();
   }, [currentWebUser]);
-
 
   //set amount of students
   useEffect(() => {
@@ -307,9 +308,7 @@ export default function Dashboard() {
 
   return (
     <div className="main-container-dashboard">
-
       <div className="dashboard-header">
-        
         <div className="dashboard-header-content">
           <h1 className="header-text-dashboard">Dashboard</h1>
           <h2 className="header-greeting-dashboard">
@@ -324,7 +323,7 @@ export default function Dashboard() {
         </div>
 
         <div className="dashboard-header-logo">
-          <img src={mindifyLogo}  alt="logo-icon" className="dashboard-logo"/>
+          <img src={mindifyLogo} alt="logo-icon" className="dashboard-logo" />
         </div>
       </div>
 
@@ -408,30 +407,34 @@ export default function Dashboard() {
           )}
         </div>
 
-        <div className="analytics-properties-dashboard">
-          {isLoadingAttempts ? (
-            <div className="loading-overlay-dashboard">
-              <div className="spinner"></div>
-              <p>Fetching data...</p>
-            </div>
-          ) : (
-            <div className="w-full h-full flex items-center justify-center flex-col cursor-pointer" onClick={() => navigate("/account/approval")}>
-              {isLoading ? (
-                <div className="loading-overlay-dashboard">
-                  <div className="spinner"></div>
-                  <p>Fetching data...</p>
-                </div>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center flex-col">
-                  <h1 className="dashboard-title mb-2 -mt-5 font-[Poppins] text-[25px] font-bold">
-                    Pending Accounts
-                  </h1>
-                  <h1 className="dashboard-title font-[Poppins] font-bold text-[70px] mt-3">
-                    <CountUp end={pendingUserCount} />
-                  </h1>
-                </div>
-              )}
-              {/* {bestPerformingWorld === "N/A" ? (
+        {["super admin", "sub admin"].includes(currentWebUser.position.toLowerCase()) && (
+          <div className="analytics-properties-dashboard">
+            {isLoadingAttempts ? (
+              <div className="loading-overlay-dashboard">
+                <div className="spinner"></div>
+                <p>Fetching data...</p>
+              </div>
+            ) : (
+              <div
+                className="w-full h-full flex items-center justify-center flex-col cursor-pointer"
+                onClick={() => navigate("/account/approval")}
+              >
+                {isLoading ? (
+                  <div className="loading-overlay-dashboard">
+                    <div className="spinner"></div>
+                    <p>Fetching data...</p>
+                  </div>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center flex-col">
+                    <h1 className="dashboard-title mb-2 -mt-5 font-[Poppins] text-[25px] font-bold">
+                      Pending Accounts
+                    </h1>
+                    <h1 className="dashboard-title font-[Poppins] font-bold text-[70px] mt-3">
+                      <CountUp end={pendingUserCount} />
+                    </h1>
+                  </div>
+                )}
+                {/* {bestPerformingWorld === "N/A" ? (
                 <h2 className="text-3xl font-bold">No Data</h2>
               ) : (
                 <>
@@ -446,9 +449,10 @@ export default function Dashboard() {
                   </h2>
                 </>
               )} */}
-            </div>
-          )}
-        </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="dashboard-headers-row">
@@ -457,211 +461,224 @@ export default function Dashboard() {
         </div>
 
         <div className="leaderboard-title-container-dashboard">
-          <h1 className="leaderboard-title-properties-dashboard">Leaderboard</h1>
+          <h1 className="leaderboard-title-properties-dashboard">
+            Leaderboard
+          </h1>
         </div>
       </div>
 
-        {/* <div className="reports-title-container-dashboard">
+      {/* <div className="reports-title-container-dashboard">
           <h1 className="reports-title-properties-dashboard">Reports</h1>
         </div> */}
 
-        <div className="reports-content-container-dashboard">
-          <div className="total-students-container-dashboard">
-            {isLoadingAttempts ? (
+      <div className="reports-content-container-dashboard">
+        <div className="total-students-container-dashboard">
+          {isLoadingAttempts ? (
+            <div className="loading-overlay-dashboard">
+              <div className="spinner"></div>
+              <p>Fetching data...</p>
+            </div>
+          ) : (
+            <div className="w-full h-10/12 flex flex-col justify-center items-center p-4">
+              <div className="w-full flex flex-col -mt-10 mb-4">
+                <h1 className="text-black text-[26px] font-bold font-[poppins]">
+                  Total Students
+                </h1>
+                <p className="text-black font-[poppins] text-[18px] -mt-2">
+                  per campus
+                </p>
+              </div>
+              <BarGraph data={branchData} />
+            </div>
+          )}
+        </div>
+
+        <div className="badges-container-dashboard">
+          <div className="w-full h-10/12 flex flex-col p-4">
+            <h1 className="text-black text-[26px] font-bold font-[poppins]">
+              Top Badges
+            </h1>
+
+            {loadingBadges ? (
               <div className="loading-overlay-dashboard">
                 <div className="spinner"></div>
-                <p>Fetching data...</p>
+                <p>Loading badges...</p>
               </div>
             ) : (
-              <div className="w-full h-10/12 flex flex-col justify-center items-center p-4">
-                <div className="w-full flex flex-col -mt-10 mb-4">
-                  <h1 className="text-black text-[26px] font-bold font-[poppins]">
-                    Total Students
-                  </h1>
-                  <p className="text-black font-[poppins] text-[18px] -mt-2">per campus</p>
-                </div>
-                <BarGraph data={branchData} />
-              </div>
+              <ul className="badge-list-dashboard">
+                {topBadges.length === 0 ? (
+                  <li>No badges earned yet.</li>
+                ) : (
+                  topBadges.map((badge, idx) => (
+                    <li
+                      key={badge.id || idx}
+                      className="badge-list-item-dashboard"
+                    >
+                      <img
+                        src={badge.iconUrl}
+                        alt={badge.name}
+                        className="badge-icon-dashboard"
+                      />
+                      <div className="badge-info-dashboard">
+                        <div className="badge-title-dashboard">
+                          {badge.name}
+                        </div>
+                        <div className="badge-level-dashboard">
+                          Level {badge.level || 1}
+                        </div>
+                        <div className="badge-progress-bar-dashboard">
+                          <div
+                            className="badge-progress-fill-dashboard"
+                            style={{ width: `${badge.percentage || 0}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                      <div className="badge-percentage-dashboard">
+                        <span className="badge-percentage-value-dashboard">
+                          {badge.percentage
+                            ? badge.percentage.toFixed(2)
+                            : "0.00"}
+                          %
+                        </span>
+                      </div>
+                    </li>
+                  ))
+                )}
+              </ul>
             )}
           </div>
+        </div>
 
-        
-          <div className="badges-container-dashboard">
-            <div className="w-full h-10/12 flex flex-col p-4">
-            <h1 className="text-black text-[26px] font-bold font-[poppins]">Top Badges</h1>
-            
-              {loadingBadges ? (
-                <div className="loading-overlay-dashboard">
-                  <div className="spinner"></div>
-                  <p>Loading badges...</p>
-                </div>
-              ) : (
-                <ul className="badge-list-dashboard">
-                  {topBadges.length === 0 ? (
-                    <li>No badges earned yet.</li>
-                  ) : (
-                    topBadges.map((badge, idx) => (
-                      <li key={badge.id || idx} className="badge-list-item-dashboard">
-                        <img src={badge.iconUrl} alt={badge.name} className="badge-icon-dashboard" />
-                        <div className="badge-info-dashboard">
-                          <div className="badge-title-dashboard">{badge.name}</div>
-                          <div className="badge-level-dashboard">Level {badge.level || 1}</div>
-                          <div className="badge-progress-bar-dashboard">
-                            <div
-                              className="badge-progress-fill-dashboard"
-                              style={{ width: `${badge.percentage || 0}%` }}
-                            ></div>
-                          </div>
-                        </div>
-                        <div className="badge-percentage-dashboard">
-                          <span className="badge-percentage-value-dashboard">
-                            {badge.percentage ? badge.percentage.toFixed(2) : "0.00"}%
-                          </span>
-                        </div>
-                      </li>
-                    ))
-                  )}
-                </ul>
-              )}
-            </div>
-          </div>
-
-
-
-          {/* <div className="leaderboard-title-container-dashboard">
+        {/* <div className="leaderboard-title-container-dashboard">
             <h1 className="leaderboard-title-properties-dashboard">Leaderboard</h1>
           </div> */}
 
-          <div
-            className="leaderboards-container-dashboard"
-            style={{
-              overflowX: "auto",
-              padding: "1rem",
-              backgroundColor: "#fff",
-              borderRadius: "8px",
-            }}
-          >
-            <div className="flex bg-[#F5F6F8] p-1 rounded-xl w-[300px] mb-4">
-              <button
-                onClick={() => setLeaderboardMode("classic")}
-                className={`w-1/2 py-2  rounded-xl font-semibold 
+        <div
+          className="leaderboards-container-dashboard"
+          style={{
+            overflowX: "auto",
+            padding: "1rem",
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+          }}
+        >
+          <div className="flex bg-[#F5F6F8] p-1 rounded-xl w-[300px] mb-4">
+            <button
+              onClick={() => setLeaderboardMode("classic")}
+              className={`w-1/2 py-2  rounded-xl font-semibold 
                 ${
                   leaderboardMode === "classic"
                     ? "bg-[#FFC300]  text-black-400 shadow-sm"
                     : "bg-transparent text-gray-400"
                 }`}
-              >
-                Competition
-              </button>
+            >
+              Competition
+            </button>
 
-              <button
-                onClick={() => setLeaderboardMode("mastery")}
-                className={`w-1/2 py-2  rounded-xl font-semibold
+            <button
+              onClick={() => setLeaderboardMode("mastery")}
+              className={`w-1/2 py-2  rounded-xl font-semibold
                 ${
                   leaderboardMode === "mastery"
                     ? "bg-[#FFC300]  text-black-400 shadow-sm"
                     : "bg-transparent text-gray-400"
                 }`}
-              >
-                Mastery
-              </button>
+            >
+              Mastery
+            </button>
+          </div>
+
+          {(
+            leaderboardMode === "classic"
+              ? loadingDataClassic
+              : loadingDataMastery
+          ) ? (
+            <div
+              className="loading-overlay-dashboard"
+              style={{ height: "150px" }}
+            >
+              <div className="spinner"></div>
+              <p>Loading {leaderboardMode} leaderboard...</p>
             </div>
+          ) : (
+            <table
+              style={{
+                width: "100%",
+                fontSize: "0.85rem",
+                borderCollapse: "collapse",
+              }}
+            >
+              <thead>
+                <tr
+                  className="text-black"
+                  style={{ borderBottom: "1px solid #ddd" }}
+                >
+                  <th className="leaderboard-th">Username</th>
+                  <th className="leaderboard-th">Branch</th>
+                  <th className="leaderboard-th">World</th>
+                  <th className="leaderboard-th">Score (%)</th>
+                  <th className="leaderboard-th">Time (s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(leaderboardMode === "classic"
+                  ? classicLeaderboards
+                  : leaderboardsMastery
+                )
+                  .map((item) => ({
+                    ...item,
+                    calculatedScore: item.total_items
+                      ? (item.correct / item.total_items) * 100
+                      : 0,
+                  }))
+                  .sort((a, b) => b.calculatedScore - a.calculatedScore)
+                  .slice(0, 10)
+                  .map((item, index) => {
+                    const user = item.user_id || {};
+                    const scorePercent = item.total_items
+                      ? item.calculatedScore.toFixed(0) + "%"
+                      : "N/A";
 
-            {(
-              leaderboardMode === "classic"
-                ? loadingDataClassic
-                : loadingDataMastery
-            ) ? (
-              <div
-                className="loading-overlay-dashboard"
-                style={{ height: "150px" }}
-              >
-                <div className="spinner"></div>
-                <p>Loading {leaderboardMode} leaderboard...</p>
-              </div>
-            ) : (
-              <table
-                style={{
-                  width: "100%",
-                  fontSize: "0.85rem",
-                  borderCollapse: "collapse",
-                }}
-              >
-                <thead>
-                  <tr
-                    className="text-black"
-                    style={{ borderBottom: "1px solid #ddd" }}
-                  >
-                    <th className="leaderboard-th">Username</th>
-                    <th className="leaderboard-th">Branch</th>
-                    <th className="leaderboard-th">World</th>
-                    <th className="leaderboard-th">Score (%)</th>
-                    <th className="leaderboard-th">Time (s)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(leaderboardMode === "classic"
-                    ? classicLeaderboards
-                    : leaderboardsMastery
-                  )
-                    .map((item) => ({
-                      ...item,
-                      calculatedScore: item.total_items
-                        ? (item.correct / item.total_items) * 100
-                        : 0,
-                    }))
-                    .sort((a, b) => b.calculatedScore - a.calculatedScore)
-                    .slice(0, 10)
-                    .map((item, index) => {
-                      const user = item.user_id || {};
-                      const scorePercent = item.total_items
-                        ? item.calculatedScore.toFixed(0) + "%"
-                        : "N/A";
-
-                      return (
-                        <tr
-                          key={item._id}
+                    return (
+                      <tr
+                        key={item._id}
+                        style={{
+                          borderBottom: "1px solid #eee",
+                          textAlign: "center",
+                        }}
+                      >
+                        <td className="text-black" style={{ padding: "6px" }}>
+                          {index + 1}. {user.username || "Unknown"}
+                        </td>
+                        <td
+                          className="text-black"
+                          style={{ padding: "6px", textTransform: "uppercase" }}
+                        >
+                          {user.branch || item.branch || "N/A"}
+                        </td>
+                        <td
+                          className="text-black"
                           style={{
-                            borderBottom: "1px solid #eee",
-                            textAlign: "center",
+                            padding: "6px",
+                            textTransform: "capitalize",
                           }}
                         >
-                          <td className="text-black" style={{ padding: "6px" }}>
-                            {index + 1}. {user.username || "Unknown"}
-                          </td>
-                          <td
-                            className="text-black"
-                            style={{ padding: "6px", textTransform: "uppercase" }}
-                          >
-                            {user.branch || item.branch || "N/A"}
-                          </td>
-                          <td
-                            className="text-black"
-                            style={{
-                              padding: "6px",
-                              textTransform: "capitalize",
-                            }}
-                          >
-                            {item.category || "N/A"}
-                          </td>
-                          <td className="text-black" style={{ padding: "6px" }}>
-                            {scorePercent}
-                          </td>
-                          <td className="text-black px-2 py-1 text-center text-sm">
-                            {formatTime(item.time_completion)}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-            )}
-          </div>
+                          {item.category || "N/A"}
+                        </td>
+                        <td className="text-black" style={{ padding: "6px" }}>
+                          {scorePercent}
+                        </td>
+                        <td className="text-black px-2 py-1 text-center text-sm">
+                          {formatTime(item.time_completion)}
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          )}
         </div>
-
-      
-
-
+      </div>
     </div>
   );
 }

@@ -324,42 +324,11 @@ export default function ManageQuestion() {
   function handleBack() {
     setGotSelected(false);
     setSubSelected("");
+    setSearchQuestion("");
   }
 
   
-const handleSave = async () => {
-  if (!editingQuestion?._id) {
-    alert("No question selected");
-    return;
-  }
 
-  try {
-    const payload = {
-      question_id: editingQuestion._id,
-      updates: {
-        question: editingQuestion.question,
-        choices: editingQuestion.choices,
-        rationale: editingQuestion.rationale,
-        category: editingQuestion.category,
-        level: editingQuestion.level,
-        answer: editingQuestion.answer,
-        difficulty: editingQuestion.difficulty,
-        timer: editingQuestion.timer ?? null,
-      },
-    };
-
-    await axios.patch(`${API_URL}/updateQuestion`, payload, {
-      headers: { Authorization: `Bearer ${currentWebUser.token}` },
-    });
-
-    setShowEditModal(false);
-    
-    queryClient.invalidateQueries(["questionsList", category]);
-  } catch (err) {
-    console.error("Failed to update question:", err.response?.data || err.message);
-    alert("Failed to update question. Please try again.");
-  }
-};
 
 
   function Category_Choices({ text, id, onClick, bgImage }) {
@@ -707,7 +676,6 @@ const handleSave = async () => {
         question={editingQuestion}
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
-        onSave={handleSave}
         onChange={(field, value, idx) => {
           setEditingQuestion(prev => {
             if (!prev) return prev;
@@ -731,6 +699,8 @@ const handleSave = async () => {
           originalQuestion &&
           JSON.stringify(originalQuestion) !== JSON.stringify(editingQuestion)
         }
+        queryClient={queryClient}   // 👈 pass it
+        category={category}   
       />
 
     </div>

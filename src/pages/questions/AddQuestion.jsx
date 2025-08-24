@@ -42,50 +42,58 @@ function AddQuestion() {
   });
 
   const validateQuestion = (q = question) => {
-    const errors = {
-      question: "",
-      choices: ["", "", "", ""],
-      rationale: "",
-      difficulty: "",
-      level: "",
-      timer: "",
-    };
-
-    if (!q.question.trim()) errors.question = "Please enter a question.";
-
-    if (!q.rationale.trim())
-      errors.rationale = "Please enter an overall rationale.";
-
-    if (!q.difficulty.trim())
-      errors.difficulty = "Please select a difficulty level.";
-
-    if (!q.level || q.level < 1) errors.level = "Please select a valid level.";
-
-    if (!q.timer || q.timer <= 0) errors.timer = "Please enter a number.";
-
-    const choiceTexts = [];
-    q.choices.forEach((c, i) => {
-      if (!c.text.trim())
-        errors.choices[
-          i
-        ] = `Choice ${c.letter.toUpperCase()} answer is required.`;
-      else if (choiceTexts.includes(c.text.trim().toLowerCase()))
-        errors.choices[i] = "Duplicate choice text is not allowed.";
-
-      if (!c.rationale.trim())
-        errors.choices[i] += errors.choices[i]
-          ? " Rationale is required."
-          : "Rationale is required.";
-
-      choiceTexts.push(c.text.trim().toLowerCase());
-    });
-
-    setValidationErrors(errors);
-
-    return !Object.values(errors).some(
-      (e) => e || (Array.isArray(e) && e.some((x) => x))
-    );
+  const errors = {
+    question: "",
+    choices: ["", "", "", ""],
+    rationale: "",
+    difficulty: "",
+    level: "",
+    timer: "",
   };
+
+  if (!q.question.trim()) errors.question = "Please enter a question.";
+
+  if (!q.rationale.trim())
+    errors.rationale = "Please enter an overall rationale.";
+
+  if (!q.difficulty.trim())
+    errors.difficulty = "Please select a difficulty level.";
+
+  if (!q.level || q.level < 1)
+    errors.level = "Please select a valid level.";
+
+  if (!q.timer || q.timer <= 0)
+    errors.timer = "Please enter a number greater than 0.";
+
+  const choiceTexts = [];
+  q.choices.forEach((c, i) => {
+    if (!c.text.trim())
+      errors.choices[i] = `Choice ${c.letter.toUpperCase()} answer is required.`;
+    else if (choiceTexts.includes(c.text.trim().toLowerCase()))
+      errors.choices[i] = "Duplicate choice text is not allowed.";
+
+    if (!c.rationale.trim())
+      errors.choices[i] += errors.choices[i]
+        ? " Rationale is required."
+        : "Rationale is required.";
+
+    choiceTexts.push(c.text.trim().toLowerCase());
+  });
+
+  setValidationErrors(errors);
+
+  // check if any error exists
+  const hasError =
+    errors.question ||
+    errors.rationale ||
+    errors.difficulty ||
+    errors.level ||
+    errors.timer ||
+    errors.choices.some((err) => err);
+
+  return !hasError;
+};
+
 
   useEffect(() => {
     const categoryFromState = location.state?.category;
@@ -124,33 +132,33 @@ function AddQuestion() {
   const [question, setQuestion] = useState(getInitialQuestionState);
 
   const handleAddQuestion = () => {
-    if (Object.keys(validationErrors).length > 0) {
-      setValidationMessage(
-        "Please fill up all required fields*."
-      );
-      setShowValidationModal(true);
-      return;
-    }
+  // validate current question
+  const isValid = validateQuestion(question);
 
-    const emptyChoice = question.choices.some(
-      (c) => !c.text.trim() || !c.rationale.trim()
-    );
-    if (emptyChoice) {
-      setValidationMessage(
-        "Please fill up all required fields*."
-      );
-      setShowValidationModal(true);
-      return;
-    }
+  if (!isValid) {
+    setValidationMessage("Please fill up all required fields*.");
+    setShowValidationModal(true);
+    return;
+  }
 
-    // If no errors, add the question
-    const questionCopy = JSON.parse(JSON.stringify(question));
-    setAllQuestions((prev) => [...prev, questionCopy]);
-    setQuestion(getInitialQuestionState());
-    setValidationErrors({}); // clear any previous errors
+  // If valid, add the question
+  const questionCopy = JSON.parse(JSON.stringify(question));
+  setAllQuestions((prev) => [...prev, questionCopy]);
+  setQuestion(getInitialQuestionState());
 
-    console.log("Added:", questionCopy);
-  };
+  // reset validation errors
+  setValidationErrors({
+    question: "",
+    choices: ["", "", "", ""],
+    rationale: "",
+    difficulty: "",
+    level: "",
+    timer: "",
+  });
+
+  console.log("Added:", questionCopy);
+};
+
 
   // const handleAddQuestion = () => { [[OLD CODE KEEPING JUST IN CASE]]
   //   const {
