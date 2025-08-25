@@ -314,14 +314,31 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
   const [reviewModeData, setReviewModeData] = useState([]);
   const { currentWebUser } = useContext(UserLoggedInContext);
   const [userBadges, setUserBadges] = useState([]);
-  const [recentAct, setRecentAct] = useState();
+  const [recentAct, setRecentAct] = useState([]);
 
   const studentId = student._id;
+  
 
-  const getMostRecentAttempt = (attempts) => {
-    if (!attempts || attempts.length === 0) return null;
-    return attempts[attempts.length - 1]; // ✅ last attempt in array
-  };
+  useEffect(() => {
+    const fetchRecentAttempts = async () => {
+      try {
+        setLoadingData(true);
+        const { data } = await axios.get(
+          `${API_URL}/getUserRecentAttempts?user_id=${studentId}`
+        );
+        setRecentAct(data);
+        console.log("recent", data);
+        
+
+      } catch (error) {
+        console.error("Error fetching student data:", error.message);
+      } finally {
+        setLoadingData(false);
+      }
+    };
+    if (studentId) fetchRecentAttempts();
+  }, [studentId]);
+
 
   useEffect(() => {
     const fetchAttempts = async () => {
@@ -339,10 +356,6 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
         );
         setMasteryModeData(hundredItemsOnly);
         setReviewModeData(data.filter((data) => data.mode === "review"));
-
-        const recent = getMostRecentAttempt(data);
-        setRecentAct(recent);
-        console.log("recent is", recent);
       } catch (error) {
         console.error("Error fetching student data:", error.message);
       } finally {

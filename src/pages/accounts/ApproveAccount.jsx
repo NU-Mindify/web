@@ -11,6 +11,7 @@ import SelectFilter from "../../components/selectFilter/SelectFilter";
 import SearchBar from "../../components/searchbar/SearchBar";
 import UserContentsTable from "../../components/tableForContents/UserContentsTable";
 import chevronIcon from "../../assets/forAll/chevron.svg";
+import { getAuth, deleteUser } from "firebase/auth";
 
 export default function ApproveAccount() {
   const [unApproveAccounts, setUnApproveAccounts] = useState([]);
@@ -59,7 +60,6 @@ export default function ApproveAccount() {
 
       setUnApproveAccounts(pendingUsers);
       // console.log(pendingUsers.length);
-      
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
@@ -206,7 +206,6 @@ export default function ApproveAccount() {
               addedClassName="ml-3"
             />
           )}
-
         </div>
       </div>
 
@@ -270,6 +269,21 @@ export default function ApproveAccount() {
 function CardActiveContent({ user, refreshData }) {
   const [approveLoading, setApproveLoading] = useState(false);
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
+  console.log("The user", user._id);
+
+  const handleDecline = async () => {
+    try {
+
+      console.log("user id", user._id);
+      await axios.delete(`${API_URL}/declineUser/${user._id}`);
+
+      alert("User deleted successfully");
+      refreshData();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      alert("Failed to delete user. Try again.");
+    }
+  };
 
   const handlesApprove = async () => {
     setApproveLoading(true);
@@ -313,7 +327,7 @@ function CardActiveContent({ user, refreshData }) {
         />
         <Buttons
           text="Decline"
-          onClick={() => alert("Decline clicked")}
+          onClick={handleDecline}
           addedClassName="btn btn-error"
         />
       </div>

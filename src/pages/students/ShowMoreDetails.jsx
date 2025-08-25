@@ -152,18 +152,39 @@ export default function ShowMoreDetails() {
           </table>
         </div>
 
-        {recentAct && (
+        {recentAct && recentAct.length > 0 && (
           <div className="w-full h-auto py-3">
             <h1 className="text-2xl font-bold">Recent Activity</h1>
-            <h1>Level: {recentAct.level}</h1>
-            <h1>
-              Category:{" "}
-              {categories.find((cat) => cat.id === recentAct.category)?.name}
-            </h1>
-            <h1>
-              Score: {recentAct.correct}/{recentAct.total_items}
-            </h1>
-            <h1>Time: {recentAct.time_completion}</h1>
+            <div className="mt-2 flex flex-col gap-2">
+              {recentAct.map((act, index) => (
+                <div
+                  key={index}
+                  className="border border-gray-300 rounded-md p-2 bg-white shadow-sm"
+                >
+                  <p className="text-black text-sm">
+                    <strong>Mode:</strong> {act.mode}
+                  </p>
+                  <p className="text-black text-sm">
+                    <strong>Level:</strong> {act.level}
+                  </p>
+                  <p className="text-black text-sm">
+                    <strong>Category:</strong>{" "}
+                    {categories.find((cat) => cat.id === act.category)?.name ||
+                      act.category}
+                  </p>
+                  <p className="text-black text-sm">
+                    <strong>Score:</strong> {act.correct}/{act.total_items}
+                  </p>
+                  <p className="text-black text-sm">
+                    <strong>Time:</strong> {act.time_completion}
+                  </p>
+                  <p className="text-black text-sm">
+                    <strong>Date:</strong>{" "}
+                    {new Date(act.createdAt).toLocaleString()}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
