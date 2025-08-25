@@ -21,6 +21,8 @@ import phone4 from "../../assets/landingpage/phone4.png";
 import phone5 from "../../assets/landingpage/phone5.png";
 import phone6 from "../../assets/landingpage/phone6.png";
 
+import { Menu, X } from "lucide-react";
+
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -31,6 +33,8 @@ const LandingPage = () => {
   const toggleFAQ = (index) => {
     setOpenFAQIndex(openFAQIndex === index ? null : index);
   };
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
 useEffect(() => {
   const handleScroll = () => {
@@ -135,50 +139,110 @@ const faqs = [
     answer: "NU Mindify is a student-focused psychology review app designed to help learners master key concepts and prepare for exams efficiently.",
   },
   {
-    question: "Is NU Mindify available in all NU Campuses?",
-    answer: "Yes! NU Mindify is available to students from all NU campuses across the Philippines.",
-  },
-  {
-    question: "Is NU Mindify free to use?",
-    answer: "Yes, NU Mindify is completely free to download and use for NU Psychology students.",
-  },
-  {
     question: "Who is NU Mindify for?",
-    answer: "NU Mindify is designed for psychology students looking to review topics, master concepts, and prepare confidently for board exams.",
+    answer:
+      "NU Mindify is designed for psychology students looking to review topics, master concepts, and prepare confidently for board exams.",
+  },
+  {
+    question: "Is NU Mindify available in all NU Campuses?",
+    answer:
+      "Yes. NU Mindify is available to students from all NU campuses.",
   },
   {
     question: "Can all Psychology students download NU Mindify?",
-    answer: "Yes, all NU Psychology students are welcome to download and use the app to aid their studies.",
+    answer:
+      "All NU Psychology students that are enrolled in the current term are welcome to download and use the app.",
   },
   {
-    question: "Do I need to sign up to use the app?",
-    answer: "You will need to create an account to track your progress, customize your avatar, and access AI-powered features like Mindi.",
+    question: "Can students outside National University download NU Mindify?",
+    answer:
+      "No. NU Mindify is exclusively accessible to National University students through their NUIS account.",
+  },
+  {
+    question: "Is NU Mindify available offline?",
+    answer:
+      "No. An active internet connection is required to use the app.",
+  },
+  {
+    question: "What is the basis of questions in the reviewer?",
+    answer:
+      "The test items went through a standardized test construction process.",
   },
 ];
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
 
   return (
     <div className="landing-container">
         
-    {/* Header */}
-      <header className="landing-header">
-        
-        <img src={mindify} alt="Mindify Logo" className="mindify-img" />
+    <header className="landing-header">
+      {/* Logo */}
+      <img src={mindify} alt="Mindify Logo" className="mindify-img" />
 
-        <nav className="nav-links">
-          <a href="#home">Home</a>
-          <a href="#about">About Us</a>
-          <a href="#features">Features</a>
-          <a href="#download">Download</a>
-          <a href="#faq">FAQs</a>
-        </nav>
+      {/* Desktop Nav */}
+      <nav className="nav-links">
+        <a href="#home">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="#faq">FAQs</a>
+      </nav>
 
-        <div className="auth-buttons">
-          <button className="login-btn" onClick={() => navigate("/login")}>
-            Sign In
-          </button>
+      {/* Desktop Auth */}
+      <div className="auth-buttons">
+        <button className="login-btn" onClick={() => navigate("/login")}>
+          Sign In
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <button
+        className="md:hidden p-2 z-50"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        {menuOpen ? <X size={28} /> : <Menu size={28} />}
+      </button>
+
+      {/* Mobile Drawer */}
+      <div
+        className={`fixed top-0 right-0 h-screen w-64 bg-white shadow-lg z-40 transform transition-transform duration-300 ease-in-out 
+        ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
+        <div className="flex flex-col items-start p-6 space-y-6 text-lg pt-20">
+          
+          <a href="#home" onClick={() => setMenuOpen(false)} className="w-full border-b border-gray-200 pb-2">Home</a>
+          <a href="#about" onClick={() => setMenuOpen(false)} className="w-full border-b border-gray-200 pb-2">About Us</a>
+          <a href="#features" onClick={() => setMenuOpen(false)} className="w-full border-b border-gray-200 pb-2">Features</a>
+          <a href="#download" onClick={() => setMenuOpen(false)} className="w-full border-b border-gray-200 pb-2">Download</a>
+          <a href="#faq" onClick={() => setMenuOpen(false)} className="w-full border-b border-gray-200 pb-2">FAQs</a>
+
+          {/* Bigger Centered Button */}
+          <div className="w-full flex justify-center mt-6">
+            <button
+              className="login-btn w-3/4 py-3 text-lg font-semibold rounded-xl"
+              onClick={() => {
+                setMenuOpen(false);
+                navigate("/login");
+              }}
+            >
+              Sign In
+            </button>
+          </div>
         </div>
-      </header>
+      </div>
+
+    </header>
+
 
     {/* Hero Section */}
         <section id="home" className="hero-section">
@@ -320,17 +384,17 @@ const faqs = [
       </section>
 
   {/* Download */} 
-      <section id="download" className="download-section">
+      <section id="download" className="download-section scroll-mt-10">
         <div className="download-content">
           <h2 className="download-title">Download App Now</h2>
 
           {/* Phone Images */}
-          <div className="relative flex justify-center items-end h-[360px] mb-10 w-full max-w-4xl mx-auto mt-25">
+          <div className="relative flex justify-center items-end h-[360px] sm:h-[320px] md:h-[400px] lg:h-[460px] mb-10 w-full ">
             <img src={phone4} alt="Phone Left" className="phone phone-left" />
-            <img src={phone5} alt="Phone Center" className="phone phone-center z-20" />
+            <img src={phone5} alt="Phone Center" className="phone phone-center z-0" />
             <img src={phone6} alt="Phone Right" className="phone phone-right" />
 
-          <div className="absolute bottom-0 left-0 w-full h-[320px] bg-gradient-to-t from-white via-white to-transparent z-20 translate-y-20 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-full h-[320px] sm:h-[260px] md:h-[320px] bg-gradient-to-t from-white via-white to-transparent z-2 translate-y-20 pointer-events-none" />
 
           </div>
 

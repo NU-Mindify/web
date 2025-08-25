@@ -30,26 +30,25 @@ html, body {
   @apply w-20 h-auto block;
 }
 
-.nav-links {
-  @apply hidden md:flex space-x-6;
-}
-
 .nav-links a {
   @apply text-gray-700 hover:text-yellow-400 transition;
 }
 
-.auth-buttons {
-  @apply flex space-x-4;
+.nav-links {
+  @apply hidden md:flex space-x-6;
 }
 
+.auth-buttons {
+  @apply hidden md:flex space-x-4;
+}
 
 /* ==== Hero Section ==== */
 .hero-section {
-  @apply h-screen flex flex-col-reverse md:flex-row items-center justify-center px-8 py-12 bg-gradient-to-b from-white to-[#35408E] rounded-3xl scroll-mt-15;
+  @apply min-h-screen flex flex-col-reverse md:flex-row items-center justify-center px-6 sm:px-8 py-12 bg-gradient-to-b from-white to-[#35408E] rounded-3xl scroll-mt-15;
 }
 
 .hero-section h1 {
-  @apply text-4xl md:text-5xl font-bold leading-tight;
+  @apply text-3xl sm:text-4xl md:text-5xl font-bold leading-tight;
 }
 
 .text-yellow {
@@ -65,7 +64,7 @@ html, body {
 }
 
 .hero-section p {
-  @apply text-gray-100 text-lg;
+  @apply text-gray-100 text-base sm:text-lg;
 }
 
 .store-buttons {
@@ -73,33 +72,33 @@ html, body {
 }
 
 .store-buttons img {
-  @apply h-12;
+  @apply h-10 sm:h-12;
 }
 
 .image-container {
-  @apply relative md:w-1/2 flex justify-center items-center h-full;
+  @apply relative flex justify-center items-center w-full md:w-1/2;
 }
 
 .phone-image {
-  @apply absolute w-[460px] md:w-[480px] drop-shadow-2xl;
+  @apply absolute max-w-[480px] w-full drop-shadow-2xl;
 }
 
 .phone1 {
-  transform: rotate(-5deg) translateX(-60px) translateY(10px);
- 
+  @apply w-[260px] sm:w-[320px] md:w-[400px] lg:w-[460px];
+  transform: rotate(-5deg) translateX(-45px) translateY(10px);
 }
 
 .phone2 {
-  transform: rotate(10deg) translateX(60px) translateY(-30px) scale(1.30);
-
+  @apply w-[280px] sm:w-[340px] md:w-[420px] lg:w-[480px];
+  transform: rotate(10deg) translateX(60px) translateY(-10px) scale(1.15);
 }
 
 .image-container:hover .phone1 {
-  transform: rotate(-2deg) translateX(-55px) translateY(10px) scale(1);
+  transform: rotate(-2deg) translateX(-25px) translateY(10px) scale(1);
 }
 
 .image-container:hover .phone2 {
-  transform: rotate(6deg) translateX(55px) translateY(-50px) scale(1.30);
+  transform: rotate(6deg) translateX(25px) translateY(-30px) scale(1.20);
 }
 
 /* NU Campuses Section */
@@ -174,23 +173,20 @@ html, body {
 
 /* ==== About NU Section ==== */
 .about-nu-section {
-  @apply px-4 py-8 text-center bg-white scroll-mt-15;
+  @apply px-4 py-12 text-center bg-white scroll-mt-15;
 }
 
 .about-title {
-  @apply text-xl font-bold text-[#222] mb-2;
+   @apply  sm:text-lg md:text-xl lg:text-2xl font-bold text-[#222] mb-2 text-center;
 }
 
 .about-nu-section p {
-  @apply mx-auto text-lg max-w-[600px] leading-relaxed text-[#333] pt-4 pb-2;
+  @apply mx-auto text-base sm:text-lg md:text-xl max-w-[700px] leading-relaxed text-[#333] pt-4 pb-2;
 }
 
-.phone-scroll-container {
-  @apply overflow-x-auto whitespace-nowrap py-2;
-}
-
+/* Scroll wrapper */
 .phone-scroll-wrapper {
-  @apply flex overflow-x-auto px-[30px] py-[30px] gap-[55px] w-full;
+  @apply flex overflow-x-auto py-8 gap-8 sm:gap-12 md:gap-16 w-full;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -199,23 +195,27 @@ html, body {
   display: none;
 }
 
+/* Phone items */
 .phone-item {
   @apply flex flex-col items-center pt-5 opacity-50;
   flex: 0 0 auto;
   scroll-snap-align: center;
-  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out;
+  transition: transform 0.2s ease, opacity 0.4s ease-in-out;
 }
 
 .phone-item img {
-  @apply block w-[230px];
+  @apply block w-[160px] sm:w-[180px] md:w-[210px] lg:w-[230px];
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.phone-label {
+  @apply text-sm sm:text-base md:text-lg lg:text-xl font-medium text-gray-700;
 }
 
 .phone-item.active {
   @apply opacity-100;
-  transform: scale(1.15);
+  transform: scale(1.1);
 }
-
 
 /* ==== App Feature Section ==== */
 .features-section {
@@ -223,7 +223,7 @@ html, body {
 }
 
 .features-title {
-  @apply text-xl font-bold text-[#222] mb-2 text-center;
+  @apply sm:text-lg md:text-xl lg:text-2xl font-bold text-[#222] mb-2 text-center;
 }
 
 .features-subtitle {
@@ -238,30 +238,40 @@ html, body {
   color: #444EB2;
 }
 
+/* Default: Mobile (stacked layout, everything centered) */
 .features-grid {
-  @apply w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-start;
+  @apply w-full max-w-6xl mx-auto flex flex-col items-center gap-12;
+}
+
+/* Desktop: 3-column layout */
+@media (min-width: 768px) {
+  .features-grid {
+    @apply grid grid-cols-3 gap-8 items-start;
+  }
 }
 
 /* ==== Left Column (Worlds, Glossary) ==== */
 .features-left {
-  @apply flex flex-col gap-12 text-right items-end pt-20;
-  align-items: flex-end;
-  justify-content: center;
-  margin-left: 0;
+  @apply flex flex-col gap-12 pt-6 md:pt-20 order-2 md:order-1 items-center text-center;
 }
 
+@media (min-width: 1024px) { /* large screens only */
+  .features-left {
+    align-items: flex-end;
+    text-align: right;
+  }
+}
 
 /* ==== Center (Phone + Avatar) ==== */
 .features-center {
-  @apply flex flex-col items-center justify-center;
+  @apply flex flex-col items-center justify-center order-1 md:order-2;
 }
 
-/* Phone Image*/
 .features-image {
   @apply mb-4;
 }
 .features-image img {
-  @apply w-[250px] md:w-[260px];
+  @apply w-[220px] sm:w-[240px] md:w-[260px];
   object-fit: contain;
 }
 
@@ -274,9 +284,26 @@ html, body {
   animation: float 3s ease-in-out infinite;
 }
 
-/* Avatar Customization Styling */
+/* Avatar under phone */
 .features-avatar {
-  @apply flex flex-col items-center text-center;
+  @apply flex flex-col items-center text-center mt-6;
+}
+
+/* ==== Right Column (Mindmap, Ask Mindi) ==== */
+.features-right {
+  @apply flex flex-col gap-12 pt-6 md:pt-20 order-3 items-center text-center;
+}
+
+@media (min-width: 1024px) { /* large screens only */
+  .features-right {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+/* ==== Shared feature styles ==== */
+.feature-box {
+  @apply flex flex-col gap-2 items-center text-center; /* default: always centered */
 }
 
 .feature-icon {
@@ -299,50 +326,38 @@ html, body {
   @apply text-sm text-gray-600 leading-relaxed relative;
 }
 
-/* ==== Right Column (Mindmap, Ask Mindi) ==== */
-.features-right {
-  @apply flex flex-col gap-12 text-left items-end pt-20;
-  margin-left: auto;
-  margin-right: 0;
-}
+/* Large screen modifiers (only kick in >= 1024px) */
+@media (min-width: 1024px) {
+  .features-left .feature-box {
+    align-items: flex-end;
+    text-align: right;
+  }
 
-.feature-box {
-  @apply flex flex-col gap-2;
+  .features-right .feature-box {
+    align-items: flex-start;
+    text-align: left;
+  }
 }
-
-.feature-box.items-end {
-  align-items: flex-end;
-  text-align: right;
-}
-.feature-box.items-center {
-  align-items: center;
-  text-align: center;
-}
-.feature-box.items-start {
-  align-items: flex-start;
-  text-align: left;
-}
-
 
 /* ==== Download App Section ==== */
 .download-section {
-  @apply bg-white py-16 px-4 flex justify-center scroll-mt-5;
+  @apply bg-white py-12 px-4 flex justify-center scroll-auto;
 }
 
 .download-content {
-  @apply flex flex-col items-center text-center max-w-4xl mx-auto;
+  @apply flex flex-col items-center text-center w-full;
 }
 
 .download-title {
-  @apply text-xl font-bold text-[#222] mb-2 text-center mb-10;
+  @apply sm:text-lg md:text-xl lg:text-2xl font-bold text-[#222] mb-6;
 }
 
 .download-heading {
-  @apply relative text-3xl md:text-4xl font-extrabold mb-4 text-center z-20;
+  @apply text-2xl sm:text-3xl md:text-2xl lg:text-4xl font-extrabold mb-4 z-3;
 }
 
 .download-description {
-  @apply text-gray-600 max-w-xl mb-6 text-center z-20;
+  @apply text-gray-600 text-sm sm:text-base max-w-xl mb-6 z-3;
 }
 
 .phone {
@@ -351,40 +366,92 @@ html, body {
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
 }
 
+/* Phone positions with responsive scaling */
 .phone-left {
   left: 50%;
-  transform: translateX(-115%) rotate(-10deg) scale(1.5);
   bottom: 0;
+  transform: translateX(-100%) rotate(-8deg) scale(1.4); 
 }
 
 .phone-center {
   left: 50%;
+  bottom: 20px;
   transform: translateX(-50%) scale(1.5);
-  bottom: 60px;
-  z-index: 5;
+  z-index: 1;
 }
 
 .phone-right {
   right: 50%;
-  transform: translateX(115%) rotate(10deg) scale(1.5);
   bottom: 0;
+  transform: translateX(100%) rotate(8deg) scale(1.4);
 }
 
+/* Small screens */
+@media (min-width: 640px) {
+  .phone-left {
+    transform: translateX(-110%) rotate(-9deg) scale(1.05);
+  }
+  .phone-center {
+    bottom: 30px;
+    transform: translateX(-50%) scale(1.1);
+  }
+  .phone-right {
+    transform: translateX(110%) rotate(9deg) scale(1.05);
+  }
+}
+
+/* Medium screens */
+@media (min-width: 768px) {
+  .phone-left {
+    transform: translateX(-115%) rotate(-10deg) scale(1.1);
+  }
+  .phone-center {
+    bottom: 40px;
+    transform: translateX(-50%) scale(1.2);
+  }
+  .phone-right {
+    transform: translateX(115%) rotate(10deg) scale(1.1);
+  }
+}
+
+/* Large screens */
+@media (min-width: 1024px) {
+  .phone-left {
+    transform: translateX(-120%) rotate(-10deg) scale(1.4);
+  }
+  .phone-center {
+    bottom: 50px;
+    transform: translateX(-50%) scale(1.5);
+  }
+  .phone-right {
+    transform: translateX(120%) rotate(10deg) scale(1.4);
+  }
+}
+
+@media (max-width: 480px) {
+  .phone-left {
+    transform: translateX(-100%) rotate(-8deg) scale(1.1);
+  }
+  .phone-center {
+    bottom: 10px;
+    transform: translateX(-50%) scale(1.2);
+  }
+  .phone-right {
+    transform: translateX(100%) rotate(8deg) scale(1.1);
+  }
+}
 
 /* ==== FAQ Section ==== */
-
 .faq-section {
-  @apply px-4 py-16 bg-white scroll-mt-6;
+  @apply px-4 py-12 sm:py-16 md:py-20 bg-white scroll-mt-6;
 }
 
 .faq-title {
-  @apply text-xl font-bold text-[#222] mb-2 text-center;
+  @apply text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-[#222] mb-2 text-center;
 }
 
 .faq-subtitle {
-  @apply text-2xl md:text-3xl font-semibold leading-relaxed mb-3 text-center;
+  @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold leading-relaxed mb-4 text-center;
 }
-
-
 
 
