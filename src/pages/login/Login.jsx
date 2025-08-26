@@ -180,44 +180,51 @@ export default function Login() {
   };
 
   const handlePasswordReset = async () => {
-    if (!resetEmail) {
+    if (!resetEmail.trim()) {
       setValidationMessage("Please enter your email address.");
+      setShowValidationModal(true);
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(resetEmail)) {
+      setValidationMessage("Please enter a valid email address.");
       setShowValidationModal(true);
       return;
     }
 
     setResetLoading(true);
     try {
-      const signInMethods = await fetchSignInMethodsForEmail(
-        firebaseAuth,
-        resetEmail
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/check-email`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: resetEmail }),
+        }
       );
-      if (signInMethods.length === 0) {
-        setValidationMessage("Account not registered.");
+
+      const { exists } = await response.json();
+
+      if (!exists) {
+        setValidationMessage("This email is not registered in our system.");
         setShowValidationModal(true);
         setResetLoading(false);
         return;
       }
+
       await sendPasswordResetEmail(firebaseAuth, resetEmail);
-      setValidationMessage("Password reset email sent! Check your inbox.");
+      setValidationMessage(
+        "We've sent you a password reset link. Please check your inbox."
+      );
       setShowValidationModal(true);
       setShowResetModal(false);
       setResetEmail("");
     } catch (error) {
-      let errorMessage =
-        "Error sending password reset email. Please try again.";
-
-      if (error.code === "auth/invalid-email") {
-        errorMessage = "Invalid email address format.";
-      } else if (error.code === "auth/user-not-found") {
-        errorMessage = "Email not registered.";
-      } else if (error.code === "auth/too-many-requests") {
-        errorMessage = "Too many requests. Please try again later.";
-      } else if (error.code === "auth/network-request-failed") {
-        errorMessage = "Network error. Please check your connection.";
-      }
-
-      setValidationMessage(errorMessage);
+      console.error(error);
+      setValidationMessage(
+        "Something went wrong while sending the reset email. Please try again later."
+      );
       setShowValidationModal(true);
     } finally {
       setResetLoading(false);

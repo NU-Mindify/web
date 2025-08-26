@@ -189,7 +189,8 @@ function App() {
               </Routes>
             ) : !isSplash ? (
               <div className="main-container">
-                <SessionTimeout timeout={15 * 60 * 1000} /> {/* 15 minutes */}
+                <SessionTimeout timeout={15 * 60 * 1000} />  {/* 15 minutes */}
+                {/* <SessionTimeout timeout={10 * 1000} /> 10 seconds for testing */}
                 <Sidebar />
                 <div
                   className={
