@@ -72,71 +72,71 @@ export default function ManageQuestion() {
   const [originalQuestion, setOriginalQuestion] = useState(null);
 
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      const reader = new FileReader();
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     setSelectedFile(file);
+  //     const reader = new FileReader();
 
-      reader.onload = (e) => {
-        const text = e.target.result;
-        const lines = text.split("\n").filter((line) => line.trim() !== "");
+  //     reader.onload = (e) => {
+  //       const text = e.target.result;
+  //       const lines = text.split("\n").filter((line) => line.trim() !== "");
 
-        const headers = lines[0].split(",").map((h) => h.trim());
-        const newQuestionsFromCSV = [];
+  //       const headers = lines[0].split(",").map((h) => h.trim());
+  //       const newQuestionsFromCSV = [];
 
-        for (let i = 1; i < lines.length; i++) {
-          const values = lines[i].split(",").map((s) => s.trim());
-          const rowData = {};
-          headers.forEach((header, index) => {
-            rowData[header] = values[index];
-          });
+  //       for (let i = 1; i < lines.length; i++) {
+  //         const values = lines[i].split(",").map((s) => s.trim());
+  //         const rowData = {};
+  //         headers.forEach((header, index) => {
+  //           rowData[header] = values[index];
+  //         });
 
-          if (!rowData["Question"] || !rowData["Overall Rationale"] || !rowData["Category"] || !rowData["Level"]) {
-            console.warn(`Skipping row ${i + 1} due to missing essential data.`);
-            continue;
-          }
+  //         if (!rowData["Question"] || !rowData["Overall Rationale"] || !rowData["Category"] || !rowData["Level"]) {
+  //           console.warn(`Skipping row ${i + 1} due to missing essential data.`);
+  //           continue;
+  //         }
 
-          const choices = [];
-          let correctAnswerLetter = "";
+  //         const choices = [];
+  //         let correctAnswerLetter = "";
 
-          const choiceLetters = ['a', 'b', 'c', 'd'];
-          for (let j = 0; j < 4; j++) {
-            const choiceTextCol = `Choice ${String.fromCharCode(65 + j)} Text`;
-            const choiceIsCorrectCol = `Choice ${String.fromCharCode(65 + j)} isCorrect`;
+  //         const choiceLetters = ['a', 'b', 'c', 'd'];
+  //         for (let j = 0; j < 4; j++) {
+  //           const choiceTextCol = `Choice ${String.fromCharCode(65 + j)} Text`;
+  //           const choiceIsCorrectCol = `Choice ${String.fromCharCode(65 + j)} isCorrect`;
 
-            if (rowData[choiceTextCol] !== undefined && rowData[choiceIsCorrectCol] !== undefined) {
-              const isCorrect = rowData[choiceIsCorrectCol].toLowerCase() === 'true';
-              choices.push({
-                letter: choiceLetters[j],
-                text: rowData[choiceTextCol],
-                isCorrect: isCorrect,
-              });
-              if (isCorrect) {
-                correctAnswerLetter = choiceLetters[j];
-              }
-            }
-          }
+  //           if (rowData[choiceTextCol] !== undefined && rowData[choiceIsCorrectCol] !== undefined) {
+  //             const isCorrect = rowData[choiceIsCorrectCol].toLowerCase() === 'true';
+  //             choices.push({
+  //               letter: choiceLetters[j],
+  //               text: rowData[choiceTextCol],
+  //               isCorrect: isCorrect,
+  //             });
+  //             if (isCorrect) {
+  //               correctAnswerLetter = choiceLetters[j];
+  //             }
+  //           }
+  //         }
 
-          const questionObj = {
-            question: rowData["Question"],
-            choices: choices,
-            rationale: rowData["Overall Rationale"],
-            category: rowData["Category"],
-            level: parseInt(rowData["Level"], 0),
-            answer: correctAnswerLetter,
-            difficulty: rowData["Difficulty"] || "Unknown"
-          };
-          newQuestionsFromCSV.push(questionObj);
-        }
-        setUploadedQuestions(newQuestionsFromCSV);
-      };
-      reader.readAsText(file);
-    } else {
-      setSelectedFile(null);
-      setUploadedQuestions([]);
-    }
-  };
+  //         const questionObj = {
+  //           question: rowData["Question"],
+  //           choices: choices,
+  //           rationale: rowData["Overall Rationale"],
+  //           category: rowData["Category"],
+  //           level: parseInt(rowData["Level"], 0),
+  //           answer: correctAnswerLetter,
+  //           difficulty: rowData["Difficulty"] || "Unknown"
+  //         };
+  //         newQuestionsFromCSV.push(questionObj);
+  //       }
+  //       setUploadedQuestions(newQuestionsFromCSV);
+  //     };
+  //     reader.readAsText(file);
+  //   } else {
+  //     setSelectedFile(null);
+  //     setUploadedQuestions([]);
+  //   }
+  // };
 
   const handleConfirmCSVUpload = () => {
     console.log("questions are", uploadedQuestions);
@@ -485,7 +485,7 @@ export default function ManageQuestion() {
 
               <div className="flex items-center gap-3 flex-shrink-0">
                 <div className="flex items-center gap-2">
-                  <label className="bg-black cursor-pointer !text-white px-4 py-2 rounded">
+                  {/* <label className="bg-black cursor-pointer !text-white px-4 py-2 rounded">
                     Upload CSV
                     <input
                       type="file"
@@ -493,7 +493,7 @@ export default function ManageQuestion() {
                       accept=".csv"
                       onChange={handleFileChange}
                     />
-                  </label>
+                  </label> */}
                   {selectedFile && uploadedQuestions.length > 0 && (
                     <Buttons
                       text={`Upload ${uploadedQuestions.length} Questions`}

@@ -11,11 +11,8 @@ import closebtn from "../../assets/glossary/close-btn.svg";
 import Papa from "papaparse";
 import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
 
-import add from "../../assets/questions/addQuestionbtn.svg";
-import edit from "../../assets/questions/editQuestionbtn.svg";
-import saveBTN from "../../assets/questions/savebtn.svg";
-import remove from "../../assets/questions/removeQuestionbtn.svg";
-import save from "../../assets/questions/saveQuestionbtn.svg";
+import OkCancelModal from "../../components/OkCancelModal/OkCancelModal.jsx";
+import { add } from "date-fns";
 
 function AddQuestion() {
   const nav = useNavigate();
@@ -32,6 +29,12 @@ function AddQuestion() {
 
   const [onEdit, setOnEdit] = useState(false);
 
+  const [OkCancelModalMessage, setOkCancelModalMessage] = useState("");
+  const [showOkCancelModal, setShowOkCancelModal] = useState(false);
+  const [questionToRemoveIdx, setQuestionToRemoveIdx] = useState(null);
+  const [AddSuccessModalMessage, setAddSuccessModalMessage] = useState("");
+  const [showAddSuccessModal, setShowAddSuccessModal] = useState(false);
+
   const [validationErrors, setValidationErrors] = useState({
     question: "",
     choices: ["", "", "", ""],
@@ -42,58 +45,58 @@ function AddQuestion() {
   });
 
   const validateQuestion = (q = question) => {
-  const errors = {
-    question: "",
-    choices: ["", "", "", ""],
-    rationale: "",
-    difficulty: "",
-    level: "",
-    timer: "",
+    const errors = {
+      question: "",
+      choices: ["", "", "", ""],
+      rationale: "",
+      difficulty: "",
+      level: "",
+      timer: "",
+    };
+
+    if (!q.question.trim()) errors.question = "Please enter a question.";
+
+    if (!q.rationale.trim())
+      errors.rationale = "Please enter an overall rationale.";
+
+    if (!q.difficulty.trim())
+      errors.difficulty = "Please select a difficulty level.";
+
+    if (!q.level || q.level < 1) errors.level = "Please select a valid level.";
+
+    if (!q.timer || q.timer <= 0)
+      errors.timer = "Please enter a number greater than 0.";
+
+    const choiceTexts = [];
+    q.choices.forEach((c, i) => {
+      if (!c.text.trim())
+        errors.choices[
+          i
+        ] = `Choice ${c.letter.toUpperCase()} answer is required.`;
+      else if (choiceTexts.includes(c.text.trim().toLowerCase()))
+        errors.choices[i] = "Duplicate choice text is not allowed.";
+
+      if (!c.rationale.trim())
+        errors.choices[i] += errors.choices[i]
+          ? " Rationale is required."
+          : "Rationale is required.";
+
+      choiceTexts.push(c.text.trim().toLowerCase());
+    });
+
+    setValidationErrors(errors);
+
+    // check if any error exists
+    const hasError =
+      errors.question ||
+      errors.rationale ||
+      errors.difficulty ||
+      errors.level ||
+      errors.timer ||
+      errors.choices.some((err) => err);
+
+    return !hasError;
   };
-
-  if (!q.question.trim()) errors.question = "Please enter a question.";
-
-  if (!q.rationale.trim())
-    errors.rationale = "Please enter an overall rationale.";
-
-  if (!q.difficulty.trim())
-    errors.difficulty = "Please select a difficulty level.";
-
-  if (!q.level || q.level < 1)
-    errors.level = "Please select a valid level.";
-
-  if (!q.timer || q.timer <= 0)
-    errors.timer = "Please enter a number greater than 0.";
-
-  const choiceTexts = [];
-  q.choices.forEach((c, i) => {
-    if (!c.text.trim())
-      errors.choices[i] = `Choice ${c.letter.toUpperCase()} answer is required.`;
-    else if (choiceTexts.includes(c.text.trim().toLowerCase()))
-      errors.choices[i] = "Duplicate choice text is not allowed.";
-
-    if (!c.rationale.trim())
-      errors.choices[i] += errors.choices[i]
-        ? " Rationale is required."
-        : "Rationale is required.";
-
-    choiceTexts.push(c.text.trim().toLowerCase());
-  });
-
-  setValidationErrors(errors);
-
-  // check if any error exists
-  const hasError =
-    errors.question ||
-    errors.rationale ||
-    errors.difficulty ||
-    errors.level ||
-    errors.timer ||
-    errors.choices.some((err) => err);
-
-  return !hasError;
-};
-
 
   useEffect(() => {
     const categoryFromState = location.state?.category;
@@ -132,101 +135,32 @@ function AddQuestion() {
   const [question, setQuestion] = useState(getInitialQuestionState);
 
   const handleAddQuestion = () => {
-  // validate current question
-  const isValid = validateQuestion(question);
+    // validate current question
+    const isValid = validateQuestion(question);
 
-  if (!isValid) {
-    setValidationMessage("Please fill up all required fields*.");
-    setShowValidationModal(true);
-    return;
-  }
+    if (!isValid) {
+      setValidationMessage("Please fill up all required fields*.");
+      setShowValidationModal(true);
+      return;
+    }
 
-  // If valid, add the question
-  const questionCopy = JSON.parse(JSON.stringify(question));
-  setAllQuestions((prev) => [...prev, questionCopy]);
-  setQuestion(getInitialQuestionState());
+    // If valid, add the question
+    const questionCopy = JSON.parse(JSON.stringify(question));
+    setAllQuestions((prev) => [...prev, questionCopy]);
+    setQuestion(getInitialQuestionState());
 
-  // reset validation errors
-  setValidationErrors({
-    question: "",
-    choices: ["", "", "", ""],
-    rationale: "",
-    difficulty: "",
-    level: "",
-    timer: "",
-  });
+    // reset validation errors
+    setValidationErrors({
+      question: "",
+      choices: ["", "", "", ""],
+      rationale: "",
+      difficulty: "",
+      level: "",
+      timer: "",
+    });
 
-  console.log("Added:", questionCopy);
-};
-
-
-  // const handleAddQuestion = () => { [[OLD CODE KEEPING JUST IN CASE]]
-  //   const {
-  //     question: questionText,
-  //     choices,
-  //     rationale,
-  //     difficulty,
-  //     level,
-  //     timer,
-  //   } = question;
-
-  //   if (!timer || timer <= 0) {
-  //     setValidationMessage("Please enter a valid timer (greater than 0).");
-  //     setShowValidationModal(true);
-  //     return;
-  //   }
-
-  //   for (const choice of choices) {
-  //     if (
-  //       !choice.text ||
-  //       !choice.text.trim() ||
-  //       !choice.rationale ||
-  //       !choice.rationale.trim()
-  //     ) {
-  //       setValidationMessage("All choices must have both text and rationale.");
-  //       setShowValidationModal(true);
-  //       return;
-  //     }
-  //   }
-
-  //   const choiceTexts = choices.map((c) => c.text.trim().toLowerCase());
-  //   const hasDuplicate = new Set(choiceTexts).size !== choiceTexts.length;
-  //   if (hasDuplicate) {
-  //     setValidationMessage("Duplicate choice texts are not allowed.");
-  //     setShowValidationModal(true);
-  //     return;
-  //   }
-
-  //   if (!questionText.trim()) {
-  //     setValidationMessage("Please enter a question.");
-  //     setShowValidationModal(true);
-  //     return;
-  //   }
-
-  //   if (!difficulty.trim()) {
-  //     setValidationMessage("Please select a difficulty level.");
-  //     setShowValidationModal(true);
-  //     return;
-  //   }
-
-  //   if (!level || level < 1) {
-  //     setValidationMessage("Please select a valid level.");
-  //     setShowValidationModal(true);
-  //     return;
-  //   }
-
-  //   if (!rationale.trim()) {
-  //     setValidationMessage("Please enter an overall rationale.");
-  //     setShowValidationModal(true);
-  //     return;
-  //   }
-
-  //   const questionCopy = JSON.parse(JSON.stringify(question));
-  //   setAllQuestions((prev) => [...prev, questionCopy]);
-  //   setQuestion(getInitialQuestionState());
-
-  //   console.log("Added:", questionCopy);
-  // };
+    console.log("Added:", questionCopy);
+  };
 
   const addToDB = async () => {
     setIsFormDisabled(true);
@@ -250,10 +184,10 @@ function AddQuestion() {
         }
       );
       console.log(data);
-      setValidationMessage("Added Successfully");
-      setShowValidationModal(true);
-      alert("Questions Added Successfully");
-      nav(-1);
+      setAddSuccessModalMessage(
+        "Added Successfully! Questions are to be approved by Admin."
+      );
+      setShowAddSuccessModal(true);
 
       for (const q of allQuestions) {
         await axios.post(`${API_URL}/addLogs`, {
@@ -341,11 +275,13 @@ function AddQuestion() {
               row["C"]?.trim() &&
               row["D"]?.trim() &&
               row["CORRECT ANSWERS"]?.trim() &&
-              row["RATIONALE"]?.trim()
+              row["RATIONALE"]?.trim() &&
+              row["TIMER"]?.trim()
           )
           .map((row) => {
             const correctAnswer = row["CORRECT ANSWERS"].trim().toLowerCase();
             const level = parseInt(row["Level"]);
+            const timer = parseInt(row["TIMER"]);
 
             return {
               question: row["Items"].trim(),
@@ -354,6 +290,7 @@ function AddQuestion() {
               rationale: row["RATIONALE"].trim(),
               answer: correctAnswer,
               category: category,
+              timer: isNaN(timer) ? 0 : timer,
               choices: [
                 {
                   letter: "a",
@@ -390,6 +327,8 @@ function AddQuestion() {
         }
 
         setAllQuestions((prev) => [...prev, ...parsedQuestions]);
+        setValidationMessage("Import Success!");
+        setShowValidationModal(true);
       },
     });
   };
@@ -451,10 +390,15 @@ function AddQuestion() {
           />
           <label
             htmlFor="upload-btn"
-            className="w-[330px] py-5 px-10 rounded-2xl text-2xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+            className="w-[330px] py-5 px-10 rounded-2xl text-xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
           >
             UPLOAD CSV FILE
           </label>
+          <a href="/IMPORT_QUESTIONS_TEMPLATE.csv" download>
+            <button className="w-[330px] mt-2 py-5 px-10 rounded-2xl text-xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer">
+              DOWNLOAD CSV TEMPLATE
+            </button>
+          </a>
           <h3 className="w-full">
             Question<span>*</span>
           </h3>
@@ -578,88 +522,6 @@ function AddQuestion() {
           </div>
         </div>
 
-        {/* <div className="select-container"> [[OLD CODE KEEPING JUST IN CASE]]
-          <div>
-            <h3>
-              Level:<span>*</span>
-            </h3>
-            <select
-              id="levelSelect"
-              disabled={isFormDisabled}
-              value={question.level || ""} 
-              onChange={(e) => {
-                const newLevel = e.target.value ? parseInt(e.target.value) : "";
-                const newQ = { ...question, level: newLevel };
-                setQuestion(newQ);
-                validateQuestion(newQ); 
-              }}
-            >
-              <option value="">Select a Level</option>{" "}
-              {[...Array(10)].map((_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {i + 1}
-                </option>
-              ))}
-            </select>
-
-            {validationErrors.level && (
-              <span className="text-red-600">{validationErrors.level}</span>
-            )}
-          </div>
-
-          <div>
-            <h3>
-              Difficulty:<span>*</span>
-            </h3>
-            <select
-              id="difficultySelect"
-              disabled={isFormDisabled}
-              value={question.difficulty}
-              onChange={(e) => {
-                const newQ = { ...question, difficulty: e.target.value };
-                setQuestion(newQ);
-                validateQuestion(newQ);
-              }}
-            >
-              <option value="">Select a Difficulty</option>{" "}
-              <option value="easy">Easy</option>
-              <option value="average">Average</option>
-              <option value="difficult">Difficult</option>
-            </select>
-
-            {validationErrors.difficulty && (
-              <span className="text-red-600">
-                {validationErrors.difficulty}
-              </span>
-            )}
-          </div>
-
-          <div>
-            <h3>
-              Timer:<span>*</span>
-            </h3>
-            <input
-              type="number"
-              min="0"
-              max="300"
-              placeholder="Enter time in seconds"
-              className="w-[200px] h-[30px] mt-2 border border-gray-400 rounded px-2"
-              disabled={isFormDisabled}
-              value={question.timer || ""}
-              onChange={(e) => {
-                const newQ = { ...question, timer: parseInt(e.target.value) };
-                setQuestion(newQ);
-                validateQuestion(newQ);
-              }}
-            />
-            <div className="h-[20px]">
-              {validationErrors.timer && (
-                <span className="text-red-600">{validationErrors.timer}</span>
-              )}
-            </div>
-          </div>
-        </div> */}
-
         <div className="option-container">
           <h3 className="text-lg font-semibold w-full">
             Options<span>*</span>
@@ -779,13 +641,15 @@ function AddQuestion() {
               {dropdownStates[idx] && (
                 <div className="dropdown-active-container">
                   <div className="level-diff-container">
-                    <div className="grid grid-cols-2 text-center">
+                    <div className="grid grid-cols-3 text-center">
                       <h1>Level</h1>
                       <h1>Difficulty</h1>
+                      <h1>Timer</h1>
                     </div>
-                    <div className="grid grid-cols-2 text-center border border-black h-6/12 mt-2 rounded-xl place-items-center">
+                    <div className="grid grid-cols-3 text-center border border-black h-6/12 mt-2 rounded-xl place-items-center">
                       <h1>{question.level}</h1>
                       <h1>{question.difficulty}</h1>
+                      <h1>{question.timer}s</h1>
                     </div>
                   </div>
 
@@ -838,7 +702,6 @@ function AddQuestion() {
                         onClick={() => setOnEdit(!onEdit)}
                       >
                         SAVE QUESTION
-                        {/* <img src={saveBTN} className="" alt="save-btn-icon" /> */}
                       </button>
                     ) : (
                       <button
@@ -846,28 +709,19 @@ function AddQuestion() {
                         onClick={() => setOnEdit(!onEdit)}
                       >
                         EDIT QUESTION
-                        {/* <img src={edit} className="" alt="edit-btn-icon" /> */}
                       </button>
                     )}
                     <button
                       className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-red-500 text-black hover:bg-red-600 cursor-pointer"
                       onClick={() => {
-                        if (
-                          confirm(
-                            "Are you sure you want to remove this question?"
-                          )
-                        ) {
-                          handleRemoveQuestion(idx);
-                        }
+                        setQuestionToRemoveIdx(idx);
+                        setOkCancelModalMessage(
+                          "Are you sure you want to remove this question?"
+                        );
+                        setShowOkCancelModal(true);
                       }}
-                      addedClassName="btn btn-error"
                     >
                       REMOVE
-                      {/* <img
-                        src={remove}
-                        className="remove-btn"
-                        alt="remove-btn-icon"
-                      /> */}
                     </button>
                   </div>
                 </div>
@@ -882,7 +736,6 @@ function AddQuestion() {
             addedClassName="btn btn-success"
           >
             SAVE QUESTION
-            {/* <img src={save} className="save-ques-btn" alt="save-btn-icon" /> */}
           </button>
         </div>
 
@@ -893,13 +746,23 @@ function AddQuestion() {
           />
         )}
 
+        {showAddSuccessModal && (
+          <ValidationModal
+            message={AddSuccessModalMessage}
+            onClose={() => {
+              setShowAddSuccessModal(false);
+              nav(-1);
+            }}
+          />
+        )}
+
         {showBackConfirmModal && (
           <div className="modal-overlay confirm-delete-popup">
             <div className="confirm-dialog">
               <div className="flex justify-center">
                 <h2>Unsaved Changes</h2>
               </div>
-              <p>You have unsaved input. Are you sure you want to go back?</p>
+              <p>Leaving this page will discard any unsaved changes. Proceed?</p>
               <div className="popup-buttons">
                 <button
                   className="btn-delete"
@@ -923,6 +786,21 @@ function AddQuestion() {
           </div>
         )}
       </div>
+
+      {showOkCancelModal && (
+        <OkCancelModal
+          message={OkCancelModalMessage}
+          onConfirm={() => {
+            handleRemoveQuestion(questionToRemoveIdx);
+            setShowOkCancelModal(false);
+            setQuestionToRemoveIdx(null);
+          }}
+          onCancel={() => {
+            setShowOkCancelModal(false);
+            setQuestionToRemoveIdx(null);
+          }}
+        />
+      )}
     </div>
   );
 }

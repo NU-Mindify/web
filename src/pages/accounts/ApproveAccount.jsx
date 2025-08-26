@@ -13,6 +13,9 @@ import UserContentsTable from "../../components/tableForContents/UserContentsTab
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import { getAuth, deleteUser } from "firebase/auth";
 
+import OkCancelModal from "../../components/OkCancelModal/OkCancelModal.jsx";
+import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+
 export default function ApproveAccount() {
   const [unApproveAccounts, setUnApproveAccounts] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -268,25 +271,46 @@ export default function ApproveAccount() {
 
 function CardActiveContent({ user, refreshData }) {
   const [approveLoading, setApproveLoading] = useState(false);
+
+  const [OkCancelModalMessage, setOkCancelModalMessage] = useState("");
+  const [showOkCancelModal, setShowOkCancelModal] = useState(false);
+  const [AcceptModalMessage, setAcceptModalMessage] = useState("");
+  const [showAcceptModal, setShowAcceptModal] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
+  const [showValidationModal, setShowValidationModal] = useState(false);
+
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
   console.log("The user", user._id);
 
   const handleDecline = async () => {
+    setOkCancelModalMessage(
+      "Are you sure you want to decline this user? (Declining will delete the user's account)"
+    );
+    setShowOkCancelModal(true);
+  };
+
+  const declineUser = async () => {
     try {
-
-      console.log("user id", user._id);
       await axios.delete(`${API_URL}/declineUser/${user._id}`);
-
-      alert("User deleted successfully");
-      refreshData();
+      setValidationMessage("User declined and deleted successfully.");
+      setShowValidationModal(true);
     } catch (error) {
       console.error("Error deleting user:", error);
-      alert("Failed to delete user. Try again.");
+      setValidationMessage("Failed to decline user. Please try again.");
+      setShowValidationModal(true);
     }
   };
 
   const handlesApprove = async () => {
+    setAcceptModalMessage(
+      "Are you sure you want to approve this user? (This action cannot be undone)"
+    );
+    setShowAcceptModal(true);
+  };
+
+  const acceptUser = async () => {
     setApproveLoading(true);
+
     try {
       await axios.put(`${API_URL}/updateWebUsers/${user._id}`, {
         ...user,
@@ -299,11 +323,13 @@ function CardActiveContent({ user, refreshData }) {
         action: "Approve Account",
         description: `${currentWebUser.firstName} has approved ${user.lastName}, ${user.firstName} account`,
       });
-      alert(`User ${user.firstName} ${user.lastName} approved!`);
-      refreshData(); // reloads the list
+
+      setValidationMessage(`User ${user.firstName} ${user.lastName} approved!`);
+      setShowValidationModal(true);
     } catch (error) {
       console.error("Error approving user:", error);
-      alert("Failed to approve user. Try again.");
+      setValidationMessage("Failed to approve user. Please try again.");
+      setShowValidationModal(true);
     } finally {
       setApproveLoading(false);
     }
@@ -331,6 +357,37 @@ function CardActiveContent({ user, refreshData }) {
           addedClassName="btn btn-error"
         />
       </div>
+      {showValidationModal && (
+        <ValidationModal
+          message={validationMessage}
+          onClose={() => {
+            setShowValidationModal(false);
+            refreshData(); // Refresh after modal is closed
+          }}
+        />
+      )}
+
+      {showAcceptModal && (
+        <OkCancelModal
+          message={AcceptModalMessage}
+          onConfirm={async () => {
+            setShowAcceptModal(false);
+            await acceptUser();
+          }}
+          onCancel={() => setShowAcceptModal(false)}
+        />
+      )}
+
+      {showOkCancelModal && (
+        <OkCancelModal
+          message={OkCancelModalMessage}
+          onConfirm={async () => {
+            setShowOkCancelModal(false);
+            await declineUser();
+          }}
+          onCancel={() => setShowOkCancelModal(false)}
+        />
+      )}
     </div>
   );
 }

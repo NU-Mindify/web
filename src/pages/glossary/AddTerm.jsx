@@ -260,10 +260,15 @@ export default function AddTerm() {
           >
             UPLOAD CSV FILE
           </label>
+
+          <a href="/IMPORT_TERMS_TEMPLATE.csv" download>
+            <button className="btn btn-warning w-[230px] rounded-xl !text-white text-xl bg-[#FFC916] border-[#FFC916] font-[Poppins] h-[50px] px-4 flex items-center justify-center text-center cursor-pointer">
+              DOWNLOAD CSV TEMPLATE
+            </button>
+          </a>
         </div>
 
         <div className="create-container">
-          
           <Buttons
             text="Add Terms"
             onClick={handleCreateNewTerm}
