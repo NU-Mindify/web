@@ -11,29 +11,16 @@ html, body, #root {
 /* ------------------- ANIMATED LOGO ---------------------*/
 
 @keyframes numindifyAnimation {
-  0% {
-    opacity: 0;
-    transform: scale(0.6) translateY(20%);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  80% {
-    transform: scale(.8) translateY(-10%);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.4) translateY(-200%);
-  }
+  0%   { opacity: 0; transform: scale(0.6) translateY(20%); }
+  50%  { opacity: 1; transform: scale(1) translateY(0); }
+  80%  { transform: scale(.85) translateY(-8%); }
+  100% { opacity: 0; transform: scale(0.5) translateY(-180%); }
 }
 
-
-
 .logo-animated{
-  animation: numindifyAnimation 3.5s ease-in-out forwards;
+  animation: numindifyAnimation 2s ease-in-out forwards;
   animation-fill-mode: both;
-  @apply w-screen h-screen max-h-[100svh] absolute top-0 left-0 z-50 flex justify-center items-center;
+  @apply w-screen h-screen max-h-[100svh] absolute top-0 left-0 z-10 flex justify-center items-center;
 }
 
 .mindifylogo{
@@ -49,8 +36,17 @@ html, body, #root {
 /* ------------------- MAIN CONTAINER ---------------------*/
 .login-main-container {
   background: radial-gradient(circle at center, #4A6FB4 0%, #27298F 70%, #273574 100%);
-  @apply w-screen h-[100svh] p-5 flex flex-row justify-center items-center;
+  @apply w-screen h-[100svh] p-4 flex flex-col justify-center items-center 
+         lg:flex-row lg:justify-between lg:px-16;
 }
+
+@media (max-width: 768px) {
+  .login-main-container {
+    padding-top: 200px; /* leaves room for logo above form */
+  }
+} 
+
+
 
 /********************************* END *******************************/
 
@@ -62,9 +58,20 @@ html, body, #root {
   animation: fadeUp 2s ease-in forwards;
   animation-delay: 1.5s;
   animation-fill-mode: both;
-  @apply flex flex-col justify-center items-center w-full h-full 
-    lg:w-[calc(65vw-20px)] lg:h-full;
+
+  /* Mobile → logo centered on top */
+  @apply flex flex-col justify-center items-center w-full h-auto 
+         lg:w-1/2 lg:h-full lg:mb-0;
+
 }
+
+@media (max-width: 768px) {
+  .logo-container {
+    margin-bottom: 2rem;
+  }
+}
+
+
 
 @keyframes glowPulse {
   0%, 100% {
@@ -87,20 +94,23 @@ html, body, #root {
 }
 
 .transition-logo {
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(1.7);
+  transform: translate(-50%, -50%) scale(1.4);
   z-index: 50;
-  width: 400px;
-  max-width: 90vw;
 
+  width: 70vw;
+  max-width: 400px;
   opacity: 0;
-  animation: fadeIn 2s ease forwards, glowPulse 4s ease-in-out infinite;
+
+  animation: fadeIn 0.5s ease forwards, glowPulse 3.6s ease-in-out infinite;
   animation-fill-mode: forwards;
-  transition: top 3s ease-in-out, left 1.5s ease-in-out, transform 5s ease-in-out;
+
+  transition: top 1s ease-in-out, left 1s ease-in-out, transform 1s ease-in-out;
 }
 
+/* After move (default = desktop) */
 .transition-logo.moved {
   top: 50%;
   left: 30%;
@@ -109,20 +119,52 @@ html, body, #root {
   opacity: 1;
 }
 
+/* On mobile: keep centered and smaller */
+@media (max-width: 1024px) {
+  .transition-logo.moved {
+    top: 25%;                
+    left: 50%;             
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
 
 .logo-img {
   width: 100%;  
   height: auto;
   display: block;
+  
 }
   
 .info {
-  @apply w-4/5 text-base opacity-100 text-center mt-4
-    lg:text-xl lg:mt-10;
+  @apply w-4/5 text-sm text-center mt-4 lg:text-xl lg:mt-10;
 }
 
 
+/* ------------------- layout for laptop ---------------------*/
 
+@media (width: 1024px) and (min-height: 780px) and (max-height: 810px) {
+  .transition-logo.moved {
+    position: relative !important;
+    margin: 40px auto !important;
+    top: auto !important;
+    transform: none !important;
+  }
+}
+
+
+@media (width: 1024px) {
+  .login-main-container {
+    justify-content: flex-start !important;
+  }
+  .transition-logo.moved {
+    position: relative !important;
+    margin: 40px auto !important; 
+    top: auto !important;
+    left: auto !important;
+    transform: translateX(0) scale(1) !important;
+  }
+}
 /********************************* END *******************************/
 
 
@@ -143,29 +185,29 @@ html, body, #root {
 
 
 
+
 .login-form {
   font-family: 'Poppins', sans-serif;
-  @apply w-[80%] bg-white flex justify-center items-center p-10 rounded-2xl;
+  @apply bg-white flex flex-col justify-center items-center rounded-2xl shadow-lg;
   animation: fadeUp 1.8s ease-in forwards;
   animation-delay: 1.5s;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 }
+
 .welcome-txt {
-  @apply  text-[#35408E] text-3xl font-extrabold;
+  @apply text-[#35408E] text-2xl font-extrabold text-center lg:text-3xl;
 }
 
 .mini-txt {
-  @apply text-black text-[14px] mb-5;
+  @apply text-black text-sm mb-4 text-center;
 }
 
 .input-container {
-  @apply w-4/5 flex flex-col flex-grow;
+  @apply w-full flex flex-col;
 }
 
 .inputs {
   border: 1px solid black;
-  @apply w-full bg-white text-black h-[40px] my-[10px] px-2 
+  @apply w-full bg-white text-black h-[45px] my-2 px-2 
          focus:outline-none focus:ring-0 focus:border-black;
 }
 
@@ -174,7 +216,7 @@ html, body, #root {
 }
 
 .remember-container {
-  @apply w-full flex flex-row items-center mt-2 mb-5;
+  @apply w-full flex flex-row justify-between items-center mt-2 mb-4 text-sm;
 }
 
 .remember-txt {
@@ -239,3 +281,66 @@ html, body, #root {
 }
 
 /********************************* END *******************************/
+
+
+/* ------------------- MOBILE FORM ADJUSTMENTS ---------------------*/
+@media (max-width: 640px) {
+  .login-form {
+    @apply w-[90%] p-4 rounded-xl;
+  }
+
+  .welcome-txt {
+    @apply text-xl; /* smaller headline */
+  }
+
+  .mini-txt {
+    @apply text-xs; /* smaller subtitle */
+  }
+
+  .inputs {
+    @apply h-[38px] text-sm; /* smaller inputs */
+  }
+
+  .remember-container {
+    @apply text-xs;
+  }
+
+  .login-btn,
+  .login-btn-ms {
+    @apply h-[36px] text-sm; /* smaller buttons */
+  }
+}
+
+
+/* ------------------- EXTRA SMALL SCREEN FIX ---------------------*/
+@media (max-width: 480px) {
+  .login-form {
+    @apply w-[95%] p-3 rounded-lg scale-[0.9];
+    max-width: 320px; /* hard cap smaller */
+  }
+
+  .welcome-txt {
+    @apply text-lg;
+  }
+
+  .mini-txt {
+    @apply text-xs leading-tight;
+  }
+
+  .inputs {
+    @apply h-[32px] text-xs px-2;
+  }
+
+  .remember-container {
+    @apply text-[11px];
+  }
+
+  .login-btn,
+  .login-btn-ms {
+    @apply h-[32px] text-xs;
+  }
+}
+
+
+
+
