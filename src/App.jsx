@@ -33,6 +33,7 @@ import SignUp from "./pages/signUp/SignUp";
 import ApproveAccount from "./pages/accounts/ApproveAccount";
 import Branches from "./pages/branches/Branches";
 import Landing from "./pages/landingpage/landing";
+import ShowUnapprove from "./pages/questions/ShowUnapprove";
 
 const queryClient = new QueryClient();
 
@@ -226,6 +227,7 @@ function App() {
                       path="/termsAndCondition"
                       element={<TermsAndConditions />}
                     />
+                    <Route path="/unapproved" element={<ShowUnapprove />} />
 
                     <Route path="*" element={<Navigate to="/" />} />
                   </Routes>

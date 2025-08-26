@@ -21,6 +21,7 @@ import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import Buttons from "../../components/buttons/Buttons";
 import { useQueryClient } from "@tanstack/react-query";
 
+
 const categoriesObj = [
   {
     id: "abnormal",
@@ -327,6 +328,22 @@ export default function ManageQuestion() {
     setSearchQuestion("");
   }
 
+const handlesUnapprove = () => {
+  console.log("Category",category);
+  console.log("selected cat",selectedCat);
+
+  navigate("/unapproved", {
+    state: {
+      category,
+      categoryName: selectedCat,
+    },
+  });
+};
+
+
+
+
+
   
 
 
@@ -570,6 +587,10 @@ export default function ManageQuestion() {
                   <option value="9">Level 9</option>
                   <option value="10">Level 10</option>
                 </select>
+              </div>
+
+              <div className="w-auto px-4 h-10 bg-red-400 flex justify-center items-center rounded-xl">
+                <button onClick={handlesUnapprove}>Show Unapproved Questions</button>
               </div>
             </div>
           </div>
