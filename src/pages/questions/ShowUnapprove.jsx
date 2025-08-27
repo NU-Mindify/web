@@ -38,7 +38,6 @@ export default function ShowUnapprove() {
     const handleDecline = async (id) => {
     try {
 
-      console.log("question id", id);
       await axios.delete(`${API_URL}/declineQuestion/${id}`);
 
       alert("Question deleted successfully");
@@ -48,6 +47,19 @@ export default function ShowUnapprove() {
       alert("Failed to delete question. Try again.");
     }
   };
+
+  const handleApprove = async (id) => {
+    try {
+      console.log("id", id);
+      
+      await axios.put(`${API_URL}/approveQuestion/${id}`);
+      alert("Question approved successfully");
+      getUnapprovedData();
+    } catch (error) {
+      console.error("Error approving question:", error);
+      alert("Failed to approve question. Try again.");
+    }
+  }
 
   return (
     <div className="w-full h-full bg-violet-200 p-3 overflow-y-auto">
@@ -103,7 +115,10 @@ export default function ShowUnapprove() {
                 <p>Timer: {data.timer}</p>
 
                 <div className="flex w-full gap-40 justify-center items-center mt-4">
-                  <button className="w-40 h-12 bg-green-200 rounded-xl">
+                  <button 
+                    className="w-40 h-12 bg-green-200 rounded-xl"
+                    onClick={() => handleApprove(data._id)}
+                  >
                     Approve
                   </button>
                   <button 
