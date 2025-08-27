@@ -232,28 +232,39 @@ export default function Login() {
   };
 
   return (
-    <div className="login-main-container">
-      <img
-        src={pattern}
-        alt="pattern"
-        className="absolute top-0 left-0 w-full h-full object-cover opacity-60 pointer-events-none z-50"
-      />
+<div className="login-main-container relative w-screen h-screen overflow-hidden flex flex-col items-center justify-center">
+  <img
+    src={pattern}
+    alt="pattern"
+    className="absolute top-0 left-0 w-full h-full object-cover opacity-60 pointer-events-none z-0"
+  />
 
-      {/* Transitioning Logo */}
-      <div className={`transition-logo ${logoTransitioned ? "moved" : ""}`}>
-        <img src={logo} alt="Mindify Logo" className="logo-img" />
-      </div>
+  {/* Transitioning Logo (center → left) */}
+  <div className={`transition-logo flex  justify-center items-center w-full ${logoTransitioned ? "moved" : ""}`}>
+    <img 
+      src={logo} 
+      alt="Mindify Logo" 
+      className="logo-img w-2/3 max-w-[200px] md:max-w-[230px] lg:max-w-[260px] xl:max-w-[400px]" 
+    />
+  </div>
 
-      {/* Login form container */}
-      <div
-        className={`relative z-50 w-full h-full flex flex-row justify-center items-stretch transition-opacity duration-1000 ${
-          logoTransitioned ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <div className="logo-container"></div>
+  {/* Login form container */}
+  <div
+    className={`relative z-10 w-full min-h-screen flex flex-col xl:flex-row 
+                justify-center items-center xl:items-stretch transition-opacity duration-1000 
+                ${logoTransitioned ? "opacity-100" : "opacity-0"}`}
+  >
+    {/* LEFT side (this is where logo lands after transition) */}
+    <div className="hidden xl:flex w-1/2 justify-center items-center">
+      {/* Empty, logo will "sit" here after .moved kicks in */}
+    </div>
 
-        <div className="w-1/2 h-full flex justify-center items-center">
-          <div className="login-form">
+    {/* RIGHT side (form) */}
+    <div className="w-full xl:w-1/2 flex justify-center items-center mt-[40px] sm:mt-[50px] md:mt-20 lg:mt-10">
+      <div className="login-form 
+                      w-[90%] max-w-[320px] sm:max-w-[360px] md:max-w-[380px] 
+                      lg:max-w-[380px] xl:max-w-[400px] 
+                      p-4 sm:p-6">
             <div className="input-container">
               <h1 className="welcome-txt">WELCOME!</h1>
               <h3 className="mini-txt">Sign in to access your account.</h3>
