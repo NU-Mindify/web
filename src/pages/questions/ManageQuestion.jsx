@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router";
 import "../../css/questions/questions.css";
 import SearchBar from "../../components/searchbar/SearchBar";
-import { API_URL } from "../../Constants";
+import { API_URL, categories } from "../../Constants";
 import abnormal from "../../assets/questions/abnormal.png";
 import developmental from "../../assets/questions/developmental.png";
 import general from "../../assets/questions/generalBG.png";
@@ -15,12 +15,14 @@ import psychological from "../../assets/questions/psychologicalBG.png";
 import back from "../../assets/questions/angle-left.svg";
 import { Plus } from "lucide-react";
 import EditQuestion from "./EditQuestion";
+import logo from "../../assets/logo/logo.png";
 
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import Buttons from "../../components/buttons/Buttons";
 import { useQueryClient } from "@tanstack/react-query";
-
+import autoTable from "jspdf-autotable";
+import jsPDF from "jspdf";
 
 const categoriesObj = [
   {
@@ -68,10 +70,9 @@ export default function ManageQuestion() {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadedQuestions, setUploadedQuestions] = useState([]);
-  
+
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [originalQuestion, setOriginalQuestion] = useState(null);
-
 
   // const handleFileChange = (event) => {
   //   const file = event.target.files[0];
@@ -141,14 +142,13 @@ export default function ManageQuestion() {
 
   const handleConfirmCSVUpload = () => {
     console.log("questions are", uploadedQuestions);
-    
+
     if (uploadedQuestions.length === 0) {
       alert(
         "No questions parsed from the CSV file. Please check the file content and format."
       );
       return;
     }
-
 
     for (const question of uploadedQuestions) {
       if (
@@ -158,7 +158,9 @@ export default function ManageQuestion() {
         !question.category.trim() ||
         isNaN(question.level)
       ) {
-        alert("Please ensure all questions in the CSV have a question, choices, rationale, category, and a valid numeric level.");
+        alert(
+          "Please ensure all questions in the CSV have a question, choices, rationale, category, and a valid numeric level."
+        );
         return;
       }
     }
@@ -187,7 +189,11 @@ export default function ManageQuestion() {
       })
       .catch((error) => {
         console.error("Error adding questions from CSV:", error);
-        alert(`Failed to add questions from CSV. Please try again. Error: ${error.response?.data?.error?.message || error.message}`);
+        alert(
+          `Failed to add questions from CSV. Please try again. Error: ${
+            error.response?.data?.error?.message || error.message
+          }`
+        );
       });
   };
 
@@ -248,7 +254,7 @@ export default function ManageQuestion() {
         }
       );
       console.log("category questions", data);
-      
+
       return data;
     } catch (error) {
       console.error(error);
@@ -328,25 +334,195 @@ export default function ManageQuestion() {
     setSearchQuestion("");
   }
 
-const handlesUnapprove = () => {
-  console.log("Category",category);
-  console.log("selected cat",selectedCat);
+  const handlesUnapprove = () => {
+    console.log("Category", category);
+    console.log("selected cat", selectedCat);
 
-  navigate("/unapproved", {
-    state: {
-      category,
-      categoryName: selectedCat,
-    },
-  });
-};
+    navigate("/unapproved", {
+      state: {
+        category,
+        categoryName: selectedCat,
+      },
+    });
+  };
 
+  const getBase64FromUrl = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
 
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
 
+  const exportQuestionsToPDF = async (questions, title) => {
+    let logoBase64 = "";
+    try {
+      logoBase64 = await getBase64FromUrl(logo);
+    } catch (error) {
+      console.error("Error converting logo:", error);
+    }
 
+    const now = new Date().toLocaleString();
+    const doc = new jsPDF("p", "mm", "a4");
 
-  
+    doc.setFontSize(14);
+    doc.text(`${title}`, 14, 10);
+    doc.setFontSize(10);
+    doc.text(
+      `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+      14,
+      18
+    );
+    doc.text(`Exported on: ${now}`, 14, 24);
 
+    // Logo in top-right
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const logoWidth = 30;
+    const logoHeight = 15;
+    const xPos = pageWidth - logoWidth - 10;
+    if (logoBase64) {
+      doc.addImage(logoBase64, "PNG", xPos, 8, logoWidth, logoHeight);
+    }
 
+    // Convert questions → table
+    const rows = questions.map((q) => {
+      const choicesText = q.choices
+        .map(
+          (c) =>
+            `${c.letter}. ${c.text} (${c.rationale || "No rationale"}) ${
+              c.letter === q.answer ? "✅" : ""
+            }`
+        )
+        .join("\n");
+
+      return [
+        q.question,
+        categories.find((cat) => cat.id === q.category)?.name || "",
+        choicesText,
+        q.difficulty || "",
+        q.timer || "",
+        q.level || "",
+        q.rationale || "",
+      ];
+    });
+
+    autoTable(doc, {
+      head: [
+        [
+          "Question",
+          "Category",
+          "Choices (with rationale, correct marked ✅)",
+          "Difficulty",
+          "Timer",
+          "Level",
+          "Overall Rationale",
+        ],
+      ],
+      body: rows,
+      startY: 30,
+      styles: { fontSize: 5, cellWidth: "wrap" },
+      columnStyles: {
+        0: { cellWidth: 40 },
+        2: { cellWidth: 70 },
+      },
+    });
+
+    doc.save(
+      `${title.replace(/\s+/g, "_")}_by_${currentWebUser.firstName}_${
+        currentWebUser.lastName
+      }.pdf`
+    );
+  };
+
+  const exportQuestionsToCSV = (questions, filename) => {
+    const now = new Date().toLocaleString();
+
+    // CSV headers
+    const headers = [
+      "Question",
+      "Category",
+      "Choice A (Text)",
+      "Choice A (Rationale)",
+      "Choice B (Text)",
+      "Choice B (Rationale)",
+      "Choice C (Text)",
+      "Choice C (Rationale)",
+      "Choice D (Text)",
+      "Choice D (Rationale)",
+      "Answer",
+      "Difficulty",
+      "Timer",
+      "Level",
+      "Overall Rationale",
+    ];
+
+    // CSV-safe cell sanitizer
+    const sanitize = (cell) => {
+      if (cell === null || cell === undefined) return "";
+      let str = String(cell);
+
+      // Escape double quotes by doubling them
+      str = str.replace(/"/g, '""');
+
+      // Wrap in quotes if contains comma, quote, or newline
+      if (/[",\n]/.test(str)) {
+        str = `"${str}"`;
+      }
+      return str;
+    };
+
+    const rows = questions.map((q) => {
+      // Always enforce A–D order
+      const choicesMap = { a: {}, b: {}, c: {}, d: {} };
+      q.choices.forEach((c) => {
+        choicesMap[c.letter?.toLowerCase()] = c;
+      });
+
+      return [
+        q.question,
+        // If you want category NAME instead of ID:
+        categories.find((cat) => cat.id === q.category)?.name || q.category,
+        choicesMap.a?.text || "",
+        choicesMap.a?.rationale || "",
+        choicesMap.b?.text || "",
+        choicesMap.b?.rationale || "",
+        choicesMap.c?.text || "",
+        choicesMap.c?.rationale || "",
+        choicesMap.d?.text || "",
+        choicesMap.d?.rationale || "",
+        q.answer || "",
+        q.difficulty || "",
+        q.timer || "",
+        q.level || "",
+        q.rationale || "",
+      ].map(sanitize);
+    });
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [
+        `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        `Exported on: ${now}`,
+        "",
+        headers.map(sanitize).join(","), // headers safe
+        ...rows.map((row) => row.join(",")),
+      ].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `${filename}_by_${currentWebUser.firstName}_${currentWebUser.lastName}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   function Category_Choices({ text, id, onClick, bgImage }) {
     return (
@@ -415,8 +591,8 @@ const handlesUnapprove = () => {
               </button>
               <button
                 onClick={() => {
-                  setEditingQuestion(data);  
-                  setOriginalQuestion(JSON.parse(JSON.stringify(data))); 
+                  setEditingQuestion(data);
+                  setOriginalQuestion(JSON.parse(JSON.stringify(data)));
                   setShowEditModal(true);
                 }}
                 className="btn-action"
@@ -429,14 +605,13 @@ const handlesUnapprove = () => {
               <button
                 className="btn-action"
                 onClick={() => {
-                  setEditingQuestion(JSON.parse(JSON.stringify(data))); 
-                  setOriginalQuestion(JSON.parse(JSON.stringify(data))); 
-                  setShowEditModal(true);  
+                  setEditingQuestion(JSON.parse(JSON.stringify(data)));
+                  setOriginalQuestion(JSON.parse(JSON.stringify(data)));
+                  setShowEditModal(true);
                 }}
               >
                 Edit
               </button>
-
 
               <button
                 onClick={() => {
@@ -472,9 +647,13 @@ const handlesUnapprove = () => {
 
               <div className="w-1/3 h-full mr-5">
                 <p className="question-count text-right">
-                  Total Questions: 
-                  {showArchived ? totalDeletedQuestion.find((cat) => cat._id === subSelected)?.count || 0
-                  : totalQuestion.find((cat) => cat._id === subSelected)?.count || 0}
+                  Total Questions:
+                  {showArchived
+                    ? totalDeletedQuestion.find(
+                        (cat) => cat._id === subSelected
+                      )?.count || 0
+                    : totalQuestion.find((cat) => cat._id === subSelected)
+                        ?.count || 0}
                 </p>
               </div>
             </div>
@@ -532,7 +711,15 @@ const handlesUnapprove = () => {
                   addedClassName="btn btn-warning !w-[200px] !text-white"
                 />
                 <div className="pb-2">
-                  <ExportDropdown />
+                  <ExportDropdown
+                    onExport={(format) => {
+                      if (format === "csv") {
+                        exportQuestionsToCSV(questions, "Questions");
+                      } else if (format === "pdf") {
+                        exportQuestionsToPDF(questions, "Questions");
+                      }
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -590,7 +777,9 @@ const handlesUnapprove = () => {
               </div>
 
               <div className="w-auto px-4 h-10 bg-red-400 flex justify-center items-center rounded-xl">
-                <button onClick={handlesUnapprove}>Show Unapproved Questions</button>
+                <button onClick={handlesUnapprove}>
+                  Show Unapproved Questions
+                </button>
               </div>
             </div>
           </div>
@@ -698,7 +887,7 @@ const handlesUnapprove = () => {
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
         onChange={(field, value, idx) => {
-          setEditingQuestion(prev => {
+          setEditingQuestion((prev) => {
             if (!prev) return prev;
             const updated = { ...prev };
 
@@ -721,9 +910,8 @@ const handlesUnapprove = () => {
           JSON.stringify(originalQuestion) !== JSON.stringify(editingQuestion)
         }
         queryClient={queryClient}
-        category={category}   
+        category={category}
       />
-
     </div>
   );
 }
