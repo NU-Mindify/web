@@ -329,7 +329,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="sign-up-container">
+    <div className="sign-up-container px-4 lg:px-10">
       <img
         src={pattern}
         alt="pattern"
@@ -337,18 +337,19 @@ export default function SignUp() {
       />
 
       {/* Left: Form section */}
-      <div className="form-container">
-        <div className="form-fields-wrapper">
+      <div className="form-container w-[90%] sm:w-[80%] md:w-[70%] lg:w-[50%] xl:w-[40%] 
+                  text-xs sm:text-sm md:text-base lg:text-lg">
+        <div className="form-fields-wrapper flex flex-row flex-wrap">
           <div className="form-welcome-text">
             <h1>WELCOME!</h1>
             <p>Create your account.</p>
           </div>
 
-          {/* Left Column */}
-          <div className="form-column">
+          {/* Left Column */}  
+          <div className="form-column w-full md:w-1/2">
             <div className="form-group">
               {/* FIRSTNAME */}
-              <p className="label">First Name</p>
+              <p className="label text-[10px] sm:text-xs md:text-sm ">First Name</p>
               <input
                 type="text"
                 placeholder="Enter your first name"
@@ -367,7 +368,7 @@ export default function SignUp() {
 
             <div className="form-group">
               {/* CAMPUS */}
-              <p className="label">Campus</p>
+              <p className="label text-[10px] sm:text-xs md:text-sm">Campus</p>
               <select
                 value={newWebUser.branch}
                 onChange={(e) => {
@@ -400,7 +401,7 @@ export default function SignUp() {
 
             <div className="form-group">
               {/* POSITION */}
-              <p className="label">Position</p>
+              <p className="label text-[10px] sm:text-xs md:text-sm">Position</p>
               <select
                 value={newWebUser.position}
                 onChange={(e) => {
@@ -423,7 +424,7 @@ export default function SignUp() {
 
             <div className="form-group">
               {/* PASSW */}
-              <p className="label">Password</p>
+              <p className="label text-[10px] sm:text-xs md:text-sm">Password</p>
               <div className="password-input-wrapper">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -451,10 +452,10 @@ export default function SignUp() {
           </div>
 
           {/* Right Column */}
-          <div className="form-column">
+          <div className="form-column w-full md:w-1/2">
             <div className="form-group">
               {/* LASTNAME */}
-              <p className="label">Last Name</p>
+              <p className="label text-[10px] sm:text-xs md:text-sm">Last Name</p>
               <input
                 type="text"
                 placeholder="Enter your last name"
@@ -473,7 +474,7 @@ export default function SignUp() {
 
             <div className="form-group">
               {/* EMAIL */}
-              <p className="label">Email</p>
+              <p className="label text-[10px] sm:text-xs md:text-sm">Email</p>
               <input
                 type="email"
                 placeholder="Enter your email"
@@ -483,7 +484,7 @@ export default function SignUp() {
                   validateField("email", e.target.value);
                 }}
                 onBlur={(e) => validateField("email", e.target.value)}
-                className={errors.email ? "error-border" : ""}
+                className={ errors.email ? "error-border" : ""}
               />
               {errors.email && (
                 <p className="error-message">{errors.email || "\u00A0"}</p>
@@ -492,7 +493,7 @@ export default function SignUp() {
 
             <div className="form-group">
               {/* EMPLOYEE# */}
-              <p className="label">Employee Number</p>
+              <p className="label text-[10px] sm:text-xs md:text-sm">Employee Number</p>
               <input
                 type="text"
                 placeholder="XX-XXXX"
@@ -527,7 +528,7 @@ export default function SignUp() {
 
             <div className="form-group">
               {/* CONFIRMPASS */}
-              <p className="label">Confirm Password</p>
+              <p className="label text-[10px] sm:text-xs md:text-sm">Confirm Password</p>
               <div className="password-input-wrapper">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
@@ -604,25 +605,27 @@ export default function SignUp() {
               RESET
             </button>
 
-            <div className="mt-5 text-center">
-              <span className="text-black text-sm">
-                Already have an account?{" "}
-                <button
-                  className="text-[#35408E] underline font-bold hover:text-[#FFA500] transition cursor-pointer"
-                  onClick={() => navigate("/login")}
-                >
-                  Sign In here.
-                </button>
-              </span>
-            </div>
+          <div className="mt-5 text-center px-2">
+            <span className="text-black text-xs sm:text-sm md:text-base">
+              Already have an account?{" "}
+              <button
+                className="text-[#35408E] underline font-semibold hover:text-[#FFA500] transition-colors duration-200 cursor-pointer inline-block"
+                onClick={() => navigate("/login")}
+              >
+                Sign In here.
+              </button>
+            </span>
+          </div>
+
           </div>
         </div>
       </div>
 
       {/* Right: Logo section */}
-      <div className="sign-up-branding-side">
-        {<img src={logo} alt="NU Logo" className="nu-logo" />}
+     <div className="sign-up-branding-side order-first lg:order-last mb-6 lg:mb-0 flex justify-center">
+        <img src={logo} alt="NU Logo" className="nu-logo" />
       </div>
+
 
       {/* Modals */}
       {showModal && (
@@ -649,44 +652,42 @@ export default function SignUp() {
         />
       )}
 
-      {showTermsModal && (
-        <div
-          className="fixed inset-0 bg-white/30 backdrop-blur-sm flex justify-center items-center z-50"
+{showTermsModal && (
+  <div
+    className="fixed inset-0 bg-black/70 flex justify-center items-center z-50"
+    onClick={() => setShowTermsModal(false)}
+  >
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className="bg-white rounded-lg 
+                 w-[90%] sm:w-[80%] md:w-[65%] lg:w-[50%] 
+                 max-h-[70vh] sm:max-h-[75vh] 
+                 flex flex-col shadow-xl"
+    >
+      {/* Header */}
+      <div className="p-3 md:p-4 border-b flex justify-between items-center">
+        <h2 className="text-base sm:text-lg md:text-xl font-bold !text-[#FFC300]">
+          Terms and Conditions
+        </h2>
+        <button
           onClick={() => setShowTermsModal(false)}
+          className="text-gray-500 hover:text-gray-700 text-base sm:text-lg font-bold"
         >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-lg w-11/12 md:w-2/3 lg:w-1/2 max-h-[80vh] flex flex-col"
-          >
-            {/* Header */}
-            <div className="p-4 border-b flex justify-between items-center">
-              <h2 className="text-xl font-bold">Terms and Conditions</h2>
-              <button
-                onClick={() => setShowTermsModal(false)}
-                className="text-gray-500 hover:text-gray-700 text-lg font-bold"
-              >
-                ✕
-              </button>
-            </div>
+          ✕
+        </button>
+      </div>
 
-            <div className="p-4 overflow-y-auto flex-1">
-              <div className="prose max-w-none">
-                <TermsAndConditions />
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div className="p-4 border-t flex justify-end">
-              <button
-                onClick={() => setShowTermsModal(false)}
-                className="btn bg-[#FFC300] text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition"
-              >
-                Close
-              </button>
-            </div>
-          </div>
+      {/* Content */}
+      <div className="p-3 md:p-4 overflow-y-auto flex-1">
+        <div className="prose max-w-none text-xs sm:text-sm md:text-base leading-relaxed">
+          <TermsAndConditions />
         </div>
-      )}
+      </div>
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 }
