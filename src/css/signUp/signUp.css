@@ -28,7 +28,7 @@ body,
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  @apply w-screen h-screen p-5 flex flex-col lg:flex-row justify-center items-center;
+   @apply w-screen min-h-screen flex flex-col lg:flex-row justify-center items-center p-4;
 }
 
 /* Left Side (Form) */
@@ -48,56 +48,63 @@ body,
 } */
 
 .form-container {
-  width: 40%;
   background-color: #ffffff;
-  padding: 10px 10px;
+  padding: 10px;
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   z-index: 2;
   position: relative;
+  overflow-x: auto;
+
+  @apply w-full max-w-[300px] sm:max-w-[340px] md:max-w-md lg:max-w-2xl mx-auto px-2 sm:px-1 md:px-1;
 }
 
+
+
 .form-fields-wrapper {
-  padding: 18px 30px;
+  padding: 10px 20px;
   display: flex;
   justify-content: center;
-  gap: 20px;
   flex-wrap: wrap;
   color: #000000;
   border-radius: 20px;
   z-index: 2;
   position: relative;
+  
+ @apply flex flex-row flex-wrap gap-5
 }
 
 .form-column {
   flex: 1;
-  min-width: 20px;
+  @apply md:w-1/2;
 }
 
 .form-welcome-text {
   width: 100%;
   text-align: center;
   margin-bottom: 2px;
+  @apply text-sm sm:text-base md:text-lg lg:text-xl font-bold text-[#35408E];
 }
 
 .form-welcome-text h1 {
   color: #35408e;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 18px;
   margin-bottom: 5px;
 }
 
 .form-welcome-text p {
-  font-size: 14px;
-  margin-bottom: 5px;
+  font-size: 12px;
+  @apply  text-xs sm:text-sm md:text-base;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
   position: relative;
-  height: 88px;
+  height: auto;
+  margin-bottom: 5px;
+  @apply w-full py-2 ;
 }
 
 /* .spanner {
@@ -105,9 +112,11 @@ body,
 } */
 
 .form-group label {
-  margin-bottom: 5px;
+  margin-bottom: 2px;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 12px;
+
+  @apply text-[10px] sm:text-xs md:text-sm;
 }
 
 /* .form-group span{
@@ -116,10 +125,11 @@ body,
 
 .form-group input,
 .form-group select {
-  padding: 10px 14px;
-  border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  @apply w-full px-3 text-[10px] sm:text-xs md:text-sm;
 }
 
 .password-input-wrapper {
@@ -138,11 +148,11 @@ body,
 }
 
 .error-message {
-  color: #e74c3c;
-  font-size: 12px;
-  height: 16px;
+  font-size: 10px;
   margin-top: 4px;
-  visibility: visible;
+  min-height: 14px; 
+  color: #e74c3c;
+  @apply text-[10px] sm:text-xs;
 }
 
 .toggle-password-btn {
@@ -165,13 +175,15 @@ body,
 }
 
 .sign-in-footer {
-  @apply text-sm text-center;
+  font-size: 12px;
+  @apply text-[10px] sm:text-xs text-center;
 }
 
 .form-checkbox {
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 12px;
+  @apply text-[10px] sm:text-xs;
 }
 
 .form-checkbox input {
@@ -180,18 +192,20 @@ body,
 
 /* Right Side (logo) */
 .sign-up-branding-side {
+  @apply flex justify-center items-center w-full lg:w-1/2;
   width: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   z-index:1;
 }
 
+
 .nu-logo {
-  width: 600px;
-  margin-bottom: 20px;
-  margin-left: 50px;
+  width: 100%;
+  max-width: 600px; /* responsive limit */
+  margin: 20px auto 0;
+
+  @apply w-3/3 sm:w-2/3 md:w-2/2 lg:w-[400px] xl:w-[500px] max-w-full;
 }
 
 /* Buttons */
@@ -211,6 +225,11 @@ body,
 
 .reset-button:hover {
   filter: brightness(1.5);
+}
+
+.register-button,
+.reset-button {
+  @apply w-full text-[10px] sm:text-xs md:text-sm h-8 sm:h-10;
 }
 
 @keyframes popup {
@@ -235,4 +254,21 @@ body,
   cursor: not-allowed !important;        
   display: inline-block !important;      
   visibility: visible !important;
+}
+
+
+/* Only on tablets in portrait between lg and <xl */
+@media (min-width: 1024px) and (max-width: 1279.98px) and (orientation: portrait) {
+  .sign-up-container {
+    flex-direction: column !important;
+    padding-top: 2rem !important; /* add space from very top */
+  }
+
+  .sign-up-branding-side {
+    order: -1 !important;      /* logo comes first */
+    width: 100% !important;    /* full width */
+    margin-bottom: 2rem !important; /* space between logo and form */
+    display: flex;
+    justify-content: center;
+  }
 }

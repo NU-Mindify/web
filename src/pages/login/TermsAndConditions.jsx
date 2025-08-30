@@ -122,10 +122,10 @@ function formatAIText(message) {
 
 const TermsAndConditions = () => {
   return (
-    <div className='!overflow-auto !h-[100svh] bg-white text-black p-8 pt-2'>
-      <div className='!overflow-auto !h-fit max-w-[60rem] mx-auto'>
+    <div className="bg-white text-black p-8 pt-2 max-w-[60rem] mx-auto">
+      
         {parse(formatAIText(termsAndConditions))}
-      </div>
+     
     </div>
   );
 };
