@@ -442,6 +442,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
         branch: currentWebUser.branch,
         action: "Delete a Student",
         description: `${currentWebUser.firstName} deleted ${student.first_name} ${student.last_name}'s account.`,
+        useravatar: currentWebUser.useravatar
       });
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -462,6 +463,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
         branch: currentWebUser.branch,
         action: "Unarchive a Student",
         description: `${currentWebUser.firstName} unarchived ${student.first_name} ${student.last_name}'s account.`,
+        useravatar: currentWebUser.useravatar
       });
 
       await fetchUsers();

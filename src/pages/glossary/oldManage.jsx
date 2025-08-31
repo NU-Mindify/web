@@ -366,6 +366,7 @@ export default function ManageGlossary() {
               branch: currentWebUser.branch,
               action: "Add Term from CSV",
               description: `${currentWebUser.firstName} added a term "${term.word}" with meaning "${term.meaning}" from CSV upload.`,
+              useravatar: currentWebUser.useravatar
             })
           )
         );

@@ -183,6 +183,7 @@ export default function ManageQuestion() {
               branch: currentWebUser.branch,
               action: "Add Question from CSV",
               description: `${currentWebUser.firstName} Added question "${q.question}" to category "${q.category}" from CSV upload.`,
+              useravatar: currentWebUser.useravatar
             })
           )
         );

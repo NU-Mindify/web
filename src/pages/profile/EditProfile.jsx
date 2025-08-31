@@ -85,6 +85,7 @@ export default function EditProfile() {
         branch: editWebUser.branch,
         action: "Edit Profile",
         description: "Updated profile information.",
+        useravatar: editWebUser.useravatar
       });
 
       setInitialWebUser(updatedUser.data);

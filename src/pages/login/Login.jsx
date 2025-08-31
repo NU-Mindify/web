@@ -136,6 +136,7 @@ export default function Login() {
           branch: verifyData.branch,
           action: "Logged In",
           description: "-",
+          useravatar: verifyData.useravatar
         });
       }
     } catch (error) {

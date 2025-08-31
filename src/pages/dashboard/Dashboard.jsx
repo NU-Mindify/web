@@ -19,6 +19,9 @@ export default function Dashboard() {
   const [studentCount, setStudentCount] = useState(0);
   const [students, setStudents] = useState([]);
 
+  const [webUsersCount, setWebUsersCount] = useState(0);
+  const [webUsers, setWebUsers] = useState([]);
+
   const [pendingUsers, setPendingUsers] = useState([]);
   const [pendingUserCount, setPendingUserCount] = useState(0);
 
@@ -33,10 +36,6 @@ export default function Dashboard() {
 
   const [mostChallengingWorld, setMostChallengingWorld] = useState(null);
   const [mostChallengingWorldScore, setMostChallengingWorldScore] =
-    useState(null);
-
-  const [bestPerformingWorld, setBestPerformingWorld] = useState(null);
-  const [bestPerformingWorldScore, setBestPerformingWorldScore] =
     useState(null);
 
   const [classicLeaderboards, setClassicLeaderboards] = useState([]);
@@ -106,6 +105,10 @@ export default function Dashboard() {
     setStudentCount(students.length);
   }, [students]);
 
+  useEffect(() => {
+    setWebUsersCount(webUsers.length);
+  }, [webUsers]);
+
   //fetch students data
   const fetchStudents = async () => {
     setIsLoading(true);
@@ -116,7 +119,7 @@ export default function Dashboard() {
         },
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setStudents(response.data);
       })
       .catch((error) => {
@@ -141,6 +144,7 @@ export default function Dashboard() {
 
       setPendingUsers(pendingUsers);
       console.log("Pending Users: " + pendingUsers);
+      setWebUsers(res.data);
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
@@ -234,47 +238,6 @@ export default function Dashboard() {
     }
   }, [attempts]);
 
-  //calculates the highest average score per world to get the best performing world
-  useEffect(() => {
-    if (attempts.length === 0) return;
-
-    const categoryScores = {};
-
-    attempts.forEach(({ category, correct, total_items }) => {
-      if (!category || total_items === 0) return;
-
-      if (!categoryScores[category]) {
-        categoryScores[category] = { correct: 0, total: 0 };
-      }
-
-      categoryScores[category].correct += correct;
-      categoryScores[category].total += total_items;
-    });
-
-    let highestAvg = -1;
-    let topCategory = null;
-
-    for (const category in categoryScores) {
-      const { correct, total } = categoryScores[category];
-      const avgScore = (correct / total) * 8;
-
-      if (avgScore > highestAvg) {
-        highestAvg = avgScore;
-        topCategory = category;
-      }
-    }
-
-    if (topCategory) {
-      setBestPerformingWorld(topCategory);
-      setBestPerformingWorldScore(
-        parseFloat(((highestAvg / 8) * 100).toFixed(2))
-      );
-    } else {
-      setBestPerformingWorld("N/A");
-      setBestPerformingWorldScore(null);
-    }
-  }, [attempts]);
-
   // TODO: Loading screen
   if (!currentWebUser) {
     return;
@@ -347,6 +310,24 @@ export default function Dashboard() {
         </div>
 
         <div className="analytics-properties-dashboard">
+          {isLoading ? (
+            <div className="loading-overlay-dashboard">
+              <div className="spinner"></div>
+              <p>Fetching data...</p>
+            </div>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center flex-col">
+              <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[25px] font-bold">
+                Total Web Users
+              </h1>
+              <h1 className="dashboard-title font-[Poppins] font-bold text-[70px] mt-3">
+                <CountUp end={webUsersCount} />
+              </h1>
+            </div>
+          )}
+        </div>
+
+        <div className="analytics-properties-dashboard">
           {isLoadingAttempts ? (
             <div className="loading-overlay-dashboard">
               <div className="spinner"></div>
@@ -368,12 +349,6 @@ export default function Dashboard() {
               </h2>
             </div>
           )}
-        </div>
-
-        <div className="analytics-properties-dashboard">
-          <h1 className="dashboard-title">
-            Average student session time placeholder
-          </h1>
         </div>
 
         <div className="analytics-properties-dashboard">
@@ -407,7 +382,9 @@ export default function Dashboard() {
           )}
         </div>
 
-        {["super admin", "sub admin"].includes(currentWebUser.position.toLowerCase()) && (
+        {["super admin", "sub admin"].includes(
+          currentWebUser.position.toLowerCase()
+        ) && (
           <div className="analytics-properties-dashboard">
             {isLoadingAttempts ? (
               <div className="loading-overlay-dashboard">

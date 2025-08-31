@@ -322,6 +322,7 @@ function CardActiveContent({ user, refreshData }) {
         branch: currentWebUser.branch,
         action: "Approve Account",
         description: `${currentWebUser.firstName} has approved ${user.lastName}, ${user.firstName} account`,
+        useravatar: currentWebUser.useravatar
       });
 
       setValidationMessage(`User ${user.firstName} ${user.lastName} approved!`);

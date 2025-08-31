@@ -105,6 +105,7 @@ export default function AddTerm() {
               branch: currentWebUser.branch,
               action: "Add Term",
               description: `${currentWebUser.firstName} added a term "${term.word}" with meaning "${term.meaning}".`,
+              useravatar: currentWebUser.useravatar
             })
           )
         );

@@ -357,6 +357,7 @@ export default function Sidebar() {
                   branch: currentWebUser.branch,
                   action: "Logged Out",
                   description: "-",
+                  useravatar: currentWebUser.useravatar
                 });
                 
                 confirmLogout(); 
