@@ -174,18 +174,26 @@ function AddQuestion() {
     }
 
     try {
-      const { data } = await axios.post(
-        `${API_URL}/addQuestion`,
-        allQuestions,
-        {
-          headers: {
-            Authorization: `Bearer ${currentWebUser.token}`,
-          },
-        }
-      );
+
+      const isAdmin =
+        currentWebUser.position.toLowerCase() === "professor"
+          ? `${API_URL}/addQuestion`
+          : `${API_URL}/addQuestionAdmin`;
+
+      const { data } = await axios.post(isAdmin, allQuestions, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
+      });
+
+      
       console.log(data);
       setAddSuccessModalMessage(
+        currentWebUser.position.toLowerCase() === "professor" ? 
         "Added Successfully! Questions are to be approved by Admin."
+        :
+        "Added Successfully!"
+        
       );
       setShowAddSuccessModal(true);
 
