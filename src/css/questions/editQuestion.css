@@ -6,7 +6,8 @@
 }
 
 .edit-question-container {
-  @apply bg-white rounded-xl p-6 w-8/12 shadow-[0_10px_25px_rgba(0,0,0,0.3)];
+  /* @apply bg-white rounded-xl p-6 w-8/12 shadow-[0_10px_25px_rgba(0,0,0,0.3)]; */
+   @apply bg-white rounded-xl p-6 w-full sm:w-10/12 md:w-8/12 shadow-[0_10px_25px_rgba(0,0,0,0.3)];
   max-height: 90vh; 
   overflow-y: auto; 
 }
@@ -17,12 +18,14 @@
 }
 
 .back-btn {
-  @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer;
+  /* @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer; */
+  @apply w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] md:w-[50px] md:h-[50px] flex items-center justify-center cursor-pointer;
 }
 
 .edit-title {
-  @apply font-[Poppins] text-[#FFC916] font-bold text-[25px]
-  md:text-[40px];
+  /* @apply font-[Poppins] text-[#FFC916] font-bold text-[25px] */
+  @apply font-[Poppins] text-[#FFC916] font-bold text-[20px] sm:text-[25px] md:text-[35px] lg:text-[40px];
+  /* md:text-[40px]; */
 }
 
 .edit-content {
@@ -35,11 +38,13 @@
 
 .edit-input {
   border: 2px solid black;
-  @apply w-full h-[60px] text-[#000000] my-3;
+  /* @apply w-full h-[60px] text-[#000000] my-3; */
+   @apply w-full h-[45px] sm:h-[50px] md:h-[60px] text-[#000000] my-3;
 }
 
 .edit-textarea {
-  @apply w-full h-[250px] text-[#000000] max-h-[250px] min-h-[100px];
+  /* @apply w-full h-[250px] text-[#000000] max-h-[250px] min-h-[100px]; */
+  @apply w-full h-[150px] sm:h-[200px] md:h-[250px] text-[#000000] max-h-[300px] min-h-[100px];
 }
 
 .edit-input,
@@ -52,6 +57,7 @@
 }
 
 .save-btn {
+  /* @apply w-[150px] h-[50px] min-h-[50px] cursor-pointer mt-3; */
   @apply w-[150px] h-[50px] min-h-[50px] cursor-pointer mt-3;
 }
 
@@ -60,7 +66,8 @@
 }
 
 .delete-btn {
-  @apply w-[150px] h-[50px] min-h-[50px] min-w-[100px] cursor-pointer mt-3;
+  /* @apply w-[150px] h-[50px] min-h-[50px] min-w-[100px] cursor-pointer mt-3; */
+  @apply w-[120px] h-[40px] sm:w-[140px] sm:h-[45px] md:w-[150px] md:h-[50px] min-h-[40px] min-w-[80px] cursor-pointer mt-3;
 }
 
 .delete-btn:hover {

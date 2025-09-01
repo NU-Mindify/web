@@ -64,11 +64,13 @@
 }
 
 .ques-container textarea {
-  @apply mt-2 w-12/12 h-[70px] bg-white text-black border border-gray-300 text-[18px] px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400;
+  /* @apply mt-2 w-12/12 h-[70px] bg-white text-black border border-gray-300 text-[18px] px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400; */
+  @apply mt-2 w-full h-[50px] sm:h-[60px] md:h-[70px] bg-white text-black border border-gray-300 text-[16px] sm:text-[18px] px-2 sm:px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400;
 }
 
 .select-container{
-    @apply w-full h-[120px] flex gap-5 px-5 items-center mb-2;
+    /* @apply w-full h-[120px] flex gap-5 px-5 items-center mb-2; */
+     @apply w-full h-auto sm:h-[100px] md:h-[120px] flex flex-wrap gap-3 sm:gap-5 px-2 sm:px-5 items-center mb-2;
 }
 
 .select-container span{
@@ -172,7 +174,8 @@
 }
 
 .quesetion-chev-holder button img{
-    @apply w-[20px] h-[20px] transform transition-transform duration-300;
+    /* @apply w-[20px] h-[20px] transform transition-transform duration-300; */
+    @apply w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] md:w-[20px] md:h-[20px] transform transition-transform duration-300;
 }
 
 
@@ -182,7 +185,8 @@
 
 
 .level-diff-container{
-    @apply w-3/12 h-[100px] mb-4;
+    /* @apply w-3/12 h-[100px] mb-4; */
+    @apply w-full sm:w-6/12 md:w-3/12 h-[60px] sm:h-[80px] md:h-[100px] mb-4;
 }
 
 .choices-container{
@@ -190,10 +194,93 @@
 }
 
 .question-btn-container{
-    @apply w-full h-[50px] flex  gap-5 items-center justify-center;
+    /* @apply w-full h-[50px] flex  gap-5 items-center justify-center; */
+     @apply w-full h-[40px] sm:h-[45px] md:h-[50px] flex gap-2 sm:gap-4 md:gap-5 items-center justify-center;
 }
 
 
 .save-ques-btn{
-    @apply w-[250px] flex justify-center items-center;
+    /* @apply w-[250px] flex justify-center items-center; */
+    @apply w-full sm:w-[200px] md:w-[250px] flex justify-center items-center;
+}
+
+/* Responsive styles for add question UI */
+@media (max-width: 1024px) {
+  .add-ques-header {
+    /* @apply h-[120px] px-3; */
+    @apply w-full h-[100px] sm:h-[120px] md:h-[150px] px-5 mb-3;
+  }
+  .add-ques-sub-header h1 {
+    /* @apply text-[32px]; */
+    @apply font-[Poppins] text-[#FFC916] font-bold text-[24px] sm:text-[32px] md:text-[40px];
+  }
+  .select-container {
+    @apply h-[100px] gap-3 px-2;
+  }
+  .level-diff-container {
+    @apply w-6/12 h-[80px];
+  }
+}
+@media (max-width: 768px) {
+  .add-ques-header {
+    @apply h-[90px] px-2;
+  }
+  .add-ques-sub-header h1 {
+    @apply text-[24px];
+  }
+  .inputs-question-container {
+    @apply px-1;
+  }
+  .select-container {
+    @apply flex-col h-auto gap-2 px-1;
+  }
+  .select-container div select {
+    @apply w-full h-[40px] text-[16px];
+  }
+  .option-container {
+    @apply p-2 ml-2 mr-2;
+  }
+  .per-choice-container {
+    @apply flex-col gap-2 p-2;
+  }
+  .level-diff-container {
+    @apply w-full h-[60px];
+  }
+  .save-ques-btn {
+    @apply w-full;
+  }
+}
+@media (max-width: 480px) {
+  .add-ques-header {
+    @apply h-[60px] px-1 mb-1;
+  }
+  .add-ques-sub-header h1 {
+    @apply text-[18px];
+  }
+  .add-ques-main-container h3,
+  .add-ques-main-container h4,
+  .ques-container h3,
+  .option-container h3,
+  .overall-rationale-container h3 {
+    @apply text-[12px];
+  }
+  .ques-container textarea,
+  .overall-rationale-container textarea {
+    @apply h-[40px] text-[14px] px-1 py-1;
+  }
+  .select-container div select {
+    @apply h-[32px] text-[12px];
+  }
+  .option-container {
+    @apply p-1;
+  }
+  .per-choice-container {
+    @apply p-1;
+  }
+  .letter-container {
+    @apply h-[28px] px-1;
+  }
+  .question-btn-container {
+    @apply h-[40px] gap-2;
+  }
 }
