@@ -1,3 +1,5 @@
+
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
 @reference "tailwindcss";
 @plugin "daisyui";
@@ -6,29 +8,36 @@
 .main-container-dashboard {
   scrollbar-width: none;
   -ms-overflow-style: none;
-  @apply w-full h-full mt-3 flex flex-col rounded-xl overflow-y-auto;
+  @apply w-full h-full mt-3 flex flex-col rounded-xl overflow-y-auto pb-8; 
 }
+
 
 /* HEADER CONTENTS */
 .dashboard-header {
-  @apply w-full px-4 py-3 flex flex-wrap items-center justify-between;
-}
-
-.dashboard-header-content{
- @apply flex flex-col max-w-[75%] sm:max-w-[80%];
+  @apply w-full px-4 py-3 flex flex-col items-center text-start
+         sm:flex-row sm:items-center sm:justify-between sm:text-left;
 }
 
 .dashboard-header-logo {
-  @apply flex items-start;
+  @apply flex justify-center sm:justify-end w-full sm:w-auto mb-3 sm:mb-0;
+}
+
+.dashboard-header-content {
+  @apply flex flex-col max-w-full sm:max-w-[75%] order-2 sm:order-1;
+}
+
+.dashboard-header-logo {
+  @apply order-1 sm:order-2; /* logo first on mobile, second on desktop */
 }
 
 .dashboard-logo {
-  @apply w-[120px] h-auto max-w-[130px] flex-shrink-0 mt-2 sm:mt-0;
+  @apply w-[120px] h-auto max-w-[130px] flex-shrink-0 sm:mt-0;
 }
 
 .header-text-dashboard {
-  @apply text-white font-[Poppins] font-bold text-[40px] mt-[-10px];
+  @apply text-white font-[Poppins] font-bold text-2xl sm:text-3xl md:text-[40px] mt-[-10px];
 }
+
 
 .header-greeting-dashboard {
   @apply text-white font-[Poppins] font-light italic text-[18px];
@@ -42,8 +51,9 @@
   xl:grid-cols-5;
 }
 
+
 .analytics-properties-dashboard {
-  @apply w-full mt-4 h-[200px] bg-white rounded-xl p-4 shadow-[0_3px_10px_rgb(0,0,0,0.2)];
+  @apply w-full mt-4 h-[140px] sm:h-[160px] md:h-[180px] bg-white rounded-xl p-3 sm:p-4 shadow-[0_3px_10px_rgb(0,0,0,0.2)];
 }
 
 .dashboard-title {
@@ -79,7 +89,7 @@
 
 
 .leaderboard-title-container-dashboard {
-  @apply flex items-end pr-80;
+  @apply flex justify-end items-end pr-45;
 }
 
 .leaderboard-title-properties-dashboard {
@@ -101,13 +111,40 @@
 }
 
 .badges-container-dashboard {
-  @apply w-full h-[480px] bg-white rounded-xl;
+  @apply w-full h-[480px] bg-white rounded-xl flex flex-col;
 }
+
+.badges-container-dashboard > .w-full {
+  @apply flex-1 overflow-y-auto;
+}
+
+.badges-container-dashboard ul {
+  @apply flex-1 overflow-y-auto pr-2; /* scroll inside */
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+/* Optional custom scrollbar styling */
+.badges-container-dashboard ul::-webkit-scrollbar {
+  width: 5px;
+}
+
+.badges-container-dashboard ul::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.total-students-container-dashboard,
+.badges-container-dashboard,
+.leaderboards-container-dashboard {
+  @apply w-full h-[350px] sm:h-[420px] md:h-[480px] bg-white rounded-xl;
+}
+
 
 
 /* LEADERBOARDS */
 .leaderboards-container-dashboard {
-  @apply w-full h-[480px] bg-white rounded-xl;
+  @apply w-full max-h-[480px] bg-white rounded-xl overflow-y-auto;
 }
 
 .leaderboard-th{
@@ -218,4 +255,3 @@
   min-width: 60px;
   text-align: right;
 }
-
