@@ -269,11 +269,11 @@ export default function Dashboard() {
     }
   };
 
-  return (
+return (
     <div className="main-container-dashboard">
       <div className="dashboard-header">
         <div className="dashboard-header-content">
-          <h1 className="header-text-dashboard">Dashboard</h1>
+          <h1 className="header-text-dashboard text-2xl sm:text-3xl md:text-4xl lg:text-[40px]">Dashboard</h1>
           <h2 className="header-greeting-dashboard">
             {`Hi, ${currentWebUser.firstName} 
             ${
@@ -299,10 +299,10 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[25px] font-bold">
+              <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold">
                 Total Students
               </h1>
-              <h1 className="dashboard-title font-[Poppins] font-bold text-[70px] mt-3">
+              <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] mt-3">
                 <CountUp end={studentCount} />
               </h1>
             </div>
@@ -317,10 +317,10 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[25px] font-bold">
+              <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold">
                 Total Web Users
               </h1>
-              <h1 className="dashboard-title font-[Poppins] font-bold text-[70px] mt-3">
+              <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] mt-3">
                 <CountUp end={webUsersCount} />
               </h1>
             </div>
@@ -335,11 +335,11 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-2 -mt-5 font-[Poppins] text-[25px] font-bold">
+              <h1 className="dashboard-title mb-2 -mt-5 font-[Poppins] text-[18px] font-bold">
                 Overall Average Score
               </h1>
 
-              <h2 className="text-3xl font-bold font-[Poppins] text-[70px] text-black mt-3">
+              <h2 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] mt-3">
                 {avgScoresByWorld.overall === "N/A" ? (
                   "No Data"
                 ) : (
@@ -359,17 +359,17 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-2 mt-3 font-[Poppins] text-[25px] font-bold">
+              <h1 className="dashboard-title mb-3 mt-3 font-[Poppins] text-[18px] font-bold">
                 Most Challenging World
               </h1>
               {mostChallengingWorld === "N/A" ? (
                 <h2 className="text-3xl font-bold">No Data</h2>
               ) : (
                 <>
-                  <h2 className="text-xl capitalize -mt-3 mb-1 !text-[#FFC300] shadow-black font-[Poppins] font-semibold text-[20px]">
+                  <h2 className="text-xl capitalize -mt-3 mb-1 !text-[#FFC300] shadow-black font-[Poppins] font-semibold text-[15px]">
                     {mostChallengingWorld + " Psychology"}
                   </h2>
-                  <h2 className="text-3xl font-bold text-black font-[Poppins] text-[70px]">
+                  <h2 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] mt-3">
                     <CountUp end={mostChallengingWorldScore} decimals={2} />%
                   </h2>
 
@@ -382,9 +382,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        {["super admin", "sub admin"].includes(
-          currentWebUser.position.toLowerCase()
-        ) && (
+        {["super admin", "sub admin"].includes(currentWebUser.position.toLowerCase()) && (
           <div className="analytics-properties-dashboard">
             {isLoadingAttempts ? (
               <div className="loading-overlay-dashboard">
@@ -403,10 +401,10 @@ export default function Dashboard() {
                   </div>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center flex-col">
-                    <h1 className="dashboard-title mb-2 -mt-5 font-[Poppins] text-[25px] font-bold">
+                    <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold">
                       Pending Accounts
                     </h1>
-                    <h1 className="dashboard-title font-[Poppins] font-bold text-[70px] mt-3">
+                    <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] mt-3">
                       <CountUp end={pendingUserCount} />
                     </h1>
                   </div>
@@ -432,230 +430,223 @@ export default function Dashboard() {
         )}
       </div>
 
-      <div className="dashboard-headers-row">
-        <div className="reports-title-container-dashboard">
-          <h1 className="reports-title-properties-dashboard">Reports</h1>
-        </div>
 
-        <div className="leaderboard-title-container-dashboard">
-          <h1 className="leaderboard-title-properties-dashboard">
-            Leaderboard
-          </h1>
-        </div>
-      </div>
+      {/* Unified Grid for Titles + Content */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 mt-4">
+        {/* Reports (title + content) */}
+        <div className="col-span-1 md:col-span-2">
+          {/* Reports Title */}
+          <h1 className="reports-title-properties-dashboard mb-2 text-lg sm:text-xl md:text-2xl lg:text-[26px]">Reports</h1>
 
-      {/* <div className="reports-title-container-dashboard">
-          <h1 className="reports-title-properties-dashboard">Reports</h1>
-        </div> */}
-
-      <div className="reports-content-container-dashboard">
-        <div className="total-students-container-dashboard">
-          {isLoadingAttempts ? (
-            <div className="loading-overlay-dashboard">
-              <div className="spinner"></div>
-              <p>Fetching data...</p>
+          {/* Reports Content Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Total Students */}
+            <div className="total-students-container-dashboard">
+              {isLoadingAttempts ? (
+                <div className="loading-overlay-dashboard">
+                  <div className="spinner"></div>
+                  <p>Fetching data...</p>
+                </div>
+              ) : (
+                <div className="w-full h-10/12 flex flex-col justify-center items-center p-4">
+                  <div className="w-full flex flex-col -mt-10 mb-4">
+                    <h1 className="text-black font-bold font-[poppins] text-lg sm:text-xl md:text-2xl lg:text-[26px]">
+                      Total Students
+                    </h1>
+                    <p className="text-black font-[poppins] text-[18px] -mt-2">
+                      per campus
+                    </p>
+                  </div>
+                  <BarGraph data={branchData} />
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="w-full h-10/12 flex flex-col justify-center items-center p-4">
-              <div className="w-full flex flex-col -mt-10 mb-4">
-                <h1 className="text-black text-[26px] font-bold font-[poppins]">
-                  Total Students
+
+            {/* Top Badges */}
+            <div className="badges-container-dashboard">
+              <div className="w-full h-10/12 flex flex-col p-4">
+                <h1 className="text-black font-bold font-[poppins] text-lg sm:text-xl md:text-2xl lg:text-[26px]">
+                  Top Badges
                 </h1>
-                <p className="text-black font-[poppins] text-[18px] -mt-2">
-                  per campus
-                </p>
-              </div>
-              <BarGraph data={branchData} />
-            </div>
-          )}
-        </div>
 
-        <div className="badges-container-dashboard">
-          <div className="w-full h-10/12 flex flex-col p-4">
-            <h1 className="text-black text-[26px] font-bold font-[poppins]">
-              Top Badges
-            </h1>
-
-            {loadingBadges ? (
-              <div className="loading-overlay-dashboard">
-                <div className="spinner"></div>
-                <p>Loading badges...</p>
-              </div>
-            ) : (
-              <ul className="badge-list-dashboard">
-                {topBadges.length === 0 ? (
-                  <li>No badges earned yet.</li>
+                {loadingBadges ? (
+                  <div className="loading-overlay-dashboard">
+                    <div className="spinner"></div>
+                    <p>Loading badges...</p>
+                  </div>
                 ) : (
-                  topBadges.map((badge, idx) => (
-                    <li
-                      key={badge.id || idx}
-                      className="badge-list-item-dashboard"
-                    >
+                  <ul className="badge-list-dashboard">
+                    {topBadges.length === 0 ? (
+                      <li>No badges earned yet.</li>
+                    ) : (
+                      topBadges.map((badge, idx) => (
+                      <li
+                        key={badge.id || idx}
+                        className="flex items-center gap-2 sm:gap-3 p-1 sm:p-2
+                                  border-b border-gray-200 last:border-none 
+                                  hover:bg-gray-50 rounded-lg transition"
+                      >
+                      {/* Rank Number */}
+                      <span className="w-5 text-xs sm:text-sm font-bold text-gray-600">
+                        {idx + 1}.
+                      </span>
+
+                      {/* Badge Icon */}
                       <img
                         src={badge.iconUrl}
                         alt={badge.name}
-                        className="badge-icon-dashboard"
+                        className="w-8 h-8 sm:w-10 sm:h-10 object-contain rounded-md shadow-sm"
                       />
-                      <div className="badge-info-dashboard">
-                        <div className="badge-title-dashboard">
+
+                      {/* Badge Info */}
+                      <div className="flex-1">
+                        <div className="font-semibold text-gray-800 text-xs sm:text-sm">
                           {badge.name}
                         </div>
-                        <div className="badge-level-dashboard">
+                        <div className="text-gray-500 text-[10px] sm:text-xs">
                           Level {badge.level || 1}
                         </div>
-                        <div className="badge-progress-bar-dashboard">
+
+                        {/* Progress Bar */}
+                        <div className="w-full h-1.5 sm:h-2 bg-gray-200 rounded-full mt-1">
                           <div
-                            className="badge-progress-fill-dashboard"
+                            className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full"
                             style={{ width: `${badge.percentage || 0}%` }}
                           ></div>
                         </div>
                       </div>
-                      <div className="badge-percentage-dashboard">
-                        <span className="badge-percentage-value-dashboard">
-                          {badge.percentage
-                            ? badge.percentage.toFixed(2)
-                            : "0.00"}
-                          %
-                        </span>
+
+                      {/* Percentage */}
+                      <div className="text-[10px] sm:text-sm font-semibold text-gray-700 ml-2">
+                        {badge.percentage ? badge.percentage.toFixed(2) : "0.00"}%
                       </div>
                     </li>
-                  ))
+                      ))
+                    )}
+                  </ul>
                 )}
-              </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Leaderboard (title + box together) */}
+        <div className="col-span-1">
+          <h1 className="leaderboard-title-properties-dashboard mb-2 text-lg sm:text-xl md:text-2xl lg:text-[26px]">
+            Leaderboard
+          </h1>
+
+          <div
+            className="leaderboards-container-dashboard"
+            style={{
+              padding: "1rem",
+              backgroundColor: "#fff",
+              borderRadius: "8px",
+            }}
+          >
+            {/* Toggle Buttons */}
+            <div className="flex bg-[#F5F6F8] p-2 rounded-xl w-full sm:w-[280px] mb-4 sticky top-0 z-10">
+              <button
+                onClick={() => setLeaderboardMode("classic")}
+                className={`w-1/2 py-1 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm
+                  ${
+                    leaderboardMode === "classic"
+                      ? "bg-[#FFC300] text-black shadow-sm"
+                      : "bg-transparent !text-gray-400"
+                  }`}
+              >
+                Competition
+              </button>
+              <button
+                onClick={() => setLeaderboardMode("mastery")}
+                className={`w-1/2 py-1 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm
+                  ${
+                    leaderboardMode === "mastery"
+                      ? "bg-[#FFC300] text-black shadow-sm"
+                      : "bg-transparent !text-gray-400"
+                  }`}
+              >
+                Mastery
+              </button>
+            </div>
+
+            {/* Leaderboard Table */}
+            {(leaderboardMode === "classic" ? loadingDataClassic : loadingDataMastery) ? (
+              <div
+                className="loading-overlay-dashboard flex flex-col items-center justify-center"
+                style={{ height: "150px" }}
+              >
+                <div className="spinner"></div>
+                <p>Loading {leaderboardMode} leaderboard...</p>
+              </div>
+            ) : (
+            <div className="overflow-hidden">
+              <table className="w-full border-collapse text-[11px] sm:text-xs md:text-sm">
+                <thead className="sticky top-0 bg-white z-10">
+                  <tr className="text-black border-b border-gray-200 text-center">
+                    <th className="px-1 py-2 whitespace-nowrap">User</th>
+                    <th className="px-1 py-2 whitespace-nowrap">Branch</th>
+                    <th className="px-1 py-2 whitespace-nowrap">World</th>
+                    <th className="px-1 py-2 whitespace-nowrap">Score</th>
+                    <th className="px-1 py-2 whitespace-nowrap">Time</th>
+                  </tr>
+                </thead>
+              </table>
+
+              {/* Scrollable Data */}
+            <div className="max-h-60 sm:max-h-70 md:max-h-80 lg:max-h-96 overflow-y-auto">
+              <table className="w-full border-collapse text-[11px] sm:text-xs md:text-sm">
+                <tbody>
+                  {(leaderboardMode === "classic"
+                    ? classicLeaderboards
+                    : leaderboardsMastery
+                  )
+                    .map((item) => ({
+                      ...item,
+                      calculatedScore: item.total_items
+                        ? (item.correct / item.total_items) * 100
+                        : 0,
+                    }))
+                    .sort((a, b) => b.calculatedScore - a.calculatedScore)
+                    .slice(0, 10)
+                    .map((item, index) => {
+                      const user = item.user_id || {};
+                      const scorePercent = item.total_items
+                        ? item.calculatedScore.toFixed(0) + "%"
+                        : "N/A";
+
+                      return (
+                        <tr
+                          key={item._id}
+                          className="border-b border-gray-100 text-center"
+                        >
+                          <td className="text-black px-1 py-1">
+                            {index + 1}. {user.username || "Unknown"}
+                          </td>
+                          <td className="text-black px-1 py-1 uppercase">
+                            {user.branch || item.branch || "N/A"}
+                          </td>
+                          <td className="text-black px-1 py-1 capitalize">
+                            {item.category || "N/A"}
+                          </td>
+                          <td className="text-black px-1 py-1">{scorePercent}</td>
+                          <td className="text-black px-1 py-1 text-[11px] sm:text-xs">
+                            {formatTime(item.time_completion)}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
+            </div>
+
             )}
           </div>
         </div>
 
-        {/* <div className="leaderboard-title-container-dashboard">
-            <h1 className="leaderboard-title-properties-dashboard">Leaderboard</h1>
-          </div> */}
-
-        <div
-          className="leaderboards-container-dashboard"
-          style={{
-            overflowX: "auto",
-            padding: "1rem",
-            backgroundColor: "#fff",
-            borderRadius: "8px",
-          }}
-        >
-          <div className="flex bg-[#F5F6F8] p-1 rounded-xl w-[300px] mb-4">
-            <button
-              onClick={() => setLeaderboardMode("classic")}
-              className={`w-1/2 py-2  rounded-xl font-semibold 
-                ${
-                  leaderboardMode === "classic"
-                    ? "bg-[#FFC300]  text-black-400 shadow-sm"
-                    : "bg-transparent text-gray-400"
-                }`}
-            >
-              Competition
-            </button>
-
-            <button
-              onClick={() => setLeaderboardMode("mastery")}
-              className={`w-1/2 py-2  rounded-xl font-semibold
-                ${
-                  leaderboardMode === "mastery"
-                    ? "bg-[#FFC300]  text-black-400 shadow-sm"
-                    : "bg-transparent text-gray-400"
-                }`}
-            >
-              Mastery
-            </button>
-          </div>
-
-          {(
-            leaderboardMode === "classic"
-              ? loadingDataClassic
-              : loadingDataMastery
-          ) ? (
-            <div
-              className="loading-overlay-dashboard"
-              style={{ height: "150px" }}
-            >
-              <div className="spinner"></div>
-              <p>Loading {leaderboardMode} leaderboard...</p>
-            </div>
-          ) : (
-            <table
-              style={{
-                width: "100%",
-                fontSize: "0.85rem",
-                borderCollapse: "collapse",
-              }}
-            >
-              <thead>
-                <tr
-                  className="text-black"
-                  style={{ borderBottom: "1px solid #ddd" }}
-                >
-                  <th className="leaderboard-th">Username</th>
-                  <th className="leaderboard-th">Branch</th>
-                  <th className="leaderboard-th">World</th>
-                  <th className="leaderboard-th">Score (%)</th>
-                  <th className="leaderboard-th">Time (s)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(leaderboardMode === "classic"
-                  ? classicLeaderboards
-                  : leaderboardsMastery
-                )
-                  .map((item) => ({
-                    ...item,
-                    calculatedScore: item.total_items
-                      ? (item.correct / item.total_items) * 100
-                      : 0,
-                  }))
-                  .sort((a, b) => b.calculatedScore - a.calculatedScore)
-                  .slice(0, 10)
-                  .map((item, index) => {
-                    const user = item.user_id || {};
-                    const scorePercent = item.total_items
-                      ? item.calculatedScore.toFixed(0) + "%"
-                      : "N/A";
-
-                    return (
-                      <tr
-                        key={item._id}
-                        style={{
-                          borderBottom: "1px solid #eee",
-                          textAlign: "center",
-                        }}
-                      >
-                        <td className="text-black" style={{ padding: "6px" }}>
-                          {index + 1}. {user.username || "Unknown"}
-                        </td>
-                        <td
-                          className="text-black"
-                          style={{ padding: "6px", textTransform: "uppercase" }}
-                        >
-                          {user.branch || item.branch || "N/A"}
-                        </td>
-                        <td
-                          className="text-black"
-                          style={{
-                            padding: "6px",
-                            textTransform: "capitalize",
-                          }}
-                        >
-                          {item.category || "N/A"}
-                        </td>
-                        <td className="text-black" style={{ padding: "6px" }}>
-                          {scorePercent}
-                        </td>
-                        <td className="text-black px-2 py-1 text-center text-sm">
-                          {formatTime(item.time_completion)}
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          )}
-        </div>
       </div>
     </div>
   );
 }
+
