@@ -56,9 +56,22 @@ export const clothes = {
   female_unform, male_unform
 }
 
+
+
 export const fetchBranches = async () => {
   try {
     const { data } = await axios.get(API_URL + "/getbranches")
+    branches = data
+    return data
+  } catch (error) {
+    console.error("Error fetching branches:", error)
+    return []
+  }
+}
+
+export const fetchDeletedBranches = async () => {
+  try {
+    const { data } = await axios.get(API_URL + "/getDeleteBranches")
     branches = data
     return data
   } catch (error) {

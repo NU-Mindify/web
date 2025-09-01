@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { API_URL, fetchBranches } from "../../Constants";
+import { API_URL, fetchBranches, fetchDeletedBranches } from "../../Constants";
 import "../../css/branches/branches.css";
 import "../../css/signUp/signUp.css";
 import Buttons from "../../components/buttons/Buttons";
@@ -12,24 +12,39 @@ import logo from "../../assets/logo/logo.png";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import submit from "../../assets/branches/submitButton.svg";
 import reset from "../../assets/branches/resetButton.svg";
+import { Delete } from "lucide-react";
 
 export default function Branches() {
   const [newBranch, setNewBranch] = useState({
     id: "",
     name: "",
     extension: "",
+    stud_extension: "",
     is_deleted: false,
   });
 
   const [branchList, setBranchList] = useState([]);
 
-  useEffect(() => {
-    const loadBranches = async () => {
-      const data = await fetchBranches();
+  const [showDeletedBranches, setShowDeletedBranches] = useState(false);
+
+
+  const loadBranches = async () => {
+    try {
+      const data = showDeletedBranches 
+        ? await fetchDeletedBranches() 
+        : await fetchBranches();
       setBranchList(data);
-    };
-    loadBranches();
-  }, []);
+    } catch (error) {
+      console.error("Error loading branches:", error);
+    }
+  };
+
+  
+  
+  useEffect(() => {
+      loadBranches();
+  }, [showDeletedBranches]); 
+
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
@@ -182,6 +197,34 @@ export default function Branches() {
     );
   };
 
+
+  async function deleteBranch(branchId) {
+    console.log("branch id",branchId);
+    
+    try {
+      await axios.put(`${API_URL}/deleteBranch?id=${branchId}`);
+      setValidationMessage("Branch deleted successfully.");
+      setShowValidationModal(true);
+      loadBranches();
+    } catch (error) {
+      console.error("Error deleting branch:", error);
+    }
+  }
+
+  async function activateBranch(branchId) {
+    console.log("branch id",branchId);
+    
+    try {
+      await axios.put(`${API_URL}/activateBranch?id=${branchId}`);
+      setValidationMessage("Branch activated successfully.");
+      setShowValidationModal(true);
+      loadBranches();
+    } catch (error) {
+      console.error("Error activating branch:", error);
+    }
+  }
+
+
   return (
     <div className="campus-main-container">
       <div className="campus-header flex justify-between items-center">
@@ -211,24 +254,9 @@ export default function Branches() {
                 placeholder="Enter Branch ID"
                 value={newBranch.id}
                 onChange={(e) => {
-                  const idValue = e.target.value;
-
-                  // Only allow letters
-                  const lettersOnly = /^[A-Za-z]*$/;
-                  if (!lettersOnly.test(idValue)) return;
-
-                  // Capitalize first letter for Campus Name
-                  const capitalizedId =
-                    idValue.charAt(0).toUpperCase() +
-                    idValue.slice(1).toLowerCase();
-
                   setNewBranch({
                     ...newBranch,
-                    id: idValue,
-                    name: idValue ? `NU ${capitalizedId}` : "",
-                    extension: idValue
-                      ? `@nu-${idValue.toLowerCase()}.edu.ph`
-                      : "",
+                    id: e.target.value,
                   });
                 }}
               />
@@ -237,22 +265,49 @@ export default function Branches() {
             <div className="input-group">
               <label className="required-label">Campus Name</label>
               <input
-                className="cursor-not-allowed"
+                className=""
                 type="text"
                 placeholder="Campus Name"
                 value={newBranch.name}
-                readOnly
+                onChange={(e) => {
+                  setNewBranch({
+                    ...newBranch,
+                    name: e.target.value,
+                  });
+                }}
               />
             </div>
 
             <div className="input-group">
-              <label className="required-label">Email Extension</label>
+              <label className="required-label">Professor Email Extension</label>
               <input
-                className="cursor-not-allowed"
+                className=""
                 type="text"
-                placeholder="Email Extension"
+                placeholder="Professor Email Extension"
                 value={newBranch.extension}
-                readOnly
+                onChange={(e) => {
+                  setNewBranch({
+                    ...newBranch,
+                    extension: e.target.value,
+                  });
+                }}  
+              />
+            </div>
+
+
+            <div className="input-group">
+              <label className="required-label">Student Email Extension</label>
+              <input
+                className=""
+                type="text"
+                placeholder="Student Email Extension"
+                value={newBranch.stud_extension}
+                onChange={(e) => {
+                  setNewBranch({
+                    ...newBranch,
+                    stud_extension: e.target.value,
+                  });
+                }}
               />
             </div>
           </div>
@@ -262,7 +317,7 @@ export default function Branches() {
             onClick={handleAddBranch}
             text={"Submit"}
             disabled={false}
-            addedClassName="btn btn-success"
+            addedClassName="btn btn-warning"
           /> */}
             <button
               onClick={handleAddBranch}
@@ -275,7 +330,7 @@ export default function Branches() {
             {/* <Buttons
             onClick={handleReset}
             text={"Reset"}
-            // disabled={isLoading}
+            // disabled={!newBranch.id && !newBranch.name && !newBranch.extension}
             addedClassName="btn btn-warning ml-5"
           /> */}
             <button
@@ -294,13 +349,27 @@ export default function Branches() {
           </div>
         </div>
       </div>
+              
+      
+      <div className="w-full h-[50px] flex gap-10 justify-center">
+        <button 
+          className="w-auto h-full px-5 text-white font-bold text-2xl bg-green-300"
+          onClick={() => setShowDeletedBranches(!showDeletedBranches)}
+        >
+          {showDeletedBranches ? "Show Active Branches" : "Show Deleted Branches"}
+        </button>
+
+
+      </div>
 
       {branchList.length > 0 && (
         <div className="campuses-main-container px-10">
           <div className="campus-header font-bold text-[20px] flex justify-between items-center pb-2 mb-2 mt-5">
-            <div className="w-[25%]">Branch ID</div>
-            <div className="w-[35%]">Name</div>
-            <div className="w-[42%]">Email Extension</div>
+            <div className="w-[10%]">Branch ID</div>
+            <div className="w-[30%]">Name</div>
+            <div className="w-[30%]">Professor Email Extension</div>
+            <div className="w-[30%]">Student Email Extension</div>
+            <div className="w-[10%]">Action</div>
           </div>
 
           <div className="campus-scroll-container max-h-[250px] overflow-y-auto pr-2 bg-white rounded-md">
@@ -309,11 +378,30 @@ export default function Branches() {
                 key={index}
                 className="campus-card flex justify-between items-center px-5 py-4 mb-3 border border-gray-600 rounded-lg bg-white text-black"
               >
-                <div className="w-[25%] text-[17px] font-medium">
+                <div className="w-[10%] text-[17px] font-medium">
                   {branch.id}
                 </div>
-                <div className="w-[35%] text-[17px]">{branch.name}</div>
-                <div className="w-[40%] text-[17px]">{branch.extension}</div>
+                <div className="w-[30%] text-[17px]">{branch.name}</div>
+                <div className="w-[30%] text-[17px]">{branch.extension}</div>
+                <div className="w-[30%] text-[17px]">{branch.stud_extension}</div>
+                <div className="w-[10%]">
+
+                  {
+                    showDeletedBranches ? 
+                      <button
+                        onClick={() => activateBranch(branch._id)}
+                      >
+                        Activate
+                      </button>
+                    :
+                      <button
+                        onClick={() => deleteBranch(branch._id)}
+                      >
+                        Delete
+                      </button>
+                  }
+                 
+                </div>
               </div>
             ))}
           </div>
