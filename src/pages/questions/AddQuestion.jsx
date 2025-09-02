@@ -35,6 +35,8 @@ function AddQuestion() {
   const [AddSuccessModalMessage, setAddSuccessModalMessage] = useState("");
   const [showAddSuccessModal, setShowAddSuccessModal] = useState(false);
 
+  const [guideIsOpen, setGuideIsOpen] = useState(false);
+
   const [validationErrors, setValidationErrors] = useState({
     question: "",
     choices: ["", "", "", ""],
@@ -415,120 +417,144 @@ function AddQuestion() {
           />
           <label
             htmlFor="upload-btn"
-            className="w-[330px] py-5 px-10 rounded-2xl text-xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+            className="w-[360px] py-5 px-10 rounded-2xl text-xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
           >
             UPLOAD CSV FILE
           </label>
           <a href="/IMPORT_QUESTIONS_TEMPLATE.csv" download>
-            <button className="w-[330px] mt-2 py-5 px-10 rounded-2xl text-xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer">
+            <button className="w-[360px] mt-2 py-5 px-10 rounded-2xl text-xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer">
               DOWNLOAD CSV TEMPLATE
             </button>
           </a>
 
-          <div className="p-5 bg-white shadow rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">
-              QuestionsTemplate.csv Format
-            </h2>
-            <p className="mb-4">
-              The <code>QuestionsTemplate.csv</code> file contains all the
-              question data. Each row represents one question. The columns
-              should appear in the following order:
-            </p>
+          <button
+            className="w-[360px] mt-2 py-5 px-10 rounded-2xl text-xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+            onClick={() => setGuideIsOpen(true)}
+          >
+            VIEW CSV TEMPLATE GUIDE
+          </button>
 
-            <div className="bg-gray-100 p-3 rounded mb-4 font-mono text-sm">
-              Difficulty,Item_Number,Question,A,A_Rationale,B,B_Rationale,C,C_Rationale,D,D_Rationale,CORRECT
-              ANSWERS,RATIONALE,TIMER
+          {guideIsOpen && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/20">
+              <div className="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold">
+                    QuestionsTemplate.csv Format
+                  </h2>
+                  <button
+                    onClick={() => setGuideIsOpen(false)}
+                    className="text-gray-500 hover:text-gray-700 text-xl cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <p className="mb-4">
+                  The <code>QuestionsTemplate.csv</code> file contains all the
+                  question data. Each row represents one question. The columns
+                  should appear in the following order:
+                </p>
+
+                <div className="bg-gray-100 p-3 rounded mb-4 font-mono text-sm">
+                  Difficulty,Item_Number,Question,A,A_Rationale,B,B_Rationale,C,C_Rationale,D,D_Rationale,CORRECT
+                  ANSWERS,RATIONALE,TIMER
+                </div>
+
+                <h3 className="text-lg font-semibold mb-2">Column Details</h3>
+                <table className="w-full border border-gray-300 mb-4">
+                  <thead className="bg-gray-200">
+                    <tr>
+                      <th className="border px-3 py-2 text-left">
+                        CSV Column Headers
+                      </th>
+                      <th className="border px-3 py-2 text-left">
+                        Required or Optional
+                      </th>
+                      <th className="border px-3 py-2 text-left">
+                        Accepted Values
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="border px-3 py-2">Difficulty</td>
+                      <td className="border px-3 py-2">Required</td>
+                      <td className="border px-3 py-2">
+                        E, A, or D (Easy, Medium, Difficult)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="border px-3 py-2">Item_Number</td>
+                      <td className="border px-3 py-2">Required</td>
+                      <td className="border px-3 py-2">Numeric value</td>
+                    </tr>
+                    <tr>
+                      <td className="border px-3 py-2">Question</td>
+                      <td className="border px-3 py-2">Required</td>
+                      <td className="border px-3 py-2">Question text</td>
+                    </tr>
+                    <tr>
+                      <td className="border px-3 py-2">A, B, C, D</td>
+                      <td className="border px-3 py-2">Required</td>
+                      <td className="border px-3 py-2">Answer choices</td>
+                    </tr>
+                    <tr>
+                      <td className="border px-3 py-2">
+                        A_Rationale, B_Rationale, C_Rationale, D_Rationale
+                      </td>
+                      <td className="border px-3 py-2">Optional</td>
+                      <td className="border px-3 py-2">
+                        Explanation for each choice
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="border px-3 py-2">CORRECT ANSWERS</td>
+                      <td className="border px-3 py-2">Required</td>
+                      <td className="border px-3 py-2">A, B, C, or D</td>
+                    </tr>
+                    <tr>
+                      <td className="border px-3 py-2">RATIONALE</td>
+                      <td className="border px-3 py-2">Required</td>
+                      <td className="border px-3 py-2">
+                        Overall explanation (use N/A if none)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="border px-3 py-2">TIMER</td>
+                      <td className="border px-3 py-2">Required</td>
+                      <td className="border px-3 py-2">
+                        Numeric value in seconds
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h3 className="text-lg font-semibold mt-4 mb-2">Notes</h3>
+                <ul className="list-disc pl-6 mb-4">
+                  <li>Each row represents one question.</li>
+                  <li>
+                    There are examples within the downloaded template to guide
+                    you.
+                  </li>
+                  <li>All columns except rationale per choice are required.</li>
+                  <li>
+                    <strong>Item_Number</strong> and <strong>TIMER</strong> must
+                    be numeric values.
+                  </li>
+                  <li>
+                    The <strong>CORRECT ANSWERS</strong> field must match one of
+                    the choices (A, B, C, or D).
+                  </li>
+                  <li>
+                    Save the file as <code>.csv</code> (comma-separated values,
+                    UTF-8 encoding recommended).
+                  </li>
+                </ul>
+
+                <div className="flex justify-end"></div>
+              </div>
             </div>
-
-            <h3 className="text-lg font-semibold mb-2">Column Details</h3>
-            <table className="w-full border border-gray-300">
-              <thead className="bg-gray-200">
-                <tr>
-                  <th className="border px-3 py-2 text-left">
-                    CSV Column Headers
-                  </th>
-                  <th className="border px-3 py-2 text-left">
-                    Required or Optional
-                  </th>
-                  <th className="border px-3 py-2 text-left">
-                    Accepted Values
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border px-3 py-2">Difficulty</td>
-                  <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">E, A, or D (Easy, Medium, Difficult)</td>
-                </tr>
-                <tr>
-                  <td className="border px-3 py-2">Item_Number</td>
-                  <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">Numeric value</td>
-                </tr>
-                <tr>
-                  <td className="border px-3 py-2">Question</td>
-                  <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">
-                    Question text
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border px-3 py-2">A, B, C, D</td>
-                  <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">Answer choices</td>
-                </tr>
-                <tr>
-                  <td className="border px-3 py-2">
-                    A_Rationale, B_Rationale, C_Rationale, D_Rationale
-                  </td>
-                  <td className="border px-3 py-2">Optional</td>
-                  <td className="border px-3 py-2">
-                    Explanation for each choice
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border px-3 py-2">CORRECT ANSWERS</td>
-                  <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">
-                    A, B, C, or D
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border px-3 py-2">RATIONALE</td>
-                  <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">
-                    Overall explanation (use N/A if none)
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border px-3 py-2">TIMER</td>
-                  <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">
-                    Numeric value in seconds
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <h3 className="text-lg font-semibold mt-4 mb-2">Notes</h3>
-            <ul className="list-disc pl-6">
-              <li>Each row represents one question.</li>
-              <li>There are examples within the downloaded template to guide you.</li>
-              <li>All columns except rationale per choice are required.</li>
-              <li>
-                <strong>Item_Number</strong> and <strong>TIMER</strong> must be
-                numeric values.
-              </li>
-              <li>
-                The <strong>CORRECT ANSWERS</strong> field must match one of the choices (A, B, C, or D).
-              </li>
-              <li>
-                Save the file as <code>.csv</code> (comma-separated values,
-                UTF-8 encoding recommended).
-              </li>
-            </ul>
-          </div>
+          )}
 
           <h3 className="w-full">
             Question<span>*</span>

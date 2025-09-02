@@ -25,6 +25,8 @@ export default function AddTerm() {
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
 
+  const [guideIsOpen, setGuideIsOpen] = useState(false);
+
   const handleInputChange = (index, field, value) => {
     const updatedTerms = [...newTerm];
     updatedTerms[index][field] = value;
@@ -257,19 +259,37 @@ export default function AddTerm() {
           />
           <label
             htmlFor="upload-btn"
-            className="btn btn-warning w-[230px] rounded-xl !text-white text-xl bg-[#FFC916] border-[#FFC916] font-[Poppins] h-[50px] px-4 flex items-center justify-center text-center cursor-pointer"
+            className="w-[360px] mt-2 py-5 px-10 rounded-2xl text-xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
           >
             UPLOAD CSV FILE
           </label>
 
           <a href="/IMPORT_TERMS_TEMPLATE.csv" download>
-            <button className="btn btn-warning w-[230px] rounded-xl !text-white text-xl bg-[#FFC916] border-[#FFC916] font-[Poppins] h-[50px] px-4 flex items-center justify-center text-center cursor-pointer">
+            <button className="w-[360px] mt-2 py-5 px-10 rounded-2xl text-xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer">
               DOWNLOAD CSV TEMPLATE
             </button>
           </a>
 
-          <div className="p-5 bg-white shadow rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">ImportTerms.csv Format</h2>
+          <button
+            className="w-[360px] mt-2 py-5 px-10 rounded-2xl text-xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+            onClick={() => setGuideIsOpen(true)}
+          >
+            VIEW CSV TEMPLATE GUIDE
+          </button>
+
+          {guideIsOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/20">
+          <div className="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold">ImportTerms.csv Format</h2>
+              <button
+                onClick={() => setGuideIsOpen(false)}
+                className="text-gray-500 hover:text-gray-700 text-xl cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
             <p className="mb-4">
               The <code>ImportTerms.csv</code> file contains all the terms and
               their meanings. Each row represents one term. The columns should
@@ -281,34 +301,24 @@ export default function AddTerm() {
             </div>
 
             <h3 className="text-lg font-semibold mb-2">Column Details</h3>
-            <table className="w-full border border-gray-300">
+            <table className="w-full border border-gray-300 mb-4">
               <thead className="bg-gray-200">
                 <tr>
-                  <th className="border px-3 py-2 text-left">
-                    CSV Column Headers
-                  </th>
-                  <th className="border px-3 py-2 text-left">
-                    Required or Optional
-                  </th>
-                  <th className="border px-3 py-2 text-left">
-                    Accepted Values
-                  </th>
+                  <th className="border px-3 py-2 text-left">CSV Column Headers</th>
+                  <th className="border px-3 py-2 text-left">Required or Optional</th>
+                  <th className="border px-3 py-2 text-left">Accepted Values</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td className="border px-3 py-2">word</td>
                   <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">
-                    The term or word
-                  </td>
+                  <td className="border px-3 py-2">The term or word</td>
                 </tr>
                 <tr>
                   <td className="border px-3 py-2">meaning</td>
                   <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">
-                    Definition or explanation of the word 
-                  </td>
+                  <td className="border px-3 py-2">Definition or explanation of the word</td>
                 </tr>
                 <tr>
                   <td className="border px-3 py-2">tags</td>
@@ -319,27 +329,20 @@ export default function AddTerm() {
             </table>
 
             <h3 className="text-lg font-semibold mt-4 mb-2">Notes</h3>
-            <ul className="list-disc pl-6">
+            <ul className="list-disc pl-6 mb-4">
               <li>Each row represents one term.</li>
-              <li>
-                All fields are <strong>required</strong>.
-              </li>
-              <li>
-                <strong>Tags</strong> represent the category of the term.
-              </li>
-              <li>
-                There is an example within the downloaded template to guide you.
-              </li>
-              <li>
-                Save the file as <code>.csv</code> (comma-separated values,
-                UTF-8 encoding recommended).
-              </li>
-              <li>
-                Do not include commas in the <strong>word</strong> or{" "}
-                <strong>meaning</strong> fields unless enclosed in quotes.
-              </li>
+              <li>All fields are <strong>required</strong>.</li>
+              <li><strong>Tags</strong> represent the category of the term.</li>
+              <li>There is an example within the downloaded template to guide you.</li>
+              <li>Save the file as <code>.csv</code> (comma-separated values, UTF-8 encoding recommended).</li>
+              <li>Do not include commas in the <strong>word</strong> or <strong>meaning</strong> fields unless enclosed in quotes.</li>
             </ul>
+
+            <div className="flex justify-end">
+            </div>
           </div>
+        </div>
+      )}
         </div>
 
         <div className="create-container">
