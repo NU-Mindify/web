@@ -16,7 +16,7 @@ import logo from "../../assets/logo/logo.png";
 import EditGlossary from "./EditGlossary";
 
 export default function ManageGlossary() {
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const letters = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const navigate = useNavigate();
 
   const { currentWebUser = { firstName: "Admin", lastName: "", token: "" } } =
@@ -71,9 +71,15 @@ export default function ManageGlossary() {
     ? allTerms
     : allTerms.filter((term) => {
         if (!term.word) return false;
+
         if (searchTerm.length === 1 && /^[A-Z]$/.test(searchTerm)) {
           return term.word[0].toUpperCase() === searchTerm;
         }
+
+        if (searchTerm === "#") {
+          return /^[0-9]/.test(term.word);
+        }
+
         return term.word.toLowerCase().includes(searchTerm.toLowerCase());
       });
 
@@ -82,12 +88,17 @@ export default function ManageGlossary() {
   const indexOfFirstTerm = indexOfLastTerm - termsPerPage;
   const currentTerms = filteredTerms.slice(indexOfFirstTerm, indexOfLastTerm);
 
-  // Group terms by first letter within current page
   const groupedTerms = letters.map((letter) => ({
     letter,
-    terms: currentTerms.filter(
-      (term) => term.word && term.word[0].toUpperCase() === letter
-    ),
+    terms: currentTerms.filter((term) => {
+      if (!term.word) return false;
+
+      if (letter === "#") {
+        return /^[0-9]/.test(term.word);
+      }
+
+      return term.word[0].toUpperCase() === letter;
+    }),
   }));
 
   const goToPage = (page) => {
