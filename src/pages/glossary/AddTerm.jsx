@@ -105,7 +105,7 @@ export default function AddTerm() {
               branch: currentWebUser.branch,
               action: "Add Term",
               description: `${currentWebUser.firstName} added a term "${term.word}" with meaning "${term.meaning}".`,
-              useravatar: currentWebUser.useravatar
+              useravatar: currentWebUser.useravatar,
             })
           )
         );
@@ -267,6 +267,79 @@ export default function AddTerm() {
               DOWNLOAD CSV TEMPLATE
             </button>
           </a>
+
+          <div className="p-5 bg-white shadow rounded-lg">
+            <h2 className="text-2xl font-bold mb-4">ImportTerms.csv Format</h2>
+            <p className="mb-4">
+              The <code>ImportTerms.csv</code> file contains all the terms and
+              their meanings. Each row represents one term. The columns should
+              appear in the following order:
+            </p>
+
+            <div className="bg-gray-100 p-3 rounded mb-4 font-mono text-sm">
+              word,meaning,tags
+            </div>
+
+            <h3 className="text-lg font-semibold mb-2">Column Details</h3>
+            <table className="w-full border border-gray-300">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="border px-3 py-2 text-left">
+                    CSV Column Headers
+                  </th>
+                  <th className="border px-3 py-2 text-left">
+                    Required or Optional
+                  </th>
+                  <th className="border px-3 py-2 text-left">
+                    Accepted Values
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border px-3 py-2">word</td>
+                  <td className="border px-3 py-2">Required</td>
+                  <td className="border px-3 py-2">
+                    The term or word
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border px-3 py-2">meaning</td>
+                  <td className="border px-3 py-2">Required</td>
+                  <td className="border px-3 py-2">
+                    Definition or explanation of the word 
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border px-3 py-2">tags</td>
+                  <td className="border px-3 py-2">Required</td>
+                  <td className="border px-3 py-2">Category of the term</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3 className="text-lg font-semibold mt-4 mb-2">Notes</h3>
+            <ul className="list-disc pl-6">
+              <li>Each row represents one term.</li>
+              <li>
+                All fields are <strong>required</strong>.
+              </li>
+              <li>
+                <strong>Tags</strong> represent the category of the term.
+              </li>
+              <li>
+                There is an example within the downloaded template to guide you.
+              </li>
+              <li>
+                Save the file as <code>.csv</code> (comma-separated values,
+                UTF-8 encoding recommended).
+              </li>
+              <li>
+                Do not include commas in the <strong>word</strong> or{" "}
+                <strong>meaning</strong> fields unless enclosed in quotes.
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="create-container">

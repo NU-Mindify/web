@@ -571,6 +571,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
                     <Buttons
                       text="View Student Details"
                       onClick={async () => {
+                        console.log("ITEMS", student.items);
                         navigate("/students/overall", {
                           state: {
                             competitionData: competitionModeData,
@@ -584,6 +585,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
                             recentAct: recentAct,
                             studentAvatar: student.avatar,
                             studentCloth: student.cloth,
+                            studentItems: student.items,
                           },
                         });
                       }}

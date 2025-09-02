@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router";
 import "../../css/students/showMoreDetails.css";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import samplepic from "../../assets/students/sample-minji.svg";
-import { branches, categories, clothes } from "../../Constants";
+import { branches, categories, avatarandclothes } from "../../Constants";
 import { avatarBodies } from "../../AvatarBody";
 
 export default function ShowMoreDetails() {
@@ -20,6 +20,14 @@ export default function ShowMoreDetails() {
   const studentAvatar = location.state?.studentAvatar;
   const studentCloth = location.state?.studentCloth;
   const recentAct = location.state?.recentAct;
+  const studentItems = location.state?.studentItems;
+
+  const avatars = studentItems?.filter(
+    (item) => avatarandclothes[item]?.type === "avatar"
+  );
+  const clothes = studentItems?.filter(
+    (item) => avatarandclothes[item]?.type === "clothes"
+  );
 
   const studentBranch =
     branches.find((b) => b.id === location.state?.studentBranch)?.name ||
@@ -124,7 +132,7 @@ export default function ShowMoreDetails() {
 
                   {/* Clothing */}
                   <img
-                    src={clothes[studentCloth] || samplepic}
+                    src={avatarandclothes[studentCloth]?.src || samplepic}
                     alt={`${studentFirstName} clothing`}
                     className="absolute z-10 object-contain"
                     style={{
@@ -360,11 +368,65 @@ export default function ShowMoreDetails() {
               Badges Acquired
             </h1>
             <div className="w-full flex flex-row flex-wrap justify-center gap-5">
-              {studentBadges.map((badges) => (
-                <div className="w-[100px] h-[100px]">
-                  <img src={badges.badge_id.filepath} alt="badge" />
-                </div>
-              ))}
+              {studentBadges?.length > 0 ? (
+                studentBadges.map((badge, index) => (
+                  <div key={index} className="w-[100px] h-[100px]">
+                    <img src={badge.badge_id.filepath} alt="badge" />
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-lg mt-4">No badges acquired</p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Avatars */}
+            <div className="bg-white shadow-md rounded-2xl p-4">
+              <div className="flex justify-between mb-4">
+                <h2 className="text-xl font-semibold">Avatars</h2>
+                <span>Total Avatars Owned: {avatars?.length || 0}</span>
+              </div>
+              <div className="flex flex-wrap gap-4 justify-center">
+                {avatars?.length > 0 ? (
+                  avatars.map((avatar, idx) => (
+                    <img
+                      key={idx}
+                      src={avatarandclothes[avatar]?.src}
+                      alt={avatar}
+                      className="w-20 h-20 object-contain"
+                    />
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-lg mt-4">
+                    No avatars acquired
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Clothes */}
+            <div className="bg-white shadow-md rounded-2xl p-4">
+              <div className="flex justify-between mb-4">
+                <h2 className="text-xl font-semibold">Clothes</h2>
+                <span>Total Clothes Owned: {clothes?.length || 0}</span>
+              </div>
+              <div className="flex flex-wrap gap-4 justify-center">
+                {clothes?.length > 0 ? (
+                  clothes.map((cloth, idx) => (
+                    <img
+                      key={idx}
+                      src={avatarandclothes[cloth]?.src}
+                      alt={cloth}
+                      className="w-20 h-20 object-contain"
+                    />
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-lg mt-4">
+                    No clothes acquired
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>

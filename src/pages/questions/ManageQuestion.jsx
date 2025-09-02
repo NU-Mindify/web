@@ -183,7 +183,7 @@ export default function ManageQuestion() {
               branch: currentWebUser.branch,
               action: "Add Question from CSV",
               description: `${currentWebUser.firstName} Added question "${q.question}" to category "${q.category}" from CSV upload.`,
-              useravatar: currentWebUser.useravatar
+              useravatar: currentWebUser.useravatar,
             })
           )
         );
@@ -367,6 +367,13 @@ export default function ManageQuestion() {
       console.error("Error converting logo:", error);
     }
 
+    // Difficulty mapping
+    const difficultyMap = {
+      easy: "Easy",
+      average: "Average",
+      difficult: "Difficult",
+    };
+
     const now = new Date().toLocaleString();
     const doc = new jsPDF("p", "mm", "a4");
 
@@ -401,12 +408,12 @@ export default function ManageQuestion() {
         .join("\n");
 
       return [
+        q.item_number || "", // Item #
         q.question,
         categories.find((cat) => cat.id === q.category)?.name || "",
         choicesText,
-        q.difficulty || "",
+        difficultyMap[q.difficulty?.toLowerCase()] || "", // Map difficulty
         q.timer || "",
-        q.level || "",
         q.rationale || "",
       ];
     });
@@ -414,12 +421,12 @@ export default function ManageQuestion() {
     autoTable(doc, {
       head: [
         [
+          "Item #",
           "Question",
           "Category",
           "Choices (with rationale, correct marked ✅)",
           "Difficulty",
           "Timer",
-          "Level",
           "Overall Rationale",
         ],
       ],
@@ -427,8 +434,9 @@ export default function ManageQuestion() {
       startY: 30,
       styles: { fontSize: 5, cellWidth: "wrap" },
       columnStyles: {
-        0: { cellWidth: 40 },
-        2: { cellWidth: 70 },
+        0: { cellWidth: 10 }, // Item #
+        1: { cellWidth: 40 }, // Question
+        3: { cellWidth: 70 }, // Choices
       },
     });
 
@@ -442,7 +450,14 @@ export default function ManageQuestion() {
   const exportQuestionsToCSV = (questions, filename) => {
     const now = new Date().toLocaleString();
 
-    // CSV headers
+    // Difficulty mapping
+    const difficultyMap = {
+      easy: "Easy",
+      average: "Average",
+      difficult: "Difficult",
+    };
+
+    // CSV headers (removed "Level")
     const headers = [
       "Question",
       "Category",
@@ -457,7 +472,6 @@ export default function ManageQuestion() {
       "Answer",
       "Difficulty",
       "Timer",
-      "Level",
       "Overall Rationale",
     ];
 
@@ -485,7 +499,6 @@ export default function ManageQuestion() {
 
       return [
         q.question,
-        // If you want category NAME instead of ID:
         categories.find((cat) => cat.id === q.category)?.name || q.category,
         choicesMap.a?.text || "",
         choicesMap.a?.rationale || "",
@@ -496,9 +509,8 @@ export default function ManageQuestion() {
         choicesMap.d?.text || "",
         choicesMap.d?.rationale || "",
         q.answer || "",
-        q.difficulty || "",
+        difficultyMap[q.difficulty?.toLowerCase()] || "",
         q.timer || "",
-        q.level || "",
         q.rationale || "",
       ].map(sanitize);
     });
@@ -560,6 +572,12 @@ export default function ManageQuestion() {
               </span>
               <span>
                 <strong>{choice.letter}.</strong> {choice.text}
+                <div className="rationale-box">
+                  <div>
+                    <strong>Rationale:</strong>
+                  </div>
+                  <div>{choice.rationale || "N/A"}</div>
+                </div>
               </span>
             </label>
           ))}
@@ -574,14 +592,17 @@ export default function ManageQuestion() {
           <div className="question-meta">
             <div>
               <div>
-                <strong>Category:</strong>{" "}
-                {
-                  categoriesObj.find((categ) => categ.id === data.category)
-                    ?.name
-                }
+                <strong>ITEM NUMBER:</strong> {data.item_number || "N/A"}
               </div>
               <div>
-                <strong>LEVEL:</strong> {data.level}
+                <strong>TIME:</strong> {data.timer}s
+              </div>
+              <div>
+                <strong>DIFFICULTY:</strong>{" "}
+                {data.difficulty
+                  ? data.difficulty.charAt(0).toUpperCase() +
+                    data.difficulty.slice(1)
+                  : ""}
               </div>
             </div>
           </div>
@@ -682,15 +703,6 @@ export default function ManageQuestion() {
 
               <div className="flex items-center gap-3 flex-shrink-0">
                 <div className="flex items-center gap-2">
-                  {/* <label className="bg-black cursor-pointer !text-white px-4 py-2 rounded">
-                    Upload CSV
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept=".csv"
-                      onChange={handleFileChange}
-                    />
-                  </label> */}
                   {selectedFile && uploadedQuestions.length > 0 && (
                     <Buttons
                       text={`Upload ${uploadedQuestions.length} Questions`}
@@ -752,8 +764,6 @@ export default function ManageQuestion() {
                     Sort by:
                   </option>
                   <option value="level-asc">ALL</option>
-                  <option value="level-asc">Level (1 → 10)</option>
-                  <option value="level-desc">Level (10 → 1)</option>
                   <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
                 </select>
@@ -762,18 +772,11 @@ export default function ManageQuestion() {
               <div className="sort-container relative">
                 <select id="filter" className="sort-select pl-8">
                   <option value="" disabled selected hidden>
-                    Filter Level:
+                    Filter By Difficulty:
                   </option>
-                  <option value="1">Level 1</option>
-                  <option value="2">Level 2</option>
-                  <option value="3">Level 3</option>
-                  <option value="4">Level 4</option>
-                  <option value="5">Level 5</option>
-                  <option value="6">Level 6</option>
-                  <option value="7">Level 7</option>
-                  <option value="8">Level 8</option>
-                  <option value="9">Level 9</option>
-                  <option value="10">Level 10</option>
+                  <option value="1">Easy</option>
+                  <option value="2">Average</option>
+                  <option value="3">Difficult</option>
                 </select>
               </div>
 

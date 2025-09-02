@@ -40,8 +40,8 @@ function AddQuestion() {
     choices: ["", "", "", ""],
     rationale: "",
     difficulty: "",
-    level: "",
     timer: "",
+    item_number: "",
   });
 
   const validateQuestion = (q = question) => {
@@ -50,8 +50,8 @@ function AddQuestion() {
       choices: ["", "", "", ""],
       rationale: "",
       difficulty: "",
-      level: "",
       timer: "",
+      item_number: "",
     };
 
     if (!q.question.trim()) errors.question = "Please enter a question.";
@@ -61,8 +61,6 @@ function AddQuestion() {
 
     if (!q.difficulty.trim())
       errors.difficulty = "Please select a difficulty level.";
-
-    if (!q.level || q.level < 1) errors.level = "Please select a valid level.";
 
     if (!q.timer || q.timer <= 0)
       errors.timer = "Please enter a number greater than 0.";
@@ -91,8 +89,8 @@ function AddQuestion() {
       errors.question ||
       errors.rationale ||
       errors.difficulty ||
-      errors.level ||
       errors.timer ||
+      errors.item_number ||
       errors.choices.some((err) => err);
 
     return !hasError;
@@ -127,7 +125,6 @@ function AddQuestion() {
     rationale: "",
     category: category,
     difficulty: "",
-    level: "",
     answer: "a",
     timer: 0,
   });
@@ -155,7 +152,7 @@ function AddQuestion() {
       choices: ["", "", "", ""],
       rationale: "",
       difficulty: "",
-      level: "",
+      item_number: "",
       timer: "",
     });
 
@@ -174,26 +171,36 @@ function AddQuestion() {
     }
 
     try {
-
       const isAdmin =
         currentWebUser.position.toLowerCase() === "professor"
           ? `${API_URL}/addQuestion`
           : `${API_URL}/addQuestionAdmin`;
 
-      const { data } = await axios.post(isAdmin, allQuestions, {
+      const cleanedQuestions = allQuestions.map((q) => ({
+        item_number: q.item_number ? String(q.item_number) : "N/A",
+        question: q.question || "N/A",
+        category: q.category || "N/A",
+        difficulty: q.difficulty || "N/A",
+        answer: q.answer || "N/A",
+        rationale: q.rationale || "N/A",
+        timer: q.timer || 0,
+        choices: q.choices || [],
+      }));
+
+      console.log("=== PAYLOAD TO SEND ===");
+      console.log(JSON.stringify(cleanedQuestions, null, 2));
+
+      const { data } = await axios.post(isAdmin, cleanedQuestions, {
         headers: {
           Authorization: `Bearer ${currentWebUser.token}`,
         },
       });
 
-      
       console.log(data);
       setAddSuccessModalMessage(
-        currentWebUser.position.toLowerCase() === "professor" ? 
-        "Added Successfully! Questions are to be approved by Admin."
-        :
-        "Added Successfully!"
-        
+        currentWebUser.position.toLowerCase() === "professor"
+          ? "Added Successfully! Questions are to be approved by Admin."
+          : "Added Successfully!"
       );
       setShowAddSuccessModal(true);
 
@@ -203,11 +210,11 @@ function AddQuestion() {
           branch: currentWebUser.branch,
           action: "Add Question",
           description: `${currentWebUser.firstName} Added question "${q.question}" to category "${q.category}"`,
-          useravatar: currentWebUser.useravatar
+          useravatar: currentWebUser.useravatar,
         });
       }
     } catch (error) {
-      console.error(error);
+      console.error("=== FULL ERROR RESPONSE ===", error.response?.data);
       setValidationMessage(
         error.response?.data?.error?.name || "Submission Failed"
       );
@@ -277,8 +284,8 @@ function AddQuestion() {
         const parsedQuestions = results.data
           .filter(
             (row) =>
-              row["Level"]?.trim() &&
-              row["Items"]?.trim() &&
+              row["Item_Number"]?.trim() &&
+              row["Question"]?.trim() &&
               row["A"]?.trim() &&
               row["B"]?.trim() &&
               row["C"]?.trim() &&
@@ -289,39 +296,48 @@ function AddQuestion() {
           )
           .map((row) => {
             const correctAnswer = row["CORRECT ANSWERS"].trim().toLowerCase();
-            const level = parseInt(row["Level"]);
             const timer = parseInt(row["TIMER"]);
 
+            const difficultyMap = {
+              E: "easy",
+              A: "average",
+              D: "difficult",
+            };
+            const difficulty =
+              difficultyMap[row["Difficulty"]?.trim().toUpperCase()] || "N/A";
+
+            const normalizeField = (value) => value?.trim() || "N/A";
+
             return {
-              question: row["Items"].trim(),
-              difficulty: "easy",
-              level: isNaN(level) ? 1 : level,
-              rationale: row["RATIONALE"].trim(),
+              item_number: row["Item_Number"].trim(),
+              question: normalizeField(row["Question"]),
+              difficulty,
+              rationale: normalizeField(row["RATIONALE"]),
               answer: correctAnswer,
               category: category,
               timer: isNaN(timer) ? 0 : timer,
               choices: [
                 {
                   letter: "a",
-                  text: row["A"].trim(),
+                  text: normalizeField(row["A"]),
                   rationale: row["A_Rationale"]?.trim() || "",
                   isCorrect: correctAnswer === "a",
                 },
                 {
                   letter: "b",
-                  text: row["B"].trim(),
+                  text: normalizeField(row["B"]),
                   rationale: row["B_Rationale"]?.trim() || "",
                   isCorrect: correctAnswer === "b",
                 },
                 {
                   letter: "c",
-                  text: row["C"].trim(),
+                  text: normalizeField(row["C"]),
                   rationale: row["C_Rationale"]?.trim() || "",
                   isCorrect: correctAnswer === "c",
                 },
                 {
                   letter: "d",
-                  text: row["D"].trim(),
+                  text: normalizeField(row["D"]),
                   rationale: row["D_Rationale"]?.trim() || "",
                   isCorrect: correctAnswer === "d",
                 },
@@ -366,7 +382,7 @@ function AddQuestion() {
                     ) ||
                     question.rationale.trim() !== "" ||
                     question.difficulty.trim() !== "" ||
-                    question.level !== 1;
+                    question.item_number.trim() !== "";
 
                   const listHasQuestions = allQuestions.length > 0;
 
@@ -408,6 +424,112 @@ function AddQuestion() {
               DOWNLOAD CSV TEMPLATE
             </button>
           </a>
+
+          <div className="p-5 bg-white shadow rounded-lg">
+            <h2 className="text-2xl font-bold mb-4">
+              QuestionsTemplate.csv Format
+            </h2>
+            <p className="mb-4">
+              The <code>QuestionsTemplate.csv</code> file contains all the
+              question data. Each row represents one question. The columns
+              should appear in the following order:
+            </p>
+
+            <div className="bg-gray-100 p-3 rounded mb-4 font-mono text-sm">
+              Difficulty,Item_Number,Question,A,A_Rationale,B,B_Rationale,C,C_Rationale,D,D_Rationale,CORRECT
+              ANSWERS,RATIONALE,TIMER
+            </div>
+
+            <h3 className="text-lg font-semibold mb-2">Column Details</h3>
+            <table className="w-full border border-gray-300">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="border px-3 py-2 text-left">
+                    CSV Column Headers
+                  </th>
+                  <th className="border px-3 py-2 text-left">
+                    Required or Optional
+                  </th>
+                  <th className="border px-3 py-2 text-left">
+                    Accepted Values
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border px-3 py-2">Difficulty</td>
+                  <td className="border px-3 py-2">Required</td>
+                  <td className="border px-3 py-2">E, A, or D (Easy, Medium, Difficult)</td>
+                </tr>
+                <tr>
+                  <td className="border px-3 py-2">Item_Number</td>
+                  <td className="border px-3 py-2">Required</td>
+                  <td className="border px-3 py-2">Numeric value</td>
+                </tr>
+                <tr>
+                  <td className="border px-3 py-2">Question</td>
+                  <td className="border px-3 py-2">Required</td>
+                  <td className="border px-3 py-2">
+                    Question text
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border px-3 py-2">A, B, C, D</td>
+                  <td className="border px-3 py-2">Required</td>
+                  <td className="border px-3 py-2">Answer choices</td>
+                </tr>
+                <tr>
+                  <td className="border px-3 py-2">
+                    A_Rationale, B_Rationale, C_Rationale, D_Rationale
+                  </td>
+                  <td className="border px-3 py-2">Optional</td>
+                  <td className="border px-3 py-2">
+                    Explanation for each choice
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border px-3 py-2">CORRECT ANSWERS</td>
+                  <td className="border px-3 py-2">Required</td>
+                  <td className="border px-3 py-2">
+                    A, B, C, or D
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border px-3 py-2">RATIONALE</td>
+                  <td className="border px-3 py-2">Required</td>
+                  <td className="border px-3 py-2">
+                    Overall explanation (use N/A if none)
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border px-3 py-2">TIMER</td>
+                  <td className="border px-3 py-2">Required</td>
+                  <td className="border px-3 py-2">
+                    Numeric value in seconds
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3 className="text-lg font-semibold mt-4 mb-2">Notes</h3>
+            <ul className="list-disc pl-6">
+              <li>Each row represents one question.</li>
+              <li>There are examples within the downloaded template to guide you.</li>
+              <li>All columns except rationale per choice are required.</li>
+              <li>
+                <strong>Item_Number</strong> and <strong>TIMER</strong> must be
+                numeric values.
+              </li>
+              <li>
+                The <strong>CORRECT ANSWERS</strong> field must match one of the choices (A, B, C, or D).
+              </li>
+              <li>
+                Save the file as <code>.csv</code> (comma-separated values,
+                UTF-8 encoding recommended).
+              </li>
+            </ul>
+          </div>
+
           <h3 className="w-full">
             Question<span>*</span>
           </h3>
@@ -427,34 +549,46 @@ function AddQuestion() {
           )}
         </div>
 
+        {/* ITEM NUMBER */}
         <div className="select-container flex gap-6">
-          {/* Level */}
           <div className="flex flex-col">
             <h3>
-              Level:<span>*</span>
+              Item Number:<span>*</span>
             </h3>
-            <select
-              id="levelSelect"
-              disabled={isFormDisabled}
-              value={question.level || ""}
-              onChange={(e) => {
-                const newLevel = e.target.value ? parseInt(e.target.value) : "";
-                const newQ = { ...question, level: newLevel };
-                setQuestion(newQ);
-                validateQuestion(newQ);
-              }}
+            <input
+              type="number"
+              min="1"
+              max="9999"
+              placeholder="Enter item number"
               className="w-[200px] h-[40px] mt-2 border border-gray-400 rounded px-2"
-            >
-              <option value="">Select a Level</option>
-              {[...Array(10)].map((_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {i + 1}
-                </option>
-              ))}
-            </select>
+              disabled={isFormDisabled}
+              value={question.item_number || ""}
+              onChange={(e) => {
+                let value = e.target.value.replace(/\D/g, "").slice(0, 4); // Up to 4 digits
+                setQuestion({ ...question, item_number: value });
+              }}
+              onKeyDown={(e) => {
+                if (
+                  [
+                    "Backspace",
+                    "Tab",
+                    "ArrowLeft",
+                    "ArrowRight",
+                    "Delete",
+                  ].includes(e.key)
+                ) {
+                  return;
+                }
+                if (!/^\d$/.test(e.key)) {
+                  e.preventDefault();
+                }
+              }}
+            />
             <div className="h-[20px] mt-1">
-              {validationErrors.level && (
-                <span className="text-red-600">{validationErrors.level}</span>
+              {validationErrors.item_number && (
+                <span className="text-red-600">
+                  {validationErrors.item_number}
+                </span>
               )}
             </div>
           </div>
@@ -651,13 +785,20 @@ function AddQuestion() {
                 <div className="dropdown-active-container">
                   <div className="level-diff-container">
                     <div className="grid grid-cols-3 text-center">
-                      <h1>Level</h1>
+                      <h1>Item Number</h1>
                       <h1>Difficulty</h1>
                       <h1>Timer</h1>
                     </div>
                     <div className="grid grid-cols-3 text-center border border-black h-6/12 mt-2 rounded-xl place-items-center">
-                      <h1>{question.level}</h1>
-                      <h1>{question.difficulty}</h1>
+                      <h1>{question.item_number || "N/A"}</h1>
+
+                      <h1>
+                        {question.difficulty
+                          ? question.difficulty.charAt(0).toUpperCase() +
+                            question.difficulty.slice(1)
+                          : ""}
+                      </h1>
+
                       <h1>{question.timer}s</h1>
                     </div>
                   </div>
@@ -771,7 +912,9 @@ function AddQuestion() {
               <div className="flex justify-center">
                 <h2>Unsaved Changes</h2>
               </div>
-              <p>Leaving this page will discard any unsaved changes. Proceed?</p>
+              <p>
+                Leaving this page will discard any unsaved changes. Proceed?
+              </p>
               <div className="popup-buttons">
                 <button
                   className="btn-delete"

@@ -30,15 +30,27 @@ export default function Leaderboard() {
   const [loadingDataClassic, setLoadingDataClassic] = useState(false);
   const [loadingDataMastery, setLoadingDataMastery] = useState(false);
 
-  const [classicSelectedBranch, setClassicSelectedBranch] = useState("");
-  const [masterySelectedBranch, setMasterySelectedBranch] = useState("");
+  // const [classicSelectedBranch, setClassicSelectedBranch] = useState("");
+  // const [masterySelectedBranch, setMasterySelectedBranch] = useState("");
+
+  const [classicSelectedBranch, setClassicSelectedBranch] = useState(
+    currentWebUser?.position.toLowerCase() === "super admin"
+      ? "all"
+      : ""
+  );
+
+  const [masterySelectedBranch, setMasterySelectedBranch] = useState(
+    currentWebUser?.position.toLowerCase() === "super admin"
+      ? "all"
+      : ""
+  );
 
   const [selectedCategoryClassic, setselectedCategoryClassic] = useState("");
   const [selectedCategoryMastery, setselectedCategoryMastery] = useState("");
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
 
-  const [showClassic, setShowClassic] = useState(true); 
+  const [showClassic, setShowClassic] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -51,7 +63,7 @@ export default function Leaderboard() {
   useEffect(() => {
     fetchTopClassicLeaderboard();
     fetchTopMasteryLeaderboard();
-  }, [selectedCategoryClassic, selectedCategoryMastery]); 
+  }, [selectedCategoryClassic, selectedCategoryMastery]);
 
   //function to normalize names for search (remove commas, trim, lowercase)
   const normalizeName = (name) => {
