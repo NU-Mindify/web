@@ -281,6 +281,20 @@ export default function ManageQuestion() {
     });
   };
 
+  const [newestSort, setNewestSort] = useState("newest");
+
+  function handleSortingByDate(e) {
+    const value = e.target.value;
+    setNewestSort(value);
+  }
+
+  const [difficultySort, setDifficultySort] = useState("");
+
+  function handleSortingByDifficulty(e) {
+    const value = e.target.value;
+    setDifficultySort(value);
+  }
+
   const confirmDeleteQuestion = async () => {
     try {
       await axios.put(
@@ -759,24 +773,31 @@ export default function ManageQuestion() {
               </div>
 
               <div className="sort-container relative">
-                <select id="sort" className="sort-select pl-8">
+                <select
+                  id="sort"
+                  className="sort-select pl-8"
+                  onChange={handleSortingByDate}
+                >
                   <option value="" disabled selected hidden>
                     Sort by:
                   </option>
-                  <option value="level-asc">ALL</option>
                   <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
                 </select>
               </div>
 
               <div className="sort-container relative">
-                <select id="filter" className="sort-select pl-8">
+                <select
+                  id="filter"
+                  className="sort-select pl-8"
+                  onChange={handleSortingByDifficulty}
+                >
                   <option value="" disabled selected hidden>
                     Filter By Difficulty:
                   </option>
-                  <option value="1">Easy</option>
-                  <option value="2">Average</option>
-                  <option value="3">Difficult</option>
+                  <option value="easy">Easy</option>
+                  <option value="average">Average</option>
+                  <option value="difficult">Difficult</option>
                 </select>
               </div>
 
@@ -810,7 +831,20 @@ export default function ManageQuestion() {
                     const matchSearch = question.question
                       .toLowerCase()
                       .includes(searchQuestion.trim().toLowerCase());
-                    return matchArchived && matchSearch;
+
+                    const matchDifficulty =
+                      !difficultySort ||
+                      question.difficulty?.toLowerCase() === difficultySort;
+
+                    return matchArchived && matchSearch && matchDifficulty;
+                  })
+                  .sort((a, b) => {
+                    if (newestSort === "newest") {
+                      return b._id.localeCompare(a._id);
+                    } else if (newestSort === "oldest") {
+                      return a._id.localeCompare(b._id);
+                    }
+                    return 0;
                   })
                   .map((question, index) => (
                     <QuestionCard

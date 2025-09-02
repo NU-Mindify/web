@@ -19,7 +19,7 @@
 }
 
 .title-left {
-  @apply flex items-center w-2/3;
+  @apply flex items-center w-1/2;
 }
 
 .back-button {
@@ -133,12 +133,13 @@
   @apply w-full h-full bg-white flex flex-col px-2;
 }
 
-.allquestions-container{
-    @apply w-full flex-grow; 
+.allquesitons-container {
+  @apply w-full flex-grow overflow-y-auto;
 }
 
+
 .ques-sub-container {
-  @apply flex-grow overflow-auto md:!h-[calc(100svh-185px)] h-full font-[Poppins];
+  @apply flex-grow overflow-y-auto font-[Poppins];
 }
 
 
