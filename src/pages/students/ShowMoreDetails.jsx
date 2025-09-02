@@ -1,13 +1,17 @@
 import { useLocation, useNavigate } from "react-router";
+import React, { useState, useEffect } from "react";
 import "../../css/students/showMoreDetails.css";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import samplepic from "../../assets/students/sample-minji.svg";
 import { branches, categories, avatarandclothes } from "../../Constants";
 import { avatarBodies } from "../../AvatarBody";
+import axios from "axios";
 
 export default function ShowMoreDetails() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [averageSessionTime, setAverageSessionTime] = useState(null);
 
   // Extract state values
   const competitionData = location.state?.competitionData;
@@ -94,6 +98,24 @@ export default function ShowMoreDetails() {
 
     return attempts;
   };
+
+  //get Ave Session Time
+  const API_URL = import.meta.env.VITE_URL; 
+
+  useEffect(() => {
+    async function fetchAverageSessionTime() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/getAverageSessionTime?users_id=${studentId}`
+        );
+        setAverageSessionTime(response.data.averageSessionTimeMinutes);
+      } catch (error) {
+        console.error("Error fetching average session time:", error);
+      }
+    }
+    if (studentId) fetchAverageSessionTime();
+  }, [studentId]);
+
 
   const levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const competitionHighestScores = getCompetitionHighScores();
@@ -428,6 +450,18 @@ export default function ShowMoreDetails() {
                 )}
               </div>
             </div>
+            
+            <div className="w-full my-4">
+              <h2 className="text-xl font-semibold text-black">Average Session Time</h2>
+                <p className="text-lg text-gray-700">
+                  {averageSessionTime !== null && averageSessionTime !== undefined
+                    ? `${averageSessionTime.toFixed(2)} minutes`
+                    : "No data available"}
+                </p>
+            </div>
+
+
+
           </div>
         </div>
       </div>
