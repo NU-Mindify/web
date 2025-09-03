@@ -7,19 +7,25 @@
 }
 
 
-.campus-main-container{
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
+.campus-main-container {
   @apply font-[Poppins] p-3 flex flex-col w-full bg-white;
-  min-height: 100vh;   
+  min-height: 100%;
+  height: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .campus-header{
   @apply w-full h-auto p-1
 }
-
-.campus-title {
-  @apply text-[40px] font-[Poppins] font-bold text-[#FFC916] h-[50px] pl-3 mt-3;
-}
-
 
 .campus-form-container {
   @apply border border-gray-500 p-6 rounded-md w-full mt-6;
@@ -43,11 +49,11 @@
 }
 
 .input-group label {
-  @apply font-medium mb-1 text-black;
+  @apply font-medium mb-1 text-black text-sm md:text-base;
 }
 
 .input-group input {
-  @apply p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400;
+  @apply p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm md:text-base;
 }
 
 .button-row {
@@ -55,12 +61,28 @@
 }
 
 
+
 .branches-list-container {
-  @apply w-full;
+ @apply w-full flex-grow;
+  
 }
+
+.campus-scroll-container {
+  @apply overflow-x-auto overflow-y-auto;
+  max-height: 400px;
+  max-height: calc(400px - 10px);
+  padding-bottom: 80px;
+  box-sizing: border-box;
+}
+
+
 
 .branch-card {
   @apply text-black;
+}
+
+.campus-card div {
+  @apply text-sm md:text-[17px];
 }
 
 
@@ -68,3 +90,22 @@
   scrollbar-width: thin;
   scrollbar-color: black transparent;
 }
+
+
+@media (max-width: 768px) {
+  .campus-main-container {
+    padding: 1rem;
+  }
+  .form-row {
+    flex-direction: column;
+  }
+  .button-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .campus-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
