@@ -229,7 +229,13 @@ export default function Branches() {
   return (
     <div className="campus-main-container">
       <div className="campus-header flex justify-between items-center">
-        <h1 className="campus-title">Campus Management</h1>
+          <h1
+            className="text-2xl sm:text-3xl md:text-4xl font-bold !text-[#FFC916] h-[50px] pl-3 mt-3 "
+            style={{ fontFamily: "'Poppins', sans-serif" }}
+          >
+            Campus Management
+          </h1>
+   
 
         <ExportDropdown
           onExport={(format) => {
@@ -323,7 +329,7 @@ export default function Branches() {
           /> */}
             <button
               onClick={handleAddBranch}
-              className="w-[260px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+              className="w-[200px]  sm:w-[180px] py-3 sm:py-5 text-base sm:text-2xl rounded-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
               disabled={false}
             >
               Submit
@@ -336,7 +342,7 @@ export default function Branches() {
             addedClassName="btn btn-warning ml-5"
           /> */}
             <button
-              className={`w-[260px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition ${
+              className={`w-[200px] sm:w-[180px] py-3 sm:py-5 text-base sm:text-2xl rounded-2xl font-extrabold transition ${
                 newBranch.id || newBranch.name || newBranch.extension
                   ? "bg-red-500 hover:bg-red-600 cursor-pointer"
                   : "bg-red-300 cursor-not-allowed"
@@ -352,19 +358,36 @@ export default function Branches() {
         </div>
       </div>
 
-      <div className="w-full h-[50px] flex gap-10 justify-center mt-5">
-        <button
-          className="w-auto h-full px-7 py-3 text-white font-bold text-2xl bg-gray-300 rounded-xl hover:bg-gray-400 transition"
-          onClick={() => setShowDeletedBranches(!showDeletedBranches)}
-        >
-          {showDeletedBranches
-            ? "Show Active Branches"
-            : "Show Deleted Branches"}
-        </button>
+      <div className="flex justify-start mt-5 ml-4">
+        <div className="flex bg-gray-100 p-1 rounded-xl w-full sm:w-[350px]">
+          <button
+            onClick={() => setShowDeletedBranches(false)}
+            className={`w-1/2 py-2 rounded-lg font-medium transition ${
+              !showDeletedBranches
+                ? "bg-white !text-[#273574] shadow"
+                : "!text-gray-400"
+            }`}
+          >
+            Active Branches
+          </button>
+
+          <button
+            onClick={() => setShowDeletedBranches(true)}
+            className={`w-1/2 py-2 rounded-lg font-medium transition ${
+              showDeletedBranches
+                ? "bg-white !text-[#273574] shadow"
+                : "!text-gray-400"
+            }`}
+          >
+            Deleted Branches
+          </button>
+        </div>
       </div>
 
+
+
       {branchList.length > 0 && (
-        <div className="campuses-main-container px-10">
+        <div className="campus-main-container min-h-screen flex flex-col">
           <div className="campus-header font-bold text-[20px] flex justify-between items-center pb-2 mb-2 mt-5">
             <div className="w-[10%]">Branch ID</div>
             <div className="w-[30%]">Name</div>
@@ -373,47 +396,45 @@ export default function Branches() {
             <div className="w-[10%]">Action</div>
           </div>
 
-          <div className="campus-scroll-container max-h-[250px] overflow-y-auto pr-2 bg-white rounded-md">
-            {branchList.map((branch, index) => (
-              <div
-                key={index}
-                className="campus-card flex justify-between items-center px-5 py-4 mb-3 border border-gray-600 rounded-lg bg-white text-black"
-              >
-                <div className="w-[10%] text-[17px] font-medium">
-                  {branch.id}
+          <div className="campus-scroll-container overflow-x-auto overflow-y-auto max-h-[70vh] pr-2 bg-white rounded-md mb-10">
+            <div className="w-full">
+              {branchList.map((branch, index) => (
+                <div
+                  key={index}
+                  className="campus-card flex flex-wrap md:flex-nowrap justify-between items-center px-3 md:px-5 py-4 mb-3 border border-gray-600 rounded-lg bg-white text-black"
+                >
+                   <div className="w-full md:w-[10%] text-sm md:text-[17px] font-medium">{branch.id}</div>
+                  <div className="w-full md:w-[30%] text-sm md:text-[17px]">{branch.name}</div>
+                  <div className="w-full md:w-[30%] text-sm md:text-[17px]">{branch.extension}</div>
+                  <div className="w-full md:w-[30%] text-sm md:text-[17px]">{branch.stud_extension}</div>
+                  <div className="w-full md:w-[10%] mt-2 md:mt-0">
+                    {showDeletedBranches ? (
+                      <button
+                        onClick={() => {
+                          setShowActivateModal(true);
+                          setBranchToActivate(branch._id);
+                        }}
+                        className="btn btn-success px-5 py-2 text-white"
+                      >
+                        Activate
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setBranchToDelete(branch._id);
+                          setShowDeleteModal(true);
+                        }}
+                        className="btn btn-error px-5 py-2 m"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="w-[30%] text-[17px]">{branch.name}</div>
-                <div className="w-[30%] text-[17px]">{branch.extension}</div>
-                <div className="w-[30%] text-[17px]">
-                  {branch.stud_extension}
-                </div>
-                <div className="w-[10%]">
-                  {showDeletedBranches ? (
-                    <button 
-                      onClick={() => {
-                        setShowActivateModal(true)
-                        setBranchToActivate(branch._id)
-                      }}
-                      // onClick={() => activateBranch(branch._id)} 
-                      className="btn btn-success px-10 py-5 text-white"
-                    >
-                      Activate
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setBranchToDelete(branch._id);
-                        setShowDeleteModal(true);
-                      }}
-                      className="btn btn-error px-10 py-5"
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+
         </div>
       )}
 
