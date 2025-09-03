@@ -184,11 +184,12 @@ export default function AddTerm() {
                   }
                 >
                   <option value="">Choose Category</option>
-                  <option value="AbPsych">Abnormal Psychology</option>
-                  <option value="DevPsych">Developmental Psychology</option>
-                  <option value="PsychoPsych">Psychological Psychology</option>
-                  <option value="IndPsych">Industrial Psychology</option>
-                  <option value="GenPsych">General Psychology</option>
+                  <option value="Abnormal Psychology">Abnormal Psychology</option>
+                  <option value="Developmental Psychology">Developmental Psychology</option>
+                  <option value="Psychological Psychology">Psychological Psychology</option>
+                  <option value="Industrial Psychology">Industrial Psychology</option>
+                  <option value="General Psychology">General Psychology</option>
+                  <option value="Theories of Personality">Theories of Personality</option>
                 </select>
                 {newTerm.length > 1 && (
                   <button
