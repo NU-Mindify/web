@@ -197,6 +197,9 @@ export default function Branches() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [branchToDelete, setBranchToDelete] = useState(null);
 
+  const [showActivateModal, setShowActivateModal] = useState(false);
+  const [branchToActivate, setBranchToActivate] = useState(null);
+
   async function deleteBranch(branchId) {
     console.log("branch id", branchId);
 
@@ -349,9 +352,9 @@ export default function Branches() {
         </div>
       </div>
 
-      <div className="w-full h-[50px] flex gap-10 justify-center">
+      <div className="w-full h-[50px] flex gap-10 justify-center mt-5">
         <button
-          className="w-auto h-full px-5 text-white font-bold text-2xl bg-green-300"
+          className="w-auto h-full px-7 py-3 text-white font-bold text-2xl bg-gray-300 rounded-xl hover:bg-gray-400 transition"
           onClick={() => setShowDeletedBranches(!showDeletedBranches)}
         >
           {showDeletedBranches
@@ -386,7 +389,14 @@ export default function Branches() {
                 </div>
                 <div className="w-[10%]">
                   {showDeletedBranches ? (
-                    <button onClick={() => activateBranch(branch._id)}>
+                    <button 
+                      onClick={() => {
+                        setShowActivateModal(true)
+                        setBranchToActivate(branch._id)
+                      }}
+                      // onClick={() => activateBranch(branch._id)} 
+                      className="btn btn-success px-10 py-5 text-white"
+                    >
                       Activate
                     </button>
                   ) : (
@@ -428,6 +438,35 @@ export default function Branches() {
                 onClick={() => {
                   deleteBranch(branchToDelete); // delete the saved branch
                   setShowDeleteModal(false); // close modal
+                }}
+              >
+                Yes
+              </button>
+              <button
+                className="btn btn-error px-10 py-5 text-2xl"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showActivateModal && (
+        <div className="w-full h-full fixed top-0 left-0 z-[5000] bg-gray-300/50 flex justify-center items-center">
+          <div className="w-auto h-[200px] bg-white flex flex-col items-center px-10 py-5">
+            <Info className="text-black mb-4" size={30} />
+            <p className="text-black text-center font-[Poppins] mb-4">
+              Are you sure you want to activate this branch?
+            </p>
+
+            <div className="w-full flex justify-evenly mt-5">
+              <button
+                className="btn btn-success px-10 py-5 text-2xl"
+                onClick={() => {
+                  activateBranch(branchToActivate);
+                  setShowActivateModal(false); 
                 }}
               >
                 Yes
