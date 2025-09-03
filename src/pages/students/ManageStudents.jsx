@@ -315,8 +315,30 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
   const { currentWebUser } = useContext(UserLoggedInContext);
   const [userBadges, setUserBadges] = useState([]);
   const [recentAct, setRecentAct] = useState([]);
+  const [recentSessions, setRecentSessions] = useState([]);
 
   const studentId = student._id;
+
+  console.log("STUDENT ID:", studentId);
+  
+  
+  useEffect(() => {
+    async function fetchRecentSessions(){
+      try{
+        const {data} = await axios.get(`${API_URL}/getRecentSessions?user_id=${studentId}`);
+        setRecentSessions(data);
+        console.log(data);
+        console.log("recent sessions", data);
+      }
+      catch(error){
+        console.error("Error fetching recent sessions:", error.message);
+      }
+    }
+
+    if(studentId) fetchRecentSessions();
+  }, [studentId]);
+
+  
   
 
   useEffect(() => {

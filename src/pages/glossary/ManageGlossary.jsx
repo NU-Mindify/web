@@ -30,7 +30,7 @@ export default function ManageGlossary() {
   // For tracking which term's dropdown is open or which term is active
   const [activeTermWord, setActiveTermWord] = useState(null);
 
-  const termsPerPage = 20;
+  const termsPerPage = 30;
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState(null);

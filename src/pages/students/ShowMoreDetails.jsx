@@ -22,6 +22,8 @@ export default function ShowMoreDetails() {
   const recentAct = location.state?.recentAct;
   const studentItems = location.state?.studentItems;
 
+  
+
   const avatars = studentItems?.filter(
     (item) => avatarandclothes[item]?.type === "avatar"
   );
@@ -161,38 +163,49 @@ export default function ShowMoreDetails() {
         </div>
 
         {recentAct && recentAct.length > 0 && (
-          <div className="w-full h-auto py-3">
-            <h1 className="text-2xl font-bold">Recent Activity</h1>
-            <div className="mt-2 flex flex-col gap-2 overflow-y-auto h-[300px] py-5">
-              {recentAct.map((act, index) => (
-                <div
-                  key={index}
-                  className="border-4 border-gray-500 rounded-md p-2 bg-white shadow-sm"
-                >
-                  <p className="text-black text-sm">
-                    <strong>Mode:</strong> {act.mode}
-                  </p>
-                  <p className="text-black text-sm">
-                    <strong>Level:</strong> {act.level}
-                  </p>
-                  <p className="text-black text-sm">
-                    <strong>Category:</strong>{" "}
-                    {categories.find((cat) => cat.id === act.category)?.name ||
-                      act.category}
-                  </p>
-                  <p className="text-black text-sm">
-                    <strong>Score:</strong> {act.correct}/{act.total_items}
-                  </p>
-                  <p className="text-black text-sm">
-                    <strong>Time:</strong> {act.time_completion}
-                  </p>
-                  <p className="text-black text-sm">
-                    <strong>Date:</strong>{" "}
-                    {new Date(act.createdAt).toLocaleString()}
-                  </p>
-                </div>
-              ))}
+          <div className="w-full h-auto flex justify-evenly items-center">
+            <div className="w-[48%] h-auto py-3">
+              <h1 className="text-2xl font-bold">Recent Activity</h1>
+              <div className="mt-2 flex flex-col gap-2 overflow-y-auto h-[300px] py-5 border-2 px-2">
+                {recentAct.map((act, index) => (
+                  <div
+                    key={index}
+                    className="border-4 border-gray-500 rounded-md p-2 bg-white shadow-sm"
+                  >
+                    <p className="text-black text-sm">
+                      <strong>Mode:</strong> {act.mode}
+                    </p>
+                    <p className="text-black text-sm">
+                      <strong>Level:</strong> {act.level}
+                    </p>
+                    <p className="text-black text-sm">
+                      <strong>Category:</strong>{" "}
+                      {categories.find((cat) => cat.id === act.category)?.name ||
+                        act.category}
+                    </p>
+                    <p className="text-black text-sm">
+                      <strong>Score:</strong> {act.correct}/{act.total_items}
+                    </p>
+                    <p className="text-black text-sm">
+                      <strong>Time:</strong> {act.time_completion}
+                    </p>
+                    <p className="text-black text-sm">
+                      <strong>Date:</strong>{" "}
+                      {new Date(act.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
+            
+
+            <div className="w-[48%] h-auto bg-violet-300 py-3">
+                <h1 className="text-2xl font-bold">Recent Sessions</h1>
+                <div className="mt-2 flex flex-col gap-2 overflow-y-auto h-[300px] py-5">
+
+                </div>
+            </div>
+            
           </div>
         )}
 
