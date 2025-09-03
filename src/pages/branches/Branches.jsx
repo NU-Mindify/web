@@ -13,6 +13,7 @@ import { UserLoggedInContext } from "../../contexts/Contexts";
 import submit from "../../assets/branches/submitButton.svg";
 import reset from "../../assets/branches/resetButton.svg";
 import { Delete } from "lucide-react";
+import { Info } from "lucide-react";
 
 export default function Branches() {
   const [newBranch, setNewBranch] = useState({
@@ -27,11 +28,10 @@ export default function Branches() {
 
   const [showDeletedBranches, setShowDeletedBranches] = useState(false);
 
-
   const loadBranches = async () => {
     try {
-      const data = showDeletedBranches 
-        ? await fetchDeletedBranches() 
+      const data = showDeletedBranches
+        ? await fetchDeletedBranches()
         : await fetchBranches();
       setBranchList(data);
     } catch (error) {
@@ -39,12 +39,9 @@ export default function Branches() {
     }
   };
 
-  
-  
   useEffect(() => {
-      loadBranches();
-  }, [showDeletedBranches]); 
-
+    loadBranches();
+  }, [showDeletedBranches]);
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
@@ -197,10 +194,12 @@ export default function Branches() {
     );
   };
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [branchToDelete, setBranchToDelete] = useState(null);
 
   async function deleteBranch(branchId) {
-    console.log("branch id",branchId);
-    
+    console.log("branch id", branchId);
+
     try {
       await axios.put(`${API_URL}/deleteBranch?id=${branchId}`);
       setValidationMessage("Branch deleted successfully.");
@@ -212,8 +211,8 @@ export default function Branches() {
   }
 
   async function activateBranch(branchId) {
-    console.log("branch id",branchId);
-    
+    console.log("branch id", branchId);
+
     try {
       await axios.put(`${API_URL}/activateBranch?id=${branchId}`);
       setValidationMessage("Branch activated successfully.");
@@ -223,7 +222,6 @@ export default function Branches() {
       console.error("Error activating branch:", error);
     }
   }
-
 
   return (
     <div className="campus-main-container">
@@ -279,7 +277,9 @@ export default function Branches() {
             </div>
 
             <div className="input-group">
-              <label className="required-label">Professor Email Extension</label>
+              <label className="required-label">
+                Professor Email Extension
+              </label>
               <input
                 className=""
                 type="text"
@@ -290,10 +290,9 @@ export default function Branches() {
                     ...newBranch,
                     extension: e.target.value,
                   });
-                }}  
+                }}
               />
             </div>
-
 
             <div className="input-group">
               <label className="required-label">Student Email Extension</label>
@@ -349,17 +348,16 @@ export default function Branches() {
           </div>
         </div>
       </div>
-              
-      
+
       <div className="w-full h-[50px] flex gap-10 justify-center">
-        <button 
+        <button
           className="w-auto h-full px-5 text-white font-bold text-2xl bg-green-300"
           onClick={() => setShowDeletedBranches(!showDeletedBranches)}
         >
-          {showDeletedBranches ? "Show Active Branches" : "Show Deleted Branches"}
+          {showDeletedBranches
+            ? "Show Active Branches"
+            : "Show Deleted Branches"}
         </button>
-
-
       </div>
 
       {branchList.length > 0 && (
@@ -383,24 +381,25 @@ export default function Branches() {
                 </div>
                 <div className="w-[30%] text-[17px]">{branch.name}</div>
                 <div className="w-[30%] text-[17px]">{branch.extension}</div>
-                <div className="w-[30%] text-[17px]">{branch.stud_extension}</div>
+                <div className="w-[30%] text-[17px]">
+                  {branch.stud_extension}
+                </div>
                 <div className="w-[10%]">
-
-                  {
-                    showDeletedBranches ? 
-                      <button
-                        onClick={() => activateBranch(branch._id)}
-                      >
-                        Activate
-                      </button>
-                    :
-                      <button
-                        onClick={() => deleteBranch(branch._id)}
-                      >
-                        Delete
-                      </button>
-                  }
-                 
+                  {showDeletedBranches ? (
+                    <button onClick={() => activateBranch(branch._id)}>
+                      Activate
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setBranchToDelete(branch._id);
+                        setShowDeleteModal(true);
+                      }}
+                      className="btn btn-error px-10 py-5"
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -413,6 +412,35 @@ export default function Branches() {
           message={validationMessage}
           onClose={() => setShowValidationModal(false)}
         />
+      )}
+
+      {showDeleteModal && (
+        <div className="w-full h-full fixed top-0 left-0 z-[5000] bg-gray-300/50 flex justify-center items-center">
+          <div className="w-auto h-[200px] bg-white flex flex-col items-center px-10 py-5">
+            <Info className="text-black mb-4" size={30} />
+            <p className="text-black text-center font-[Poppins] mb-4">
+              Are you sure you want to delete this branch?
+            </p>
+
+            <div className="w-full flex justify-evenly mt-5">
+              <button
+                className="btn btn-success px-10 py-5 text-2xl"
+                onClick={() => {
+                  deleteBranch(branchToDelete); // delete the saved branch
+                  setShowDeleteModal(false); // close modal
+                }}
+              >
+                Yes
+              </button>
+              <button
+                className="btn btn-error px-10 py-5 text-2xl"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
