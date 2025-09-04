@@ -295,7 +295,8 @@ export default function ManageGlossary() {
           </div>
 
           {/* Terms list */}
-          <div className="w-11/12 flex-grow overflow-auto">
+          {/* <div className="w-11/12 flex-grow overflow-auto"> */}
+          <div className="w-full md:w-11/12 flex-grow overflow-y-auto overflow-x-hidden">
             {loadingTerms ? (
               <p>Loading terms...</p>
             ) : groupedTerms.some((g) => g.terms.length > 0) ? (
