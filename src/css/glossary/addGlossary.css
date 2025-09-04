@@ -27,7 +27,8 @@
 
 
 .close-btn {
-  @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer;
+  /* @apply w-[50px] h-[50px] flex items-center justify-center cursor-pointer; */
+  @apply w-[36px] h-[36px] sm:w-[44px] sm:h-[44px] md:w-[50px] md:h-[50px] flex items-center justify-center cursor-pointer;
 }
 
 /* .close-btn:hover {
@@ -35,7 +36,8 @@
 } */
 
 .add-term-title {
-  @apply -mb-2 mt-3 font-[Poppins] text-[#FFC916] font-bold text-[25px] md:text-[40px];
+  /* @apply -mb-2 mt-3 font-[Poppins] text-[#FFC916] font-bold text-[25px] md:text-[40px]; */
+  @apply -mb-1 mt-2 font-[Poppins] text-[#FFC916] font-bold text-[20px] sm:text-[25px] md:text-[32px] lg:text-[40px];
 }
 
 .add-term-contents {
@@ -89,7 +91,8 @@
 }
 
 .term-header select {
-  @apply w-full h-[40px];
+  /* @apply w-full h-[40px]; */
+  @apply w-full h-[32px] sm:h-[36px] md:h-[40px];
 }
 
 .delete-term-btn {
@@ -120,8 +123,9 @@
   border-radius: 0.5px;
   border-bottom: 1px solid #151616;
   padding: 0.5rem 0;
-  font-size: 14px;
+  /* font-size: 14px; */
   outline: none;
+  @apply text-sm sm:text-base; /* scales font size */
 }
 
 
@@ -140,10 +144,11 @@
 .add-more-term-btn {
   margin-top: 0.5rem;
   color: #000000;
-  font-size: 15px;
+  /* font-size: 15px; */
   text-decoration: underline;
   cursor: pointer;
   align-self: flex-start;
+  @apply text-sm sm:text-base; /* responsive font scaling */
 }
 
 .add-more-term-btn:hover {
@@ -151,7 +156,8 @@
 }
 
 .create-container {
-  @apply flex justify-center sticky mb-5 w-full pt-2;
+  /* @apply flex justify-center sticky mb-5 w-full pt-2; */
+  @apply flex justify-center sticky mb-3 sm:mb-5 w-full pt-2;
 }
 
 

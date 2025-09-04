@@ -12,7 +12,8 @@
 }
 
 .glossary-title-container h1 {
-  @apply font-[Poppins] text-[#FFC916] font-bold text-[25px] pl-3 md:text-[40px] mt-3;
+  /* @apply font-[Poppins] text-[#FFC916] font-bold text-[25px] pl-3 md:text-[40px] mt-3; */
+   @apply font-[Poppins] text-[#FFC916] font-bold text-[20px] sm:text-[25px] md:text-[32px] lg:text-[40px] pl-3 mt-3;
 }
 
 .glossary-sub-header-container {
@@ -20,7 +21,8 @@
 }
 
 .glossary-letters-btn-container {
-  @apply font-[Poppins] hidden lg:w-[90%] lg:h-[80px] lg:flex lg:justify-around lg:items-center lg:min-w-[500px];
+  /* @apply font-[Poppins] hidden lg:w-[90%] lg:h-[80px] lg:flex lg:justify-around lg:items-center lg:min-w-[500px]; */
+  @apply font-[Poppins] hidden lg:w-[90%] lg:h-[60px] xl:h-[80px] lg:flex lg:justify-around lg:items-center lg:min-w-[400px] xl:min-w-[500px];
 }
 
 .navigator-buttons {
@@ -28,7 +30,8 @@
 }
 
 .letter-title {
-  @apply text-black text-xl my-2 md:text-3xl lg:text-[40px];
+  /* @apply text-black text-xl my-2 md:text-3xl lg:text-[40px]; */
+  @apply text-black text-lg sm:text-xl my-2 md:text-2xl lg:text-[36px] xl:text-[40px];
 }
 
 
@@ -63,7 +66,8 @@
 
 .header-details {
   /* Added min-w for the grid layout to ensure minimum width before scrolling */
-  @apply grid grid-cols-[2fr_3fr_1fr] text-2xl font-medium text-black h-[60px] lg:items-center border-b-2 border-black w-11/12 min-w-[700px]; /* Adjust min-w value as needed */
+  /* @apply grid grid-cols-[2fr_3fr_1fr] text-2xl font-medium text-black h-[60px] lg:items-center border-b-2 border-black w-11/12 min-w-[700px]; Adjust min-w value as needed */
+  @apply grid grid-cols-[2fr_3fr_1fr] text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-black h-[40px] sm:h-[50px] md:h-[60px] lg:items-center border-b-2 border-black w-full md:w-11/12 min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
 }
 
 .header-title {
@@ -81,14 +85,17 @@
 /* Non-active word container */
 .per-word-container {
   /* Added min-w for the grid layout to ensure minimum width before scrolling */
-  @apply w-11/12 grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-300 border-1 border-black min-w-[700px]; /* Adjust min-w value to match or be slightly less than header-details */
+  /* @apply w-11/12 grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-300 border-1 border-black min-w-[700px]; Adjust min-w value to match or be slightly less than header-details */
+  @apply w-full sm:w-11/12 grid grid-cols-[1fr] sm:grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-300 border-1 border-black min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
   @apply transform scale-100 transition-transform duration-300 ease-in-out;
 }
 
 .active-per-word-container {
   /* Added min-w for the grid layout to ensure minimum width before scrolling */
-  @apply w-11/12 h-auto grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 bg-[#35408E] min-w-[700px]; /* Adjust min-w value to match or be slightly less than header-details */
-  @apply transition-transform duration-300 ease-in-out transform scale-108;
+  /* @apply w-11/12 h-auto grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 bg-[#35408E] min-w-[700px]; /* Adjust min-w value to match or be slightly less than header-details */
+  /* @apply transition-transform duration-300 ease-in-out transform scale-108; */
+  @apply w-full sm:w-11/12 h-auto grid grid-cols-[1fr] sm:grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 bg-[#35408E] min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
+  @apply transition-transform duration-300 ease-in-out transform scale-105 sm:scale-108;
 }
 
 .word-container {
@@ -120,11 +127,13 @@
 }
 
 .editIcon {
-  @apply cursor-pointer w-[25px] h-[25px];
+  /* @apply cursor-pointer w-[25px] h-[25px]; */
+  @apply cursor-pointer w-[20px] h-[20px] sm:w-[22px] sm:h-[22px] md:w-[25px] md:h-[25px];
 }
 
 .per-word-container button img {
-  @apply w-[40px] aspect-square;
+  /* @apply w-[40px] aspect-square; */
+  @apply w-[28px] sm:w-[32px] md:w-[36px] lg:w-[40px] aspect-square;
 }
 
 .active-per-word-container button img {
