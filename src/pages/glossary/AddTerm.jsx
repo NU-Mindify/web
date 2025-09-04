@@ -260,7 +260,7 @@ export default function AddTerm() {
           />
           <label
             htmlFor="upload-btn"
-            className="w-[360px] mt-2 py-5 px-10 rounded-2xl text-xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+            className="w-[280px] sm:w-[320px] md:w-[360px] mt-2 py-3 sm:py-4 md:py-5 px-6 sm:px-8 md:px-10 rounded-2xl text-lg sm:text-xl md:text-2xl text-center font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
           >
             UPLOAD CSV FILE
           </label>
