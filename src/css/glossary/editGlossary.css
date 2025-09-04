@@ -5,12 +5,13 @@
 
 .modal-overlay {
     background-color: rgba(105, 105, 105, 0.886);
-    @apply fixed inset-0 flex justify-center items-center z-[1000];
+    /* @apply fixed inset-0 flex justify-center items-center z-[1000]; */
+     @apply fixed inset-0 flex justify-center items-center z-[9999];
 }
 
 .edit-glossary-container{
   /* @apply bg-white rounded-xl p-6 w-8/12 shadow-[0_10px_25px_rgba(0,0,0,0.3)]; */
-  @apply bg-white rounded-xl p-4 sm:p-6 w-11/12 sm:w-10/12 md:w-8/12 shadow-[0_10px_25px_rgba(0,0,0,0.3)];
+  @apply bg-white rounded-xl p-6 w-11/12 max-w-md shadow-lg;
   max-height: 90vh; /* prevent overflow on small screens */
   overflow-y: auto;
 }
