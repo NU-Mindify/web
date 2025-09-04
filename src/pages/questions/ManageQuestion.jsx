@@ -730,7 +730,7 @@ export default function ManageQuestion() {
                 </div>
                 <Buttons
                   text={
-                    <span className="flex items-center !text-white">
+                    <span className="flex flex-wrap justify-center sm:justify-between items-center w-full mt-3 gap-2 lg:w-auto lg:mt-0">
                       Add Question
                     </span>
                   }
