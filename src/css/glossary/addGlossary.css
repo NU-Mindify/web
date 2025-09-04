@@ -7,7 +7,7 @@
 .add-term-main-container {
   /* @apply w-full bg-white rounded-xl p-5 flex flex-col;*/
   height: 100vh; 
-  @apply w-11/12 max-w-lg bg-white rounded-xl p-5 flex flex-col;
+  @apply w-full max-w-lg bg-white rounded-xl p-5 flex flex-col;
   /* scrollbar-width: none;
     -ms-overflow-style: none; */
 }
