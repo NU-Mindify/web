@@ -5,9 +5,9 @@
 
 
 .add-term-main-container {
-  /* @apply w-full bg-white rounded-xl p-5 flex flex-col;*/
+  @apply w-full bg-white rounded-xl p-5 flex flex-col;
   height: 100vh; 
-  @apply w-full max-w-lg bg-white rounded-xl p-5 flex flex-col;
+  /* @apply w-full max-w-lg bg-white rounded-xl p-5 flex flex-col; */
   /* scrollbar-width: none;
     -ms-overflow-style: none; */
 }
@@ -159,7 +159,7 @@
 
 .create-container {
   /* @apply flex justify-center sticky mb-5 w-full pt-2; */
-  @apply flex justify-center sticky mb-3 sm:mb-5 w-full pt-2;
+  @apply flex justify-center sticky mb-5 sm:mb-5 w-full pt-2;
 }
 
 
