@@ -5,11 +5,9 @@
 
 
 .add-term-main-container {
-  /* @apply w-full bg-white rounded-xl p-5 flex flex-col;
-  height: 100vh; */
+  /* @apply w-full bg-white rounded-xl p-5 flex flex-col;*/
+  height: 100vh; 
   @apply w-11/12 max-w-lg bg-white rounded-xl p-5 flex flex-col;
-  max-height: 90vh;
-  overflow-y: auto;
   /* scrollbar-width: none;
     -ms-overflow-style: none; */
 }
