@@ -221,8 +221,7 @@ export default function ManageGlossary() {
             addedClassName="w-[70%] h-[50px]"
           />
 
-          <div className="flex flex-wrap justify-between items-center w-full mt-3 gap-2 lg:w-auto lg:mt-0"
->
+          <div className="flex flex-wrap justify-center sm:justify-between items-center w-full mt-3 gap-2 lg:w-auto lg:mt-0">
             <Buttons
               text="Add Term"
               onClick={() => navigate("/addterm")}
