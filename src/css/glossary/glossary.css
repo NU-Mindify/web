@@ -13,7 +13,8 @@
 
 .glossary-title-container h1 {
   /* @apply font-[Poppins] text-[#FFC916] font-bold text-[25px] pl-3 md:text-[40px] mt-3; */
-   @apply font-[Poppins] text-[#FFC916] font-bold text-[20px] sm:text-[25px] md:text-[32px] lg:text-[40px] pl-3 mt-3;
+    @apply font-[Poppins] text-[#FFC916] font-bold 
+         text-[18px] sm:text-[22px] md:text-[28px] lg:text-[36px] xl:text-[40px] pl-3 mt-3;
 }
 
 .glossary-sub-header-container {
@@ -31,7 +32,8 @@
 
 .letter-title {
   /* @apply text-black text-xl my-2 md:text-3xl lg:text-[40px]; */
-  @apply text-black text-lg sm:text-xl my-2 md:text-2xl lg:text-[36px] xl:text-[40px];
+  @apply text-black font-bold 
+         text-lg sm:text-xl md:text-2xl lg:text-[32px] xl:text-[40px] my-2;
 }
 
 
@@ -68,11 +70,17 @@
 .header-details {
   /* Added min-w for the grid layout to ensure minimum width before scrolling */
   /* @apply grid grid-cols-[2fr_3fr_1fr] text-2xl font-medium text-black h-[60px] lg:items-center border-b-2 border-black w-11/12 min-w-[700px]; Adjust min-w value as needed */
-  @apply grid grid-cols-[2fr_3fr_1fr] text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-black h-[40px] sm:h-[50px] md:h-[60px] lg:items-center border-b-2 border-black w-full md:w-11/12 min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
+   @apply grid grid-cols-[2fr_3fr_1fr] 
+         text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 
+         font-medium text-black h-[40px] sm:h-[50px] md:h-[60px] 
+         lg:items-center border-b-2 border-black w-full md:w-11/12 
+         min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
 }
 
 .header-title {
-  @apply w-full text-sm md:text-xl text-black font-medium pl-3;
+  /* @apply w-full text-sm md:text-xl text-black font-medium pl-3; */
+   @apply w-full text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 
+         text-black font-medium pl-3;
 }
 
 .per-letter-main-container {
@@ -101,7 +109,10 @@
 
 .word-container {
   /* @apply flex-1 h-full text-black text-base whitespace-nowrap overflow-hidden text-ellipsis p-2; */
-  @apply flex-1 h-full text-black text-base whitespace-nowrap overflow-hidden text-ellipsis p-2 md:whitespace-normal md:overflow-visible;
+  @apply flex-1 h-full text-black 
+         text-sm sm:text-base md:text-lg 
+         whitespace-nowrap overflow-hidden text-ellipsis p-2 
+         md:whitespace-normal md:overflow-visible;
 }
 
 .active-per-word-container .word-container {
@@ -109,11 +120,16 @@
 }
 
 .meaning-container {
-  @apply flex-1 h-full text-black text-base whitespace-nowrap overflow-hidden text-ellipsis p-2;
+  /* @apply flex-1 h-full text-black text-base whitespace-nowrap overflow-hidden text-ellipsis p-2; */
+  @apply flex-1 h-full text-black 
+         text-sm sm:text-base md:text-lg 
+         whitespace-nowrap overflow-hidden text-ellipsis p-2;
 }
 
 .active-meaning-container {
-  @apply flex-1 max-h-[1000px] text-base overflow-hidden p-2 flex items-center text-white;
+  /* @apply flex-1 max-h-[1000px] text-base overflow-hidden p-2 flex items-center text-white; */
+  @apply flex-1 max-h-[1000px] text-sm sm:text-base md:text-lg 
+         overflow-hidden p-2 flex items-center text-white;
 }
 
 .action-container {
