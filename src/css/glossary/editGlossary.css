@@ -34,9 +34,8 @@ box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6);
 
 
 .edit-title {
-    /* @apply font-[Poppins] text-[#FFC916] font-bold text-[25px]
-    md:text-[40px]; */
-     @apply font-[Poppins] text-[#FFC916] font-bold text-[20px] sm:text-[25px] md:text-[32px] lg:text-[40px];
+    /* @apply font-[Poppins] text-[#FFC916] font-bold text-[25px] md:text-[40px]; */
+    @apply font-[Poppins] text-[#FFC916] font-bold text-[18px] sm:text-[22px] md:text-[28px] lg:text-[32px];
 }
 
 
@@ -46,7 +45,9 @@ box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6);
 
 
 .edit-content h1 {
-   @apply block font-bold text-black mb-1;
+   /* @apply block font-bold text-black mb-1; */
+   @apply block font-bold text-black mb-1 
+         text-[14px] sm:text-[15px] md:text-[16px];
   
 }
 
@@ -63,7 +64,8 @@ box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6);
 
 .edit-input,
 .edit-textarea {
-  @apply w-full rounded-md border border-gray-300 p-3 text-black;
+  /* @apply w-full rounded-md border border-gray-300 p-3 text-black; */
+   @apply w-full rounded-md border border-gray-300 p-3 text-black text-[14px] sm:text-[15px] md:text-[16px];
 }
 
 
@@ -87,6 +89,11 @@ box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.6);
 
 .delete-btn:hover{
     filter: brightness(1.6);
+}
+
+.save-btn,
+.delete-btn {
+  @apply text-[14px] sm:text-[15px] md:text-[16px] font-semibold;
 }
 
 .confirm-delete-popup {
