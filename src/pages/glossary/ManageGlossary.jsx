@@ -221,7 +221,8 @@ export default function ManageGlossary() {
             addedClassName="w-[70%] h-[50px]"
           />
 
-          <div className="flex justify-between w-full mt-3 lg:w-auto lg:mt-0">
+          <div className="flex flex-wrap justify-between items-center w-full mt-3 gap-2 lg:w-auto lg:mt-0"
+>
             <Buttons
               text="Add Term"
               onClick={() => navigate("/addterm")}
@@ -260,7 +261,7 @@ export default function ManageGlossary() {
       <div className="glossary-body">
         <div className="header-details-container">
           <div className="w-full mb-3">
-            <div className="flex bg-gray-100 p-1 rounded-xl w-[300px] ml-15 mt-5 sticky top-0">
+            <div className="flex bg-gray-100 p-1 rounded-xl w-full max-w-[300px] mx-auto mt-5 sticky top-0">
               <button
                 onClick={() => {
                   setShowArchived(false);
