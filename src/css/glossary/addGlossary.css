@@ -5,8 +5,11 @@
 
 
 .add-term-main-container {
-  @apply w-full bg-white rounded-xl p-5 flex flex-col;
-  height: 100vh;
+  /* @apply w-full bg-white rounded-xl p-5 flex flex-col;
+  height: 100vh; */
+  @apply w-11/12 max-w-lg bg-white rounded-xl p-5 flex flex-col;
+  max-height: 90vh;
+  overflow-y: auto;
   /* scrollbar-width: none;
     -ms-overflow-style: none; */
 }
@@ -125,15 +128,16 @@
   padding: 0.5rem 0;
   /* font-size: 14px; */
   outline: none;
-  @apply text-sm sm:text-base; /* scales font size */
+  @apply text-sm sm:text-base md:text-[15px];
 }
 
 
 .term-label {
-  margin-top: 0.25rem;
+  /* margin-top: 0.25rem;
   font-size: 13px;
   font-weight: 600;
-  color: #000000;
+  color: #000000; */
+   @apply mt-1 font-semibold text-[12px] sm:text-[13px] md:text-[14px] text-black;
 }
 
 .required-asterisk {
@@ -192,6 +196,11 @@
 
 .btn-cancel {
   @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold px-6 py-3 rounded-md text-sm shadow transition duration-200;
+}
+
+.btn-delete,
+.btn-cancel {
+  @apply px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base;
 }
 
 @media (max-width: 600px) {
