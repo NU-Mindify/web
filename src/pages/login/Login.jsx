@@ -276,7 +276,6 @@ export default function Login() {
                   className="select select-ghost inputs"
                   value={branch}
                   onChange={(e) => setBranch(e.target.value)}
-                  defaultValue="Select a Campus"
                 >
                   <option disabled value="default" hidden>
                     Select a Campus
