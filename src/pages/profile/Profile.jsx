@@ -182,7 +182,7 @@ export default function Profile() {
                 type="text"
                 placeholder="First Name"
                 className="input input-properties-disabled"
-                value={webUser.firstName}
+                value={webUser.firstName || ""}
                 disabled
               />
             </div>
@@ -193,7 +193,7 @@ export default function Profile() {
                 type="text"
                 placeholder="Last Name"
                 className="input input-properties-disabled"
-                value={webUser.lastName}
+                value={webUser.lastName || ""}
                 disabled
               />
             </div>
@@ -202,8 +202,9 @@ export default function Profile() {
               <label className="forms-label-properties">NU Branch</label>
               <select
                 className="input input-bordered input-disabled input-properties-disabled"
-                value={webUser.branch}
+                value={webUser.branch || ""}
                 disabled
+                aria-label="NU Branch"
               >
                 <option value="manila">NU Manila</option>
                 <option value="moa">NU MOA</option>
@@ -224,7 +225,7 @@ export default function Profile() {
                 type="email"
                 placeholder="Email"
                 className="input input-properties-disabled"
-                value={webUser.email}
+                value={webUser.email || ""}
                 disabled
               />
             </div>
@@ -235,7 +236,7 @@ export default function Profile() {
                 type="text"
                 placeholder="Employee No."
                 className="input input-properties-disabled"
-                value={webUser.employeenum}
+                value={webUser.employeenum || ""}
                 disabled
               />
             </div>
@@ -247,7 +248,7 @@ export default function Profile() {
                 type="text"
                 placeholder="Position"
                 className="input input-properties-disabled"
-                value={webUser.position}
+                value={webUser.position || ""}
                 disabled
               />
             </div>

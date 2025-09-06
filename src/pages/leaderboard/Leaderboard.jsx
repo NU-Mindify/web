@@ -30,15 +30,11 @@ export default function Leaderboard() {
   // const [masterySelectedBranch, setMasterySelectedBranch] = useState("");
 
   const [classicSelectedBranch, setClassicSelectedBranch] = useState(
-    currentWebUser?.position.toLowerCase() === "super admin"
-      ? "all"
-      : ""
+    currentWebUser?.position.toLowerCase() === "super admin" ? "all" : ""
   );
 
   const [masterySelectedBranch, setMasterySelectedBranch] = useState(
-    currentWebUser?.position.toLowerCase() === "super admin"
-      ? "all"
-      : ""
+    currentWebUser?.position.toLowerCase() === "super admin" ? "all" : ""
   );
 
   const [selectedCategoryClassic, setselectedCategoryClassic] = useState("");
@@ -673,6 +669,7 @@ export default function Leaderboard() {
             <div className="w-full flex flex-row ml-4 mt-[-10px] mb-3">
               {currentWebUser.position.toLowerCase() === "super admin" && (
                 <SelectFilter
+                  aria-label="Select Branch"
                   value={masterySelectedBranch}
                   onChange={(e) => setMasterySelectedBranch(e.target.value)}
                   disabledOption="Select Branch"
@@ -685,6 +682,7 @@ export default function Leaderboard() {
               )}
 
               <SelectFilter
+                aria-label="Select Category"
                 value={selectedCategoryMastery}
                 onChange={(e) => setselectedCategoryMastery(e.target.value)}
                 disabledOption="Select Category"

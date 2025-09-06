@@ -246,7 +246,7 @@ export default function Branches() {
 
       <div className="px-5">
         <div className="campus-form-container">
-          <h3 className="form-title">ADD CAMPUS</h3>
+          <h2 className="form-title">ADD CAMPUS</h2>
           <hr className="border-b border-gray-300 mb-4" />
 
           <div className="form-row">

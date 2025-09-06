@@ -51,9 +51,9 @@ const BarGraph = ({ data }) => {
         />
         <Bar
           dataKey="count"
-          fill="#FACC15"
+          fill="#444EB2"
           name="Students"
-          stroke="#000"
+          stroke="#000000"
           strokeWidth={1}
         />
       </BarChart>

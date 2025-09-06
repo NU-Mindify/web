@@ -203,6 +203,7 @@ export default function ActivityLogs() {
         <div className="flex flex-wrap items-center justify-between w-full mb-7 mt-5 px-4">
           <div className="flex gap-6">
             <SelectFilter
+              ariaLabel={"Select Action"}
               value={selectedAction}
               onChange={(e) => setSelectedAction(e.target.value)}
               fixOption=""

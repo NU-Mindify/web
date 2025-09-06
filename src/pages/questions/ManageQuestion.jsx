@@ -139,7 +139,7 @@ export default function ManageQuestion() {
   // };
 
   const handleConfirmCSVUpload = () => {
-    console.log("questions are", uploadedQuestions);
+    // console.log("questions are", uploadedQuestions);
 
     if (uploadedQuestions.length === 0) {
       alert(
@@ -205,7 +205,7 @@ export default function ManageQuestion() {
     try {
       const { data } = await axios.get(`${API_URL}/getTotalQuestions`);
       setTotalQuestion(data);
-      console.log("total quest", data);
+      // console.log("total quest", data);
     } catch (error) {
       console.error("Error fetching total questions:", error);
     }
@@ -215,7 +215,7 @@ export default function ManageQuestion() {
     try {
       const { data } = await axios.get(`${API_URL}/getTotalDeletedQuestions`);
       setTotalDeletedQuestion(data);
-      console.log("total deleted quest", data);
+      // console.log("total deleted quest", data);
     } catch (error) {
       console.error("Error fetching total questions:", error);
     }
@@ -252,7 +252,7 @@ export default function ManageQuestion() {
           },
         }
       );
-      console.log("category questions", data);
+      // console.log("category questions", data);
 
       return data;
     } catch (error) {
@@ -348,8 +348,8 @@ export default function ManageQuestion() {
   }
 
   const handlesUnapprove = () => {
-    console.log("Category", category);
-    console.log("selected cat", selectedCat);
+    // console.log("Category", category);
+    // console.log("selected cat", selectedCat);
 
     navigate("/unapproved", {
       state: {

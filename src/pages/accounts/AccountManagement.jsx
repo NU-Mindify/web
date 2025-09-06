@@ -294,6 +294,7 @@ export default function AccountManagement() {
           </div>
 
           <SelectFilter
+            ariaLabel={"Select Position"}
             value={selectedPosition}
             onChange={(e) => setSelectedPosition(e.target.value)}
             disabledOption="Select Position"
@@ -303,6 +304,7 @@ export default function AccountManagement() {
 
           {currentWebUser?.position?.toLowerCase() === "super admin" && (
             <SelectFilter
+              ariaLabel={"Select Campus"}
               value={selectedBranch}
               onChange={(e) => setSelectedBranch(e.target.value)}
               disabledOption="Select Campus"

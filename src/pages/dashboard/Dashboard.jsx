@@ -10,7 +10,7 @@ import "../../css/dashboard/dashboard.css";
 
 export default function Dashboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);
-  console.log("Current Web User:", currentWebUser);
+  // console.log("Current Web User:", currentWebUser);
 
   const navigate = useNavigate();
 
@@ -141,7 +141,7 @@ export default function Dashboard() {
       let pendingUsers = res.data.filter((user) => user.isApproved === false);
 
       setPendingUsers(pendingUsers);
-      console.log("Pending Users: " + pendingUsers);
+      // console.log("Pending Users: " + pendingUsers);
       setWebUsers(res.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -166,7 +166,7 @@ export default function Dashboard() {
         },
       });
 
-      console.log(response.data);
+      // console.log(response.data);
       setAttempts(response.data);
     } catch (error) {
       console.error("Error fetching analytics data:", error.message);
@@ -364,7 +364,7 @@ return (
                 <h2 className="text-3xl font-bold">No Data</h2>
               ) : (
                 <>
-                  <h2 className="text-xl capitalize -mt-3 mb-1 !text-[#FFC300] shadow-black font-[Poppins] font-semibold text-[15px]">
+                  <h2 className="text-xl capitalize -mt-3 mb-1 text-black shadow-black font-[Poppins] font-semibold text-[15px]">
                     {mostChallengingWorld + " Psychology"}
                   </h2>
                   <h2 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] mt-3">

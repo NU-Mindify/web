@@ -119,9 +119,9 @@ export default function Sidebar() {
   const fetchUserInfo = async () => {
     try {
       const userToken = await getAuth().currentUser.getIdToken()
-      console.log("token", userToken);
+      // console.log("token", userToken);
       
-      console.log("webuser", currentWebUserUID);
+      // console.log("webuser", currentWebUserUID);
       const response = await axios.get(`${API_URL}/getwebuser/${currentWebUserUID}`)
       const newCurrentWebUser = { ...response.data, token: userToken };
       setCurrentWebUser(newCurrentWebUser);
@@ -136,7 +136,7 @@ export default function Sidebar() {
       }
 
       localStorage.setItem("webUser", JSON.stringify(response.data));
-      console.log(newCurrentWebUser);
+      // console.log(newCurrentWebUser);
     } catch (error) {
       console.log("Error fetching sidebar user:", error);
     }

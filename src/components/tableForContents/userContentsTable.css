@@ -111,7 +111,7 @@
 }
 
 .mini-avatar {
-  @apply w-[40px] h-[40px] rounded-full mr-2;
+  @apply w-[40px] h-[40px] rounded-full mr-2 object-cover;
 }
 
 

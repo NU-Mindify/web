@@ -489,14 +489,14 @@ const LandingPage = () => {
                 <div className="flex justify-between items-center">
                   <span
                     className={`font-medium text-sm md:text-base ${
-                      isOpen ? "text-white !text-white" : "text-black"
+                      isOpen ? " !text-white" : "text-black"
                     }`}
                   >
                     {item.question}
                   </span>
                   <span
                     className={`text-xl font-bold transition-all duration-200 ${
-                      isOpen ? "text-white !text-white" : "text-gray-500"
+                      isOpen ? " !text-white" : "text-gray-500"
                     }`}
                     style={{ fontWeight: 400 }}
                   >

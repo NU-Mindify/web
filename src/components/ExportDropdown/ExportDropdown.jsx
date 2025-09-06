@@ -34,6 +34,7 @@ const ExportDropdown = ({ onExport }) => {
         className="export-btn mt-2"
         onClick={handleToggle}
         style={{ cursor: "pointer" }}
+        aria-label="Export Options"
       >
         <Download size={22} color="black" />
       </button>

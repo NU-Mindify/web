@@ -312,7 +312,7 @@ export default function Analytics() {
       const response = await axios.get(query);
 
       const data = response.data;
-      console.log("the data are", data);
+      // console.log("the data are", data);
 
       const userLevelHighScoresMap = new Map();
 
@@ -320,7 +320,7 @@ export default function Analytics() {
         const user = entry.user_id;
         if (!user || !user._id) return;
 
-        console.log("entry", entry);
+        // console.log("entry", entry);
 
         const userId = user._id;
         const correct = entry.correct;
@@ -365,10 +365,10 @@ export default function Analytics() {
         });
       });
 
-      console.log(
-        "All high scores for all users across all levels/categories:",
-        allHighScores
-      );
+      // console.log(
+      //   "All high scores for all users across all levels/categories:",
+      //   allHighScores
+      // );
 
       const highScoresPerGroupingKeyMap = new Map();
 
@@ -391,10 +391,10 @@ export default function Analytics() {
       const highScoresPerGroup = Object.fromEntries(
         highScoresPerGroupingKeyMap
       );
-      console.log(
-        "All high scores grouped by level/category:",
-        highScoresPerGroup
-      );
+      // console.log(
+      //   "All high scores grouped by level/category:",
+      //   highScoresPerGroup
+      // );
 
       const branchStatsMap = new Map();
       allHighScores.forEach((student) => {
@@ -410,7 +410,7 @@ export default function Analytics() {
         const branchData = branchStatsMap.get(branch);
         branchData.totalStudents += 1;
         branchData.totalScore += student.correct;
-        console.log("branchData", branchData);
+        // console.log("branchData", branchData);
       });
 
       setTotalScorePerCampus((prevState) =>
@@ -711,7 +711,7 @@ export default function Analytics() {
                 </button>
               </div>
 
-              <select value="all" className="!w-[300px] !h-[60px]">
+              <select defaultValue="all" className="!w-[300px] !h-[60px]">
                 <option value="all">All Categories</option>
                 <option value="developmental">Developmental Psychology</option>
                 <option value="abnormal">Abnormal Psychology</option>

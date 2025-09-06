@@ -1,6 +1,7 @@
 import "./selectfilter.css";
 
 export default function SelectFilter({ 
+  ariaLabel,
   value, 
   onChange, 
   fixOption, 
@@ -12,7 +13,7 @@ export default function SelectFilter({
   disabledOption
 }) {
   return (
-    <select value={value} onChange={onChange} className={`${className} ${addedClassName}`}>
+    <select aria-label={ariaLabel} value={value} onChange={onChange} className={`${className} ${addedClassName}`}>
       {disabledOption && (
         <option value="" disabled hidden>{disabledOption}</option>
       )}

@@ -265,7 +265,7 @@ export default function Login() {
                       p-4 sm:p-6">
             <div className="input-container">
               <h1 className="welcome-txt">WELCOME!</h1>
-              <h3 className="mini-txt">Sign in to access your account.</h3>
+              <h2 className="mini-txt">Sign in to access your account.</h2>
 
               <label className="floating-label">
                 <span className="spanner">Campus</span>
@@ -333,9 +333,9 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-5 top-[22px] text-gray-600 text-sm"
+                  className="absolute right-5 top-[20px] text-gray-600 text-sm"
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff size={25} /> : <Eye size={25} />}
                 </button>
               </label>
 

@@ -210,6 +210,7 @@ export default function ManageStudents() {
           <div className="flex gap-2">
             {currentWebUser.position.toLowerCase() === "super admin" && (
               <SelectFilter
+                ariaLabel="Filter by Branch"
                 value={selectedBranch}
                 onChange={(e) => setSelectedBranch(e.target.value)}
                 disabledOption="Select Branch"

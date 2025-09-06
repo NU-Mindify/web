@@ -88,7 +88,7 @@ function App() {
 
         localStorage.setItem("userUID", user.uid);
         setCurrentWebUserUID(user.uid);
-        console.log("current web user uid: " + currentWebUserUID);
+        // console.log("current web user uid: " + currentWebUserUID);
         setIsSplash(false);
       } else {
         localStorage.removeItem("userUID");

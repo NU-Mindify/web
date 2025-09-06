@@ -4,6 +4,8 @@ export const API_URL = import.meta.env.VITE_URL;
 
 export let branches = [];
 
+import defaultUserAvatar from "../src/assets/defaultAvatar/defaultAvatar.svg";
+
 import b1 from "../src/assets/avatar/b1.svg";
 import b2 from "../src/assets/avatar/b2.svg";
 import b3 from "../src/assets/avatar/b3.svg";
@@ -163,5 +165,4 @@ export const modes = [
   },
 ];
 
-export const defaultAvatar =
-  "https://static.vecteezy.com/system/resources/previews/055/581/121/non_2x/default-profile-picture-icon-avatar-photo-placeholder-illustration-vector.jpg";
+export const defaultAvatar = defaultUserAvatar;

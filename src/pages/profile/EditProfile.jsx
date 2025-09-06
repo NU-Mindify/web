@@ -237,6 +237,7 @@ export default function EditProfile() {
                   setEditWebUser({ ...editWebUser, branch: e.target.value })
                 }
                 disabled
+                aria-label="NU Branch"
               >
                 <option value="manila">NU Manila</option>
                 <option value="moa">NU MOA</option>

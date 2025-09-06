@@ -12,7 +12,7 @@ import "../../css/glossary/addGlossary.css";
 
 export default function AddTerm() {
   const [newTerm, setNewTerm] = useState([
-    { word: "", meaning: "", tags: [], is_deleted: false },
+    { word: "", meaning: "", tags: "", is_deleted: false },
   ]);
   const [tagInput, setTagInput] = useState("");
   const navigate = useNavigate();
@@ -182,6 +182,7 @@ export default function AddTerm() {
                   onChange={(e) =>
                     handleInputChange(index, "tags", e.target.value)
                   }
+                  aria-label="Select Category"
                 >
                   <option value="">Choose Category</option>
                   <option value="Abnormal Psychology">Abnormal Psychology</option>
