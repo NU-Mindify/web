@@ -382,7 +382,7 @@ return (
           )}
         </div>
 
-        {["super admin", "sub admin"].includes(currentWebUser.position.toLowerCase()) && (
+        {["super admin", "sub admin"].includes(currentWebUser.position?.toLowerCase()) && (
           <div className="analytics-properties-dashboard">
             {isLoadingAttempts ? (
               <div className="loading-overlay-dashboard">

@@ -27,7 +27,7 @@ export default function CountUp({ end, duration = 700 }) {
 
   return (
     <span className="fade-in">
-      {count.toLocaleString()}
+      {count?.toLocaleString()}
     </span>
   );
 }
