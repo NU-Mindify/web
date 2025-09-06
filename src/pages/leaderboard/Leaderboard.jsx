@@ -1,20 +1,16 @@
-import "../../css/leaderboard/leaderboards.css";
-import search from "../../assets/search/search.svg";
-import download from "../../assets/leaderboard/file-export.svg";
-import dropdown from "../../assets/glossary/dropdown.svg";
 import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import search from "../../assets/search/search.svg";
 import { API_URL, branches, categories } from "../../Constants";
-import { useEffect, useState, useContext } from "react";
+import "../../css/leaderboard/leaderboards.css";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 
-import { UserLoggedInContext } from "../../contexts/Contexts";
-import SelectFilter from "../../components/selectFilter/SelectFilter";
-import SearchBar from "../../components/searchbar/SearchBar";
-import searchIcon from "../../assets/students/search-01.svg";
 import logo from "../../assets/logo/logo.png";
+import SelectFilter from "../../components/selectFilter/SelectFilter";
+import { UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function Leaderboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);

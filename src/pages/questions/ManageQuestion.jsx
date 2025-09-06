@@ -1,28 +1,26 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { useContext, useEffect, useState } from "react";
-import search from "../../assets/search/search.svg";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import "../../css/questions/questions.css";
-import SearchBar from "../../components/searchbar/SearchBar";
-import { API_URL, categories } from "../../Constants";
+import logo from "../../assets/logo/logo.png";
 import abnormal from "../../assets/questions/abnormal.png";
+import back from "../../assets/questions/angle-left.svg";
 import developmental from "../../assets/questions/developmental.png";
 import general from "../../assets/questions/generalBG.png";
 import industrial from "../../assets/questions/industrial.png";
 import psychological from "../../assets/questions/psychologicalBG.png";
-import back from "../../assets/questions/angle-left.svg";
-import { Plus } from "lucide-react";
+import search from "../../assets/search/search.svg";
+import { API_URL, categories } from "../../Constants";
+import "../../css/questions/questions.css";
 import EditQuestion from "./EditQuestion";
-import logo from "../../assets/logo/logo.png";
 
+import { useQueryClient } from "@tanstack/react-query";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import Buttons from "../../components/buttons/Buttons";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
-import Buttons from "../../components/buttons/Buttons";
-import { useQueryClient } from "@tanstack/react-query";
-import autoTable from "jspdf-autotable";
-import jsPDF from "jspdf";
 
 const categoriesObj = [
   {

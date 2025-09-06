@@ -1,18 +1,18 @@
-import { useState, useEffect, useContext } from "react";
-import edit from "../../assets/glossary/edit.svg";
-import dropdown from "../../assets/glossary/dropdown.svg";
-import "../../css/glossary/glossary.css";
-import { useNavigate } from "react-router";
 import axios from "axios";
-import { API_URL } from "../../Constants";
-import SearchBar from "../../components/searchbar/SearchBar";
-import searchIcon from "../../assets/students/search-01.svg";
-import Buttons from "../../components/buttons/Buttons";
-import { UserLoggedInContext } from "../../contexts/Contexts";
-import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { API_URL } from "../../Constants";
+import dropdown from "../../assets/glossary/dropdown.svg";
+import edit from "../../assets/glossary/edit.svg";
 import logo from "../../assets/logo/logo.png";
+import searchIcon from "../../assets/students/search-01.svg";
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import Buttons from "../../components/buttons/Buttons";
+import SearchBar from "../../components/searchbar/SearchBar";
+import { UserLoggedInContext } from "../../contexts/Contexts";
+import "../../css/glossary/glossary.css";
 import EditGlossary from "./EditGlossary";
 
 export default function ManageGlossary() {

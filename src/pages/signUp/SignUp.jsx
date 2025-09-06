@@ -1,21 +1,18 @@
-import { useState } from "react";
+import axios from "axios";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signOut,
 } from "firebase/auth";
-import { firebaseAuth } from "../../Firebase";
-import axios from "axios";
-import { API_URL, branches, defaultAvatar } from "../../Constants";
-import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
-import Buttons from "../../components/buttons/Buttons";
-import "../../css/signUp/signUp.css";
-import { useNavigate } from "react-router";
-import chevronIcon from "../../assets/forAll/chevron.svg";
-import logo from "../../assets/logo/logo.svg";
-import pattern from "../../assets/forAll/pattern.svg";
 import { Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { API_URL, branches, defaultAvatar } from "../../Constants";
+import { firebaseAuth } from "../../Firebase";
+import pattern from "../../assets/forAll/pattern.svg";
+import logo from "../../assets/logo/logo.svg";
+import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+import "../../css/signUp/signUp.css";
 import TermsAndConditions from "../login/TermsAndConditions.jsx";
 
 export default function SignUp() {

@@ -1,21 +1,19 @@
-import { useRef, useState, useEffect } from "react";
-import edit from "../../assets/glossary/edit.svg";
-import dropdown from "../../assets/glossary/dropdown.svg";
-import "../../css/glossary/glossary.css";
-import { useNavigate } from "react-router";
 import axios from "axios";
-import { API_URL } from "../../Constants";
-import EditGlossary from "./EditGlossary";
-import SearchBar from "../../components/searchbar/SearchBar";
-import searchIcon from "../../assets/students/search-01.svg";
-import download from "../../assets/leaderboard/file-export.svg";
-import Buttons from "../../components/buttons/Buttons";
-import { useContext } from "react";
-import { UserLoggedInContext } from "../../contexts/Contexts";
-import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { useContext, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
+import dropdown from "../../assets/glossary/dropdown.svg";
+import edit from "../../assets/glossary/edit.svg";
 import logo from "../../assets/logo/logo.png";
+import searchIcon from "../../assets/students/search-01.svg";
+import Buttons from "../../components/buttons/Buttons";
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import SearchBar from "../../components/searchbar/SearchBar";
+import { API_URL } from "../../Constants";
+import { UserLoggedInContext } from "../../contexts/Contexts";
+import "../../css/glossary/glossary.css";
+import EditGlossary from "./EditGlossary";
 
 export default function ManageGlossary() {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");

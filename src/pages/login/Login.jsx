@@ -1,22 +1,20 @@
-import "../../css/login/login.css";
-import logo from "../../assets/logo/logo.svg";
-import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
-import { useContext, useState, useEffect } from "react";
-import { firebaseAuth } from "../../Firebase";
-import {
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-  sendEmailVerification,
-  signOut,
-  fetchSignInMethodsForEmail,
-} from "firebase/auth";
-import { API_URL, branches } from "../../Constants";
-import pattern from "../../assets/forAll/pattern.svg";
-import { Eye, EyeOff } from "lucide-react";
-import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import axios from "axios";
+import {
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut
+} from "firebase/auth";
+import { Eye, EyeOff } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SelectFilter from "../../components/selectFilter/SelectFilter.jsx";
+import { API_URL, branches } from "../../Constants";
+import { firebaseAuth } from "../../Firebase";
+import pattern from "../../assets/forAll/pattern.svg";
+import logo from "../../assets/logo/logo.svg";
+import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
+import "../../css/login/login.css";
 
 export default function Login() {
   const { setCurrentWebUserUID } = useContext(UserLoggedInContext);
@@ -114,12 +112,11 @@ export default function Login() {
       await user.reload();
 
       if (!user.emailVerified) {
-        // alert(
-        //   "Your Account email is not verified! Please check your email for the verification link. (verification link re-sent)"
-        // );
-        //       signOut(firebaseAuth);             [[comment for now para maka login si super admin kasi di pa valid email nya]]
-        //       signOut(firebaseAuth)
-        //       sendEmailVerification(user)
+        alert(
+          "Your Account email is not verified! Please check your email for the verification link. (verification link re-sent)"
+        );      
+              signOut(firebaseAuth)
+              sendEmailVerification(user)
         return;
       }
 

@@ -1,8 +1,7 @@
-import { useContext, useState } from "react";
-import "../../css/glossary/editGlossary.css";
 import axios from "axios";
+import { useContext, useState } from "react";
 import { API_URL } from "../../Constants";
-// import close from '../../assets/glossary/close btn.svg'
+import "../../css/glossary/editGlossary.css"
 import closebtn from "../../assets/glossary/close-btn.svg";
 import Buttons from "../../components/buttons/Buttons";
 import { UserLoggedInContext } from "../../contexts/Contexts";

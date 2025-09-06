@@ -1,17 +1,13 @@
-import "../../css/profile/profile.css";
-import { useRef, useState, useEffect, useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { API_URL } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts";
+import "../../css/profile/profile.css";
 
-import { supabase } from "../../supabase";
-import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import OkCancelModal from "../../components/OkCancelModal/OkCancelModal.jsx";
-import Buttons from "../../components/buttons/Buttons.jsx";
-import saveprofile from "../../assets/profile/saveprofileButton.svg";
-import cancel from "../../assets/profile/cancelButton.svg";
-import { set } from "date-fns";
+import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+import { supabase } from "../../supabase";
 
 export default function EditProfile() {
   const { currentWebUser, setCurrentWebUser, setCurrentWebUserUID } =

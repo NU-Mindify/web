@@ -1,17 +1,17 @@
 import axios from "axios";
-import { useEffect, useState, useContext } from "react";
-import { API_URL, branches } from "../../Constants";
-import "../../css/activityLog/activityLog.css";
-import SelectFilter from "../../components/selectFilter/SelectFilter";
-import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import logo from "../../assets/logo/logo.png";
-import { UserLoggedInContext } from "../../contexts/Contexts";
-import chevronIcon from "../../assets/forAll/chevron.svg";
-import samplepic from "../../assets/students/sample-minji.svg";
+import { useContext, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import chevronIcon from "../../assets/forAll/chevron.svg";
+import logo from "../../assets/logo/logo.png";
+import samplepic from "../../assets/students/sample-minji.svg";
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import SelectFilter from "../../components/selectFilter/SelectFilter";
+import { API_URL, branches } from "../../Constants";
+import { UserLoggedInContext } from "../../contexts/Contexts";
+import "../../css/activityLog/activityLog.css";
 
 export default function ActivityLogs() {
   const [allLogs, setAllLogs] = useState([]);

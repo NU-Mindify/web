@@ -1,14 +1,14 @@
 import axios from "axios";
+import Papa from "papaparse";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
-import { API_URL } from "../../Constants";
-import "../../css/glossary/addGlossary.css";
 import closebtn from "../../assets/glossary/close-btn.svg";
 import deletebtn from "../../assets/glossary/delete-icon.svg";
 import Buttons from "../../components/buttons/Buttons";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
-import Papa from "papaparse";
+import { API_URL } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
+import "../../css/glossary/addGlossary.css";
 
 export default function AddTerm() {
   const [newTerm, setNewTerm] = useState([

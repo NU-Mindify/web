@@ -1,19 +1,15 @@
-import { useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { API_URL, fetchBranches, fetchDeletedBranches } from "../../Constants";
-import "../../css/branches/branches.css";
-import "../../css/signUp/signUp.css";
-import Buttons from "../../components/buttons/Buttons";
-import ValidationModal from "../../components/ValidationModal/ValidationModal";
-import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import logo from "../../assets/logo/logo.png";
-import { UserLoggedInContext } from "../../contexts/Contexts";
-import submit from "../../assets/branches/submitButton.svg";
-import reset from "../../assets/branches/resetButton.svg";
-import { Delete } from "lucide-react";
 import { Info } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
+import logo from "../../assets/logo/logo.png";
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import ValidationModal from "../../components/ValidationModal/ValidationModal";
+import { API_URL, fetchBranches, fetchDeletedBranches } from "../../Constants";
+import { UserLoggedInContext } from "../../contexts/Contexts";
+import "../../css/branches/branches.css";
+import "../../css/signUp/signUp.css";
 
 export default function Branches() {
   const [newBranch, setNewBranch] = useState({

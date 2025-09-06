@@ -1,19 +1,15 @@
-import "../../css/analytics/analytics.css";
 import axios from "axios";
-import { API_URL, categories, modes, levels, branches } from "../../Constants";
 import { useContext, useEffect, useState } from "react";
+import CountUp from "../../components/CountUp/CountUp";
+import AccountsCreatedChart from "../../components/LineChart/AccountsCreatedChart";
+import AttemptsChart from "../../components/LineChart/AttemptsChart";
 import PieChartAttempts from "../../components/PieChart/PieChartAttempts";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
-import CountUp from "../../components/CountUp/CountUp";
-import AttemptsChart from "../../components/LineChart/AttemptsChart";
-import AccountsCreatedChart from "../../components/LineChart/AccountsCreatedChart";
+import { API_URL, branches, categories, levels, modes } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
-import { Download } from "lucide-react";
+import "../../css/analytics/analytics.css";
 
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
 
-import ExportDropdownPng from "../../components/ExportDropdown/ExportDropdownPng.jsx";
 
 export default function Analytics() {
   const { currentWebUser } = useContext(UserLoggedInContext);
@@ -723,20 +719,6 @@ export default function Analytics() {
                 <option value="general">General Psychology</option>
                 <option value="psychological">Psychological Assessment</option>
               </select>
-
-              {/* {showCompe && (
-                <select value="" className="!w-[300px] !h-[60px]">
-                  <option value="all" hidden>
-                    Filter by Level
-                  </option>
-                  <option value="">All Levels</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-              )} */}
             </div>
 
             <table className="w-[95%] bg-white text-left px-5">

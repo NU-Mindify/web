@@ -1,10 +1,10 @@
-import React, { useState } from "react";
 import axios from "axios";
-import Buttons from "../../components/buttons/Buttons.jsx";
+import { useState } from "react";
 import closebtn from "../../assets/glossary/close-btn.svg";
-import "../../css/questions/editQuestion.css";
+import Buttons from "../../components/buttons/Buttons.jsx";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import { API_URL, categories } from "../../Constants";
+import "../../css/questions/editQuestion.css";
 
 function EditQuestion({
   question,

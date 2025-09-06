@@ -1,19 +1,18 @@
-import { useState, useCallback } from "react";
 import {
-  ReactFlow,
-  applyNodeChanges,
-  applyEdgeChanges,
   addEdge,
+  applyEdgeChanges,
+  applyNodeChanges,
   Background,
   Controls,
-  MiniMap,
+  ReactFlow
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import CustomNode from "./CustomNode";
 import axios from "axios";
-import { API_URL } from "../../Constants";
 import Lottie from "lottie-react";
-import loading from '../../assets/animation/loading.json'
+import { useCallback, useState } from "react";
+import loading from '../../assets/animation/loading.json';
+import { API_URL } from "../../Constants";
+import CustomNode from "./CustomNode";
 
 
 const nodeTypes = {

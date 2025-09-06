@@ -1,22 +1,20 @@
 // Cleaned-up ManageStudents and CardActiveContent component code
 
-import "../../css/students/students.css";
-import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { API_URL, branches, categories } from "../../Constants";
-import AnimatedProgressBar from "../../components/animatedProgressBar/AnimatedProgressBar";
-import { UserLoggedInContext } from "../../contexts/Contexts";
-import SearchBar from "../../components/searchbar/SearchBar";
-import download from "../../assets/leaderboard/file-export.svg";
-import SelectFilter from "../../components/selectFilter/SelectFilter";
-import searchIcon from "../../assets/students/search-01.svg";
-import UserContentsTable from "../../components/tableForContents/UserContentsTable";
-import Buttons from "../../components/buttons/Buttons";
-import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import logo from "../../assets/logo/logo.png";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import logo from "../../assets/logo/logo.png";
+import searchIcon from "../../assets/students/search-01.svg";
+import Buttons from "../../components/buttons/Buttons";
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import SearchBar from "../../components/searchbar/SearchBar";
+import SelectFilter from "../../components/selectFilter/SelectFilter";
+import UserContentsTable from "../../components/tableForContents/UserContentsTable";
+import { API_URL, branches, categories } from "../../Constants";
+import { UserLoggedInContext } from "../../contexts/Contexts";
+import "../../css/students/students.css";
 
 export default function ManageStudents() {
   const { currentWebUser } = useContext(UserLoggedInContext);

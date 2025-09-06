@@ -1,22 +1,18 @@
-import "../../css/profile/profile.css";
-import { useEffect, useRef, useState, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import DotLoader from "react-spinners/DotLoader";
 import axios from "axios";
-import { API_URL } from "../../Constants";
-import { onAuthStateChanged } from "firebase/auth";
-import { firebaseAuth } from "../../Firebase";
 import {
   EmailAuthProvider,
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
-import ValidationModal from "../../components/ValidationModal/ValidationModal";
-import OldPasswordModal from "../../components/OldPassModal/OldPasswordModal";
+import { useContext, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import NewPasswordModal from "../../components/NewPassModal/NewPasswordModal";
+import OldPasswordModal from "../../components/OldPassModal/OldPasswordModal";
+import ValidationModal from "../../components/ValidationModal/ValidationModal";
+import { API_URL } from "../../Constants";
+import "../../css/profile/profile.css";
+import { firebaseAuth } from "../../Firebase";
 
-import editprofile from "../../assets/profile/editprofileButton.svg";
-import changepass from "../../assets/profile/changepassButton.svg";
 
 import { UserLoggedInContext } from "../../contexts/Contexts";
 

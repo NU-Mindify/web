@@ -1,6 +1,6 @@
 // CustomNode.jsx
 import { Handle, Position } from "@xyflow/react";
-import React, { memo } from "react";
+import { memo } from "react";
 
 
 const CustomNode = ({ data }) => {

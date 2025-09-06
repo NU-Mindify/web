@@ -1,19 +1,18 @@
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import axios from "axios";
-import "../../css/account/account.css";
-import { API_URL, fetchBranches } from "../../Constants";
-import searchIcon from "../../assets/students/search-01.svg";
-import { UserLoggedInContext } from "../../contexts/Contexts";
-import download from "../../assets/leaderboard/file-export.svg";
-import Buttons from "../../components/buttons/Buttons";
-import SelectFilter from "../../components/selectFilter/SelectFilter";
-import SearchBar from "../../components/searchbar/SearchBar";
-import UserContentsTable from "../../components/tableForContents/UserContentsTable";
-import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { API_URL, fetchBranches } from "../../Constants";
 import logo from "../../assets/logo/logo.png";
+import searchIcon from "../../assets/students/search-01.svg";
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
+import Buttons from "../../components/buttons/Buttons";
+import SearchBar from "../../components/searchbar/SearchBar";
+import SelectFilter from "../../components/selectFilter/SelectFilter";
+import UserContentsTable from "../../components/tableForContents/UserContentsTable";
+import { UserLoggedInContext } from "../../contexts/Contexts";
+import "../../css/account/account.css";
 
 export default function AccountManagement() {
   const [webUsers, setWebUsers] = useState([]);

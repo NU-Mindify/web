@@ -1,20 +1,20 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { useContext, useEffect, useState } from "react";
-import "../../css/account/account.css";
+import axios from "axios";
 import {
   createUserWithEmailAndPassword,
-  signOut,
   sendPasswordResetEmail,
+  signOut,
 } from "firebase/auth";
-import { secondaryAuth } from "../../Firebase";
-import axios from "axios";
-import chevronIcon from "../../assets/forAll/chevron.svg";
-import { API_URL, branches } from "../../Constants";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserLoggedInContext } from "../../contexts/Contexts";
+import chevronIcon from "../../assets/forAll/chevron.svg";
 import No_Profile from "../../assets/profile/noProfile.jpg";
 import Buttons from "../../components/buttons/Buttons";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
+import { API_URL, branches } from "../../Constants";
+import { UserLoggedInContext } from "../../contexts/Contexts";
+import "../../css/account/account.css";
+import { secondaryAuth } from "../../Firebase";
 
 export default function AddAccount() {
   const [newWebUser, setNewWebUser] = useState({

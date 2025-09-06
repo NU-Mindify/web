@@ -1,9 +1,9 @@
 import { useLocation, useNavigate } from "react-router";
-import "../../css/students/showMoreDetails.css";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import samplepic from "../../assets/students/sample-minji.svg";
-import { branches, categories, avatarandclothes } from "../../Constants";
 import { avatarBodies } from "../../AvatarBody";
+import { avatarandclothes, branches, categories } from "../../Constants";
+import "../../css/students/showMoreDetails.css";
 
 export default function ShowMoreDetails() {
   const location = useLocation();

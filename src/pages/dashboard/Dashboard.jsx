@@ -1,14 +1,12 @@
-import { useContext } from "react";
-import "../../css/dashboard/dashboard.css";
-import Chart from "chart.js/auto";
-import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
-import BarGraph from "../../components/barGraph/BarGraph";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { API_URL, categories, modes, levels, branches } from "../../Constants";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CountUp from "../../components/CountUp/CountUp";
 import mindifyLogo from "../../assets/logo/logo.svg";
+import BarGraph from "../../components/barGraph/BarGraph";
+import CountUp from "../../components/CountUp/CountUp";
+import { API_URL, branches, categories, levels, modes } from "../../Constants";
+import { UserLoggedInContext } from "../../contexts/Contexts";
+import "../../css/dashboard/dashboard.css";
 
 export default function Dashboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);

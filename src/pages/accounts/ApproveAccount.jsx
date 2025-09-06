@@ -1,17 +1,15 @@
+import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import axios from "axios";
-import "../../css/account/account.css";
 import { API_URL, fetchBranches } from "../../Constants";
-import searchIcon from "../../assets/students/search-01.svg";
-import { UserLoggedInContext } from "../../contexts/Contexts";
-import download from "../../assets/leaderboard/file-export.svg";
-import Buttons from "../../components/buttons/Buttons";
-import SelectFilter from "../../components/selectFilter/SelectFilter";
-import SearchBar from "../../components/searchbar/SearchBar";
-import UserContentsTable from "../../components/tableForContents/UserContentsTable";
 import chevronIcon from "../../assets/forAll/chevron.svg";
-import { getAuth, deleteUser } from "firebase/auth";
+import searchIcon from "../../assets/students/search-01.svg";
+import Buttons from "../../components/buttons/Buttons";
+import SearchBar from "../../components/searchbar/SearchBar";
+import SelectFilter from "../../components/selectFilter/SelectFilter";
+import UserContentsTable from "../../components/tableForContents/UserContentsTable";
+import { UserLoggedInContext } from "../../contexts/Contexts";
+import "../../css/account/account.css";
 
 import OkCancelModal from "../../components/OkCancelModal/OkCancelModal.jsx";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
