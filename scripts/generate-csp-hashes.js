@@ -58,7 +58,7 @@ function updateVercelConfig(scriptHashes, styleHashes) {
     " "
   )} https://fonts.googleapis.com`;
 
-  const cspValue = `default-src 'self'; script-src ${scriptSrc}; style-src ${styleSrc}; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: https://*.googleapis.com; connect-src 'self' https://api.numindify.com/api/ https://www.numindify.com/ https://www.google-analytics.com https://vercel.live https://*.googleapis.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;`;
+  const cspValue = `default-src 'self'; script-src ${scriptSrc}; style-src ${styleSrc}; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: https://*.googleapis.com; connect-src 'self' https://api.numindify.com/api/ http://nu-mindify-api.vercel.app/ https://www.numindify.com/ https://www.google-analytics.com https://vercel.live https://*.googleapis.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;`;
 
   // Update the CSP header
   vercelConfig.headers[0].headers[0].value = cspValue;
