@@ -212,16 +212,6 @@ export default function ActivityLogs() {
               getOptionLabel={(opt) => opt.label}
             />
 
-            {/* <SelectFilter
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-              fixOption=""
-              disabledOption="Select Month"
-              mainOptions={monthOptions}
-              getOptionValue={(opt) => opt.value}
-              getOptionLabel={(opt) => opt.label}
-            /> */}
-
             <div className="flex items-center gap-2">
               <DatePicker
                 selected={startDate}

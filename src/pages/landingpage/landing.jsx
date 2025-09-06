@@ -304,7 +304,8 @@ const faqs = [
         <section id="about" className="about-nu-section">
           <h2 className="about-title">About NU Mindify</h2>
           <h2 className="text-center text-2xl md:text-3xl font-semibold leading-relaxed">
-            Where <span style={{ color: "#FFC300" }}>learning</span> meets <span style={{ color: "#444EB2" }}>understanding</span>.
+            {/* Where <span style={{ color: "#FFC300" }}>learning</span> meets <span style={{ color: "#444EB2" }}>understanding</span>. */}
+            Where learning meets understanding.
           </h2>
 
           <p className="text-gray-800 max-w-2xl text-lg pt-2">
@@ -330,8 +331,10 @@ const faqs = [
       <section id="features" className="features-section">
           <h2 className="features-title">App Features</h2>
           <h2 className="features-subtitle">
-            Your <span className="yellow">Study Tools</span>,{" "}
-            <span className="blue">Leveled Up</span>.
+            {/* Your <span className="yellow">Study Tools</span>,{" "}
+            <span className="blue">Leveled Up</span>. */}
+            Your Study Tools,{" "}
+            Leveled Up.
           </h2>
           
         <div className="features-grid">
@@ -399,7 +402,8 @@ const faqs = [
           </div>
 
           <h3 className="download-heading -mt-15 ">
-            Download <span style={{ color: "#FFC300" }}>NU Mindify</span> and <span style={{ color: "#444EB2" }}>Learn Today</span>.
+            {/* Download <span style={{ color: "#FFC300" }}>NU Mindify</span> and <span style={{ color: "#444EB2" }}>Learn Today</span>. */}
+            Download NU Mindify and Learn Today.
           </h3>
 
           <p className="download-description">
@@ -418,8 +422,10 @@ const faqs = [
       <section id="faq" className="faq-section">
         <h2 className="faq-title">Frequently Asked Questions</h2>
         <h2 className="faq-subtitle">
-          <span className="yellow">Learn More</span> about{" "}
-          <span className="blue">NU Mindify</span>.
+          {/* <span className="yellow">Learn More</span> about{" "}
+          <span className="blue">NU Mindify</span>. */}
+          Learn More about{" "}
+          NU Mindify.
         </h2>
 
           <div className="faq-items space-y-4 max-w-3xl mx-auto mt-8">

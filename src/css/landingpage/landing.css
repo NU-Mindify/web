@@ -209,7 +209,7 @@ html, body {
 }
 
 .phone-label {
-  @apply text-sm sm:text-base md:text-lg lg:text-xl font-medium text-gray-700;
+  @apply text-sm sm:text-base md:text-lg lg:text-xl font-medium text-black bg-white/80 px-2 py-1 rounded;
 }
 
 .phone-item.active {

@@ -715,11 +715,8 @@ export default function Analytics() {
                 </button>
               </div>
 
-              <select defaultValue="" className="!w-[300px] !h-[60px]">
-                <option value="all" hidden>
-                  Filter by Category
-                </option>
-                <option value="">All Categories</option>
+              <select value="all" className="!w-[300px] !h-[60px]">
+                <option value="all">All Categories</option>
                 <option value="developmental">Developmental Psychology</option>
                 <option value="abnormal">Abnormal Psychology</option>
                 <option value="industrial">Industrial Psychology</option>
@@ -727,8 +724,8 @@ export default function Analytics() {
                 <option value="psychological">Psychological Assessment</option>
               </select>
 
-              {showCompe && (
-                <select defaultValue="" className="!w-[300px] !h-[60px]">
+              {/* {showCompe && (
+                <select value="" className="!w-[300px] !h-[60px]">
                   <option value="all" hidden>
                     Filter by Level
                   </option>
@@ -739,7 +736,7 @@ export default function Analytics() {
                   <option value="4">4</option>
                   <option value="5">5</option>
                 </select>
-              )}
+              )} */}
             </div>
 
             <table className="w-[95%] bg-white text-left px-5">
