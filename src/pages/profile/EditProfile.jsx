@@ -96,7 +96,7 @@ export default function EditProfile() {
 
   const handleCancelEdit = () => {
     if (hasChanges) {
-      setDiscardModalMessage("Changes made will not be saved. Continue?");
+      setDiscardModalMessage("You have unsaved changes. Are you sure you want to go back?");
       setShowDiscardModal(true);
     } else {
       navigate("/profile");
@@ -301,7 +301,7 @@ export default function EditProfile() {
             </button>
 
             <button
-              className="bg-red-500 text-white hover:bg-red-600 py-5 px-10 rounded-2xl text-2xl font-extrabold transition cursor-pointer"
+              className="bg-red-500 !text-white hover:bg-red-600 py-5 px-10 rounded-2xl text-2xl font-extrabold transition cursor-pointer"
               style={{ width: "330px" }}
               onClick={handleCancelEdit}
             >
@@ -317,28 +317,62 @@ export default function EditProfile() {
           />
         )}
 
-        {showOkCancelModal && (
-          <OkCancelModal
-            message={OkCancelModalMessage}
-            onConfirm={async () => {
-              setShowOkCancelModal(false);
-              await handleUpdateProfile(); // <-- Update only if confirmed
-              navigate("/profile");
-            }}
-            onCancel={() => setShowOkCancelModal(false)}
-          />
-        )}
+      {showOkCancelModal && (
+      <div className="modal-overlay confirm-delete-popup">
+        <div className="confirm-dialog">
+          <div className="flex justify-center">
+            <h2>Confirmation</h2>
+          </div>
+          <p>{OkCancelModalMessage}</p>
+          <div className="popup-buttons">
+            <button
+              className="btn-delete"
+              onClick={async () => {
+                setShowOkCancelModal(false);
+                await handleUpdateProfile(); 
+                navigate("/profile");
+              }}
+            >
+              Yes, Confirm
+            </button>
+            <button
+              className="btn-cancel"
+              onClick={() => setShowOkCancelModal(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
 
-        {showDiscardModal && (
-          <OkCancelModal
-            message={discardModalMessage}
-            onConfirm={() => {
-              setShowDiscardModal(false);
-              navigate("/profile");
-            }}
-            onCancel={() => setShowDiscardModal(false)}
-          />
-        )}
+    {showDiscardModal && (
+      <div className="modal-overlay confirm-delete-popup">
+        <div className="confirm-dialog">
+          <div className="flex justify-center">
+            <h2>Discard Changes</h2>
+          </div>
+          <p>{discardModalMessage}</p>
+          <div className="popup-buttons">
+            <button
+              className="btn-delete"
+              onClick={() => {
+                setShowDiscardModal(false);
+                navigate("/profile");
+              }}
+            >
+              Yes, Discard
+            </button>
+            <button
+              className="btn-cancel"
+              onClick={() => setShowDiscardModal(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
       </div>
     </>
   );
