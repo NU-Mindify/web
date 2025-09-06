@@ -164,7 +164,7 @@ export default function ShowMoreDetails() {
 
         {recentAct && recentAct.length > 0 && (
           <div className="w-full h-auto flex justify-evenly items-center">
-            <div className="w-full h-auto py-3">
+            <div className="w-[48%] h-auto py-3">
               <h1 className="text-2xl font-bold">Recent Activity</h1>
               <div className="mt-2 flex flex-col gap-2 overflow-y-auto h-[300px] py-5 border-2 px-2">
                 {recentAct.map((act, index) => (
@@ -199,12 +199,12 @@ export default function ShowMoreDetails() {
             </div>
             
 
-            {/* <div className="w-[48%] h-auto bg-violet-300 py-3">
+            <div className="w-[48%] h-auto bg-violet-300 py-3">
                 <h1 className="text-2xl font-bold">Recent Sessions</h1>
                 <div className="mt-2 flex flex-col gap-2 overflow-y-auto h-[300px] py-5">
 
                 </div>
-            </div> */}
+            </div>
             
           </div>
         )}
