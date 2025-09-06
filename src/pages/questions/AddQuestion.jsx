@@ -371,35 +371,37 @@ function AddQuestion() {
         <div className="add-ques-header">
           <div className="add-ques-sub-header">
             <h1>Add Question</h1>
-            <button
-              className="w-[50px] h-[50px]"
-              onClick={() => {
-                const hasUnsavedInput = () => {
-                  const formHasInput =
-                    question.question.trim() !== "" ||
-                    question.choices.some(
-                      (c) => c.text.trim() !== "" || c.rationale.trim() !== ""
-                    ) ||
-                    question.rationale.trim() !== "" ||
-                    question.difficulty.trim() !== "" ||
-                    question.item_number.trim() !== "";
+           <button
+            className="w-[50px] h-[50px]"
+            onClick={() => {
+              const hasUnsavedInput = () => {
+                const itemNumberStr = question.item_number ? String(question.item_number) : "";
+                const formHasInput =
+                  question.question.trim() !== "" ||
+                  question.choices.some(
+                    (c) => c.text.trim() !== "" || c.rationale.trim() !== ""
+                  ) ||
+                  question.rationale.trim() !== "" ||
+                  question.difficulty.trim() !== "" ||
+                  itemNumberStr.trim() !== "";
 
-                  const listHasQuestions = allQuestions.length > 0;
+                const listHasQuestions = allQuestions.length > 0;
 
-                  return formHasInput || listHasQuestions;
-                };
+                return formHasInput || listHasQuestions;
+              };
 
-                if (hasUnsavedInput()) {
-                  setShowBackConfirmModal(true);
-                } else {
-                  nav("/question", {
-                    state: { category, categoryName, catSelected: true },
-                  });
-                }
-              }}
-            >
-              <img src={closebtn} alt="close" />
-            </button>
+              if (hasUnsavedInput()) {
+                setShowBackConfirmModal(true);
+              } else {
+                nav("/question", {
+                  state: { category, categoryName, catSelected: true },
+                });
+              }
+            }}
+          >
+            <img src={closebtn} alt="close" />
+          </button>
+
           </div>
 
           <h3>Create Question for {categoryName}</h3>
@@ -946,13 +948,13 @@ function AddQuestion() {
                 <h2>Unsaved Changes</h2>
               </div>
               <p>
-                Leaving this page will discard any unsaved changes. Proceed?
+                You have unsaved input. Are you sure you want to go back?
               </p>
               <div className="popup-buttons">
                 <button
                   className="btn-delete"
                   onClick={() => {
-                    setShowBackConfirmModal(false); // close modal
+                    setShowBackConfirmModal(false); 
                     nav("/question", {
                       state: { category, categoryName, catSelected: true },
                     });

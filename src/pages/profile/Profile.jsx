@@ -42,6 +42,10 @@ export default function Profile() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+
+  const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [discardTarget, setDiscardTarget] = useState(null); 
+
   const user = firebaseAuth.currentUser;
 
   useEffect(() => {
@@ -280,7 +284,14 @@ export default function Profile() {
           <OldPasswordModal
             password={oldPassword}
             setPassword={setOldPassword}
-            onClose={() => setShowOldPasswordModal(false)}
+            onClose={() => {
+              if (oldPassword) {
+                setDiscardTarget("old");
+                setShowDiscardModal(true);
+              } else {
+                setShowOldPasswordModal(false);
+              }
+            }}
             onSubmit={handleOldPasswordSubmit}
           />
         )}
@@ -291,10 +302,61 @@ export default function Profile() {
             setPassword={setNewPassword}
             confirmPassword={confirmPassword}
             setConfirmPassword={setConfirmPassword}
-            onClose={() => setShowNewPasswordModal(false)}
+            onClose={() => {
+              if (newPassword || confirmPassword) {
+                setDiscardTarget("new");
+                setShowDiscardModal(true);
+              } else {
+                setShowNewPasswordModal(false);
+              }
+            }}
             onSubmit={handleNewPasswordSubmit}
           />
         )}
+
+
+       {showDiscardModal && (
+        <div className="modal-overlay confirm-delete-popup">
+          <div className="confirm-dialog">
+            <div className="flex justify-center">
+              <h2>Unsaved Changes</h2>
+            </div>
+            <p>
+              {discardTarget === "old"
+                ? "You have unsaved input in your old password field. Are you sure you want to discard it?"
+                : "You have unsaved input in your new password fields. Are you sure you want to discard them?"}
+            </p>
+            <div className="popup-buttons">
+              <button
+                className="btn-delete"
+                onClick={() => {
+                  if (discardTarget === "old") {
+                    setOldPassword("");
+                    setShowOldPasswordModal(false);
+                  }
+                  if (discardTarget === "new") {
+                    setNewPassword("");
+                    setConfirmPassword("");
+                    setShowNewPasswordModal(false);
+                  }
+                  setShowDiscardModal(false);
+                  setDiscardTarget(null);
+                }}
+              >
+                Yes, Discard
+              </button>
+              <button
+                className="btn-cancel"
+                onClick={() => setShowDiscardModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
       </div>
     </>
   );

@@ -413,7 +413,7 @@ export default function Leaderboard() {
             className={`text-black flex justify-center items-center w-1/2 px-4 py-2 rounded-lg transition-all duration-200
       ${
         showClassic
-          ? "bg-white font-semibold shadow"
+          ? "bg-white !text-[#FFA500] font-semibold shadow"
           : "opacity-60 hover:opacity-100"
       }`}
             onClick={() => setShowClassic(true)}
@@ -426,7 +426,7 @@ export default function Leaderboard() {
             className={`text-black flex justify-center items-center w-1/2 px-4 py-2 rounded-lg transition-all duration-200
       ${
         !showClassic
-          ? "bg-white font-semibold shadow"
+          ? "bg-white  !text-[#FFD700] font-semibold shadow"
           : "opacity-60 hover:opacity-100"
       }`}
             onClick={() => setShowClassic(false)}
@@ -495,33 +495,38 @@ export default function Leaderboard() {
               </div>
             </div>
 
-            <div className="w-full flex flex-row ml-4 mt-[-10px] mb-3">
+            <div className="w-full flex flex-col md:flex-row gap-3 ml-4 mb-3">
               {currentWebUser.position.toLowerCase() === "super admin" && (
-                <SelectFilter
-                  value={classicSelectedBranch}
-                  onChange={(e) => setClassicSelectedBranch(e.target.value)}
-                  disabledOption="Select Branch"
-                  fixOption="All Branches"
-                  mainOptions={branches}
-                  getOptionValue={(branch) => branch.id}
-                  getOptionLabel={(branch) => branch.name}
-                  addedClassName=""
-                />
+                <div className="flex-1 min-w-[150px]">
+                  <SelectFilter
+                    value={classicSelectedBranch}
+                    onChange={(e) => setClassicSelectedBranch(e.target.value)}
+                    disabledOption="Select Branch"
+                    fixOption="All Branches"
+                    mainOptions={branches}
+                    getOptionValue={(branch) => branch.id}
+                    getOptionLabel={(branch) => branch.name}
+                    addedClassName="w-full"     
+                  />
+                </div>
               )}
 
-              <SelectFilter
-                value={selectedCategoryClassic}
-                onChange={(e) => setselectedCategoryClassic(e.target.value)}
-                disabledOption="Select Category"
-                fixOption="All Categories"
-                mainOptions={categories}
-                getOptionValue={(categories) => categories.id}
-                getOptionLabel={(categories) => categories.name}
-                addedClassName="ml-3"
-              />
+              <div className="flex-1 min-w-[150px]">
+                <SelectFilter
+                  value={selectedCategoryClassic}
+                  onChange={(e) => setselectedCategoryClassic(e.target.value)}
+                  disabledOption="Select Category"
+                  fixOption="All Categories"
+                  mainOptions={categories}
+                  getOptionValue={(c) => c.id}
+                  getOptionLabel={(c) => c.name}
+                  addedClassName="w-full"      
+                />
+              </div>
             </div>
 
-            <div className="leaderboard-contents-container">
+
+            <div className="leaderboard-contents-container mb-25">
               <div className="content-header">
                 <h1 className="title-header">Rank</h1>
                 <h1 className="title-header">Name</h1>
@@ -666,35 +671,40 @@ export default function Leaderboard() {
               </div>
             </div>
 
-            <div className="w-full flex flex-row ml-4 mt-[-10px] mb-3">
+            <div className="w-full flex flex-col md:flex-row md:flex-wrap gap-3 ml-4 mb-3">
               {currentWebUser.position.toLowerCase() === "super admin" && (
-                <SelectFilter
-                  aria-label="Select Branch"
-                  value={masterySelectedBranch}
-                  onChange={(e) => setMasterySelectedBranch(e.target.value)}
-                  disabledOption="Select Branch"
-                  fixOption="All Branches"
-                  mainOptions={branches}
-                  getOptionValue={(branch) => branch.id}
-                  getOptionLabel={(branch) => branch.name}
-                  addedClassName=""
-                />
+                <div className="flex-1 min-w-[150px]">
+                  <SelectFilter
+                    aria-label="Select Branch"
+                    value={masterySelectedBranch}
+                    onChange={(e) => setMasterySelectedBranch(e.target.value)}
+                    disabledOption="Select Branch"
+                    fixOption="All Branches"
+                    mainOptions={branches}
+                    getOptionValue={(branch) => branch.id}
+                    getOptionLabel={(branch) => branch.name}
+                    addedClassName="w-full" 
+                  />
+                </div>
               )}
 
-              <SelectFilter
-                aria-label="Select Category"
-                value={selectedCategoryMastery}
-                onChange={(e) => setselectedCategoryMastery(e.target.value)}
-                disabledOption="Select Category"
-                fixOption="All Categories"
-                mainOptions={categories}
-                getOptionValue={(categories) => categories.id}
-                getOptionLabel={(categories) => categories.name}
-                addedClassName="ml-3"
-              />
+              <div className="flex-1 min-w-[150px]">
+                <SelectFilter
+                  aria-label="Select Category"
+                  value={selectedCategoryMastery}
+                  onChange={(e) => setselectedCategoryMastery(e.target.value)}
+                  disabledOption="Select Category"
+                  fixOption="All Categories"
+                  mainOptions={categories}
+                  getOptionValue={(c) => c.id}
+                  getOptionLabel={(c) => c.name}
+                  addedClassName="w-full"  
+                />
+              </div>
             </div>
 
-            <div className="leaderboard-contents-container">
+
+            <div className="leaderboard-contents-container mb-25">
               <div className="content-header">
                 <h1 className="title-header">Rank</h1>
                 <h1 className="title-header">Name</h1>

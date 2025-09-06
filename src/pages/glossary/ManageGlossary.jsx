@@ -260,7 +260,7 @@ export default function ManageGlossary() {
       <div className="glossary-body">
         <div className="header-details-container">
           <div className="w-full mb-3">
-            <div className="flex bg-gray-100 p-1 rounded-xl w-full max-w-[300px] mx-auto mt-5 sticky top-0">
+            <div className="flex bg-gray-100 p-1 rounded-xl w-full max-w-[300px] mt-5 sticky top-0 self-start ml-5">
               <button
                 onClick={() => {
                   setShowArchived(false);
