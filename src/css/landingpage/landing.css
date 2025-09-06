@@ -1,21 +1,20 @@
 @reference "tailwindcss";
 @plugin "daisyui";
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 ::-webkit-scrollbar {
   display: none;
 }
 
-
 body {
-  scrollbar-width: none; 
+  scrollbar-width: none;
 }
 
-html, body {
+html,
+body {
   overflow-y: auto;
 }
-
 
 /* ==== Header Styles ==== */
 .landing-container {
@@ -85,20 +84,23 @@ html, body {
 
 .phone1 {
   @apply w-[260px] sm:w-[320px] md:w-[400px] lg:w-[460px];
-  transform: rotate(-5deg) translateX(-45px) translateY(10px);
+  transform: rotate(-5deg) translateX(-45px) translateY(10px) !important; /* Force override */
+  z-index: 1;
 }
 
 .phone2 {
   @apply w-[280px] sm:w-[340px] md:w-[420px] lg:w-[480px];
-  transform: rotate(10deg) translateX(60px) translateY(-10px) scale(1.15);
+  transform: rotate(10deg) translateX(60px) translateY(-10px) scale(1.15) !important;
+  z-index: 2;
 }
 
+/* Hover animations */
 .image-container:hover .phone1 {
-  transform: rotate(-2deg) translateX(-25px) translateY(10px) scale(1);
+  transform: rotate(-2deg) translateX(-100px) translateY(10px) scale(1.05);
 }
 
 .image-container:hover .phone2 {
-  transform: rotate(6deg) translateX(25px) translateY(-30px) scale(1.20);
+  transform: rotate(6deg) translateX(100px) translateY(-30px) scale(1.2);
 }
 
 /* NU Campuses Section */
@@ -119,7 +121,7 @@ html, body {
 
 .campus-marquee::before,
 .campus-marquee::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   width: 80px;
@@ -138,7 +140,6 @@ html, body {
   background: linear-gradient(to left, white, transparent);
 }
 
-
 .campus-list {
   display: flex;
   white-space: nowrap;
@@ -155,7 +156,7 @@ html, body {
   font-size: 1.1rem;
   color: #000;
   opacity: 0.6;
-  transition: opacity 0.20s ease;
+  transition: opacity 0.2s ease;
 }
 
 .campus-list li:hover {
@@ -177,7 +178,7 @@ html, body {
 }
 
 .about-title {
-   @apply  sm:text-lg md:text-xl lg:text-2xl font-bold text-[#222] mb-2 text-center;
+  @apply sm:text-lg md:text-xl lg:text-2xl font-bold text-[#222] mb-2 text-center;
 }
 
 .about-nu-section p {
@@ -231,11 +232,11 @@ html, body {
 }
 
 .yellow {
-  color: #FFC300;
+  color: #ffc300;
 }
 
 .blue {
-  color: #444EB2;
+  color: #444eb2;
 }
 
 /* Default: Mobile (stacked layout, everything centered) */
@@ -255,7 +256,8 @@ html, body {
   @apply flex flex-col gap-12 pt-6 md:pt-20 order-2 md:order-1 items-center text-center;
 }
 
-@media (min-width: 1024px) { /* large screens only */
+@media (min-width: 1024px) {
+  /* large screens only */
   .features-left {
     align-items: flex-end;
     text-align: right;
@@ -276,8 +278,13 @@ html, body {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 .animate-float {
@@ -294,7 +301,8 @@ html, body {
   @apply flex flex-col gap-12 pt-6 md:pt-20 order-3 items-center text-center;
 }
 
-@media (min-width: 1024px) { /* large screens only */
+@media (min-width: 1024px) {
+  /* large screens only */
   .features-right {
     align-items: flex-start;
     text-align: left;
@@ -319,7 +327,7 @@ html, body {
 }
 
 .feature-box:hover .feature-title {
-  @apply text-[#444EB2]; 
+  @apply text-[#444EB2];
 }
 
 .feature-description {
@@ -370,7 +378,7 @@ html, body {
 .phone-left {
   left: 50%;
   bottom: 0;
-  transform: translateX(-100%) rotate(-8deg) scale(1.4); 
+  transform: translateX(-100%) rotate(-8deg) scale(1.4);
 }
 
 .phone-center {
@@ -454,4 +462,28 @@ html, body {
   @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold leading-relaxed mb-4 text-center;
 }
 
+/* Common fade-up animation */
+.animate-in-top,
+.animate-in-bottom {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1s ease-out forwards;
+}
 
+.animate-in-bottom {
+  animation-delay: 0.2s;
+  z-index: 1; /* Behind */
+}
+
+.animate-in-top {
+  animation-delay: 0.4s;
+  z-index: 2; /* On top */
+}
+
+/* Keyframes */
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
