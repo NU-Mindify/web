@@ -44,3 +44,42 @@
 .per-level-stats-container {
   @apply w-11/12 h-full p-3 rounded-2xl mt-3;
 }
+
+.stud-session-container {
+  @apply mt-2 flex flex-col gap-2 overflow-y-auto h-[300px] py-5 border-2 px-2;
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
+}
+
+.stud-session-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.stud-session-container::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 8px;
+}
+
+.stud-session-container::-webkit-scrollbar-track {
+  background: black;
+}
+
+
+.stud-recent-act-container {
+  @apply mt-2 flex flex-col gap-2 overflow-y-auto h-[300px] py-5 border-2 px-2;
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
+}
+
+.stud-recent-act-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.stud-recent-act-container::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 8px;
+}
+
+.stud-recent-act-container::-webkit-scrollbar-track {
+  background: black;
+}

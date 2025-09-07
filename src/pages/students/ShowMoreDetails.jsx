@@ -21,8 +21,9 @@ export default function ShowMoreDetails() {
   const studentCloth = location.state?.studentCloth;
   const recentAct = location.state?.recentAct;
   const studentItems = location.state?.studentItems;
+  const studentSessions = location.state?.studentSessions;
 
-  
+  console.log("Recnt acct", recentAct);
 
   const avatars = studentItems?.filter(
     (item) => avatarandclothes[item]?.type === "avatar"
@@ -97,6 +98,43 @@ export default function ShowMoreDetails() {
     return attempts;
   };
 
+  function formatDateTime(isoString) {
+    if (!isoString) return { date: "", time: "" };
+
+    const date = new Date(isoString);
+
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const mmm = months[date.getMonth()];
+    const dd = String(date.getDate()).padStart(2, "0");
+    const yyyy = date.getFullYear();
+
+    let hh = date.getHours();
+    const mm = String(date.getMinutes()).padStart(2, "0");
+    const ss = String(date.getSeconds()).padStart(2, "0");
+
+    const ampm = hh >= 12 ? "PM" : "AM";
+    hh = hh % 12 || 12; // convert to 12hr format
+
+    return {
+      date: `${mmm} ${dd}, ${yyyy}`,
+      time: `${hh}:${mm}:${ss} ${ampm}`,
+    };
+  }
+
   const levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const competitionHighestScores = getCompetitionHighScores();
   const highestMasteryScores = getHighestMasteryScores();
@@ -162,50 +200,108 @@ export default function ShowMoreDetails() {
           </table>
         </div>
 
-        {recentAct && recentAct.length > 0 && (
-          <div className="w-full h-auto flex justify-evenly items-center">
-            <div className="w-[48%] h-auto py-3">
-              <h1 className="text-2xl font-bold">Recent Activity</h1>
-              <div className="mt-2 flex flex-col gap-2 overflow-y-auto h-[300px] py-5 border-2 px-2">
-                {recentAct.map((act, index) => (
-                  <div
-                    key={index}
-                    className="border-4 border-gray-500 rounded-md p-2 bg-white shadow-sm"
-                  >
-                    <p className="text-black text-sm">
-                      <strong>Mode:</strong> {act.mode}
-                    </p>
-                    <p className="text-black text-sm">
-                      <strong>Level:</strong> {act.level}
-                    </p>
-                    <p className="text-black text-sm">
-                      <strong>Category:</strong>{" "}
-                      {categories.find((cat) => cat.id === act.category)?.name ||
-                        act.category}
-                    </p>
-                    <p className="text-black text-sm">
-                      <strong>Score:</strong> {act.correct}/{act.total_items}
-                    </p>
-                    <p className="text-black text-sm">
-                      <strong>Time:</strong> {act.time_completion}
-                    </p>
-                    <p className="text-black text-sm">
-                      <strong>Date:</strong>{" "}
-                      {new Date(act.createdAt).toLocaleString()}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-
-            <div className="w-[48%] h-auto bg-violet-300 py-3">
-                <h1 className="text-2xl font-bold">Recent Sessions</h1>
-                <div className="mt-2 flex flex-col gap-2 overflow-y-auto h-[300px] py-5">
-
+        {recentAct?.length > 0 || studentSessions?.length > 0 ? (
+          <div className="w-full h-auto flex justify-evenly items-start gap-4">
+            {/* Recent Activity */}
+            {recentAct?.length > 0 ? (
+              <div className="w-[48%] h-auto py-3">
+                <h1 className="text-2xl font-bold">Recent Activity</h1>
+                <div className="stud-recent-act-container space-y-3">
+                  {recentAct.map((act) => (
+                    <div
+                      key={act._id}
+                      className="border-4 border-gray-500 rounded-md p-2 bg-white shadow-sm"
+                    >
+                      <h1 className="text-black">
+                        <strong>Mode:</strong> {act.mode}
+                      </h1>
+                      <h1 className="text-black">
+                        <strong>Level:</strong> {act.level}
+                      </h1>
+                      <h1 className="text-black">
+                        <strong>Category:</strong>{" "}
+                        {categories.find((cat) => cat.id === act.category)
+                          ?.name || act.category}
+                      </h1>
+                      <h1 className="text-black">
+                        <strong>Score:</strong> {act.correct}/{act.total_items}
+                      </h1>
+                      <h1 className="text-black">
+                        <strong>Time:</strong> {act.time_completion}
+                      </h1>
+                      <h1 className="text-black">
+                        <strong>Date:</strong>{" "}
+                        {new Date(act.createdAt)
+                          .toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "2-digit",
+                            year: "numeric",
+                          })
+                          .replace(/ /g, "-")}
+                      </h1>
+                      <h1 className="text-black">
+                        <strong>Time:</strong>{" "}
+                        {new Date(act.createdAt).toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                      </h1>
+                    </div>
+                  ))}
                 </div>
-            </div>
-            
+              </div>
+            ) : (
+              <div className="w-[48%] h-[250px] flex items-center justify-center">
+                <h1 className="text-gray-600">No Activity Yet</h1>
+              </div>
+            )}
+
+            {/* Recent Sessions */}
+            {studentSessions?.length > 0 ? (
+              <div className="w-[48%] h-auto py-3">
+                <h1 className="text-2xl font-bold">Recent Sessions</h1>
+                <div className="stud-session-container space-y-3">
+                  {studentSessions.map((session) => {
+                    const start = formatDateTime(session.start_time);
+                    const end = formatDateTime(session.end_time);
+
+                    return (
+                      <div
+                        key={session._id}
+                        className="border-4 border-gray-500 rounded-md p-2 bg-white shadow-sm"
+                      >
+                        <h1>
+                          <strong>Duration:</strong> {session.duration}
+                        </h1>
+                        <br />
+                        <h1>
+                          <strong>Date Started:</strong> {start.date}
+                        </h1>
+                        <h1>
+                          <strong>Time Started:</strong> {start.time}
+                        </h1>
+                        <br />
+                        <h1>
+                          <strong>Date Ended:</strong> {end.date}
+                        </h1>
+                        <h1>
+                          <strong>Time Ended:</strong> {end.time}
+                        </h1>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className="w-[48%] h-[250px] flex items-center justify-center">
+                <h1 className="text-gray-600">No Session Found</h1>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="w-full h-[150px] flex items-center justify-center">
+            <h1 className="text-gray-600 text-[100px]">NO ATTEMPTS YET</h1>
           </div>
         )}
 

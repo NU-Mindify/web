@@ -324,9 +324,8 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
   useEffect(() => {
     async function fetchRecentSessions(){
       try{
-        const {data} = await axios.get(`${API_URL}/getRecentSessions?user_id=${studentId}`);
+        const {data} = await axios.get(`${API_URL}/getRecentSessions?id=${studentId}`);
         setRecentSessions(data);
-        console.log(data);
         console.log("recent sessions", data);
       }
       catch(error){
@@ -607,6 +606,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
                             studentAvatar: student.avatar,
                             studentCloth: student.cloth,
                             studentItems: student.items,
+                            studentSessions: recentSessions
                           },
                         });
                       }}
