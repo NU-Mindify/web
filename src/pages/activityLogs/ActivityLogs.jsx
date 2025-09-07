@@ -19,6 +19,7 @@ export default function ActivityLogs() {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
+  // console.log("Current Web user",currentWebUser.position);
 
   const [cardActive, setCardActive] = useState(null);
 
@@ -44,17 +45,26 @@ export default function ActivityLogs() {
   const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
+    if (!currentWebUser) return; // ✅ wait for context
     const fetchLogs = async () => {
       try {
         const response = await axios.get(`${API_URL}/getLogs`);
-        setAllLogs(response.data);
-        setFilteredLogs(response.data);
+        let logs = response.data;
+
+        if (currentWebUser.position?.toLowerCase().trim() !== "super admin") {
+          logs = logs.filter(
+            (log) => log.position?.toLowerCase().trim() !== "super admin"
+          );
+        }
+
+        setAllLogs(logs);
+        setFilteredLogs(logs);
       } catch (error) {
         console.error(error);
       }
     };
     fetchLogs();
-  }, []);
+  }, [currentWebUser]);
 
   const actions = Array.from(new Set(allLogs.map((log) => log.action)));
   const actionOptions = [
@@ -83,14 +93,13 @@ export default function ActivityLogs() {
     }
 
     if (startDate && endDate) {
-  logs = logs.filter((log) => {
-    const logDate = new Date(log.createdAt);
-    const inclusiveEndDate = new Date(endDate);
-    inclusiveEndDate.setHours(23, 59, 59, 999);
-    return logDate >= startDate && logDate <= inclusiveEndDate;
-  });
-}
-
+      logs = logs.filter((log) => {
+        const logDate = new Date(log.createdAt);
+        const inclusiveEndDate = new Date(endDate);
+        inclusiveEndDate.setHours(23, 59, 59, 999);
+        return logDate >= startDate && logDate <= inclusiveEndDate;
+      });
+    }
 
     setFilteredLogs(logs);
   }, [selectedMonth, selectedAction, startDate, endDate, allLogs]);
@@ -192,8 +201,6 @@ export default function ActivityLogs() {
       }.pdf`
     );
   };
-
-  
 
   return (
     <div className="logs-main-container">
@@ -330,3 +337,4 @@ export default function ActivityLogs() {
     </div>
   );
 }
+  

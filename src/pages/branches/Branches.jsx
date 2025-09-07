@@ -41,13 +41,14 @@ export default function Branches() {
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
-  const { setCurrentWebUser, currentWebUser } = useContext(UserLoggedInContext);
+  const { currentWebUser } = useContext(UserLoggedInContext);
 
   const handleReset = () => {
     setNewBranch({
       id: "",
       name: "",
       extension: "",
+      stud_extension: "", 
       is_deleted: false,
     });
   };
@@ -90,6 +91,15 @@ export default function Branches() {
       setBranchList((prev) => [...prev, addedBranch]);
       setValidationMessage("Branch added successfully!");
       setShowValidationModal(true);
+      axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Add Branch",
+        description: `${currentWebUser.firstName} added the branch ${newBranch.name}.`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      })
+
       handleReset();
     } catch (error) {
       console.error("Error adding branch:", error);
@@ -192,6 +202,7 @@ export default function Branches() {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [branchToDelete, setBranchToDelete] = useState(null);
+  const [selectedBranch, setSelectedBranch] = useState("")
 
   const [showActivateModal, setShowActivateModal] = useState(false);
   const [branchToActivate, setBranchToActivate] = useState(null);
@@ -203,6 +214,16 @@ export default function Branches() {
       await axios.put(`${API_URL}/deleteBranch?id=${branchId}`);
       setValidationMessage("Branch deleted successfully.");
       setShowValidationModal(true);
+
+      axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Delete Branch",
+        description: `${currentWebUser.firstName} deleted the branch ${selectedBranch}.`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      })
+
       loadBranches();
     } catch (error) {
       console.error("Error deleting branch:", error);
@@ -216,6 +237,19 @@ export default function Branches() {
       await axios.put(`${API_URL}/activateBranch?id=${branchId}`);
       setValidationMessage("Branch activated successfully.");
       setShowValidationModal(true);
+
+
+      console.log(currentWebUser.branch);
+      
+      axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Activate Branch",  
+        description: `${currentWebUser.firstName} activated the branch ${selectedBranch}.`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      })
+
       loadBranches();
     } catch (error) {
       console.error("Error activating branch:", error);
@@ -236,9 +270,9 @@ export default function Branches() {
         <ExportDropdown
           onExport={(format) => {
             if (format === "csv") {
-              exportBranchesToCSV(branchList, "Branch_List");
+              exportBranchesToCSV(branchList, "Campus_List");
             } else if (format === "pdf") {
-              exportBranchesToPDF(branchList, "Branch_List");
+              exportBranchesToPDF(branchList, "Campus_List");
             }
           }}
         />
@@ -254,7 +288,7 @@ export default function Branches() {
               <label className="required-label"> Campus ID </label>
               <input
                 type="text"
-                placeholder="Enter Branch ID"
+                placeholder="Enter Campus ID"
                 value={newBranch.id}
                 onChange={(e) => {
                   setNewBranch({
@@ -364,7 +398,7 @@ export default function Branches() {
                 : "!text-gray-400"
             }`}
           >
-            Active Branches
+            Active Campuses
           </button>
 
           <button
@@ -375,7 +409,7 @@ export default function Branches() {
                 : "!text-gray-400"
             }`}
           >
-            Deleted Branches
+            Deleted Campuses
           </button>
         </div>
       </div>
@@ -408,6 +442,7 @@ export default function Branches() {
                       <button
                         onClick={() => {
                           setShowActivateModal(true);
+                          setSelectedBranch(branch.name)
                           setBranchToActivate(branch._id);
                         }}
                         className="btn btn-success px-5 py-2 text-white"
@@ -418,6 +453,7 @@ export default function Branches() {
                       <button
                         onClick={() => {
                           setBranchToDelete(branch._id);
+                          setSelectedBranch(branch.name)
                           setShowDeleteModal(true);
                         }}
                         className="btn btn-error px-5 py-2 m"
