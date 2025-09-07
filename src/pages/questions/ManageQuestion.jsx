@@ -51,11 +51,14 @@ const categoriesObj = [
 ];
 
 export default function ManageQuestion() {
+
   const { currentWebUser } = useContext(UserLoggedInContext);
   const [showArchived, setShowArchived] = useState(false);
   const [restore, setRestore] = useState(false);
+  
 
-  const { subSelected, setSubSelected } = useContext(ActiveContext);
+  const { subSelected, setSubSelected, } = useContext(ActiveContext);
+  
 
   const [totalQuestion, setTotalQuestion] = useState([]);
   const [totalDeletedQuestion, setTotalDeletedQuestion] = useState([]);
@@ -221,15 +224,20 @@ export default function ManageQuestion() {
     }
   };
 
+  const [category, setCategory] = useState(null);
+  const [gotSelected, setGotSelected] = useState(false);
+  const [selectedCat, setSelectedCat] = useState(null);
+
   const location = useLocation();
   useEffect(() => {
+    const isSelected = location.state?.gotSelected;
     const category = location.state?.category;
     const categoryName = location.state?.categoryName;
     const catSelected = location.state?.catSelected;
 
     if (category && catSelected) {
       setCategory(category);
-      setGotSelected(true);
+      setGotSelected(isSelected || true);
       setSelectedCat(categoryName);
     }
   }, [location.state]);
@@ -238,9 +246,7 @@ export default function ManageQuestion() {
 
   const [searchQuestion, setSearchQuestion] = useState("");
 
-  const [category, setCategory] = useState(null);
-  const [gotSelected, setGotSelected] = useState(false);
-  const [selectedCat, setSelectedCat] = useState(null);
+  
 
   const getData = async () => {
     try {
@@ -348,12 +354,11 @@ export default function ManageQuestion() {
   }
 
   const handlesUnapprove = () => {
-    // console.log("Category", category);
-    // console.log("selected cat", selectedCat);
+
 
     navigate("/unapproved", {
       state: {
-        category,
+        category: category,
         categoryName: selectedCat,
       },
     });

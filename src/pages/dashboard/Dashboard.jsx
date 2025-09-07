@@ -7,10 +7,15 @@ import CountUp from "../../components/CountUp/CountUp";
 import { API_URL, branches, categories, levels, modes } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/dashboard/dashboard.css";
+import { ActiveContext } from "../../contexts/Contexts";
 
 export default function Dashboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);
-  // console.log("Current Web User:", currentWebUser);
+
+
+  const {
+    setSelected,
+  } = useContext(ActiveContext);
 
   const navigate = useNavigate();
 
@@ -33,14 +38,16 @@ export default function Dashboard() {
   const [loadingBadges, setLoadingBadges] = useState(false);
 
   const [mostChallengingWorld, setMostChallengingWorld] = useState(null);
-  const [mostChallengingWorldScore, setMostChallengingWorldScore] =
-    useState(null);
+  const [mostChallengingWorldScore, setMostChallengingWorldScore] = useState(null);
 
   const [classicLeaderboards, setClassicLeaderboards] = useState([]);
   const [leaderboardsMastery, setLeaderboardsMastery] = useState([]);
   const [loadingDataClassic, setLoadingDataClassic] = useState(false);
   const [loadingDataMastery, setLoadingDataMastery] = useState(false);
   const [leaderboardMode, setLeaderboardMode] = useState("classic");
+  
+  const [averageSession, setAverageSession] = useState(0)
+  const [loadingSession, setLoadingSession] = useState(false)
 
   useEffect(() => {
     if (!currentWebUser?.token) return;
@@ -49,7 +56,27 @@ export default function Dashboard() {
     fetchTopClassicLeaderboard();
     fetchTopMasteryLeaderboard();
     fetchPendingUsers();
+    fetchAverageSession()
   }, [currentWebUser]);
+
+
+  async function fetchAverageSession(){
+    setLoadingSession(true)
+    try{
+      const {data} = await axios.get(`${API_URL}/getAverageSession`)
+      console.log("average sess",Number(data.averageSessionTime.toFixed(2)));
+      setAverageSession(Number(data.averageSessionTime.toFixed(2)));
+      
+    }
+    catch(error){
+      console.error("Error fetching top leaderboards:", error.message);
+    }
+    finally{
+      setLoadingSession(false)
+    }
+  }
+
+  
 
   const fetchTopClassicLeaderboard = async () => {
     setLoadingDataClassic(true);
@@ -300,7 +327,7 @@ return (
               <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold">
                 Total Students
               </h1>
-              <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] mt-3">
+              <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
                 <CountUp end={studentCount} />
               </h1>
             </div>
@@ -318,7 +345,7 @@ return (
               <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold">
                 Total Web Users
               </h1>
-              <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] mt-3">
+              <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
                 <CountUp end={webUsersCount} />
               </h1>
             </div>
@@ -333,11 +360,11 @@ return (
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-2 -mt-5 font-[Poppins] text-[18px] font-bold">
+              <h1 className="dashboard-title mb-2 -mt-5 font-[Poppins] text-[18px] font-bold text-center">
                 Overall Average Score
               </h1>
 
-              <h2 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] mt-3">
+              <h2 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
                 {avgScoresByWorld.overall === "N/A" ? (
                   "No Data"
                 ) : (
@@ -357,17 +384,17 @@ return (
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-3 mt-3 font-[Poppins] text-[18px] font-bold">
+              <h1 className="dashboard-title mb-3 mt-3 font-[Poppins] text-[18px] font-bold text-center">
                 Most Challenging World
               </h1>
               {mostChallengingWorld === "N/A" ? (
                 <h2 className="text-3xl font-bold">No Data</h2>
               ) : (
                 <>
-                  <h2 className="text-xl capitalize -mt-3 mb-1 text-black shadow-black font-[Poppins] font-semibold text-[15px]">
+                  <h2 className="text-xl capitalize -mt-3 mb-1 text-black shadow-black font-[Poppins] font-semibold text-[15px] text-center">
                     {mostChallengingWorld + " Psychology"}
                   </h2>
-                  <h2 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] mt-3">
+                  <h2 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
                     <CountUp end={mostChallengingWorldScore} decimals={2} />%
                   </h2>
 
@@ -376,6 +403,29 @@ return (
                   </h2>
                 </>
               )}
+            </div>
+          )}
+        </div>
+
+        <div className="analytics-properties-dashboard">
+          {loadingSession ? (
+            <div className="loading-overlay-dashboard">
+              <div className="spinner"></div>
+              <p>Fetching data...</p>
+            </div>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center flex-col">
+              <h1 className="dashboard-title mb-3 mt-3 font-[Poppins] text-[18px] font-bold text-center">
+                Students Average Session
+              </h1>
+
+                <>
+                  <h2 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3 text-center">
+                    <CountUp end={averageSession} decimals={2} />s
+                  </h2>
+
+                </>
+              
             </div>
           )}
         </div>
@@ -390,7 +440,10 @@ return (
             ) : (
               <div
                 className="w-full h-full flex items-center justify-center flex-col cursor-pointer"
-                onClick={() => navigate("/account/approval")}
+                onClick={() => {
+                  navigate("/account/approval")
+                  setSelected("account")
+                }}
               >
                 {isLoading ? (
                   <div className="loading-overlay-dashboard">
@@ -402,7 +455,7 @@ return (
                     <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold">
                       Pending Accounts
                     </h1>
-                    <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] mt-3">
+                    <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
                       <CountUp end={pendingUserCount} />
                     </h1>
                   </div>

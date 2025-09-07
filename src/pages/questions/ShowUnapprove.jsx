@@ -1,14 +1,22 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { API_URL, categories } from "../../Constants";
 import chevron from "../../assets/forAll/chevron.svg";
 import { UserLoggedInContext } from "../../contexts/Contexts";
+import back from "../../assets/questions/angle-left.svg";
 
 export default function ShowUnapprove() {
   const location = useLocation();
+  const navigate = useNavigate(); 
   const category = location.state?.category;
+  const categoryName = location.state?.categoryName;
   const { currentWebUser } = useContext(UserLoggedInContext);
+
+ 
+ 
+ 
+  
 
   const [unapprovedQuestions, setUnapprovedQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,12 +42,9 @@ export default function ShowUnapprove() {
     }
   }, [category, currentWebUser]);
 
-
-    const handleDecline = async (id) => {
+  const handleDecline = async (id) => {
     try {
-
       await axios.delete(`${API_URL}/declineQuestion/${id}`);
-
       alert("Question deleted successfully");
       getUnapprovedData();
     } catch (error) {
@@ -51,7 +56,6 @@ export default function ShowUnapprove() {
   const handleApprove = async (id) => {
     try {
       console.log("id", id);
-      
       await axios.put(`${API_URL}/approveQuestion/${id}`);
       alert("Question approved successfully");
       getUnapprovedData();
@@ -59,34 +63,52 @@ export default function ShowUnapprove() {
       console.error("Error approving question:", error);
       alert("Failed to approve question. Try again.");
     }
+  };
+
+  function handleBack() {
+    navigate("/question", {
+      state: {
+        category: category,
+        catSelected: categoryName,
+        gotSelected: true,
+        categoryName: categoryName,
+      }
+    })
+
   }
 
   return (
-    <div className="w-full h-full bg-violet-200 p-3 overflow-y-auto">
+    <div className="w-full h-full bg-white p-3 overflow-y-auto">
+      <div className="title-header">
+        <div className="title-left">
+          <button
+            className="back-button cursor-pointer mt-5"
+            onClick={handleBack}
+          >
+            <img src={back} alt="back arrow" className="back-icon" />
+          </button>
+          <h1 className="question-title">Unapprove Questions</h1>
+        </div>
+      </div>
       {unapprovedQuestions.map((data, index) => (
         <div
           key={data._id || index}
-          className="w-full h-auto grid grid-cols-[10fr_1fr] p-2 bg-blue-300 mb-2"
+          className="w-full h-auto grid grid-cols-[10fr_1fr] p-2 bg-white border-2 border-black rounded-xl mb-2 mt-10"
         >
-
           <div className="flex items-center">
             {index + 1}. {data.question}
           </div>
 
-
           <div className="flex items-center justify-end pr-10">
             <button
               onClick={() =>
-                setActiveQuestion(
-                  activeQuestion === data._id ? null : data._id
-                )
+                setActiveQuestion(activeQuestion === data._id ? null : data._id)
               }
               className="p-2 rounded cursor-pointer"
             >
               <img src={chevron} alt="Open details" className="w-5 h-5" />
             </button>
           </div>
-
 
           <div className="col-span-2">
             {activeQuestion === data._id && (
@@ -115,16 +137,16 @@ export default function ShowUnapprove() {
                 <p>Timer: {data.timer}</p>
 
                 <div className="flex w-full gap-40 justify-center items-center mt-4">
-                  <button 
+                  <button
                     className="w-40 h-12 bg-green-200 rounded-xl"
                     onClick={() => handleApprove(data._id)}
                   >
                     Approve
                   </button>
-                  <button 
+                  <button
                     className="w-40 h-12 bg-red-200 rounded-xl"
                     onClick={() => handleDecline(data._id)}
-                >
+                  >
                     Decline
                   </button>
                 </div>
