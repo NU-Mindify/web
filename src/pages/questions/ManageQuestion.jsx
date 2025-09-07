@@ -754,62 +754,65 @@ export default function ManageQuestion() {
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 w-full justify-start">
-              <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
-                <button
-                  onClick={() => setShowArchived(false)}
-                  className={`all-archive-btn ${
-                    showArchived || "active"
-                  } w-1/2`}
-                >
-                  All Questions
-                </button>
+           <div className="flex flex-wrap items-center gap-4 w-full">
+            {/* Left side group */}
+            <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
+              <button
+                onClick={() => setShowArchived(false)}
+                className={`all-archive-btn ${showArchived || "active"} w-1/2`}
+              >
+                All Questions
+              </button>
 
-                <button
-                  onClick={() => setShowArchived(true)}
-                  className={`all-archive-btn ${
-                    showArchived && "active"
-                  } w-1/2`}
-                >
-                  Archive
-                </button>
-              </div>
-
-              <div className="sort-container relative">
-                <select
-                  id="sort"
-                  className="sort-select pl-8"
-                  onChange={handleSortingByDate}
-                >
-                  <option value="" disabled selected hidden>
-                    Sort by:
-                  </option>
-                  <option value="newest">Newest First</option>
-                  <option value="oldest">Oldest First</option>
-                </select>
-              </div>
-
-              <div className="sort-container relative">
-                <select
-                  id="filter"
-                  className="sort-select pl-8"
-                  onChange={handleSortingByDifficulty}
-                >
-                  <option value="" disabled selected hidden>
-                    Filter By Difficulty:
-                  </option>
-                  <option value="easy">Easy</option>
-                  <option value="average">Average</option>
-                  <option value="difficult">Difficult</option>
-                </select>
-              </div>
-
-              <div className="w-auto px-4 h-10 bg-red-400 flex justify-center items-center rounded-xl">
-                <button onClick={handlesUnapprove}>
-                  Show Unapproved Questions
-                </button>
-              </div>
+              <button
+                onClick={() => setShowArchived(true)}
+                className={`all-archive-btn ${showArchived && "active"} w-1/2`}
+              >
+                Archive
+              </button>
             </div>
+
+            <div className="sort-container relative">
+              <select
+                id="sort"
+                className="sort-select pl-8"
+                onChange={handleSortingByDate}
+              >
+                <option value="" disabled selected hidden>
+                  Sort by:
+                </option>
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
+            <div className="sort-container relative">
+              <select
+                id="filter"
+                className="sort-select pl-8"
+                onChange={handleSortingByDifficulty}
+              >
+                <option value="" disabled selected hidden>
+                  Filter By Difficulty:
+                </option>
+                <option value="easy">Easy</option>
+                <option value="average">Average</option>
+                <option value="difficult">Difficult</option>
+              </select>
+            </div>
+
+            {/* Right side button */}
+            <div className="ml-auto">
+              <button 
+                onClick={handlesUnapprove} 
+                className="px-4 h-10 bg-[#FFC300] font-bold text-black rounded-xl 
+                          hover:bg-[#e6b200] transition cursor-pointer"
+              >
+                Show Unapproved Questions
+              </button>
+            </div>
+          </div>
+
           </div>
         )}
       </div>

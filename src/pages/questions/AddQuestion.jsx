@@ -1,7 +1,7 @@
 import axios from "axios";
 import { CheckCircle2Icon, XCircle } from "lucide-react";
 import Papa from "papaparse";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { API_URL } from "../../Constants";
 import chevronIcon from "../../assets/forAll/chevron.svg";
@@ -9,6 +9,8 @@ import closebtn from "../../assets/glossary/close-btn.svg";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
 import "../../css/questions/addQuestion.css";
+
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 import OkCancelModal from "../../components/OkCancelModal/OkCancelModal.jsx";
 
@@ -34,6 +36,22 @@ function AddQuestion() {
   const [showAddSuccessModal, setShowAddSuccessModal] = useState(false);
 
   const [guideIsOpen, setGuideIsOpen] = useState(false);
+  
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const [validationErrors, setValidationErrors] = useState({
     question: "",
@@ -408,40 +426,58 @@ function AddQuestion() {
         </div>
 
         <div className="ques-container">
-          <input
-            id="upload-btn"
-            type="file"
-            accept=".csv"
-            onChange={handleCSVUploadQuestions}
-            className="hidden"
-          />
-          <label
-            htmlFor="upload-btn"
-            className="w-[280px] sm:w-[320px] md:w-[360px] mt-2 py-3 sm:py-4 md:py-5 
-                        px-6 sm:px-8 md:px-10 rounded-2xl text-lg sm:text-xl md:text-2xl 
-                        text-center font-extrabold transition bg-[#FFC300] text-black 
-                        hover:bg-[#e6b200] cursor-pointer"
-          >
-            UPLOAD CSV FILE
-          </label>
-          <a href="/IMPORT_QUESTIONS_TEMPLATE.csv" download>
-            <button className="w-[280px] sm:w-[320px] md:w-[360px] mt-2 py-3 sm:py-4 md:py-5 
-                        px-6 sm:px-8 md:px-10 rounded-2xl text-lg sm:text-xl md:text-2xl 
-                        text-center font-extrabold transition bg-[#FFC300] text-black 
-                        hover:bg-[#e6b200] cursor-pointer">
-              DOWNLOAD CSV TEMPLATE
-            </button>
-          </a>
+<div className="w-full flex justify-end relative" ref={dropdownRef}>
+      <div className="flex items-center gap-2">
+        {/* Hidden input for CSV Upload */}
+        <input
+          id="upload-btn"
+          type="file"
+          accept=".csv"
+          onChange={handleCSVUploadQuestions}
+          className="hidden"
+        />
 
-          <button
-            className="w-[280px] sm:w-[320px] md:w-[360px] mt-2 py-3 sm:py-4 md:py-5 
-                        px-6 sm:px-8 md:px-10 rounded-2xl text-lg sm:text-xl md:text-2xl 
-                        text-center font-extrabold transition bg-[#FFC300] text-black 
-                        hover:bg-[#e6b200] cursor-pointer"
-            onClick={() => setGuideIsOpen(true)}
-          >
-            VIEW CSV TEMPLATE GUIDE
-          </button>
+        {/* Upload Button */}
+        <label
+          htmlFor="upload-btn"
+          className="px-5 py-2 sm:px-6 sm:py-3 rounded-2xl text-base sm:text-lg 
+                    font-bold transition bg-[#FFC300] text-black 
+                    hover:bg-[#e6b200] cursor-pointer"
+        >
+          Upload CSV File
+        </label>
+
+        {/* Dropdown Trigger */}
+        <button
+          onClick={() => setShowDropdown((prev) => !prev)}
+          className="px-4 py-2 sm:px-5 sm:py-3 rounded-2xl bg-[#FFC300] text-black hover:bg-[#e6b200] transition"
+        >
+          {showDropdown ? <ChevronUp size={25} /> : <ChevronDown size={25} />}
+        </button>
+
+        {/* Dropdown Menu */}
+        {showDropdown && (
+          <div className="absolute right-0 top-[110%] w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+            <a
+              href="/IMPORT_QUESTIONS_TEMPLATE.csv"
+              download
+              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Download CSV Template
+            </a>
+            <button
+              onClick={() => {
+                setGuideIsOpen(true);
+                setShowDropdown(false);
+              }}
+              className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              View CSV Template Guide
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
 
           {guideIsOpen && (
             <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/20">
