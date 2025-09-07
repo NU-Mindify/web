@@ -1,0 +1,74 @@
+{/* <div className="w-full mb-5 flex flex-col  items-center">
+            <div className="w-full flex justify-center mb-4">
+              <div className="flex bg-gray-100 p-1 rounded-full w-fit shadow-inner flex-row">
+                <button
+                  onClick={() => {
+                    setMode("competition");
+                    setShowCompe(true);
+                  }}
+                  className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200
+        ${showCompe ? "bg-blue-600 text-white shadow-md" : "text-gray-500"}`}
+                >
+                  Competition
+                </button>
+
+                <button
+                  onClick={() => {
+                    setMode("mastery");
+                    setShowCompe(false);
+                  }}
+                  className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200
+        ${!showCompe ? "bg-blue-600 text-white shadow-md" : "text-gray-500"}`}
+                >
+                  Mastery
+                </button>
+              </div>
+
+              <select defaultValue="all" className="!w-[300px] !h-[60px]">
+                <option value="all">All Categories</option>
+                <option value="developmental">Developmental Psychology</option>
+                <option value="abnormal">Abnormal Psychology</option>
+                <option value="industrial">Industrial Psychology</option>
+                <option value="general">General Psychology</option>
+                <option value="psychological">Psychological Assessment</option>
+              </select>
+            </div>
+
+            <table className="w-[95%] bg-white text-left px-5">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Campus</th>
+                  <th>Total Students</th>
+                  <th>Average Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {totalScorePerCampus
+                  .sort((a, b) => b.averageScore - a.averageScore)
+                  .map((campus, index) => (
+                    <tr key={campus.branch}>
+                      <td>
+                        {index === 0 ? (
+                          <span>🥇</span>
+                        ) : index === 1 ? (
+                          <span>🥈</span>
+                        ) : index === 2 ? (
+                          <span>🥉</span>
+                        ) : (
+                          index + 1
+                        )}
+                      </td>
+                      <td>
+                        {
+                          branches.find((branch) => branch.id === campus.branch)
+                            ?.name
+                        }
+                      </td>
+                      <td>{campus.totalStudents}</td>
+                      <td>{Math.round(campus.averageScore * 100)}%</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div> */}

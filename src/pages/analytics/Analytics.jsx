@@ -5,11 +5,12 @@ import AccountsCreatedChart from "../../components/LineChart/AccountsCreatedChar
 import AttemptsChart from "../../components/LineChart/AttemptsChart";
 import PieChartAttempts from "../../components/PieChart/PieChartAttempts";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
+import ExportDropdown from "../../components/ExportDropdown/ExportDropdown.jsx";
 import { API_URL, branches, categories, levels, modes } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 import "../../css/analytics/analytics.css";
-
-
 
 export default function Analytics() {
   const { currentWebUser } = useContext(UserLoggedInContext);
@@ -163,113 +164,6 @@ export default function Analytics() {
     filteredMasteryAttempts
   );
 
-  //export to CSV
-  const exportAttemptsAccountsCSV = (
-    allAttempts,
-    allStudents,
-    attemptsViewMode,
-    accountsViewMode
-  ) => {
-    const now = new Date().toLocaleString();
-
-    // Helper to group by date/month
-    const groupByDate = (data, viewMode, keyGetter) => {
-      const map = {};
-      data.forEach((item) => {
-        const key = keyGetter(item);
-        if (!map[key]) map[key] = 0;
-        map[key]++;
-      });
-      return Object.entries(map).map(([date, count]) => [date, count]);
-    };
-
-    const getFormattedDate = (dateStr, mode) => {
-      const date = new Date(dateStr);
-      return mode === "daily"
-        ? date.toLocaleDateString()
-        : `${date.getFullYear()}-${(date.getMonth() + 1)
-            .toString()
-            .padStart(2, "0")}`;
-    };
-
-    const attemptsPerTime = groupByDate(allAttempts, attemptsViewMode, (a) =>
-      getFormattedDate(a.createdAt, attemptsViewMode)
-    );
-
-    const accountsPerTime = groupByDate(allStudents, accountsViewMode, (s) =>
-      getFormattedDate(s.createdAt, accountsViewMode)
-    );
-
-    // Takers vs Non-Takers
-    const attemptedIds = new Set(allAttempts.map((a) => a.user_id?._id));
-    const takers = allStudents.filter((s) => attemptedIds.has(s._id)).length;
-    const nonTakers = allStudents.length - takers;
-
-    const csvSections = [
-      `Exported on:,${now}`,
-      "",
-      "Attempts Per " + (attemptsViewMode === "daily" ? "Day" : "Month"),
-      "Date,Number of Attempts",
-      ...attemptsPerTime.map((row) => row.join(",")),
-      "",
-      "Accounts Created Per " +
-        (accountsViewMode === "daily" ? "Day" : "Month"),
-      "Date,Number of Accounts",
-      ...accountsPerTime.map((row) => row.join(",")),
-      "",
-      "Takers vs Non-Takers",
-      "Category,Count",
-      `Takers,${takers}`,
-      `Non-Takers,${nonTakers}`,
-    ];
-
-    // Category breakdown
-    const categoryNames = {
-      developmental: "Developmental Psychology",
-      abnormal: "Abnormal Psychology",
-      psychological: "Psychological Psychology",
-      industrial: "Industrial Psychology",
-      general: "General Psychology",
-    };
-
-    const categoryCounts = {};
-    allAttempts.forEach((a) => {
-      const cat = a.category;
-      if (!cat) return;
-      categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
-    });
-
-    csvSections.push(
-      "",
-      "Attempts per Category",
-      "Category,Number of Attempts",
-      ...Object.entries(categoryCounts).map(
-        ([cat, count]) => `${categoryNames[cat] || cat},${count}`
-      )
-    );
-
-    csvSections.push(
-      "",
-      "Summary Scores",
-      "Competition Average %,Review Average %,Mastery Average %",
-      `${competitionAvgPercent ?? ""},${reviewAvgPercent ?? ""},${
-        filteredMasteryAvgPercent ?? ""
-      }`
-    );
-
-    const csvContent = "data:text/csv;charset=utf-8," + csvSections.join("\n");
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute(
-      "download",
-      `Analytics_Report_by_${currentWebUser.firstName} ${currentWebUser.lastName}.csv`
-    );
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   const [mode, setMode] = useState("competition");
   const [level, setLevel] = useState(1);
   const [category, setCateogry] = useState("developmental");
@@ -303,7 +197,6 @@ export default function Analytics() {
     }
 
     try {
-      
       let query = `${API_URL}/getLeaderboard?mode=${mode}&category=${category}`;
       if (showCompe) {
         query += `&level=${level}`;
@@ -446,10 +339,225 @@ export default function Analytics() {
     }
   };
 
+  //csv Export
+  const exportAttemptsAccountsCSV = (
+    allAttempts,
+    allStudents,
+    attemptsViewMode,
+    accountsViewMode
+  ) => {
+    const now = new Date().toLocaleString();
+
+    const groupByDate = (data, viewMode, keyGetter) => {
+      const map = {};
+      data.forEach((item) => {
+        const key = keyGetter(item);
+        if (!map[key]) map[key] = 0;
+        map[key]++;
+      });
+      return Object.entries(map).map(([date, count]) => [date, count]);
+    };
+
+    const getFormattedDate = (dateStr, mode) => {
+      const date = new Date(dateStr);
+      return mode === "daily"
+        ? date.toLocaleDateString()
+        : `${date.getFullYear()}-${(date.getMonth() + 1)
+            .toString()
+            .padStart(2, "0")}`;
+    };
+
+    const attemptsPerTime = groupByDate(allAttempts, attemptsViewMode, (a) =>
+      getFormattedDate(a.createdAt, attemptsViewMode)
+    );
+    const accountsPerTime = groupByDate(allStudents, accountsViewMode, (s) =>
+      getFormattedDate(s.createdAt, accountsViewMode)
+    );
+
+    const attemptedIds = new Set(allAttempts.map((a) => a.user_id?._id));
+    const takers = allStudents.filter((s) => attemptedIds.has(s._id)).length;
+    const nonTakers = allStudents.length - takers;
+
+    const categoryNames = {
+      developmental: "Developmental Psychology",
+      abnormal: "Abnormal Psychology",
+      psychological: "Psychological Psychology",
+      industrial: "Industrial Psychology",
+      general: "General Psychology",
+    };
+
+    const categoryCounts = {};
+    allAttempts.forEach((a) => {
+      const cat = a.category;
+      if (!cat) return;
+      categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+    });
+
+    const csvSections = [
+      `Exported on:,${now}`,
+      "",
+      "Attempts Per " + (attemptsViewMode === "daily" ? "Day" : "Month"),
+      "Date,Number of Attempts",
+      ...attemptsPerTime.map((row) => row.join(",")),
+      "",
+      "Accounts Created Per " +
+        (accountsViewMode === "daily" ? "Day" : "Month"),
+      "Date,Number of Accounts",
+      ...accountsPerTime.map((row) => row.join(",")),
+      "",
+      "Takers vs Non-Takers",
+      "Category,Count",
+      `Takers,${takers}`,
+      `Non-Takers,${nonTakers}`,
+      "",
+      "Attempts per Category",
+      "Category,Number of Attempts",
+      ...Object.entries(categoryCounts).map(
+        ([cat, count]) => `${categoryNames[cat] || cat},${count}`
+      ),
+      "",
+      "Summary Scores",
+      "Competition Average %,Review Average %,Mastery Average %",
+      `${competitionAvgPercent ?? ""},${reviewAvgPercent ?? ""},${
+        filteredMasteryAvgPercent ?? ""
+      }`,
+    ];
+
+    const csvContent = "data:text/csv;charset=utf-8," + csvSections.join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `Analytics_Report_by_${currentWebUser.firstName} ${currentWebUser.lastName}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  //PDF Export
+  const exportAttemptsAccountsPDF = (allAttempts, allStudents) => {
+    const doc = new jsPDF();
+    const now = new Date().toLocaleString();
+    doc.text(`Analytics Report`, 14, 10);
+    doc.text(`Exported on: ${now}`, 14, 18);
+
+    const getFormattedDate = (dateStr, mode) => {
+      const date = new Date(dateStr);
+      return mode === "daily"
+        ? date.toLocaleDateString()
+        : `${date.getFullYear()}-${(date.getMonth() + 1)
+            .toString()
+            .padStart(2, "0")}`;
+    };
+
+    const groupByDate = (data, viewMode, keyGetter) => {
+      const map = {};
+      data.forEach((item) => {
+        const key = keyGetter(item);
+        if (!map[key]) map[key] = 0;
+        map[key]++;
+      });
+      return Object.entries(map);
+    };
+
+    const attemptsPerTime = groupByDate(allAttempts, attemptsViewMode, (a) =>
+      getFormattedDate(a.createdAt, attemptsViewMode)
+    );
+    const accountsPerTime = groupByDate(allStudents, accountsViewMode, (s) =>
+      getFormattedDate(s.createdAt, accountsViewMode)
+    );
+
+    autoTable(doc, {
+      startY: 28,
+      head: [["Date", "Number of Attempts"]],
+      body: attemptsPerTime,
+      theme: "striped",
+    });
+
+    autoTable(doc, {
+      startY: doc.lastAutoTable.finalY + 10,
+      head: [["Date", "Number of Accounts"]],
+      body: accountsPerTime,
+      theme: "striped",
+    });
+
+    const attemptedIds = new Set(allAttempts.map((a) => a.user_id?._id));
+    const takers = allStudents.filter((s) => attemptedIds.has(s._id)).length;
+    const nonTakers = allStudents.length - takers;
+
+    autoTable(doc, {
+      startY: doc.lastAutoTable.finalY + 10,
+      head: [["Category", "Count"]],
+      body: [
+        ["Takers", takers],
+        ["Non-Takers", nonTakers],
+      ],
+      theme: "striped",
+    });
+
+    const categoryNames = {
+      developmental: "Developmental Psychology",
+      abnormal: "Abnormal Psychology",
+      psychological: "Psychological Psychology",
+      industrial: "Industrial Psychology",
+      general: "General Psychology",
+    };
+    const categoryCounts = {};
+    allAttempts.forEach((a) => {
+      const cat = a.category;
+      if (!cat) return;
+      categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+    });
+
+    const categoryTable = Object.entries(categoryCounts).map(([cat, count]) => [
+      categoryNames[cat] || cat,
+      count,
+    ]);
+
+    autoTable(doc, {
+      startY: doc.lastAutoTable.finalY + 10,
+      head: [["Category", "Number of Attempts"]],
+      body: categoryTable,
+      theme: "striped",
+    });
+
+    autoTable(doc, {
+      startY: doc.lastAutoTable.finalY + 10,
+      head: [["Competition Avg %", "Review Avg %", "Mastery Avg %"]],
+      body: [
+        [
+          competitionAvgPercent.toFixed(2),
+          reviewAvgPercent.toFixed(2),
+          filteredMasteryAvgPercent.toFixed(2),
+        ],
+      ],
+    });
+
+    doc.save(
+      `Analytics_Report_${currentWebUser.firstName}_${currentWebUser.lastName}.pdf`
+    );
+  };
+
+  //Export handler
+  const handleExport = (format) => {
+    const allAttempts = filteredAttempts.concat(filteredMasteryAttempts);
+    if (format === "csv") {
+      exportAttemptsAccountsCSV(
+        allAttempts,
+        filteredStudents,
+        attemptsViewMode,
+        accountsViewMode
+      );
+    } else if (format === "pdf") {
+      exportAttemptsAccountsPDF(allAttempts, filteredStudents);
+    }
+  };
+
   return (
     <>
       <div className="main-container-analytics" id="main-cont-analytics">
-        
         <div className="header-container-analytics">
           <h1 className="h-full w-full !text-[40px]">
             Analytics for{" "}
@@ -481,23 +589,10 @@ export default function Analytics() {
                   addedClassName="ml-3 !w-[150px]  xl:!w-[250px]"
                 />
               )}
+              <ExportDropdown onExport={handleExport} />
             </div>
-
-            {/* <ExportDropdownPng          [[COMMENTED FOR NOW AS I AM STIL FIGURING OUT HOW TO EXPORT THIS WHOLE PAGE TO PDF -j]]
-              onExport={(format) => {
-                if (format === "csv") {
-                  exportAttemptsAccountsCSV(
-                    filteredAttempts.concat(filteredMasteryAttempts),
-                    filteredStudents,
-                    attemptsViewMode,
-                    accountsViewMode
-                  );
-                }
-              }}
-            /> */}
           </div>
         </div>
-
         <div className="content-container-analytics">
           <div className="w-full flex flex-col md:flex-row px-1 py-3 gap-6">
             <div className="analytics-container-properties">
@@ -683,81 +778,6 @@ export default function Analytics() {
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="w-full mb-5 flex flex-col  items-center">
-            <div className="w-full flex justify-center mb-4">
-              <div className="flex bg-gray-100 p-1 rounded-full w-fit shadow-inner flex-row">
-                <button
-                  onClick={() => {
-                    setMode("competition");
-                    setShowCompe(true);
-                  }}
-                  className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200
-        ${showCompe ? "bg-blue-600 text-white shadow-md" : "text-gray-500"}`}
-                >
-                  Competition
-                </button>
-
-                <button
-                  onClick={() => {
-                    setMode("mastery");
-                    setShowCompe(false);
-                  }}
-                  className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200
-        ${!showCompe ? "bg-blue-600 text-white shadow-md" : "text-gray-500"}`}
-                >
-                  Mastery
-                </button>
-              </div>
-
-              <select defaultValue="all" className="!w-[300px] !h-[60px]">
-                <option value="all">All Categories</option>
-                <option value="developmental">Developmental Psychology</option>
-                <option value="abnormal">Abnormal Psychology</option>
-                <option value="industrial">Industrial Psychology</option>
-                <option value="general">General Psychology</option>
-                <option value="psychological">Psychological Assessment</option>
-              </select>
-            </div>
-
-            <table className="w-[95%] bg-white text-left px-5">
-              <thead>
-                <tr>
-                  <th>Rank</th>
-                  <th>Campus</th>
-                  <th>Total Students</th>
-                  <th>Average Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {totalScorePerCampus
-                  .sort((a, b) => b.averageScore - a.averageScore)
-                  .map((campus, index) => (
-                    <tr key={campus.branch}>
-                      <td>
-                        {index === 0 ? (
-                          <span>🥇</span>
-                        ) : index === 1 ? (
-                          <span>🥈</span>
-                        ) : index === 2 ? (
-                          <span>🥉</span>
-                        ) : (
-                          index + 1
-                        )}
-                      </td>
-                      <td>
-                        {
-                          branches.find((branch) => branch.id === campus.branch)
-                            ?.name
-                        }
-                      </td>
-                      <td>{campus.totalStudents}</td>
-                      <td>{Math.round(campus.averageScore * 100)}%</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
           </div>
         </div>
       </div>
