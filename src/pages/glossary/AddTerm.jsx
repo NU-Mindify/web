@@ -1,6 +1,6 @@
 import axios from "axios";
 import Papa from "papaparse";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import closebtn from "../../assets/glossary/close-btn.svg";
 import deletebtn from "../../assets/glossary/delete-icon.svg";
@@ -9,6 +9,8 @@ import ValidationModal from "../../components/ValidationModal/ValidationModal.js
 import { API_URL } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
 import "../../css/glossary/addGlossary.css";
+
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 export default function AddTerm() {
   const [newTerm, setNewTerm] = useState([
@@ -26,6 +28,22 @@ export default function AddTerm() {
   const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
 
   const [guideIsOpen, setGuideIsOpen] = useState(false);
+
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown if click outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleInputChange = (index, field, value) => {
     const updatedTerms = [...newTerm];
@@ -172,6 +190,60 @@ export default function AddTerm() {
           </button>
         </div>
 
+          <div className="w-full flex justify-end relative pb-10" ref={dropdownRef}>
+          <div className="flex items-center gap-2">
+            {/* Hidden input for CSV Upload */}
+            <input
+              id="upload-btn"
+              type="file"
+              accept=".csv"
+              onChange={handleCSVUpload}
+              className="hidden"
+            />
+
+            {/* Upload Button */}
+            <label
+              htmlFor="upload-btn"
+              className="px-5 py-2 sm:px-6 sm:py-3 rounded-2xl text-base sm:text-lg 
+                        font-bold transition bg-[#FFC300] text-black 
+                        hover:bg-[#e6b200] cursor-pointer"
+            >
+              Upload CSV File
+            </label>
+
+            {/* Dropdown Trigger */}
+            <button
+              onClick={() => setShowDropdown((prev) => !prev)}
+              className="px-4 py-2 sm:px-5 sm:py-3 rounded-2xl bg-[#FFC300] text-black hover:bg-[#e6b200] transition"
+            >
+              {showDropdown ? <ChevronUp size={25} /> : <ChevronDown size={25} />}
+            </button>
+
+            {/* Dropdown Menu */}
+            {showDropdown && (
+              <div className="absolute right-0 top-[110%] w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                <a
+                  href="/IMPORT_TERMS_TEMPLATE.csv"
+                  download
+                  className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Download CSV Template
+                </a>
+                <button
+                  onClick={() => {
+                    setGuideIsOpen(true);
+                    setShowDropdown(false);
+                  }}
+                  className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  View CSV Template Guide
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+
         <div className="add-term-contents">
           {newTerm.map((term, index) => (
             <div className="term-section" key={index}>
@@ -252,103 +324,69 @@ export default function AddTerm() {
           >
             + Add more term
           </button>
-          <input
-            id="upload-btn"
-            type="file"
-            accept=".csv"
-            onChange={handleCSVUpload}
-            className="hidden"
-          />
-          <label
-            htmlFor="upload-btn"
-            className="w-[280px] sm:w-[320px] md:w-[360px] mt-2 py-3 sm:py-4 md:py-5 
-                        px-6 sm:px-8 md:px-10 rounded-2xl text-lg sm:text-xl md:text-2xl 
-                        text-center font-extrabold transition bg-[#FFC300] text-black 
-                        hover:bg-[#e6b200] cursor-pointer">
-            UPLOAD CSV FILE
-          </label>
-
-          <a href="/IMPORT_TERMS_TEMPLATE.csv" download>
-            <button className="w-[280px] sm:w-[320px] md:w-[360px] mt-2 py-3 sm:py-4 md:py-5 
-                        px-6 sm:px-8 md:px-10 rounded-2xl text-lg sm:text-xl md:text-2xl 
-                        text-center font-extrabold transition bg-[#FFC300] text-black 
-                        hover:bg-[#e6b200] cursor-pointer">
-              DOWNLOAD CSV TEMPLATE
-            </button>
-          </a>
-
-          <button
-            className="w-[280px] sm:w-[320px] md:w-[360px] mt-2 py-3 sm:py-4 md:py-5 
-                        px-6 sm:px-8 md:px-10 rounded-2xl text-lg sm:text-xl md:text-2xl 
-                        text-center font-extrabold transition bg-[#FFC300] text-black 
-                        hover:bg-[#e6b200] cursor-pointer"
-            onClick={() => setGuideIsOpen(true)}
-          >
-            VIEW CSV TEMPLATE GUIDE
-          </button>
 
           {guideIsOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/20">
-          <div className="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">ImportTerms.csv Format</h2>
-              <button
-                onClick={() => setGuideIsOpen(false)}
-                className="text-gray-500 hover:text-gray-700 text-xl cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/20">
+            <div className="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold">ImportTerms.csv Format</h2>
+                <button
+                  onClick={() => setGuideIsOpen(false)}
+                  className="text-gray-500 hover:text-gray-700 text-xl cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
 
-            <p className="mb-4">
-              The <code>ImportTerms.csv</code> file contains all the terms and
-              their meanings. Each row represents one term. The columns should
-              appear in the following order:
-            </p>
+              <p className="mb-4">
+                The <code>ImportTerms.csv</code> file contains all the terms and
+                their meanings. Each row represents one term. The columns should
+                appear in the following order:
+              </p>
 
-            <div className="bg-gray-100 p-3 rounded mb-4 font-mono text-sm">
-              word,meaning,tags
-            </div>
+              <div className="bg-gray-100 p-3 rounded mb-4 font-mono text-sm">
+                word,meaning,tags
+              </div>
 
-            <h3 className="text-lg font-semibold mb-2">Column Details</h3>
-            <table className="w-full border border-gray-300 mb-4">
-              <thead className="bg-gray-200">
-                <tr>
-                  <th className="border px-3 py-2 text-left">CSV Column Headers</th>
-                  <th className="border px-3 py-2 text-left">Required or Optional</th>
-                  <th className="border px-3 py-2 text-left">Accepted Values</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border px-3 py-2">word</td>
-                  <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">The term or word</td>
-                </tr>
-                <tr>
-                  <td className="border px-3 py-2">meaning</td>
-                  <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">Definition or explanation of the word</td>
-                </tr>
-                <tr>
-                  <td className="border px-3 py-2">tags</td>
-                  <td className="border px-3 py-2">Required</td>
-                  <td className="border px-3 py-2">Category of the term</td>
-                </tr>
-              </tbody>
-            </table>
+              <h3 className="text-lg font-semibold mb-2">Column Details</h3>
+              <table className="w-full border border-gray-300 mb-4">
+                <thead className="bg-gray-200">
+                  <tr>
+                    <th className="border px-3 py-2 text-left">CSV Column Headers</th>
+                    <th className="border px-3 py-2 text-left">Required or Optional</th>
+                    <th className="border px-3 py-2 text-left">Accepted Values</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border px-3 py-2">word</td>
+                    <td className="border px-3 py-2">Required</td>
+                    <td className="border px-3 py-2">The term or word</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-3 py-2">meaning</td>
+                    <td className="border px-3 py-2">Required</td>
+                    <td className="border px-3 py-2">Definition or explanation of the word</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-3 py-2">tags</td>
+                    <td className="border px-3 py-2">Required</td>
+                    <td className="border px-3 py-2">Category of the term</td>
+                  </tr>
+                </tbody>
+              </table>
 
-            <h3 className="text-lg font-semibold mt-4 mb-2">Notes</h3>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Each row represents one term.</li>
-              <li>All fields are <strong>required</strong>.</li>
-              <li><strong>Tags</strong> represent the category of the term.</li>
-              <li>There is an example within the downloaded template to guide you.</li>
-              <li>Save the file as <code>.csv</code> (comma-separated values, UTF-8 encoding recommended).</li>
-              <li>Do not include commas in the <strong>word</strong> or <strong>meaning</strong> fields unless enclosed in quotes.</li>
-            </ul>
+              <h3 className="text-lg font-semibold mt-4 mb-2">Notes</h3>
+              <ul className="list-disc pl-6 mb-4">
+                <li>Each row represents one term.</li>
+                <li>All fields are <strong>required</strong>.</li>
+                <li><strong>Tags</strong> represent the category of the term.</li>
+                <li>There is an example within the downloaded template to guide you.</li>
+                <li>Save the file as <code>.csv</code> (comma-separated values, UTF-8 encoding recommended).</li>
+                <li>Do not include commas in the <strong>word</strong> or <strong>meaning</strong> fields unless enclosed in quotes.</li>
+              </ul>
 
-            <div className="flex justify-end">
+              <div className="flex justify-end">
             </div>
           </div>
         </div>

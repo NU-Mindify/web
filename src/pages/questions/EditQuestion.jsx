@@ -19,6 +19,9 @@ function EditQuestion({
   const [validationMessage, setValidationMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
+
+  const [showDiscardModal, setShowDiscardModal] = useState(false);
+
   if (!isOpen) return null;
 
   const handleSaveClick = async () => {
@@ -78,7 +81,16 @@ function EditQuestion({
       <div className="edit-question-container">
         <div className="edit-header">
           <h1 className="edit-title">Edit Question</h1>
-          <button className="back-btn" onClick={onClose}>
+          <button
+            className="back-btn"
+            onClick={() => {
+              if (hasChanges) {
+                setShowDiscardModal(true);
+              } else {
+                onClose();
+              }
+            }}
+          >
             <img src={closebtn} alt="close btn" />
           </button>
         </div>
@@ -207,7 +219,13 @@ function EditQuestion({
           />
           <Buttons
             text="Cancel"
-            onClick={onClose}
+            onClick={() => {
+              if (hasChanges) {
+                setShowDiscardModal(true);
+              } else {
+                onClose();
+              }
+            }}
             addedClassName="btn btn-error"
             disabled={loading}
           />
@@ -220,6 +238,35 @@ function EditQuestion({
           message={validationMessage}
           onClose={() => setShowValidation(false)}
         />
+      )}
+
+      {/* ⚠ Unsaved Changes Modal */}
+      {showDiscardModal && (
+        <div className="modal-overlay confirm-delete-popup">
+          <div className="confirm-dialog">
+            <div className="flex justify-center">
+              <h2>Unsaved Changes</h2>
+            </div>
+            <p>You have unsaved changes. Are you sure you want to discard them?</p>
+            <div className="popup-buttons">
+              <button
+                className="btn-delete"
+                onClick={() => {
+                  setShowDiscardModal(false);
+                  onClose();
+                }}
+              >
+                Yes, Discard
+              </button>
+              <button
+                className="btn-cancel"
+                onClick={() => setShowDiscardModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
