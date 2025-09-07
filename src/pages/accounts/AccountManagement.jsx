@@ -394,7 +394,7 @@ function CardActiveContent({ user, fetchUsers, setCardActive }) {
       await axios.post(`${API_URL}/addLogs`, {
         name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
         branch: currentWebUser.branch,
-        action: "Delete a User",
+        action: "Archived a User",
         description: `${currentWebUser.firstName} deleted ${user.firstName} ${user.lastName}'s account.`,
         useravatar: currentWebUser.useravatar
       });
@@ -459,7 +459,7 @@ function CardActiveContent({ user, fetchUsers, setCardActive }) {
           />
         ) : (
           <Buttons
-            text="Delete User"
+            text="Archive User"
             onClick={() => {
               setConfirmUserDelete(!confirmUserDelete);
             }}
@@ -502,9 +502,9 @@ function CardActiveContent({ user, fetchUsers, setCardActive }) {
       {confirmUserDelete && (
         <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
           <div className="confirm-dialog !h-10/12">
-            <h2>Confirm Delete</h2>
+            <h2>Confirm Archive</h2>
             <p className="text-black text-[13px]">
-              Are you sure you want to delete "
+              Are you sure you want to archive "
               <strong>
                 {user.firstName} {user.lastName}
               </strong>
@@ -512,7 +512,7 @@ function CardActiveContent({ user, fetchUsers, setCardActive }) {
             </p>
             <div className="popup-buttons">
               <Buttons
-                text="Yes, Delete"
+                text="Yes, Archive"
                 addedClassName="btn btn-delete"
                 onClick={handleConfirmDelete}
               />

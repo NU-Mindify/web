@@ -121,7 +121,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
       await axios.post(`${API_URL}/addLogs`, {
         name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
         branch: currentWebUser.branch,
-        action: "Delete a Term",
+        action: "Archived a Term",
         description: `${currentWebUser.firstName} deleted the term "${word}"`,
         useravatar: currentWebUser.useravatar
       });
@@ -207,7 +207,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
               />
             )}
             <Buttons
-              text="Delete"
+              text="Archive"
               onClick={confirmDelete}
               addedClassName="btn btn-error"
             />
@@ -235,9 +235,9 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
             {showDeleteConfirm && (
               <div className="modal-overlay confirm-delete-popup">
                 <div className="confirm-dialog">
-                  <h2>Confirm Delete</h2>
+                  <h2>Confirm Archive</h2>
                   <p>
-                    Are you sure you want to delete the term "
+                    Are you sure you want to archive the term "
                     <strong>{word}</strong>"?
                   </p>
                   <div className="popup-buttons">
@@ -245,7 +245,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
                       className="btn-delete"
                       onClick={handleConfirmDelete}
                     >
-                      Yes, Delete
+                      Yes, Archive
                     </button>
                     <button className="btn-cancel" onClick={handleCancelDelete}>
                       Cancel

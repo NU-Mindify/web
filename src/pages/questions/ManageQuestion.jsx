@@ -659,7 +659,7 @@ export default function ManageQuestion() {
                 }}
                 className="btn-action"
               >
-                Delete
+                Archive
               </button>
             </div>
           )}
@@ -883,12 +883,12 @@ export default function ManageQuestion() {
         <div className="modal-overlay confirm-delete-popup">
           <div className="confirm-dialog">
             <div className="flex justify-center">
-              <h2>Delete Confirmation</h2>
+              <h2>Archive Confirmation</h2>
             </div>
-            <p>Are you sure you want to delete this question?</p>
+            <p>Are you sure you want to archive this question?</p>
             <div className="popup-buttons">
               <button className="btn-delete" onClick={confirmDeleteQuestion}>
-                Yes, Delete
+                Yes, Archive
               </button>
               <button
                 className="btn-cancel"
