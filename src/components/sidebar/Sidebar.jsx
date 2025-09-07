@@ -57,10 +57,10 @@ export default function Sidebar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Update selected menu based on URL path
   useEffect(() => {
     const pathToKeyMap = {
       "/dashboard": "dashboard",
+      "/branches": "campus",
       "/analytics": "analytics",
       "/leaderboard": "leaderboard",
       "/question": "question",

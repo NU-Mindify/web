@@ -58,9 +58,7 @@ export default function ApproveAccount() {
           (user) => user.position.toLowerCase() !== "sub admin"
         );
       }
-
       setUnApproveAccounts(pendingUsers);
-      // console.log(pendingUsers.length);
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
@@ -278,7 +276,7 @@ function CardActiveContent({ user, refreshData }) {
   const [showValidationModal, setShowValidationModal] = useState(false);
 
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
-  console.log("The user", user._id);
+  
 
   const handleDecline = async () => {
     setOkCancelModalMessage(
@@ -291,6 +289,16 @@ function CardActiveContent({ user, refreshData }) {
     try {
       await axios.delete(`${API_URL}/declineUser/${user._id}`);
       setValidationMessage("User declined and deleted successfully.");
+
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Decline Account",
+        description: `${currentWebUser.firstName} has declined ${user.lastName}, ${user.firstName} account`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar
+      });
+
       setShowValidationModal(true);
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -320,6 +328,7 @@ function CardActiveContent({ user, refreshData }) {
         branch: currentWebUser.branch,
         action: "Approve Account",
         description: `${currentWebUser.firstName} has approved ${user.lastName}, ${user.firstName} account`,
+        position: currentWebUser.position,
         useravatar: currentWebUser.useravatar
       });
 

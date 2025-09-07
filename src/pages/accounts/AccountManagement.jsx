@@ -68,15 +68,28 @@ export default function AccountManagement() {
     setCurrentPage(1);
   }, [searchQuery, selectedBranch, selectedPosition]);
 
-  const uniquePositions = Array.from(
-    new Set(
-      webUsers
-        .map((user) => user.position)
-        .filter((pos) => pos?.toLowerCase() !== "super admin")
-    )
-  );
+ const uniquePositions = Array.from(
+  new Set(
+    webUsers
+      .map((user) => user.position)
+      .filter((pos) => {
+        if (currentWebUser?.position?.toLowerCase() !== "super admin") {
+          return pos?.toLowerCase() !== "super admin";
+        }
+        return true; 
+      })
+  )
+);
+
 
   const filteredUsers = webUsers
+
+    .filter((user) => {
+      if (currentWebUser?.position?.toLowerCase() !== "super admin") {
+        return user.position?.toLowerCase() !== "super admin";
+      }
+      return true;
+    })
     .filter((user) => user.isApproved === true)
     .filter((user) => {
       const query = searchQuery.toLowerCase().replace(",", "").trim();
@@ -396,7 +409,8 @@ function CardActiveContent({ user, fetchUsers, setCardActive }) {
         branch: currentWebUser.branch,
         action: "Archived a User",
         description: `${currentWebUser.firstName} deleted ${user.firstName} ${user.lastName}'s account.`,
-        useravatar: currentWebUser.useravatar
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
       });
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -420,7 +434,8 @@ function CardActiveContent({ user, fetchUsers, setCardActive }) {
         branch: currentWebUser.branch,
         action: "Unarchive a User",
         description: `${currentWebUser.firstName} unarchived ${user.firstName} ${user.lastName}'s account.`,
-        useravatar: currentWebUser.useravatar
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
       });
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -466,38 +481,36 @@ function CardActiveContent({ user, fetchUsers, setCardActive }) {
             addedClassName="btn btn-error"
           />
         )}
-
-        
       </div>
 
       {confirmUnarchive && (
-          <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
-            <div className="confirm-dialog !h-10/12">
-              <h2>Confirm Unarchive</h2>
-              <p className="text-black text-[13px]">
-                Are you sure you want to unarchive "
-                <strong>
-                  {user.firstName} {user.lastName}
-                </strong>
-                "?
-              </p>
-              <div className="popup-buttons">
-                <Buttons
-                  text="Yes, Unarchive"
-                  addedClassName="btn btn-delete"
-                  onClick={handleUnarchiveUser}
-                />
-                <Buttons
-                  text="Cancel"
-                  addedClassName="btn btn-cancel"
-                  onClick={() => {
-                    setConfirmUnarchive(false);
-                  }}
-                />
-              </div>
+        <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
+          <div className="confirm-dialog !h-10/12">
+            <h2>Confirm Unarchive</h2>
+            <p className="text-black text-[13px]">
+              Are you sure you want to unarchive "
+              <strong>
+                {user.firstName} {user.lastName}
+              </strong>
+              "?
+            </p>
+            <div className="popup-buttons">
+              <Buttons
+                text="Yes, Unarchive"
+                addedClassName="btn btn-delete"
+                onClick={handleUnarchiveUser}
+              />
+              <Buttons
+                text="Cancel"
+                addedClassName="btn btn-cancel"
+                onClick={() => {
+                  setConfirmUnarchive(false);
+                }}
+              />
             </div>
           </div>
-        )}
+        </div>
+      )}
 
       {confirmUserDelete && (
         <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">

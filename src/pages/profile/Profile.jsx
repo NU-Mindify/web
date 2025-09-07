@@ -4,8 +4,8 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
-import { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NewPasswordModal from "../../components/NewPassModal/NewPasswordModal";
 import OldPasswordModal from "../../components/OldPassModal/OldPasswordModal";
 import ValidationModal from "../../components/ValidationModal/ValidationModal";
@@ -19,17 +19,15 @@ import { UserLoggedInContext } from "../../contexts/Contexts";
 export default function Profile() {
   const {
     currentWebUser,
-    setCurrentWebUser,
     currentWebUserUID,
     setCurrentWebUserUID,
   } = useContext(UserLoggedInContext);
 
   const navigate = useNavigate();
 
-  const inputRef = useRef(null);
-  // console.log(currentWebUserUID);
 
-  const { uid } = useParams();
+
+
   const [webUser, setWebUser] = useState({});
 
   const [validationMessage, setValidationMessage] = useState("");
@@ -51,12 +49,12 @@ export default function Profile() {
   useEffect(() => {
     let uid = currentWebUserUID;
 
-    // Fallback to localStorage if context is empty
+
     if (!uid) {
       const storedUID = localStorage.getItem("userUID");
       if (storedUID) {
         uid = storedUID;
-        setCurrentWebUserUID(storedUID); // sync it back into context
+        setCurrentWebUserUID(storedUID); 
       }
     }
 
@@ -147,6 +145,14 @@ export default function Profile() {
       setNewPassword("");
       setConfirmPassword("");
       setValidationMessage("Password successfully changed.");
+      axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Edit Profile",  
+        description: `${currentWebUser.firstName} has changed his/her password.`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      })
       setShowValidationModal(true);
     } catch (error) {
       console.error(error);
@@ -181,7 +187,7 @@ export default function Profile() {
 
           <div className="forms-container">
             <div className="forms-properties">
-              <label className="forms-label-properties">First Name</label>
+              <h2 className="forms-label-properties">First Name</h2>
               <input
                 type="text"
                 placeholder="First Name"
@@ -192,7 +198,7 @@ export default function Profile() {
             </div>
 
             <div className="forms-properties">
-              <label className="forms-label-properties">Last Name</label>
+              <h2 className="forms-label-properties">Last Name</h2>
               <input
                 type="text"
                 placeholder="Last Name"
@@ -203,7 +209,7 @@ export default function Profile() {
             </div>
 
             <div className="forms-properties">
-              <label className="forms-label-properties">NU Branch</label>
+              <h2 className="forms-label-properties">NU Campus</h2>
               <select
                 className="input input-bordered input-disabled input-properties-disabled"
                 value={webUser.branch || ""}
@@ -224,7 +230,7 @@ export default function Profile() {
             </div>
 
             <div className="forms-properties">
-              <label className="forms-label-properties">Email</label>
+              <h2 className="forms-label-properties">Email</h2>
               <input
                 type="email"
                 placeholder="Email"
@@ -235,7 +241,7 @@ export default function Profile() {
             </div>
 
             <div className="forms-properties">
-              <label className="forms-label-properties">Employee No.</label>
+              <h2 className="forms-label-properties">Employee No.</h2>
               <input
                 type="text"
                 placeholder="Employee No."
@@ -246,7 +252,7 @@ export default function Profile() {
             </div>
 
             <div className="forms-properties">
-              <label className="forms-label-properties">Position</label>
+              <h2 className="forms-label-properties">Position</h2>
 
               <input
                 type="text"

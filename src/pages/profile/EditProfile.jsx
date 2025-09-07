@@ -10,7 +10,7 @@ import ValidationModal from "../../components/ValidationModal/ValidationModal.js
 import { supabase } from "../../supabase";
 
 export default function EditProfile() {
-  const { currentWebUser, setCurrentWebUser, setCurrentWebUserUID } =
+  const { setCurrentWebUser, setCurrentWebUserUID } =
     useContext(UserLoggedInContext);
 
   const navigate = useNavigate();
@@ -21,14 +21,12 @@ export default function EditProfile() {
   const [initialWebUser, setInitialWebUser] = useState(
     location.state?.webUser || null
   );
-  const [showModal, setShowModal] = useState(false);
-  const [showSaveConfirmModal, setShowSaveConfirmModal] = useState(false);
+
 
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
 
   const [isUploading, setIsUploading] = useState(false);
-  const [profilePicChanged, setProfilePicChanged] = useState(false);
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
@@ -74,15 +72,8 @@ export default function EditProfile() {
       );
       setCurrentWebUser(updatedUser.data);
       setCurrentWebUserUID(updatedUser.data.uid);
-      localStorage.setItem("userUID", updatedUser.data.uid);
+      
 
-      await axios.post(`${API_URL}/addLogs`, {
-        name: `${editWebUser.firstName} ${editWebUser.lastName}`,
-        branch: editWebUser.branch,
-        action: "Edit Profile",
-        description: "Updated profile information.",
-        useravatar: editWebUser.useravatar
-      });
 
       setInitialWebUser(updatedUser.data);
       setEditWebUser(updatedUser.data);
@@ -189,7 +180,7 @@ export default function EditProfile() {
 
           <div className="forms-container">
             <div className="forms-properties">
-              <label className="forms-label-properties">First Name*</label>
+              <h2 className="forms-label-properties">First Name*</h2>
               <input
                 type="text"
                 placeholder="First Name"
@@ -210,7 +201,7 @@ export default function EditProfile() {
             </div>
 
             <div className="forms-properties">
-              <label className="forms-label-properties">Last Name*</label>
+              <h2 className="forms-label-properties">Last Name*</h2>
               <input
                 type="text"
                 placeholder="Last Name"
@@ -229,7 +220,7 @@ export default function EditProfile() {
             </div>
 
             <div className="forms-properties">
-              <label className="forms-label-properties">NU Branch</label>
+              <h2 className="forms-label-properties">NU Branch</h2>
               <select
                 className="input input-properties-disabled"
                 value={editWebUser.branch}
@@ -253,7 +244,7 @@ export default function EditProfile() {
             </div>
 
             <div className="forms-properties">
-              <label className="forms-label-properties">Email</label>
+              <h2 className="forms-label-properties">Email</h2>
               <input
                 type="email"
                 placeholder="Email"
@@ -264,7 +255,7 @@ export default function EditProfile() {
             </div>
 
             <div className="forms-properties">
-              <label className="forms-label-properties">Employee No.</label>
+              <h2 className="forms-label-properties">Employee No.</h2>
               <input
                 type="text"
                 placeholder="Employee No."
@@ -275,7 +266,7 @@ export default function EditProfile() {
             </div>
 
             <div className="forms-properties">
-              <label className="forms-label-properties">Position</label>
+              <h2 className="forms-label-properties">Position</h2>
               <input
                 type="text"
                 placeholder="Position"

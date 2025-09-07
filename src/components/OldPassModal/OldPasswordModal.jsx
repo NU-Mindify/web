@@ -11,6 +11,13 @@ export default function OldPasswordModal({
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onSubmit();
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[998]">
       <div className="bg-white p-6 rounded-lg shadow-lg w-90 h-50 flex items-center justify-center flex-col animate-popup">
@@ -25,6 +32,7 @@ export default function OldPasswordModal({
             className="w-full p-2 border border-black rounded"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <button
             type="button"

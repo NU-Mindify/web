@@ -14,6 +14,13 @@ export default function NewPasswordModal({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+   const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onSubmit();
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-transparent bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-[998]">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96 flex flex-col items-center animate-popup">
@@ -29,6 +36,7 @@ export default function NewPasswordModal({
             className="w-full p-2 border border-black rounded"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <button
             type="button"
@@ -47,6 +55,7 @@ export default function NewPasswordModal({
             className="w-full p-2 border border-black rounded"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <button
             type="button"
@@ -65,7 +74,7 @@ export default function NewPasswordModal({
           >
             Submit
           </button>
-          {/* Cancel Button */}
+        
           <button
             onClick={onClose}
             className="flex-1 px-4 py-3 rounded-lg bg-red-500 hover:bg-red-600 text-white font-[Poppins] font-bold transition cursor-pointer"

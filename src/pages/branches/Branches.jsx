@@ -144,7 +144,7 @@ export default function Branches() {
     document.body.removeChild(link);
   };
 
-  //convert logo to base64 para lumabas sa pdf
+
   const getBase64FromUrl = async (url) => {
     const response = await fetch(url);
     const blob = await response.blob();
@@ -208,7 +208,6 @@ export default function Branches() {
   const [branchToActivate, setBranchToActivate] = useState(null);
 
   async function deleteBranch(branchId) {
-    console.log("branch id", branchId);
 
     try {
       await axios.put(`${API_URL}/deleteBranch?id=${branchId}`);
@@ -231,16 +230,12 @@ export default function Branches() {
   }
 
   async function activateBranch(branchId) {
-    console.log("branch id", branchId);
 
     try {
       await axios.put(`${API_URL}/activateBranch?id=${branchId}`);
       setValidationMessage("Branch activated successfully.");
       setShowValidationModal(true);
-
-
-      console.log(currentWebUser.branch);
-      
+ 
       axios.post(`${API_URL}/addLogs`, {
         name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
         branch: currentWebUser.branch,
@@ -285,7 +280,7 @@ export default function Branches() {
 
           <div className="form-row">
             <div className="input-group">
-              <label className="required-label"> Campus ID </label>
+              <h2 className="required-label"> Campus ID </h2>
               <input
                 type="text"
                 placeholder="Enter Campus ID"
@@ -300,7 +295,7 @@ export default function Branches() {
             </div>
 
             <div className="input-group">
-              <label className="required-label">Campus Name</label>
+              <h2 className="required-label">Campus Name</h2>
               <input
                 className=""
                 type="text"
@@ -316,9 +311,9 @@ export default function Branches() {
             </div>
 
             <div className="input-group">
-              <label className="required-label">
+              <h2 className="required-label">
                 Professor Email Extension
-              </label>
+              </h2>
               <input
                 className=""
                 type="text"
@@ -334,7 +329,7 @@ export default function Branches() {
             </div>
 
             <div className="input-group">
-              <label className="required-label">Student Email Extension</label>
+              <h2 className="required-label">Student Email Extension</h2>
               <input
                 className=""
                 type="text"
@@ -489,8 +484,8 @@ export default function Branches() {
               <button
                 className="btn btn-success px-10 py-5 text-2xl"
                 onClick={() => {
-                  deleteBranch(branchToDelete); // delete the saved branch
-                  setShowDeleteModal(false); // close modal
+                  deleteBranch(branchToDelete); 
+                  setShowDeleteModal(false); 
                 }}
               >
                 Yes

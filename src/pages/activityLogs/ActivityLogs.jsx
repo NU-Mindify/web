@@ -45,7 +45,7 @@ export default function ActivityLogs() {
   const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
-    if (!currentWebUser) return; // ✅ wait for context
+    if (!currentWebUser) return;
     const fetchLogs = async () => {
       try {
         const response = await axios.get(`${API_URL}/getLogs`);
@@ -260,7 +260,7 @@ export default function ActivityLogs() {
           <div className="users-main-container px-10">
             <div className="user-table font-bold text-[20px] flex justify-between items-center pb-2 mb-2">
               <div className="w-3/11">Name</div>
-              <div className="w-[22%]">Branch</div>
+              <div className="w-[22%]">Campus</div>
               <div className="w-[22%]">Action</div>
               <div className="w-3/9">Description</div>
               <div className="w-3/11">Timestamp</div>
