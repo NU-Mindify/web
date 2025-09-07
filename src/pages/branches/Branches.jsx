@@ -229,7 +229,7 @@ export default function Branches() {
             className="text-2xl sm:text-3xl md:text-4xl font-bold !text-[#FFC916] h-[50px] pl-3 mt-3 "
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
-            Campus Management
+            Manage Campus
           </h1>
    
 
@@ -385,7 +385,7 @@ export default function Branches() {
       {branchList.length > 0 && (
         <div className="campus-main-container min-h-screen flex flex-col">
           <div className="campus-header font-bold text-[20px] flex justify-between items-center pb-2 mb-2 mt-5">
-            <div className="w-[10%]">Branch ID</div>
+            <div className="w-[10%]">Campus ID</div>
             <div className="w-[30%]">Name</div>
             <div className="w-[30%]">Professor Email Extension</div>
             <div className="w-[30%]">Student Email Extension</div>

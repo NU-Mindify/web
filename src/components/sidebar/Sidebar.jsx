@@ -203,14 +203,14 @@ export default function Sidebar() {
     },
     {
       id: "campus",
-      text: "NU Campuses",
+      text: "Manage Campus",
       icon: school,
       path: "/branches",
       superAdmin: true,
     },
     {
       id: "logout",
-      text: "Logout",
+      text: "Sign Out",
       icon: logout,
       isLogout: true,
     },
@@ -345,7 +345,7 @@ export default function Sidebar() {
       <dialog id="logout_modal" className="modal">
         <form method="dialog" className="modal-box text-center font-[Poppins] bg-white">
           <h3 className="font-bold text-lg mb-4">
-            Are you sure you want to logout?
+            Are you sure you want to sign out?
           </h3>
           <div className="flex justify-center gap-4">
             <button
