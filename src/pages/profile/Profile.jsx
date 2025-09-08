@@ -266,13 +266,13 @@ export default function Profile() {
 
           <div className="edit-btn-prof-settings w-full">
             <button
-              className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+              className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
               onClick={handleEditProfile}
             >
               EDIT PROFILE
             </button>
             <button
-              className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+              className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
               onClick={handlePasswordChange}
             >
               CHANGE PASSWORD

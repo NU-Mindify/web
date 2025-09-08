@@ -353,18 +353,18 @@ export default function Login() {
               </div>
 
               <button
-                className="login-btn"
+                className="login-btn bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]"
                 onClick={handleLoginFirebase}
                 disabled={isLoading}
               >
-                {isLoading ? "Signing you in..." : "Sign In"}
+                {isLoading ? "Signing you in..." : "SIGN IN"}
               </button>
 
               <div className="mt-5 text-center">
                 <span className="text-black text-sm">
                   Don't have an account yet?{" "}
                   <button
-                    className="text-[#35408E] underline font-bold hover:text-[#FFA500] transition cursor-pointer"
+                    className="!text-[#35408E] underline font-bold hover:!text-[#FFBF1A] transition cursor-pointer"
                     onClick={() => navigate("/signup")}
                   >
                     Sign Up here.

@@ -210,26 +210,26 @@ body,
 
 /* Buttons */
 .register-button {
-  @apply btn rounded-xl mt-[5px] h-[40px] bg-[#FFC300] text-white
+  @apply btn rounded-xl mt-[5px] h-[40px] bg-[#FFC300] text-black
          sm:btn-sm md:btn-md lg:btn-lg;
 }
 
 .register-button:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.05);
 }
 
 .reset-button {
-  @apply btn rounded-xl mt-[5px] h-[40px] bg-[#FF3F42] text-white
+  @apply btn rounded-xl mt-[5px] h-[40px] bg-[#FF3F42] !text-black
          sm:btn-sm md:btn-md lg:btn-lg;
 }
 
 .reset-button:hover {
-  filter: brightness(1.5);
+  filter: brightness(1.05);
 }
 
 .register-button,
 .reset-button {
-  @apply w-full text-[10px] sm:text-xs md:text-sm h-8 sm:h-10;
+  @apply w-full text-[10px] sm:text-sm md:text-sm h-8 sm:h-10;
 }
 
 @keyframes popup {
@@ -249,7 +249,7 @@ body,
 
 .reset-button:disabled {
   background-color: #b0b0b0 !important; 
-  color: #ffffff !important;            
+  color: black !important;            
   opacity: 0.8 !important;               
   cursor: not-allowed !important;        
   display: inline-block !important;      

@@ -525,7 +525,7 @@ export default function ManageQuestion() {
           {showArchived ? (
             <div className="question-actions">
               <button 
-                className="btn btn-secondary w-[100px] rounded-xl !text-white"
+                className="btn w-[100px] rounded-xl bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]"
                 onClick={() => {
                   setEditingQuestion(data);
                   setOriginalQuestion(JSON.parse(JSON.stringify(data)));
@@ -539,7 +539,8 @@ export default function ManageQuestion() {
                   setShowRestoreConfirmModal(true)
                   setQuestionToRestoreId(data)
                 }}
-                className="btn-action"
+                className="btn-action bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]
+"
               >
                 Restore
               </button>
@@ -547,7 +548,8 @@ export default function ManageQuestion() {
           ) : (
             <div className="question-actions">
               <button
-                className="btn-action"
+                className="btn-action bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]
+"
                 onClick={() => {
                   setEditingQuestion(JSON.parse(JSON.stringify(data)));
                   setOriginalQuestion(JSON.parse(JSON.stringify(data)));
@@ -562,7 +564,8 @@ export default function ManageQuestion() {
                   setQuestionToDeleteId(data);
                   setShowDeleteConfirmModal(true);
                 }}
-                className="btn-action"
+                className="btn-action bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]
+"
               >
                 Archive
               </button>
@@ -632,8 +635,9 @@ export default function ManageQuestion() {
                     </span>
                   }
                   onClick={addQuestion}
-                  addedClassName="btn btn-warning !w-[200px] !text-white"
+                  addedClassName="btn btn-warning !w-[200px] text-black bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]"
                 />
+
                 <div className="pb-2">
                   <ExportDropdown
                     onExport={(format) => {
@@ -699,8 +703,8 @@ export default function ManageQuestion() {
             <div className="ml-auto">
               <button 
                 onClick={handlesUnapprove} 
-                className="px-4 h-10 bg-[#FFC300] font-bold text-black rounded-xl 
-                          hover:bg-[#e6b200] transition cursor-pointer"
+                className="px-4 h-10 bg-[#FFBF1A] font-bold text-black rounded-xl 
+                          hover:brightness-105 transition cursor-pointer"
               >
                 Show Unapproved Questions
               </button>

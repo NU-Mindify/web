@@ -230,8 +230,8 @@ function EditQuestion({
           <Buttons
             text={loading ? "Saving..." : "Save"}
             onClick={handleSaveClick}
-            addedClassName={`btn btn-success ${
-              !hasChanges || loading ? "opacity-50 cursor-not-allowed" : ""
+            addedClassName={`btn btn-success  ${
+              !hasChanges || loading ? "opacity-50 cursor-not-allowed " : ""
             }`}
             disabled={!hasChanges || loading}
           />
@@ -258,7 +258,7 @@ function EditQuestion({
         />
       )}
 
-      {/* ⚠ Unsaved Changes Modal */}
+      {/* Unsaved Changes Modal */}
       {showDiscardModal && (
         <div className="modal-overlay confirm-delete-popup">
           <div className="confirm-dialog">

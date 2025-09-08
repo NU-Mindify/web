@@ -226,7 +226,8 @@ export default function ManageGlossary() {
             <Buttons
               text="Add Term"
               onClick={() => navigate("/addterm")}
-              addedClassName="btn btn-warning"
+              addedClassName="btn btn-warning bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]
+"
             />
 
             <ExportDropdown

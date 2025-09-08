@@ -11,6 +11,8 @@ import { UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/branches/branches.css";
 import "../../css/signUp/signUp.css";
 
+import { Archive, ArchiveRestore } from "lucide-react";
+
 export default function Branches() {
   const [newBranch, setNewBranch] = useState({
     id: "",
@@ -354,7 +356,7 @@ export default function Branches() {
           /> */}
             <button
               onClick={handleAddBranch}
-              className="w-[200px]  sm:w-[180px] py-3 sm:py-5 text-base sm:text-2xl rounded-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+              className="w-[200px]  sm:w-[180px] py-3 sm:py-5 text-base sm:text-2xl rounded-2xl font-extrabold transition bg-[#FFC300] text-black hover:brightness-105 cursor-pointer"
               disabled={false}
             >
               Submit
@@ -414,9 +416,9 @@ export default function Branches() {
       {branchList.length > 0 && (
         <div className="campus-main-container min-h-screen flex flex-col">
           <div className="campus-header font-bold text-[20px] flex justify-between items-center pb-2 mb-2 mt-5">
-            <div className="w-[10%]">Campus ID</div>
+            <div className="w-[25%]">Campus ID</div>
             <div className="w-[30%]">Name</div>
-            <div className="w-[30%]">Professor Email Extension</div>
+            <div className="w-[35%]">Professor Email Extension</div>
             <div className="w-[30%]">Student Email Extension</div>
             <div className="w-[10%]">Action</div>
           </div>
@@ -428,21 +430,23 @@ export default function Branches() {
                   key={index}
                   className="campus-card flex flex-wrap md:flex-nowrap justify-between items-center px-3 md:px-5 py-4 mb-3 border border-gray-600 rounded-lg bg-white text-black"
                 >
-                   <div className="w-full md:w-[10%] text-sm md:text-[17px] font-medium">{branch.id}</div>
+                   <div className="w-full md:w-[21%] text-sm md:text-[17px] font-medium">{branch.id}</div>
                   <div className="w-full md:w-[30%] text-sm md:text-[17px]">{branch.name}</div>
                   <div className="w-full md:w-[30%] text-sm md:text-[17px]">{branch.extension}</div>
                   <div className="w-full md:w-[30%] text-sm md:text-[17px]">{branch.stud_extension}</div>
-                  <div className="w-full md:w-[10%] mt-2 md:mt-0">
+                  <div className="w-full md:w-[5%] mt-2 md:mt-0">
                     {showDeletedBranches ? (
                       <button
                         onClick={() => {
                           setShowActivateModal(true);
                           setSelectedBranch(branch.name)
                           setBranchToActivate(branch._id);
+                          
+                          // className="btn btn-success px-5 py-2 text-white"
                         }}
-                        className="btn btn-success px-5 py-2 text-white"
+                        
                       >
-                        Activate
+                        <ArchiveRestore size={20} />
                       </button>
                     ) : (
                       <button
@@ -450,10 +454,12 @@ export default function Branches() {
                           setBranchToDelete(branch._id);
                           setSelectedBranch(branch.name)
                           setShowDeleteModal(true);
+
+                          // className="btn btn-error px-5 py-2 m"
                         }}
-                        className="btn btn-error px-5 py-2 m"
+                      
                       >
-                        Delete
+                         <Archive size={20} />
                       </button>
                     )}
                   </div>
@@ -477,12 +483,12 @@ export default function Branches() {
           <div className="w-auto h-[200px] bg-white flex flex-col items-center px-10 py-5">
             <Info className="text-black mb-4" size={30} />
             <p className="text-black text-center font-[Poppins] mb-4">
-              Are you sure you want to delete this branch?
+              Are you sure you want to delete this campus?
             </p>
 
             <div className="w-full flex justify-evenly mt-5">
               <button
-                className="btn btn-success px-10 py-5 text-2xl"
+                className="btn btn-delete px-10 py-5 text-2xl"
                 onClick={() => {
                   deleteBranch(branchToDelete); 
                   setShowDeleteModal(false); 
@@ -491,7 +497,7 @@ export default function Branches() {
                 Yes
               </button>
               <button
-                className="btn btn-error px-10 py-5 text-2xl"
+                className="btn btn-cancel px-10 py-5 text-2xl"
                 onClick={() => setShowDeleteModal(false)}
               >
                 No
@@ -506,12 +512,12 @@ export default function Branches() {
           <div className="w-auto h-[200px] bg-white flex flex-col items-center px-10 py-5">
             <Info className="text-black mb-4" size={30} />
             <p className="text-black text-center font-[Poppins] mb-4">
-              Are you sure you want to activate this branch?
+              Are you sure you want to activate this campus?
             </p>
 
             <div className="w-full flex justify-evenly mt-5">
               <button
-                className="btn btn-success px-10 py-5 text-2xl"
+                className="btn btn-delete px-10 py-5 text-2xl "
                 onClick={() => {
                   activateBranch(branchToActivate);
                   setShowActivateModal(false); 
@@ -520,7 +526,7 @@ export default function Branches() {
                 Yes
               </button>
               <button
-                className="btn btn-error px-10 py-5 text-2xl"
+                className="btn btn-cancel px-10 py-5 text-2xl"
                 onClick={() => setShowDeleteModal(false)}
               >
                 No

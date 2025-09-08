@@ -443,7 +443,7 @@ function AddQuestion() {
           htmlFor="upload-btn"
           className="px-5 py-2 sm:px-6 sm:py-3 rounded-2xl text-base sm:text-lg 
                     font-bold transition bg-[#FFC300] text-black 
-                    hover:bg-[#e6b200] cursor-pointer"
+                    hover:brightness-105 cursor-pointer"
         >
           Upload CSV File
         </label>
@@ -451,7 +451,7 @@ function AddQuestion() {
         {/* Dropdown Trigger */}
         <button
           onClick={() => setShowDropdown((prev) => !prev)}
-          className="px-4 py-2 sm:px-5 sm:py-3 rounded-2xl bg-[#FFC300] text-black hover:bg-[#e6b200] transition"
+          className="px-4 py-2 sm:px-5 sm:py-3 rounded-2xl bg-[#FFC300] text-black hover:brightness-105  transition"
         >
           {showDropdown ? <ChevronUp size={25} /> : <ChevronDown size={25} />}
         </button>
@@ -815,7 +815,7 @@ function AddQuestion() {
 
         <div className="add-btn-container">
           <button
-            className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+            className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:brightness-105 cursor-pointer"
             onClick={handleAddQuestion}
           >
             ADD QUESTION
@@ -920,14 +920,14 @@ function AddQuestion() {
                   <div className="question-btn-container">
                     {onEdit ? (
                       <button
-                        className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+                        className="w-[200px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFBF1A] text-black hover:brightness-105 cursor-pointer"
                         onClick={() => setOnEdit(!onEdit)}
                       >
                         SAVE QUESTION
                       </button>
                     ) : (
                       <button
-                        className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+                        className="w-[200px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFBF1A] text-black hover:brightness-105 cursor-pointer"
                         onClick={() => setOnEdit(!onEdit)}
                       >
                         EDIT QUESTION
@@ -953,7 +953,7 @@ function AddQuestion() {
         </div>
         <div className="w-full flex justify-center py-4">
           <button
-            className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:bg-[#e6b200] cursor-pointer"
+            className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFC300] text-black hover:brightness-105 cursor-pointer"
             onClick={addToDB}
             addedClassName="btn btn-success"
           >

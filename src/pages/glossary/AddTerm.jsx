@@ -207,7 +207,7 @@ export default function AddTerm() {
               htmlFor="upload-btn"
               className="px-5 py-2 sm:px-6 sm:py-3 rounded-2xl text-base sm:text-lg 
                         font-bold transition bg-[#FFC300] text-black 
-                        hover:bg-[#e6b200] cursor-pointer"
+                        hover:brightness-105 cursor-pointer"
             >
               Upload CSV File
             </label>
@@ -215,7 +215,7 @@ export default function AddTerm() {
             {/* Dropdown Trigger */}
             <button
               onClick={() => setShowDropdown((prev) => !prev)}
-              className="px-4 py-2 sm:px-5 sm:py-3 rounded-2xl bg-[#FFC300] text-black hover:bg-[#e6b200] transition"
+              className="px-4 py-2 sm:px-5 sm:py-3 rounded-2xl bg-[#FFC300] text-black hover:brightness-105 transition"
             >
               {showDropdown ? <ChevronUp size={25} /> : <ChevronDown size={25} />}
             </button>
@@ -398,7 +398,7 @@ export default function AddTerm() {
           <Buttons
             text="Add Terms"
             onClick={handleCreateNewTerm}
-            addedClassName="btn btn-warning"
+            addedClassName="btn btn-warning bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]"
           />
         </div>
       </div>
