@@ -604,13 +604,13 @@ export default function Analytics() {
                       {attemptsViewMode === "daily" ? "Day" : "Month"}
                     </h1>
 
-                    <div className="flex bg-[#F5F6F8] p-[2px] rounded-lg w-[180px]">
+                    <div className="flex bg-gray-100 p-[2px] rounded-lg w-[180px] ">
                       <button
                         onClick={() => setAttemptsViewMode("daily")}
                         className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                         ${
                           attemptsViewMode === "daily"
-                            ? "bg-[#FFC300] !text-black-900 shadow-sm"
+                            ? "bg-white !text-blue-900 shadow-sm"
                             : "bg-transparent !text-gray-400"
                         }`}
                       >
@@ -622,7 +622,7 @@ export default function Analytics() {
                         className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                         ${
                           attemptsViewMode === "monthly"
-                            ? "bg-[#FFC300] !text-black-900 shadow-sm"
+                            ? "bg-white !text-blue-900  shadow-sm"
                             : "bg-transparent !text-gray-400"
                         }`}
                       >
@@ -656,7 +656,7 @@ export default function Analytics() {
                       className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                       ${
                         accountsViewMode === "daily"
-                          ? "bg-[#FFC300] !text-black-900 shadow-sm"
+                          ? "bg-white !text-blue-900  shadow-sm"
                           : "bg-transparent !text-gray-400"
                       }`}
                     >
@@ -668,7 +668,7 @@ export default function Analytics() {
                       className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                       ${
                         accountsViewMode === "monthly"
-                          ? "bg-[#FFC300] !text-black-900 shadow-sm"
+                          ? "bg-white !text-blue-900 shadow-sm"
                           : "bg-transparent !text-gray-400"
                       }`}
                     >

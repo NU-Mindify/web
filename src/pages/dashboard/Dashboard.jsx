@@ -602,7 +602,7 @@ return (
                 className={`w-1/2 py-1 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm
                   ${
                     leaderboardMode === "classic"
-                      ? "bg-[#FFC300] text-black shadow-sm"
+                      ? "bg-white !text-blue-900  shadow-sm"
                       : "bg-transparent !text-gray-400"
                   }`}
               >
@@ -613,7 +613,7 @@ return (
                 className={`w-1/2 py-1 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm
                   ${
                     leaderboardMode === "mastery"
-                      ? "bg-[#FFC300] text-black shadow-sm"
+                      ? "bg-white !text-blue-900  shadow-sm"
                       : "bg-transparent !text-gray-400"
                   }`}
               >

@@ -704,7 +704,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
                           },
                         });
                       }}
-                      addedClassName="btn btn-warning !w-[250px]"
+                      addedClassName="btn btn-warning !w-[250px] bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]"
                       disabled={loadingData}
                     />
 

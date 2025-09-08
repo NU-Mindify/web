@@ -606,7 +606,7 @@ export default function SignUp() {
             <span className="text-black text-xs sm:text-sm md:text-base">
               Already have an account?{" "}
               <button
-                className="text-[#35408E] underline font-semibold hover:text-[#FFA500] transition-colors duration-200 cursor-pointer inline-block"
+                className="!text-[#35408E] underline font-semibold hover:!text-[#FFBF1A] transition-colors duration-200 cursor-pointer inline-block"
                 onClick={() => navigate("/login")}
               >
                 Sign In here.
