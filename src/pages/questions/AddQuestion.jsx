@@ -228,6 +228,7 @@ function AddQuestion() {
           branch: currentWebUser.branch,
           action: "Add Question",
           description: `${currentWebUser.firstName} Added question "${q.question}" to category "${q.category}"`,
+          position: currentWebUser.position,
           useravatar: currentWebUser.useravatar,
         });
       }

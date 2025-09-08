@@ -65,6 +65,7 @@ export default function ManageGlossary() {
     if (currentWebUser?.token) {
       getAllTerms();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWebUser, showArchived]);
 
   const filteredTerms = !searchTerm
@@ -373,6 +374,7 @@ export default function ManageGlossary() {
                 onTermUpdated={() => {
                   getAllTerms().then(allTerms);
                 }}
+                showArchive={showArchived}
               />
             )}
           </div>

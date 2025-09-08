@@ -42,22 +42,42 @@ export default function ShowUnapprove() {
     }
   }, [category, currentWebUser]);
 
-  const handleDecline = async (id) => {
+  const handleDecline = async (data) => {
     try {
-      await axios.delete(`${API_URL}/declineQuestion/${id}`);
+      await axios.delete(`${API_URL}/declineQuestion/${data._id}`);
       alert("Question deleted successfully");
       getUnapprovedData();
+
+      axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Edit Question",  
+        description: `${currentWebUser.firstName} declined the question "${data.question}".`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      })
     } catch (error) {
       console.error("Error deleting question:", error);
       alert("Failed to delete question. Try again.");
     }
   };
 
-  const handleApprove = async (id) => {
+  const handleApprove = async (data) => {
+
+    console.log("data",data);
+    
     try {
-      console.log("id", id);
-      await axios.put(`${API_URL}/approveQuestion/${id}`);
+      
+      await axios.put(`${API_URL}/approveQuestion/${data._id}`);
       alert("Question approved successfully");
+      axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Edit Question",  
+        description: `${currentWebUser.firstName} approved the question "${data.question}".`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      })
       getUnapprovedData();
     } catch (error) {
       console.error("Error approving question:", error);
@@ -139,13 +159,13 @@ export default function ShowUnapprove() {
                 <div className="flex w-full gap-40 justify-center items-center mt-4">
                   <button
                     className="w-40 h-12 bg-green-200 rounded-xl"
-                    onClick={() => handleApprove(data._id)}
+                    onClick={() => handleApprove(data)}
                   >
                     Approve
                   </button>
                   <button
                     className="w-40 h-12 bg-red-200 rounded-xl"
-                    onClick={() => handleDecline(data._id)}
+                    onClick={() => handleDecline(data)}
                   >
                     Decline
                   </button>

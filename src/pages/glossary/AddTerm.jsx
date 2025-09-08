@@ -16,7 +16,7 @@ export default function AddTerm() {
   const [newTerm, setNewTerm] = useState([
     { word: "", meaning: "", tags: "", is_deleted: false },
   ]);
-  const [tagInput, setTagInput] = useState("");
+ 
   const navigate = useNavigate();
   const { currentWebUser } = useContext(UserLoggedInContext);
 

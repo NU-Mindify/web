@@ -6,7 +6,7 @@ import closebtn from "../../assets/glossary/close-btn.svg";
 import Buttons from "../../components/buttons/Buttons";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 
-export default function EditGlossary({ onClose, term, onTermUpdated }) {
+export default function EditGlossary({ onClose, term, onTermUpdated, showArchive }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const { _id, word, meaning, tags } = term;
   const { currentWebUser } = useContext(UserLoggedInContext);
@@ -15,7 +15,6 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
   const [editedMeaning, setEditedMeaning] = useState(meaning);
   const [editTags, setEditTags] = useState(tags);
   const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [showRequiredPopup, setShowRequiredPopup] = useState(false);
 
 
@@ -146,6 +145,42 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
     }
   };
 
+  const [confirmUnarchive, setConfirmUnarchive] = useState(false)
+
+  function confirmToUnarchive(){
+    setConfirmUnarchive(true)
+  }
+
+
+  const handleConfirmUnarchive = async () => {
+    try {
+      await axios.put(`${API_URL}/unarchiveTerm/${_id}`, {
+        term_id: _id,
+        is_deleted: false,
+      }, {
+        headers: {
+          Authorization: `Bearer ${currentWebUser.token}`,
+        },
+      });
+
+      onTermUpdated?.();
+      onClose();
+
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Unarchived a Term",
+        description: `${currentWebUser.firstName} unarchived the term "${word}"`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar
+      });
+    } catch (error) {
+      console.error("Error deleting term:", error);
+    } finally {
+      setShowDeleteConfirm(false);
+    }
+  };
+
   return (
     <>
       <div className="modal-overlay">
@@ -208,11 +243,21 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
                 disabled={true}
               />
             )}
-            <Buttons
-              text="Archive"
-              onClick={confirmDelete}
-              addedClassName="btn btn-error"
-            />
+
+            {showArchive ?
+              <Buttons
+                text="Unarchive"
+                onClick={confirmToUnarchive}
+                addedClassName="btn btn-secondary"
+              />
+            :
+              <Buttons
+                text="Archive"
+                onClick={confirmDelete}
+                addedClassName="btn btn-error"
+              />
+            }
+            
 
             {showRequiredPopup && (
             <div className="modal-overlay confirm-delete-popup">
@@ -250,6 +295,30 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
                       Yes, Archive
                     </button>
                     <button className="btn-cancel" onClick={handleCancelDelete}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+
+            {confirmUnarchive && (
+              <div className="modal-overlay confirm-delete-popup">
+                <div className="confirm-dialog">
+                  <h2>Confirm Unarchive</h2>
+                  <p>
+                    Are you sure you want to unarchive the term "
+                    <strong>{word}</strong>"?
+                  </p>
+                  <div className="popup-buttons">
+                    <button
+                      className="btn btn-secondary !text-white"
+                      onClick={handleConfirmUnarchive}
+                    >
+                      Yes, Unarchive
+                    </button>
+                    <button className="btn-cancel" onClick={() => setConfirmUnarchive(false)}>
                       Cancel
                     </button>
                   </div>

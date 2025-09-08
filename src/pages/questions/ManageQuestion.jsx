@@ -62,142 +62,21 @@ export default function ManageQuestion() {
 
   const [totalQuestion, setTotalQuestion] = useState([]);
   const [totalDeletedQuestion, setTotalDeletedQuestion] = useState([]);
+
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
   const [questionToDeleteId, setQuestionToDeleteId] = useState(null);
+
   const [showRestoreConfirmModal, setShowRestoreConfirmModal] = useState(false);
-  const [questionToRestoreId, setQuestionToRestoreId] = useState(null);
+  const [questionToRestoreId, setQuestionToRestoreId] = useState({});
+
   const queryClient = useQueryClient();
   const [showEditModal, setShowEditModal] = useState(false);
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadedQuestions, setUploadedQuestions] = useState([]);
 
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [originalQuestion, setOriginalQuestion] = useState(null);
 
-  // const handleFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     setSelectedFile(file);
-  //     const reader = new FileReader();
 
-  //     reader.onload = (e) => {
-  //       const text = e.target.result;
-  //       const lines = text.split("\n").filter((line) => line.trim() !== "");
-
-  //       const headers = lines[0].split(",").map((h) => h.trim());
-  //       const newQuestionsFromCSV = [];
-
-  //       for (let i = 1; i < lines.length; i++) {
-  //         const values = lines[i].split(",").map((s) => s.trim());
-  //         const rowData = {};
-  //         headers.forEach((header, index) => {
-  //           rowData[header] = values[index];
-  //         });
-
-  //         if (!rowData["Question"] || !rowData["Overall Rationale"] || !rowData["Category"] || !rowData["Level"]) {
-  //           console.warn(`Skipping row ${i + 1} due to missing essential data.`);
-  //           continue;
-  //         }
-
-  //         const choices = [];
-  //         let correctAnswerLetter = "";
-
-  //         const choiceLetters = ['a', 'b', 'c', 'd'];
-  //         for (let j = 0; j < 4; j++) {
-  //           const choiceTextCol = `Choice ${String.fromCharCode(65 + j)} Text`;
-  //           const choiceIsCorrectCol = `Choice ${String.fromCharCode(65 + j)} isCorrect`;
-
-  //           if (rowData[choiceTextCol] !== undefined && rowData[choiceIsCorrectCol] !== undefined) {
-  //             const isCorrect = rowData[choiceIsCorrectCol].toLowerCase() === 'true';
-  //             choices.push({
-  //               letter: choiceLetters[j],
-  //               text: rowData[choiceTextCol],
-  //               isCorrect: isCorrect,
-  //             });
-  //             if (isCorrect) {
-  //               correctAnswerLetter = choiceLetters[j];
-  //             }
-  //           }
-  //         }
-
-  //         const questionObj = {
-  //           question: rowData["Question"],
-  //           choices: choices,
-  //           rationale: rowData["Overall Rationale"],
-  //           category: rowData["Category"],
-  //           level: parseInt(rowData["Level"], 0),
-  //           answer: correctAnswerLetter,
-  //           difficulty: rowData["Difficulty"] || "Unknown"
-  //         };
-  //         newQuestionsFromCSV.push(questionObj);
-  //       }
-  //       setUploadedQuestions(newQuestionsFromCSV);
-  //     };
-  //     reader.readAsText(file);
-  //   } else {
-  //     setSelectedFile(null);
-  //     setUploadedQuestions([]);
-  //   }
-  // };
-
-  const handleConfirmCSVUpload = () => {
-    // console.log("questions are", uploadedQuestions);
-
-    if (uploadedQuestions.length === 0) {
-      alert(
-        "No questions parsed from the CSV file. Please check the file content and format."
-      );
-      return;
-    }
-
-    for (const question of uploadedQuestions) {
-      if (
-        !question.question.trim() ||
-        question.choices.length === 0 ||
-        !question.rationale.trim() ||
-        !question.category.trim() ||
-        isNaN(question.level)
-      ) {
-        alert(
-          "Please ensure all questions in the CSV have a question, choices, rationale, category, and a valid numeric level."
-        );
-        return;
-      }
-    }
-
-    axios
-      .post(`${API_URL}/addQuestion`, uploadedQuestions, {
-        headers: {
-          Authorization: `Bearer ${currentWebUser.token}`,
-        },
-      })
-      .then(() => {
-        alert("Questions from CSV added successfully!");
-        setSelectedFile(null);
-        setUploadedQuestions([]);
-
-        Promise.all(
-          uploadedQuestions.map((q) =>
-            axios.post(`${API_URL}/addLogs`, {
-              name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-              branch: currentWebUser.branch,
-              action: "Add Question from CSV",
-              description: `${currentWebUser.firstName} Added question "${q.question}" to category "${q.category}" from CSV upload.`,
-              useravatar: currentWebUser.useravatar,
-            })
-          )
-        );
-      })
-      .catch((error) => {
-        console.error("Error adding questions from CSV:", error);
-        alert(
-          `Failed to add questions from CSV. Please try again. Error: ${
-            error.response?.data?.error?.message || error.message
-          }`
-        );
-      });
-  };
 
   useEffect(() => {
     getTotalQuestion();
@@ -302,7 +181,7 @@ export default function ManageQuestion() {
   const confirmDeleteQuestion = async () => {
     try {
       await axios.put(
-        `${API_URL}/deleteQuestion/${questionToDeleteId}`,
+        `${API_URL}/deleteQuestion/${questionToDeleteId._id}`,
         {
           question_id: questionToDeleteId,
           is_deleted: true,
@@ -315,6 +194,15 @@ export default function ManageQuestion() {
       );
       setShowDeleteConfirmModal(false);
       setQuestionToDeleteId(null);
+
+      axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Delete Question",  
+        description: `${currentWebUser.firstName} deleted the question ${questionToDeleteId.question}.`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      })
       queryClient.invalidateQueries(["questionsList", category]);
     } catch (error) {
       console.error("Error deleting question:", error);
@@ -322,9 +210,12 @@ export default function ManageQuestion() {
   };
 
   const confirmRestoreQuestion = async () => {
+
+    console.log("to be restore",questionToRestoreId);
+    
     try {
       await axios.put(
-        `${API_URL}/deleteQuestion/${questionToRestoreId}`,
+        `${API_URL}/deleteQuestion/${questionToRestoreId._id}`,
         {
           question_id: questionToRestoreId,
           is_deleted: false,
@@ -336,7 +227,15 @@ export default function ManageQuestion() {
         }
       );
       setShowRestoreConfirmModal(false);
-      setQuestionToRestoreId(null);
+        axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Unarchive Question",  
+        description: `${currentWebUser.firstName} unarchived the question ${questionToRestoreId.question}.`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      })
+      setQuestionToRestoreId({});
       queryClient.invalidateQueries(["questionsList", category]);
     } catch (error) {
       console.error("Error restoring Question:", error);
@@ -451,9 +350,9 @@ export default function ManageQuestion() {
       startY: 30,
       styles: { fontSize: 5, cellWidth: "wrap" },
       columnStyles: {
-        0: { cellWidth: 10 }, // Item #
-        1: { cellWidth: 40 }, // Question
-        3: { cellWidth: 70 }, // Choices
+        0: { cellWidth: 10 }, 
+        1: { cellWidth: 40 }, 
+        3: { cellWidth: 70 },
       },
     });
 
@@ -556,14 +455,14 @@ export default function ManageQuestion() {
 
   function Category_Choices({ text, id, onClick, bgImage }) {
     return (
-      <div className="category-container" onClick={onClick} key={id}>
+      <button className="category-container" onClick={onClick} key={id}>
         <img src={bgImage} className="category-bg" alt="bgImages" />
         <h1 className="category-text">{text}</h1>
         <p className="category-quantity">
           Questions:{" "}
           {totalQuestion.find((category) => category._id === id)?.count || 0}
         </p>
-      </div>
+      </button>
     );
   }
 
@@ -625,14 +524,20 @@ export default function ManageQuestion() {
           </div>
           {showArchived ? (
             <div className="question-actions">
-              <button className="btn-action !bg-gray-500" disabled>
-                Edit
-              </button>
-              <button
+              <button 
+                className="btn btn-secondary w-[100px] rounded-xl !text-white"
                 onClick={() => {
                   setEditingQuestion(data);
                   setOriginalQuestion(JSON.parse(JSON.stringify(data)));
                   setShowEditModal(true);
+                }}
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => {
+                  setShowRestoreConfirmModal(true)
+                  setQuestionToRestoreId(data)
                 }}
                 className="btn-action"
               >
@@ -654,7 +559,7 @@ export default function ManageQuestion() {
 
               <button
                 onClick={() => {
-                  setQuestionToDeleteId(data._id);
+                  setQuestionToDeleteId(data);
                   setShowDeleteConfirmModal(true);
                 }}
                 className="btn-action"
@@ -719,18 +624,7 @@ export default function ManageQuestion() {
               </div>
 
               <div className="flex items-center gap-3 flex-shrink-0">
-                <div className="flex items-center gap-2">
-                  {selectedFile && uploadedQuestions.length > 0 && (
-                    <Buttons
-                      text={`Upload ${uploadedQuestions.length} Questions`}
-                      onClick={handleConfirmCSVUpload}
-                      addedClassName="btn btn-primary"
-                    />
-                  )}
-                  {selectedFile && uploadedQuestions.length === 0 && (
-                    <p className="text-sm text-gray-500">Parsing CSV...</p>
-                  )}
-                </div>
+                
                 <Buttons
                   text={
                     <span className="flex flex-wrap justify-center sm:justify-between items-center w-full mt-3 gap-2 lg:w-auto lg:mt-0">

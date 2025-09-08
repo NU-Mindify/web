@@ -1,10 +1,13 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import closebtn from "../../assets/glossary/close-btn.svg";
 import Buttons from "../../components/buttons/Buttons.jsx";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import { API_URL, categories } from "../../Constants";
 import "../../css/questions/editQuestion.css";
+import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
+
+
 
 function EditQuestion({
   question,
@@ -15,6 +18,8 @@ function EditQuestion({
   queryClient,
   category,
 }) {
+
+  const { currentWebUser } = useContext(UserLoggedInContext);
   const [showValidation, setShowValidation] = useState(false);
   const [validationMessage, setValidationMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -62,9 +67,22 @@ function EditQuestion({
       };
 
       await axios.put(`${API_URL}/updateQuestion/${question._id}`, payload);
+      
+      console.log(question.question);
+      
+      axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Edit Question",  
+        description: `${currentWebUser.firstName} edited the question "${question.question}".`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      })
 
       // 🔄 Refresh question list
       queryClient.invalidateQueries(["questionsList", category]);
+
+      
 
       onClose();
     } catch (err) {
