@@ -25,12 +25,65 @@ export default function AccountManagement() {
   const [selectedBranch, setSelectedBranch] = useState("");
   const [selectedPosition, setSelectedPosition] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(true);
+  const [showArchived, setShowArchived] = useState(false);
 
   const navigate = useNavigate();
   const usersPerPage = 15;
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
 
-  const [showArchived, setShowArchived] = useState(false);
+  const [confirmUserDelete, setConfirmUserDelete] = useState(null);
+  const [confirmUnarchive, setConfirmUnarchive] = useState(null);
+
+const handleConfirmDelete = async () => {
+  if (!confirmUserDelete) return;
+  try {
+    await axios.put(`${API_URL}/deleteWebUser/${confirmUserDelete._id}`, {
+      user_id: confirmUserDelete._id,
+      is_deleted: true,
+    });
+    await fetchUsers();
+    setCardActive(null);
+
+    await axios.post(`${API_URL}/addLogs`, {
+      name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+      branch: currentWebUser.branch,
+      action: "Archived a User",
+      description: `${currentWebUser.firstName} archived ${confirmUserDelete.firstName} ${confirmUserDelete.lastName}'s account.`,
+      position: currentWebUser.position,
+      useravatar: currentWebUser.useravatar,
+    });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setConfirmUserDelete(null);
+  }
+};
+
+const handleUnarchiveUser = async () => {
+  if (!confirmUnarchive) return;
+  try {
+    await axios.put(`${API_URL}/deleteWebUser/${confirmUnarchive._id}`, {
+      user_id: confirmUnarchive._id,
+      is_deleted: false,
+    });
+    await fetchUsers();
+    setCardActive(null);
+
+    await axios.post(`${API_URL}/addLogs`, {
+      name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+      branch: currentWebUser.branch,
+      action: "Unarchived a User",
+      description: `${currentWebUser.firstName} unarchived ${confirmUnarchive.firstName} ${confirmUnarchive.lastName}'s account.`,
+      position: currentWebUser.position,
+      useravatar: currentWebUser.useravatar,
+    });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setConfirmUnarchive(null);
+  }
+};
+
 
   useEffect(() => {
     const loadBranches = async () => {
@@ -46,12 +99,9 @@ export default function AccountManagement() {
 
   const fetchUsers = async () => {
     if (!currentUserBranch) return;
-
     setIsLoading(true);
     try {
-      const res = await axios.get(
-        `${API_URL}/getWebUsers/${currentUserBranch}`
-      );
+      const res = await axios.get(`${API_URL}/getWebUsers/${currentUserBranch}`);
       setWebUsers(res.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -68,22 +118,20 @@ export default function AccountManagement() {
     setCurrentPage(1);
   }, [searchQuery, selectedBranch, selectedPosition]);
 
- const uniquePositions = Array.from(
-  new Set(
-    webUsers
-      .map((user) => user.position)
-      .filter((pos) => {
-        if (currentWebUser?.position?.toLowerCase() !== "super admin") {
-          return pos?.toLowerCase() !== "super admin";
-        }
-        return true; 
-      })
-  )
-);
-
+  const uniquePositions = Array.from(
+    new Set(
+      webUsers
+        .map((user) => user.position)
+        .filter((pos) => {
+          if (currentWebUser?.position?.toLowerCase() !== "super admin") {
+            return pos?.toLowerCase() !== "super admin";
+          }
+          return true;
+        })
+    )
+  );
 
   const filteredUsers = webUsers
-
     .filter((user) => {
       if (currentWebUser?.position?.toLowerCase() !== "super admin") {
         return user.position?.toLowerCase() !== "super admin";
@@ -95,23 +143,16 @@ export default function AccountManagement() {
       const query = searchQuery.toLowerCase().replace(",", "").trim();
       const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
       const reversedName = `${user.lastName} ${user.firstName}`.toLowerCase();
-      const matchesSearch =
-        fullName.includes(query) || reversedName.includes(query);
+      const matchesSearch = fullName.includes(query) || reversedName.includes(query);
 
       const matchesBranch =
-        selectedBranch === "" ||
-        selectedBranch === "all" ||
-        user.branch === selectedBranch;
+        selectedBranch === "" || selectedBranch === "all" || user.branch === selectedBranch;
 
       const matchesPosition =
-        selectedPosition === "" ||
-        selectedPosition === "all" ||
-        user.position === selectedPosition;
+        selectedPosition === "" || selectedPosition === "all" || user.position === selectedPosition;
 
       const matchesArchived = showArchived ? user.is_deleted : !user.is_deleted;
-      return (
-        matchesSearch && matchesBranch && matchesPosition && matchesArchived
-      );
+      return matchesSearch && matchesBranch && matchesPosition && matchesArchived;
     })
     .sort((a, b) => {
       const comparison = a.lastName.localeCompare(b.lastName);
@@ -119,28 +160,20 @@ export default function AccountManagement() {
     });
 
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-  const currentUsers = filteredUsers.slice(
-    (currentPage - 1) * usersPerPage,
-    currentPage * usersPerPage
-  );
+  const currentUsers = filteredUsers.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage);
 
   const toggleCard = (id) => {
     setCardActive((prev) => (prev === id ? null : id));
   };
 
-  const getBranchName = (branchId) =>
-    branches.find((b) => b.id === branchId)?.name || "Unknown Branch";
+  const getBranchName = (branchId) => branches.find((b) => b.id === branchId)?.name || "Unknown Branch";
 
   const searchSuggestions = searchQuery
     ? filteredUsers
         .filter((user) => {
           const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-          const reversedName =
-            `${user.lastName} ${user.firstName}`.toLowerCase();
-          return (
-            fullName.includes(searchQuery.toLowerCase()) ||
-            reversedName.includes(searchQuery.toLowerCase())
-          );
+          const reversedName = `${user.lastName} ${user.firstName}`.toLowerCase();
+          return fullName.includes(searchQuery.toLowerCase()) || reversedName.includes(searchQuery.toLowerCase());
         })
         .slice(0, 5)
     : [];
@@ -161,9 +194,7 @@ export default function AccountManagement() {
       const lastName = user.lastName || "";
       const fullName = `${lastName.toUpperCase()} ${firstName}`.trim();
       const position = user.position || "N/A";
-      const campus =
-        branches.find((branch) => branch.id === user.branch)?.name || "N/A";
-
+      const campus = branches.find((branch) => branch.id === user.branch)?.name || "N/A";
       return [fullName, position, campus];
     });
 
@@ -189,11 +220,10 @@ export default function AccountManagement() {
     document.body.removeChild(link);
   };
 
-  //convert logo to base64 para lumabas sa pdf
+  // convert logo to base64 para lumabas sa pdf
   const getBase64FromUrl = async (url) => {
     const response = await fetch(url);
     const blob = await response.blob();
-
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result);
@@ -209,11 +239,7 @@ export default function AccountManagement() {
     const doc = new jsPDF();
 
     doc.text(`${title}`, 14, 10);
-    doc.text(
-      `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
-      14,
-      18
-    );
+    doc.text(`Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`, 14, 18);
     doc.text(`Exported on: ${now}`, 14, 26);
 
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -223,27 +249,42 @@ export default function AccountManagement() {
     doc.addImage(logoBase64, "PNG", xPos, 10, logoWidth, logoHeight);
 
     const rows = data.map((user) => {
-      const fullName = `${(user.lastName || "").toUpperCase()} ${
-        user.firstName || ""
-      }`.trim();
+      const fullName = `${(user.lastName || "").toUpperCase()} ${user.firstName || ""}`.trim();
       const position = user.position || "";
-      const campus =
-        branches.find((branch) => branch.id === user.branch)?.name || "N/A";
-
+      const campus = branches.find((branch) => branch.id === user.branch)?.name || "N/A";
       return [fullName, position, campus];
     });
 
-    autoTable(doc, {
-      head: [["Name", "Position", "Campus"]],
-      body: rows,
-      startY: 30,
-    });
+    autoTable(doc, { head: [["Name", "Position", "Campus"]], body: rows, startY: 30 });
 
-    doc.save(
-      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
-        currentWebUser.lastName
-      }.pdf`
-    );
+    doc.save(`${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${currentWebUser.lastName}.pdf`);
+  };
+
+  // 🔁 Archive / Unarchive handler for the icon
+  const handleArchiveToggle = async (user) => {
+    try {
+      const newStatus = !user.is_deleted; // toggle
+      await axios.put(`${API_URL}/deleteWebUser/${user._id}`, {
+        user_id: user._id,
+        is_deleted: newStatus,
+      });
+
+      await fetchUsers();
+      setCardActive(null);
+
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: newStatus ? "Archived a User" : "Unarchived a User",
+        description: `${currentWebUser.firstName} ${
+          newStatus ? "archived" : "unarchived"
+        } ${user.firstName} ${user.lastName}'s account.`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      });
+    } catch (error) {
+      console.error("Error updating user status:", error);
+    }
   };
 
   return (
@@ -263,9 +304,7 @@ export default function AccountManagement() {
             suggestions={searchSuggestions}
             showSuggestions={showSuggestions}
             onSuggestionSelect={(user) => {
-              setSearchQuery(
-                `${user.lastName.toUpperCase()}, ${user.firstName}`
-              );
+              setSearchQuery(`${user.lastName.toUpperCase()}, ${user.firstName}`);
               setShowSuggestions(false);
             }}
             addedClassName="w-[70%] h-[50px] mt-2 ml-1"
@@ -289,6 +328,7 @@ export default function AccountManagement() {
             />
           </div>
         </div>
+
         <div className="flex flex-wrap items-center gap-6 w-full mb-7 mt-5 ml-3">
           <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
             <button
@@ -342,23 +382,62 @@ export default function AccountManagement() {
         setSortOrderAsc={setSortOrderAsc}
         getBranchName={getBranchName}
         cardActiveContent={(user) => (
-          <CardActiveContent
-            user={user}
-            fetchUsers={fetchUsers}
-            setCardActive={setCardActive}
-          />
+        <CardActiveContent user={user} fetchUsers={fetchUsers} setCardActive={setCardActive} />
         )}
+          onArchiveClick={(user, action) => {
+            if (action === "archive") {
+              setConfirmUserDelete(user);
+            } else {
+              setConfirmUnarchive(user);
+            }
+          }}
       />
+
+      {confirmUnarchive && (
+        <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
+          <div className="confirm-dialog !h-auto min-h-[180px] max-h-[300px]">
+            <h2>Confirm Unarchive</h2>
+            <p className="text-black text-[13px]">
+              Are you sure you want to unarchive "
+              <strong>
+                {confirmUnarchive.firstName} {confirmUnarchive.lastName}
+              </strong>
+              "?
+            </p>
+            <div className="popup-buttons">
+              <Buttons text="Yes, Unarchive" addedClassName="btn btn-delete" onClick={handleUnarchiveUser} />
+              <Buttons text="Cancel" addedClassName="btn btn-cancel" onClick={() => setConfirmUnarchive(null)} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {confirmUserDelete && (
+        <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
+          <div className="confirm-dialog !h-auto min-h-[180px] max-h-[300px]">
+            <h2>Confirm Archive</h2>
+            <p className="text-black text-[13px]">
+              Are you sure you want to archive "
+              <strong>
+                {confirmUserDelete.firstName} {confirmUserDelete.lastName}
+              </strong>
+              "?
+            </p>
+            <div className="popup-buttons">
+              <Buttons text="Yes, Archive" addedClassName="btn btn-delete" onClick={handleConfirmDelete} />
+              <Buttons text="Cancel" addedClassName="btn btn-cancel" onClick={() => setConfirmUserDelete(null)} />
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
       <div className="acc-footer">
         <div className="pagination-container">
           <h1 className="text-black">
-            Showing{" "}
-            {filteredUsers.length === 0
-              ? 0
-              : (currentPage - 1) * usersPerPage + 1}{" "}
-            to {Math.min(currentPage * usersPerPage, filteredUsers.length)} of{" "}
-            {filteredUsers.length}
+            Showing {filteredUsers.length === 0 ? 0 : (currentPage - 1) * usersPerPage + 1} to{" "}
+            {Math.min(currentPage * usersPerPage, filteredUsers.length)} of {filteredUsers.length}
           </h1>
           <div className="join">
             <button
@@ -373,9 +452,7 @@ export default function AccountManagement() {
             </button>
             <button
               className="join-item btn bg-white text-black"
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage >= totalPages}
             >
               »
@@ -389,10 +466,8 @@ export default function AccountManagement() {
 
 function CardActiveContent({ user, fetchUsers, setCardActive }) {
   const [confirmUserDelete, setConfirmUserDelete] = useState(false);
-
   const [confirmUnarchive, setConfirmUnarchive] = useState(false);
-
-  const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
+  const { currentWebUser } = useContext(UserLoggedInContext);
 
   const handleConfirmDelete = async () => {
     try {
@@ -464,82 +539,10 @@ function CardActiveContent({ user, fetchUsers, setCardActive }) {
               })}
         </p>
 
-        {user.is_deleted ? (
-          <Buttons
-            text="Unarchive User"
-            onClick={() => {
-              setConfirmUnarchive(!confirmUnarchive);
-            }}
-            addedClassName="btn btn-error"
-          />
-        ) : (
-          <Buttons
-            text="Archive User"
-            onClick={() => {
-              setConfirmUserDelete(!confirmUserDelete);
-            }}
-            addedClassName="btn btn-error"
-          />
-        )}
+        
       </div>
 
-      {confirmUnarchive && (
-        <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
-          <div className="confirm-dialog !h-10/12">
-            <h2>Confirm Unarchive</h2>
-            <p className="text-black text-[13px]">
-              Are you sure you want to unarchive "
-              <strong>
-                {user.firstName} {user.lastName}
-              </strong>
-              "?
-            </p>
-            <div className="popup-buttons">
-              <Buttons
-                text="Yes, Unarchive"
-                addedClassName="btn btn-delete"
-                onClick={handleUnarchiveUser}
-              />
-              <Buttons
-                text="Cancel"
-                addedClassName="btn btn-cancel"
-                onClick={() => {
-                  setConfirmUnarchive(false);
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {confirmUserDelete && (
-        <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
-          <div className="confirm-dialog !h-10/12">
-            <h2>Confirm Archive</h2>
-            <p className="text-black text-[13px]">
-              Are you sure you want to archive "
-              <strong>
-                {user.firstName} {user.lastName}
-              </strong>
-              "?
-            </p>
-            <div className="popup-buttons">
-              <Buttons
-                text="Yes, Archive"
-                addedClassName="btn btn-delete"
-                onClick={handleConfirmDelete}
-              />
-              <Buttons
-                text="Cancel"
-                addedClassName="btn btn-cancel"
-                onClick={() => {
-                  setConfirmUserDelete(false);
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+      
     </>
   );
 }

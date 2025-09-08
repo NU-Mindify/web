@@ -28,6 +28,9 @@ export default function ManageStudents() {
 
   const [showArchived, setShowArchived] = useState(false);
 
+  const [confirmUserDelete, setConfirmUserDelete] = useState(null);
+  const [confirmUnarchive, setConfirmUnarchive] = useState(null);
+
   useEffect(() => {
     fetchStudents();
   }, [currentWebUser]);
@@ -192,6 +195,85 @@ export default function ManageStudents() {
     );
   };
 
+
+
+  const handleArchiveClick = (student, action) => {
+    if (action === "archive") {
+      setConfirmUserDelete(student);
+    } else {
+      setConfirmUnarchive(student);
+     }
+   };
+
+  const handleConfirmDelete = async () => {
+    if (!confirmUserDelete) return;
+    try {
+      // Optimistically update UI
+      setStudents((prev) =>
+        prev.map((s) =>
+          s._id === confirmUserDelete._id ? { ...s, is_deleted: true } : s
+        )
+      );
+
+      await axios.put(`${API_URL}/deleteUser/${confirmUserDelete._id}`, {
+        user_id: confirmUserDelete._id,
+        is_deleted: true,
+      });
+
+      const firstName = confirmUserDelete.first_name || confirmUserDelete.firstName || "";
+      const lastName = confirmUserDelete.last_name || confirmUserDelete.lastName || "";
+
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.first_name || currentWebUser.firstName} ${currentWebUser.last_name || currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Archived a Student",
+        description: `${currentWebUser.first_name || currentWebUser.firstName} archived ${firstName} ${lastName}'s account.`,
+        useravatar: currentWebUser.useravatar,
+      });
+
+      await fetchStudents(); // extra sync
+    } catch (error) {
+      console.error("Error archiving user:", error);
+    } finally {
+      setConfirmUserDelete(null);
+    }
+  };
+
+  const handleUnarchiveUser = async () => {
+    if (!confirmUnarchive) return;
+    try {
+      // Optimistically update UI
+      setStudents((prev) =>
+        prev.map((s) =>
+          s._id === confirmUnarchive._id ? { ...s, is_deleted: false } : s
+        )
+      );
+
+      await axios.put(`${API_URL}/deleteUser/${confirmUnarchive._id}`, {
+        user_id: confirmUnarchive._id,
+        is_deleted: false,
+      });
+
+      const firstName = confirmUnarchive.first_name || confirmUnarchive.firstName || "";
+      const lastName = confirmUnarchive.last_name || confirmUnarchive.lastName || "";
+
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.first_name || currentWebUser.firstName} ${currentWebUser.last_name || currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Unarchived a Student",
+        description: `${currentWebUser.first_name || currentWebUser.firstName} unarchived ${firstName} ${lastName}'s account.`,
+        useravatar: currentWebUser.useravatar,
+      });
+
+      await fetchStudents(); // extra sync
+    } catch (error) {
+      console.error("Error unarchiving user:", error);
+    } finally {
+      setConfirmUnarchive(null);
+    }
+  };
+
+
   return (
     <div className="students-main-container">
       <div className="student-header">
@@ -267,7 +349,65 @@ export default function ManageStudents() {
             setCardActive={setCardActive}
           />
         )}
+        onArchiveClick={handleArchiveClick} 
       />
+
+      {confirmUnarchive && (
+        <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
+          <div className="confirm-dialog !h-auto min-h-[180px] max-h-[300px]">
+            <h2>Confirm Unarchive</h2>
+            <p className="text-black text-[13px]">
+              Are you sure you want to unarchive "
+              <strong>
+                {confirmUnarchive.first_name || confirmUnarchive.firstName}{" "}
+                {confirmUnarchive.last_name || confirmUnarchive.lastName}
+              </strong>
+              "?
+            </p>
+            <div className="popup-buttons">
+              <Buttons
+                text="Yes, Unarchive"
+                addedClassName="btn btn-delete"
+                onClick={handleUnarchiveUser}
+              />
+              <Buttons
+                text="Cancel"
+                addedClassName="btn btn-cancel"
+                onClick={() => setConfirmUnarchive(null)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {confirmUserDelete && (
+        <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
+          <div className="confirm-dialog !h-auto min-h-[180px] max-h-[300px]">
+            <h2>Confirm Archive</h2>
+            <p className="text-black text-[13px]">
+              Are you sure you want to archive "
+              <strong>
+                {confirmUserDelete.first_name || confirmUserDelete.firstName}{" "}
+                {confirmUserDelete.last_name || confirmUserDelete.lastName}
+              </strong>
+              "?
+            </p>
+            <div className="popup-buttons">
+              <Buttons
+                text="Yes, Archive"
+                addedClassName="btn btn-delete"
+                onClick={handleConfirmDelete}
+              />
+              <Buttons
+                text="Cancel"
+                addedClassName="btn btn-cancel"
+                onClick={() => setConfirmUserDelete(null)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
 
       <div className="student-footer">
         <div className="student-pagination-container">
@@ -444,55 +584,55 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
   const navigate = useNavigate();
   const [masteryPercentage, setMasteryPercentage] = useState(0);
 
-  const [confirmDeleteUser, setConfirmDeleteuser] = useState(false);
-  const [unarchiveUser, setUnarchiveUser] = useState(false);
+  // const [confirmDeleteUser, setConfirmDeleteuser] = useState(false);
+  // const [unarchiveUser, setUnarchiveUser] = useState(false);
 
-  const handleDeleteStudent = async () => {
-    try {
-      await axios.put(`${API_URL}/deleteUser/${student._id}`, {
-        user_id: student._id,
-        is_deleted: true,
-      });
+  // const handleDeleteStudent = async () => {
+  //   try {
+  //     await axios.put(`${API_URL}/deleteUser/${student._id}`, {
+  //       user_id: student._id,
+  //       is_deleted: true,
+  //     });
 
-      await fetchUsers();
-      setCardActive(null);
+  //     await fetchUsers();
+  //     setCardActive(null);
 
-      await axios.post(`${API_URL}/addLogs`, {
-        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-        branch: currentWebUser.branch,
-        action: "Archived a Student",
-        description: `${currentWebUser.firstName} deleted ${student.first_name} ${student.last_name}'s account.`,
-        useravatar: currentWebUser.useravatar
-      });
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    } finally {
-      setConfirmDeleteuser(false);
-    }
-  };
+  //     await axios.post(`${API_URL}/addLogs`, {
+  //       name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+  //       branch: currentWebUser.branch,
+  //       action: "Archived a Student",
+  //       description: `${currentWebUser.firstName} deleted ${student.first_name} ${student.last_name}'s account.`,
+  //       useravatar: currentWebUser.useravatar
+  //     });
+  //   } catch (error) {
+  //     console.error("Error deleting user:", error);
+  //   } finally {
+  //     setConfirmDeleteuser(false);
+  //   }
+  // };
 
-  const handleUnarchiveStudent = async () => {
-    try {
-      await axios.put(`${API_URL}/deleteUser/${student._id}`, {
-        user_id: student._id,
-        is_deleted: false,
-      });
+  // const handleUnarchiveStudent = async () => {
+  //   try {
+  //     await axios.put(`${API_URL}/deleteUser/${student._id}`, {
+  //       user_id: student._id,
+  //       is_deleted: false,
+  //     });
 
-      await axios.post(`${API_URL}/addLogs`, {
-        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-        branch: currentWebUser.branch,
-        action: "Unarchive a Student",
-        description: `${currentWebUser.firstName} unarchived ${student.first_name} ${student.last_name}'s account.`,
-        useravatar: currentWebUser.useravatar
-      });
+  //     await axios.post(`${API_URL}/addLogs`, {
+  //       name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+  //       branch: currentWebUser.branch,
+  //       action: "Unarchive a Student",
+  //       description: `${currentWebUser.firstName} unarchived ${student.first_name} ${student.last_name}'s account.`,
+  //       useravatar: currentWebUser.useravatar
+  //     });
 
-      await fetchUsers();
-    } catch (error) {
-      console.error("Error unarchiving user:", error);
-    } finally {
-      setUnarchiveUser(false);
-    }
-  };
+  //     await fetchUsers();
+  //   } catch (error) {
+  //     console.error("Error unarchiving user:", error);
+  //   } finally {
+  //     setUnarchiveUser(false);
+  //   }
+  // };
 
   return (
     <>
@@ -614,7 +754,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
                       disabled={loadingData}
                     />
 
-                    {student.is_deleted ? (
+                    {/* {student.is_deleted ? (
                       <Buttons
                         text="Unarchive Student"
                         onClick={() => {
@@ -630,7 +770,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
                         }}
                         addedClassName="btn btn-error ml-20"
                       />
-                    )}
+                    )} */}
                   </div>
                 </td>
               </tr>
@@ -639,7 +779,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
         )}
       </div>
 
-      {confirmDeleteUser && (
+      {/* {confirmDeleteUser && (
         <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%] flex items-center justify-center">
           <div className="confirm-dialog flex justify-center items-center flex-col">
             <h2>Confirm Archive</h2>
@@ -695,7 +835,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }

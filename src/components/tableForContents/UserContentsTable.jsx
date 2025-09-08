@@ -1,7 +1,8 @@
 import samplepic from "../../assets/students/sample-minji.svg";
 import chevronIcon from "../../assets/forAll/chevron.svg";
-import settingsIcon from "../../assets/forAll/settings.svg";
-import { avatars } from "../../Constants"
+
+import { avatars } from "../../Constants";
+import { Archive, ArchiveRestore } from "lucide-react";
 import "./userContentsTable.css";
 
 export default function UserContentsTable({
@@ -16,6 +17,7 @@ export default function UserContentsTable({
   getBranchName,
   cardActiveContent,
   isForApprove,
+  onArchiveClick, // 👈 new prop
 }) {
   return (
     <div className="users-main-container">
@@ -33,11 +35,7 @@ export default function UserContentsTable({
                     {sortOrderAsc ? (
                       <img src={chevronIcon} alt="chevron" className="w-4" />
                     ) : (
-                      <img
-                        src={chevronIcon}
-                        alt="chevron"
-                        className="rotate-180 w-4"
-                      />
+                      <img src={chevronIcon} alt="chevron" className="rotate-180 w-4" />
                     )}
                   </button>
                 )}
@@ -59,16 +57,13 @@ export default function UserContentsTable({
                   <p className="text-black mt-10 text-3xl">No user found.</p>
                 </div>
               ) : (
-                data
-                .map((user) => {
-                  const userId = user.uid || user.student_id;
+                data.map((user) => {
+                  const userId = user.uid || user.student_id || user._id; // include _id as fallback
 
                   return (
                     <div
                       key={userId}
-                      className={
-                        cardActive === userId ? "active-user-card" : "user-card"
-                      }
+                      className={cardActive === userId ? "active-user-card" : "user-card"}
                     >
                       <table className="user-table">
                         <tbody>
@@ -83,10 +78,8 @@ export default function UserContentsTable({
                                         alt={user.firstName || user.first_name}
                                         className="mini-avatar"
                                       />
-                                      {(
-                                        user.lastName || user.last_name
-                                      )?.toUpperCase()}
-                                      , {user.firstName || user.first_name}
+                                      {(user.lastName || user.last_name)?.toUpperCase()},{" "}
+                                      {user.firstName || user.first_name}
                                     </td>
                                   );
                                 case "position":
@@ -106,29 +99,34 @@ export default function UserContentsTable({
                                 case "action":
                                   return (
                                     <td key={key} className="user-action-cell">
-                                      <div className={isForApprove ? "flex justify-end pr-10" : "action-holder"}>
-                                        {
-                                          !isForApprove && 
+                                      <div
+                                        className={
+                                          isForApprove ? "flex justify-end pr-10" : "action-holder"
+                                        }
+                                      >
+                                        {!isForApprove && (
                                           <button
                                             type="button"
-                                            className="setting-icon bg-transparent border-none p-0"
+                                            className="archive-icon bg-transparent border-none p-0"
+                                            aria-label={user.is_deleted ? "Unarchive user" : "Archive user"}
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              onArchiveClick && onArchiveClick(user, user.is_deleted ? "unarchive" : "archive");
+                                            }}
                                           >
-                                            <img
-                                              src={settingsIcon}
-                                              alt="settings"
-                                              className="setting-icon"
-                                            />
+                                            {user.is_deleted ? (
+                                              <ArchiveRestore size={20} className="text-green-600" />
+                                            ) : (
+                                              <Archive size={20} className="text-red-500" />
+                                            )}
                                           </button>
-                                        }
-                                        
 
+                                        )}
 
                                         <button
                                           type="button"
                                           className={`acc-chevron transition-transform duration-300 ${
-                                            cardActive === userId
-                                              ? "rotate-180"
-                                              : "rotate-0"
+                                            cardActive === userId ? "rotate-180" : "rotate-0"
                                           }`}
                                           aria-label="Toggle details"
                                           onClick={() => toggleCard(userId)}
