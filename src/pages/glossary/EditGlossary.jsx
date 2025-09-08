@@ -89,6 +89,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
           branch: currentWebUser.branch,
           action: "Updated a Term",
           description,
+          position: currentWebUser.position,
           useravatar: currentWebUser.useravatar
         });
       }
@@ -123,6 +124,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated }) {
         branch: currentWebUser.branch,
         action: "Archived a Term",
         description: `${currentWebUser.firstName} deleted the term "${word}"`,
+        position: currentWebUser.position,
         useravatar: currentWebUser.useravatar
       });
     } catch (error) {

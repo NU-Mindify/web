@@ -117,7 +117,7 @@ export default function AddTerm() {
         setShowValidationModal(true);
         setNewTerm([{ word: "", meaning: "", tags: [], is_deleted: false }]);
 
-        // Log each added term
+        
         Promise.all(
           newTerm.map((term) =>
             axios.post(`${API_URL}/addLogs`, {
@@ -125,6 +125,7 @@ export default function AddTerm() {
               branch: currentWebUser.branch,
               action: "Add Term",
               description: `${currentWebUser.firstName} added a term "${term.word}" with meaning "${term.meaning}".`,
+              position: currentWebUser.position,
               useravatar: currentWebUser.useravatar,
             })
           )

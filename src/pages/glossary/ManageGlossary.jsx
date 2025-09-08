@@ -27,7 +27,7 @@ export default function ManageGlossary() {
   const [allTerms, setAllTerms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // For tracking which term's dropdown is open or which term is active
+  
   const [activeTermWord, setActiveTermWord] = useState(null);
 
   const termsPerPage = 30;
@@ -51,11 +51,11 @@ export default function ManageGlossary() {
       if (response.data) {
         setAllTerms(response.data);
       } else {
-        setAllTerms([]); // fallback if response is empty
+        setAllTerms([]);
       }
     } catch (error) {
       console.error("Error fetching terms:", error);
-      setAllTerms([]); // prevent stale state on error
+      setAllTerms([]);
     } finally {
       setLoadingTerms(false);
     }

@@ -228,6 +228,7 @@ export default function ManageStudents() {
         branch: currentWebUser.branch,
         action: "Archived a Student",
         description: `${currentWebUser.first_name || currentWebUser.firstName} archived ${firstName} ${lastName}'s account.`,
+        position: currentWebUser.position,
         useravatar: currentWebUser.useravatar,
       });
 
@@ -262,10 +263,11 @@ export default function ManageStudents() {
         branch: currentWebUser.branch,
         action: "Unarchived a Student",
         description: `${currentWebUser.first_name || currentWebUser.firstName} unarchived ${firstName} ${lastName}'s account.`,
+        position: currentWebUser.position,
         useravatar: currentWebUser.useravatar,
       });
 
-      await fetchStudents(); // extra sync
+      await fetchStudents(); 
     } catch (error) {
       console.error("Error unarchiving user:", error);
     } finally {
@@ -582,57 +584,9 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
   const highestMasteryScores = getHighestMasteryScores();
 
   const navigate = useNavigate();
-  const [masteryPercentage, setMasteryPercentage] = useState(0);
+  
 
-  // const [confirmDeleteUser, setConfirmDeleteuser] = useState(false);
-  // const [unarchiveUser, setUnarchiveUser] = useState(false);
-
-  // const handleDeleteStudent = async () => {
-  //   try {
-  //     await axios.put(`${API_URL}/deleteUser/${student._id}`, {
-  //       user_id: student._id,
-  //       is_deleted: true,
-  //     });
-
-  //     await fetchUsers();
-  //     setCardActive(null);
-
-  //     await axios.post(`${API_URL}/addLogs`, {
-  //       name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-  //       branch: currentWebUser.branch,
-  //       action: "Archived a Student",
-  //       description: `${currentWebUser.firstName} deleted ${student.first_name} ${student.last_name}'s account.`,
-  //       useravatar: currentWebUser.useravatar
-  //     });
-  //   } catch (error) {
-  //     console.error("Error deleting user:", error);
-  //   } finally {
-  //     setConfirmDeleteuser(false);
-  //   }
-  // };
-
-  // const handleUnarchiveStudent = async () => {
-  //   try {
-  //     await axios.put(`${API_URL}/deleteUser/${student._id}`, {
-  //       user_id: student._id,
-  //       is_deleted: false,
-  //     });
-
-  //     await axios.post(`${API_URL}/addLogs`, {
-  //       name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-  //       branch: currentWebUser.branch,
-  //       action: "Unarchive a Student",
-  //       description: `${currentWebUser.firstName} unarchived ${student.first_name} ${student.last_name}'s account.`,
-  //       useravatar: currentWebUser.useravatar
-  //     });
-
-  //     await fetchUsers();
-  //   } catch (error) {
-  //     console.error("Error unarchiving user:", error);
-  //   } finally {
-  //     setUnarchiveUser(false);
-  //   }
-  // };
+ 
 
   return (
     <>
