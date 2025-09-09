@@ -701,6 +701,11 @@ export default function ManageQuestion() {
 
             {/* Right side button */}
             <div className="ml-auto">
+
+            {currentWebUser.position.toLowerCase() === "professor" ?
+              <>
+              </>
+             :
               <button 
                 onClick={handlesUnapprove} 
                 className="px-4 h-10 bg-[#FFBF1A] font-bold text-black rounded-xl 
@@ -708,6 +713,8 @@ export default function ManageQuestion() {
               >
                 Show Unapproved Questions
               </button>
+             }
+              
             </div>
           </div>
 

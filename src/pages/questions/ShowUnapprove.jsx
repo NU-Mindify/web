@@ -51,7 +51,7 @@ export default function ShowUnapprove() {
       axios.post(`${API_URL}/addLogs`, {
         name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
         branch: currentWebUser.branch,
-        action: "Edit Question",  
+        action: "Decline Question",  
         description: `${currentWebUser.firstName} declined the question "${data.question}".`,
         position: currentWebUser.position,
         useravatar: currentWebUser.useravatar,
@@ -73,7 +73,7 @@ export default function ShowUnapprove() {
       axios.post(`${API_URL}/addLogs`, {
         name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
         branch: currentWebUser.branch,
-        action: "Edit Question",  
+        action: "Approve Question",  
         description: `${currentWebUser.firstName} approved the question "${data.question}".`,
         position: currentWebUser.position,
         useravatar: currentWebUser.useravatar,
@@ -98,19 +98,29 @@ export default function ShowUnapprove() {
   }
 
   return (
-    <div className="w-full h-full bg-white p-3 overflow-y-auto">
-      <div className="title-header">
-        <div className="title-left">
-          <button
-            className="back-button cursor-pointer mt-5"
-            onClick={handleBack}
-          >
-            <img src={back} alt="back arrow" className="back-icon" />
-          </button>
-          <h1 className="question-title">Unapprove Questions</h1>
-        </div>
+  <div className="w-full h-full flex flex-col bg-white p-3 overflow-y-auto">
+    <div className="title-header mb-4">
+      <div className="title-left">
+        <button
+          className="back-button cursor-pointer mt-5"
+          onClick={handleBack}
+        >
+          <img src={back} alt="back arrow" className="back-icon" />
+        </button>
+        <h1 className="question-title">Unapprove Questions</h1>
       </div>
-      {unapprovedQuestions.map((data, index) => (
+    </div>
+
+   
+    {unapprovedQuestions.length === 0 ? (
+      <div className="w-full flex-1  flex justify-center items-center">
+        <h1 className="text-gray-600 text-3xl mt-10 text-center">
+          No unapproved questions
+        </h1>
+      </div>
+      
+    ) : (
+      unapprovedQuestions.map((data, index) => (
         <div
           key={data._id || index}
           className="w-full h-auto grid grid-cols-[10fr_1fr] p-2 bg-white border-2 border-black rounded-xl mb-2 mt-10"
@@ -174,7 +184,9 @@ export default function ShowUnapprove() {
             )}
           </div>
         </div>
-      ))}
-    </div>
-  );
+      ))
+    )}
+  </div>
+);
+
 }

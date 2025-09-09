@@ -122,7 +122,7 @@ export default function EditGlossary({ onClose, term, onTermUpdated, showArchive
         name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
         branch: currentWebUser.branch,
         action: "Archived a Term",
-        description: `${currentWebUser.firstName} deleted the term "${word}"`,
+        description: `${currentWebUser.firstName} archived the term "${word}"`,
         position: currentWebUser.position,
         useravatar: currentWebUser.useravatar
       });
