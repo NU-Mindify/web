@@ -90,17 +90,15 @@ export default function Sidebar() {
 
   const confirmLogout = () => {
     const auth = getAuth();
+    
     signOut(auth)
       .then(() => {
-        setCurrentWebUser(null);
-        setCurrentWebUserUID(null);
         localStorage.removeItem("webUser");
         localStorage.removeItem("userUID");
+        localStorage.removeItem("sessionTimedOut");
         document.cookie =
           "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-        setSelected("login");
-        setActive(false);
-        navigate("/login");
+        navigate("/");
       })
       .catch((error) => {
         console.log(error);
@@ -119,9 +117,7 @@ export default function Sidebar() {
   const fetchUserInfo = async () => {
     try {
       const userToken = await getAuth().currentUser.getIdToken()
-      // console.log("token", userToken);
-      
-      // console.log("webuser", currentWebUserUID);
+
       const response = await axios.get(`${API_URL}/getwebuser/${currentWebUserUID}`)
       const newCurrentWebUser = { ...response.data, token: userToken };
       setCurrentWebUser(newCurrentWebUser);
@@ -357,6 +353,7 @@ export default function Sidebar() {
                   branch: currentWebUser.branch,
                   action: "Logged Out",
                   description: "-",
+                  position: currentWebUser.position,
                   useravatar: currentWebUser.useravatar
                 });
                 
