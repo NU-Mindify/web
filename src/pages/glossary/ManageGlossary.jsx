@@ -381,19 +381,19 @@ export default function ManageGlossary() {
           </div>
 
           {/* Pagination controls */}
-          <div className="join mt-5">
+          <div className="join mt-5 w-10/12 flex justify-end">
             <button
-              className="join-item btn"
+              className="join-item btn bg-white"
               disabled={currentPage === 1}
               onClick={() => goToPage(currentPage - 1)}
             >
               «
             </button>
-            <button className="join-item btn !text-white">
+            <button className="join-item btn bg-white">
               Page {currentPage} of {totalPages}
             </button>
             <button
-              className="join-item btn"
+              className="join-item btn bg-white"
               disabled={currentPage === totalPages}
               onClick={() => goToPage(currentPage + 1)}
             >

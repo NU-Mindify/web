@@ -7,8 +7,8 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
 } from "firebase/auth";
-// * 60 * 1000
-export default function SessionTimeout({ timeout = 5 }) {
+
+export default function SessionTimeout({ timeout = 5 * 60 * 1000 }) {
   const navigate = useNavigate();
   const timerRef = useRef(null);
   const [showModal, setShowModal] = useState(() => {
