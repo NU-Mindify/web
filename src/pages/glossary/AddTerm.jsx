@@ -14,7 +14,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 export default function AddTerm() {
   const [newTerm, setNewTerm] = useState([
-    { word: "", meaning: "", tags: "", is_deleted: false },
+    // { word: "", meaning: "", tags: "", is_deleted: false },
+    null
   ]);
  
   const navigate = useNavigate();
