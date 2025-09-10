@@ -145,14 +145,6 @@ export default function Profile() {
       setNewPassword("");
       setConfirmPassword("");
       setValidationMessage("Password successfully changed.");
-      axios.post(`${API_URL}/addLogs`, {
-        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-        branch: currentWebUser.branch,
-        action: "Edit Profile",  
-        description: `${currentWebUser.firstName} has changed his/her password.`,
-        position: currentWebUser.position,
-        useravatar: currentWebUser.useravatar,
-      })
       setShowValidationModal(true);
     } catch (error) {
       console.error(error);
