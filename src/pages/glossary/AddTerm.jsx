@@ -14,8 +14,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 export default function AddTerm() {
   const [newTerm, setNewTerm] = useState([
-    // { word: "", meaning: "", tags: "", is_deleted: false },
-    null
+    { word: "", meaning: "", tags: "", is_deleted: false },
+    
   ]);
  
   const navigate = useNavigate();
@@ -174,8 +174,8 @@ export default function AddTerm() {
             tags: row.tags || "",
             is_deleted: false,
           }));
-
-        setNewTerm((prev) => [...prev, ...parsedData]);
+        
+        setNewTerm(parsedData);
       },
     });
   };
