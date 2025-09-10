@@ -12,6 +12,7 @@ import "../../css/branches/branches.css";
 import "../../css/signUp/signUp.css";
 
 import { Archive, ArchiveRestore } from "lucide-react";
+import Buttons from "../../components/buttons/Buttons";
 
 export default function Branches() {
   const [newBranch, setNewBranch] = useState({
@@ -356,7 +357,7 @@ export default function Branches() {
           /> */}
             <button
               onClick={handleAddBranch}
-              className="w-[200px]  sm:w-[180px] py-3 sm:py-5 text-base sm:text-2xl rounded-2xl font-extrabold transition bg-[#FFC300] text-black hover:brightness-105 cursor-pointer"
+              className="w-[200px] sm:w-[150px] sm:h-[50px] text-base sm:text-xl rounded-2xl font-extrabold transition bg-[#FFC300] text-black hover:brightness-105 cursor-pointer"
               disabled={false}
             >
               Submit
@@ -369,7 +370,7 @@ export default function Branches() {
             addedClassName="btn btn-warning ml-5"
           /> */}
             <button
-              className={`w-[200px] sm:w-[180px] py-3 sm:py-5 text-base sm:text-2xl rounded-2xl font-extrabold transition ${
+              className={`w-[200px] sm:w-[180px] sm:h-[50px] text-base sm:text-xl rounded-2xl font-extrabold transition ${
                 newBranch.id || newBranch.name || newBranch.extension
                   ? "bg-red-500 hover:bg-red-600 cursor-pointer"
                   : "bg-red-300 cursor-not-allowed"

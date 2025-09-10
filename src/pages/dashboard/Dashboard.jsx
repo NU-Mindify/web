@@ -64,7 +64,7 @@ export default function Dashboard() {
     setLoadingSession(true)
     try{
       const {data} = await axios.get(`${API_URL}/getAverageSession`)
-      console.log("average sess",Number(data.averageSessionTime.toFixed(2)));
+     
       setAverageSession(Number(data.averageSessionTime.toFixed(2)));
       
     }
@@ -587,14 +587,18 @@ return (
             Leaderboard
           </h1>
 
-          <div
-            className="leaderboards-container-dashboard"
+          <button
+            className="leaderboards-container-dashboard cursor-pointer"
             style={{
               padding: "1rem",
               backgroundColor: "#fff",
               borderRadius: "8px",
             }}
-          >
+            onClick={() => {
+                  navigate("/leaderboard")
+                  setSelected("leaderboard")
+                }}
+            >
             {/* Toggle Buttons */}
             <div className="flex bg-[#F5F6F8] p-2 rounded-xl w-full sm:w-[280px] mb-4 sticky top-0 z-10">
               <button
@@ -693,7 +697,7 @@ return (
             </div>
 
             )}
-          </div>
+          </button>
         </div>
 
       </div>
