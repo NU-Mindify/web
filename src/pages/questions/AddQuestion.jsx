@@ -927,14 +927,14 @@ function AddQuestion() {
                       </button>
                     ) : (
                       <button
-                        className="w-[200px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFBF1A] text-black hover:brightness-105 cursor-pointer"
+                        className="w-auto py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFBF1A] text-black hover:brightness-105 cursor-pointer"
                         onClick={() => setOnEdit(!onEdit)}
                       >
                         EDIT QUESTION
                       </button>
                     )}
                     <button
-                      className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-red-500 text-black hover:bg-red-600 cursor-pointer"
+                      className="w-auto py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-red-500 text-black hover:bg-red-600 cursor-pointer"
                       onClick={() => {
                         setQuestionToRemoveIdx(idx);
                         setOkCancelModalMessage(
