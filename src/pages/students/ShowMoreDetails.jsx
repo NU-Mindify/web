@@ -23,6 +23,8 @@ export default function ShowMoreDetails() {
   const studentItems = location.state?.studentItems;
   const studentSessions = location.state?.studentSessions;
 
+  
+
   console.log("Recnt acct", recentAct);
 
   const avatars = studentItems?.filter(

@@ -275,6 +275,8 @@ export default function ManageStudents() {
     }
   };
 
+  
+
 
   return (
     <div className="students-main-container">
@@ -460,7 +462,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
 
   const studentId = student._id;
 
-  console.log("STUDENT ID:", studentId);
+  console.log("STUDENT lifespan:", student.lifespan);
   
   
   useEffect(() => {
