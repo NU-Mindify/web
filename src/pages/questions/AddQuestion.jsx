@@ -36,7 +36,7 @@ function AddQuestion() {
   const [showAddSuccessModal, setShowAddSuccessModal] = useState(false);
 
   const [guideIsOpen, setGuideIsOpen] = useState(false);
-  
+
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -234,9 +234,17 @@ function AddQuestion() {
       }
     } catch (error) {
       console.error("=== FULL ERROR RESPONSE ===", error.response?.data);
-      setValidationMessage(
-        error.response?.data?.error?.name || "Submission Failed"
-      );
+
+      if (error.response?.status === 409) {
+        setValidationMessage(
+          error.response?.data?.error || "Duplicate question found!"
+        );
+      } else {
+        setValidationMessage(
+          error.response?.data?.error?.name || "Submission Failed"
+        );
+      }
+
       setShowValidationModal(true);
     } finally {
       setIsFormDisabled(false);
@@ -390,95 +398,100 @@ function AddQuestion() {
         <div className="add-ques-header">
           <div className="add-ques-sub-header">
             <h1>Add Question</h1>
-           <button
-            className="w-[50px] h-[50px]"
-            onClick={() => {
-              const hasUnsavedInput = () => {
-                const itemNumberStr = question.item_number ? String(question.item_number) : "";
-                const formHasInput =
-                  question.question.trim() !== "" ||
-                  question.choices.some(
-                    (c) => c.text.trim() !== "" || c.rationale.trim() !== ""
-                  ) ||
-                  question.rationale.trim() !== "" ||
-                  question.difficulty.trim() !== "" ||
-                  itemNumberStr.trim() !== "";
+            <button
+              className="w-[50px] h-[50px]"
+              onClick={() => {
+                const hasUnsavedInput = () => {
+                  const itemNumberStr = question.item_number
+                    ? String(question.item_number)
+                    : "";
+                  const formHasInput =
+                    question.question.trim() !== "" ||
+                    question.choices.some(
+                      (c) => c.text.trim() !== "" || c.rationale.trim() !== ""
+                    ) ||
+                    question.rationale.trim() !== "" ||
+                    question.difficulty.trim() !== "" ||
+                    itemNumberStr.trim() !== "";
 
-                const listHasQuestions = allQuestions.length > 0;
+                  const listHasQuestions = allQuestions.length > 0;
 
-                return formHasInput || listHasQuestions;
-              };
+                  return formHasInput || listHasQuestions;
+                };
 
-              if (hasUnsavedInput()) {
-                setShowBackConfirmModal(true);
-              } else {
-                nav("/question", {
-                  state: { category, categoryName, catSelected: true },
-                });
-              }
-            }}
-          >
-            <img src={closebtn} alt="close" />
-          </button>
-
+                if (hasUnsavedInput()) {
+                  setShowBackConfirmModal(true);
+                } else {
+                  nav("/question", {
+                    state: { category, categoryName, catSelected: true },
+                  });
+                }
+              }}
+            >
+              <img src={closebtn} alt="close" />
+            </button>
           </div>
 
           <h3>Create Question for {categoryName}</h3>
         </div>
 
         <div className="ques-container">
-<div className="w-full flex justify-end relative" ref={dropdownRef}>
-      <div className="flex items-center gap-2">
-        {/* Hidden input for CSV Upload */}
-        <input
-          id="upload-btn"
-          type="file"
-          accept=".csv"
-          onChange={handleCSVUploadQuestions}
-          className="hidden"
-        />
+          <div className="w-full flex justify-end relative" ref={dropdownRef}>
+            <div className="flex items-center gap-2">
+              {/* Hidden input for CSV Upload */}
+              <input
+                id="upload-btn"
+                type="file"
+                accept=".csv"
+                onChange={handleCSVUploadQuestions}
+                className="hidden"
+              />
 
-        {/* Upload Button */}
-        <label
-          htmlFor="upload-btn"
-          className="px-5 py-2 sm:px-6 sm:py-3 rounded-2xl text-base sm:text-lg 
+              {/* Upload Button */}
+              <label
+                htmlFor="upload-btn"
+                className="px-5 py-2 sm:px-6 sm:py-3 rounded-2xl text-base sm:text-lg 
                     font-bold transition bg-[#FFC300] text-black 
                     hover:brightness-105 cursor-pointer"
-        >
-          Upload CSV File
-        </label>
+              >
+                Upload CSV File
+              </label>
 
-        {/* Dropdown Trigger */}
-        <button
-          onClick={() => setShowDropdown((prev) => !prev)}
-          className="px-4 py-2 sm:px-5 sm:py-3 rounded-2xl bg-[#FFC300] text-black hover:brightness-105  transition"
-        >
-          {showDropdown ? <ChevronUp size={25} /> : <ChevronDown size={25} />}
-        </button>
+              {/* Dropdown Trigger */}
+              <button
+                onClick={() => setShowDropdown((prev) => !prev)}
+                className="px-4 py-2 sm:px-5 sm:py-3 rounded-2xl bg-[#FFC300] text-black hover:brightness-105  transition"
+              >
+                {showDropdown ? (
+                  <ChevronUp size={25} />
+                ) : (
+                  <ChevronDown size={25} />
+                )}
+              </button>
 
-        {/* Dropdown Menu */}
-        {showDropdown && (
-          <div className="absolute right-0 top-[110%] w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-            <a
-              href="/IMPORT_QUESTIONS_TEMPLATE.csv"
-              download
-              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              Download CSV Template
-            </a>
-            <button
-              onClick={() => {
-                setGuideIsOpen(true);
-                setShowDropdown(false);
-              }}
-              className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              View CSV Template Guide
-            </button>
+              {/* Dropdown Menu */}
+              {showDropdown && (
+                <div className="absolute right-0 top-[110%] w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                  <a
+                    href="/IMPORT_QUESTIONS_TEMPLATE.csv"
+                    download
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Download CSV Template
+                  </a>
+                  <button
+                    onClick={() => {
+                      setGuideIsOpen(true);
+                      setShowDropdown(false);
+                    }}
+                    className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    View CSV Template Guide
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
-    </div>
 
           {guideIsOpen && (
             <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/20">
@@ -984,14 +997,12 @@ function AddQuestion() {
               <div className="flex justify-center">
                 <h2>Unsaved Changes</h2>
               </div>
-              <p>
-                You have unsaved input. Are you sure you want to go back?
-              </p>
+              <p>You have unsaved input. Are you sure you want to go back?</p>
               <div className="popup-buttons">
                 <button
                   className="btn-delete"
                   onClick={() => {
-                    setShowBackConfirmModal(false); 
+                    setShowBackConfirmModal(false);
                     nav("/question", {
                       state: { category, categoryName, catSelected: true },
                     });
