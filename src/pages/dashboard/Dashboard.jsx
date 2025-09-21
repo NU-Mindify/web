@@ -49,16 +49,7 @@ export default function Dashboard() {
   const [averageSession, setAverageSession] = useState(0)
   const [loadingSession, setLoadingSession] = useState(false)
 
-  console.log("The id is", currentWebUser._id);
-  console.log(currentWebUser.lifespan);
-
-  axios.post(`${API_URL}/addLogs`, {
-    name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-    branch: currentWebUser.branch,
-    action: "Logged In",
-    description: "-",
-    useravatar: currentWebUser.useravatar
-  });
+  
   
   axios.put(`${API_URL}/tryUpdateTTL`, {
     user_id: currentWebUser._id

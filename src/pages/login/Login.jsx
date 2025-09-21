@@ -128,6 +128,14 @@ export default function Login() {
         setCurrentWebUserUID(user.uid);
         navigate("/dashboard");
 
+        await axios.post(`${API_URL}/addLogs`, {
+          name: `${verifyData.firstName} ${verifyData.lastName}`,
+          branch: verifyData.branch,
+          action: "Logged In",
+          description: "-",
+          position: verifyData.position,
+          useravatar: verifyData.useravatar
+        });
         
       }
     } catch (error) {
