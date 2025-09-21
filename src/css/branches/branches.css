@@ -15,20 +15,23 @@ html, body {
 
 
 .campus-main-container {
-  @apply font-[Poppins] p-3 flex flex-col w-full bg-white;
-  min-height: 100%;
-  height: auto;
+  @apply font-[Poppins] flex flex-col w-full;
+  min-height: 100svh;
   padding-bottom: 1rem;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
+.header-container{
+  @apply w-full h-auto bg-white rounded-xl mb-5 ;
+}
+
 .campus-header{
-  @apply w-full h-auto p-1
+  @apply w-full h-auto p-1;
 }
 
 .campus-form-container {
-  @apply border border-gray-500 p-6 rounded-md w-full mt-6;
+  @apply border border-black p-6 rounded-xl w-full mt-2
 }
 
 .form-title {
