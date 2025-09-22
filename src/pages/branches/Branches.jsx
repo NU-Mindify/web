@@ -14,7 +14,6 @@ import "../../css/signUp/signUp.css";
 import { Archive, ArchiveRestore } from "lucide-react";
 import Buttons from "../../components/buttons/Buttons";
 import Header from "../../components/header/Header";
-Header;
 
 export default function Branches() {
   const [newBranch, setNewBranch] = useState({
@@ -256,19 +255,20 @@ export default function Branches() {
   const [showAddCampus, setShowAddCampus] = useState(false);
 
   return (
-    <div className="campus-main-container">
-      <div className="header-container">
+    <div className="font-[Poppins] flex flex-col w-full min-h-screen">
+      <div className="w-full h-auto bg-white rounded-xl mb-5">
         <Header
+          id={"campus"}
           title="Manage Campus"
           exportToCSV={() => exportBranchesToCSV(branchList, "Campus_List")}
           exportToPDF={() => exportBranchesToPDF(branchList, "Campus_List")}
         />
       </div>
 
-      <div className="w-full flex-grow bg-white/50 rounded-xl">
+      <div className="w-full h-[calc(100svh-140px)] bg-white/50 rounded-xl ">
         {showAddCampus ? (
-          <div className="px-5">
-            <div className="campus-form-container">
+          <div className="px-5 w-full h-[270px] flex justify-center items-center">
+            <div className="border border-black p-6 rounded-xl w-full">
               <h2 className="form-title">ADD CAMPUS</h2>
               <hr className="border-b border-gray-300 mb-4" />
 
@@ -340,7 +340,7 @@ export default function Branches() {
               <div className="button-row">
                 <button
                   onClick={handleAddBranch}
-                  className="w-[200px] sm:w-[150px] sm:h-[50px] text-base sm:text-xl rounded-2xl font-extrabold transition cursor-pointer bg-[#FFC300] text-black hover:brightness-105 cursor-pointer"
+                  className="w-[200px] sm:w-[150px] sm:h-[50px] text-base sm:text-xl rounded-2xl font-extrabold transition cursor-pointer bg-[#FFC300] text-black hover:brightness-105"
                   disabled={false}
                 >
                   Submit
@@ -364,7 +364,7 @@ export default function Branches() {
           </div>
         ) : (
           <>
-            <div className="w-full h-20 bg-red-400 flex justify-between items-center px-10">
+            <div className="w-full h-[100px] flex  justify-between items-center px-10">
               <div className="flex justify-between bg-gray-100 rounded-xl w-[400px]">
                 <button
                   onClick={() => setShowDeletedBranches(false)}
@@ -399,7 +399,7 @@ export default function Branches() {
           </>
         )}
 
-        {showAddCampus && (
+        {/* {showAddCampus && (
           <div className="flex justify-between bg-gray-100 rounded-xl w-[400px] mt-3">
             <button
               onClick={() => setShowDeletedBranches(false)}
@@ -423,11 +423,20 @@ export default function Branches() {
               Deleted Campuses
             </button>
           </div>
-        )}
+        )} */}
 
+        
+        
         {branchList.length > 0 && (
-          <div className="campus-main-container min-h-screen flex flex-col">
-            <div className="campus-header font-bold text-[20px] flex justify-between items-center pb-2 mb-2 mt-5">
+          <div
+            className={`w-full flex flex-col px-5 pb-5 overflow-y-auto ${
+              showAddCampus
+                ? "h-[calc(100%-300px)]"
+                : "h-[calc(100svh-240px)]"
+            }`}
+          >
+
+            <div className="w-full h-[40px] p-1 px-2 font-bold text-[20px] flex justify-between items-center">
               <div className="w-[25%]">Campus ID</div>
               <div className="w-[30%]">Name</div>
               <div className="w-[35%]">Professor Email Extension</div>
@@ -435,12 +444,11 @@ export default function Branches() {
               <div className="w-[10%]">Action</div>
             </div>
 
-            <div className="campus-scroll-container overflow-x-auto overflow-y-auto max-h-[70vh] pr-2 bg-white rounded-md mb-10">
-              <div className="w-full">
+            <div className="w-full h-[calc(100svh-300px)] overflow-y-auto campus-scroll-container">
                 {branchList.map((branch, index) => (
                   <div
                     key={index}
-                    className="campus-card flex flex-wrap md:flex-nowrap justify-between items-center px-3 md:px-5 py-4 mb-3 border border-gray-600 rounded-lg bg-white text-black"
+                    className="campus-card flex flex-wrap md:flex-nowrap justify-between items-center px-3 md:px-5 py-4 mb-3 border border-gray-600 rounded-lg bg-white text-black hover:bg-[#35408E]"
                   >
                     <div className="w-full md:w-[21%] text-sm md:text-[17px] font-medium">
                       {branch.id}
@@ -469,6 +477,7 @@ export default function Branches() {
                         </button>
                       ) : (
                         <button
+                          className="cursor-pointer"
                           onClick={() => {
                             setBranchToDelete(branch._id);
                             setSelectedBranch(branch.name);
@@ -483,7 +492,7 @@ export default function Branches() {
                     </div>
                   </div>
                 ))}
-              </div>
+              
             </div>
           </div>
         )}
