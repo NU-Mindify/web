@@ -3,7 +3,7 @@ import { CheckCircle2Icon, XCircle } from "lucide-react";
 import Papa from "papaparse";
 import { useContext, useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { API_URL } from "../../Constants";
+import { API_URL} from "../../Constants";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import closebtn from "../../assets/glossary/close-btn.svg";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
