@@ -159,6 +159,18 @@ function AddQuestion() {
       return;
     }
 
+    // Check for exact duplicates in the current list to prevent adding locally
+    const isDuplicateInList = allQuestions.some(
+      (q) =>
+        q.question.trim().toLowerCase() === question.question.trim().toLowerCase()
+    );
+
+    if (isDuplicateInList) {
+      setValidationMessage("This exact question is already in the list to be added.");
+      setShowValidationModal(true);
+      return;
+    }
+
     // --- AI SIMILARITY CHECK ---
     try {
       console.log("Attempting AI similarity check for:", question.question);
@@ -170,7 +182,7 @@ function AddQuestion() {
     } catch (error) {
       if (error.response && error.response.status === 409) {
         // 409 Conflict indicates a semantic duplicate was found
-        console.warn("AI check found a semantic duplicate:", error.response.data);
+        // console.warn("AI check found a semantic duplicate:", error.response.data);
         const { message, similarQuestion, similarityScore } = error.response.data;
         const similarityPercent = (similarityScore * 100).toFixed(1);
         setValidationMessage(
@@ -183,15 +195,15 @@ function AddQuestion() {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          console.error("Error Response Data:", error.response.data);
-          console.error("Error Response Status:", error.response.status);
-          console.error("Error Response Headers:", error.response.headers);
+          // console.error("Error Response Data:", error.response.data);
+          // console.error("Error Response Status:", error.response.status);
+          // console.error("Error Response Headers:", error.response.headers);
         } else if (error.request) {
           // The request was made but no response was received
           console.error("Error Request:", error.request);
         } else {
           // Something happened in setting up the request that triggered an Error
-          console.error("Error Message:", error.message);
+          // console.error("Error Message:", error.message);
         }
         const errorMessage = error.response?.data?.error || "An unexpected error occurred during the AI similarity check.";
         setValidationMessage(`AI Check Failed: ${errorMessage}`);
@@ -201,16 +213,6 @@ function AddQuestion() {
     }
     // --- END OF AI CHECK ---
 
-    // Check for duplicates
-    const isDuplicate = allQuestions.some(
-      (q) => q.question.trim().toLowerCase() === question.question.trim().toLowerCase()
-    );
-
-    if (isDuplicate) {
-      setValidationMessage("This question already exists in the list.");
-      setShowValidationModal(true);
-      return;
-    }
     // If valid, add the question
     const questionCopy = JSON.parse(JSON.stringify(question));
     setAllQuestions((prev) => [...prev, questionCopy]);
@@ -289,7 +291,11 @@ function AddQuestion() {
 
       if (error.response?.status === 409) {
         setValidationMessage(
-          error.response?.data?.error || "Duplicate question found!"
+          `Duplicate Error: ${error.response.data.error}`
+        );
+      } else if (error.response?.data?.message?.includes("duplicate key error")) {
+        setValidationMessage(
+          "This exact question already exists in the database."
         );
       } else {
         setValidationMessage(
