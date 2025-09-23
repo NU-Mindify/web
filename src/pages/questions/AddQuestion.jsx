@@ -149,7 +149,7 @@ function AddQuestion() {
 
   const [question, setQuestion] = useState(getInitialQuestionState);
 
-  const handleAddQuestion = () => {
+  const handleAddQuestion = async () => {
     // validate current question
     const isValid = validateQuestion(question);
 
@@ -159,6 +159,58 @@ function AddQuestion() {
       return;
     }
 
+    // --- AI SIMILARITY CHECK ---
+    try {
+      console.log("Attempting AI similarity check for:", question.question);
+      await axios.post(`${API_URL}/checkQuestionSimilarity`, {
+        questionText: question.question,
+        category: question.category,
+      });
+      console.log("AI similarity check passed. No duplicates found.");
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        // 409 Conflict indicates a semantic duplicate was found
+        console.warn("AI check found a semantic duplicate:", error.response.data);
+        const { message, similarQuestion, similarityScore } = error.response.data;
+        const similarityPercent = (similarityScore * 100).toFixed(1);
+        setValidationMessage(
+          `${message} It is ${similarityPercent}% similar to: "${similarQuestion}"`
+        );
+        setShowValidationModal(true);
+        return;
+      } else {
+        console.error("AI similarity check failed with an unexpected error.");
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error("Error Response Data:", error.response.data);
+          console.error("Error Response Status:", error.response.status);
+          console.error("Error Response Headers:", error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error("Error Request:", error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error("Error Message:", error.message);
+        }
+        const errorMessage = error.response?.data?.error || "An unexpected error occurred during the AI similarity check.";
+        setValidationMessage(`AI Check Failed: ${errorMessage}`);
+        setShowValidationModal(true);
+        return;
+      }
+    }
+    // --- END OF AI CHECK ---
+
+    // Check for duplicates
+    const isDuplicate = allQuestions.some(
+      (q) => q.question.trim().toLowerCase() === question.question.trim().toLowerCase()
+    );
+
+    if (isDuplicate) {
+      setValidationMessage("This question already exists in the list.");
+      setShowValidationModal(true);
+      return;
+    }
     // If valid, add the question
     const questionCopy = JSON.parse(JSON.stringify(question));
     setAllQuestions((prev) => [...prev, questionCopy]);
