@@ -12,6 +12,9 @@ import SelectFilter from "../../components/selectFilter/SelectFilter";
 import { API_URL, branches } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/activityLog/activityLog.css";
+import Header from "../../components/header/Header";
+import PaginationControl from "../../components/paginationControls/PaginationControl";
+
 
 export default function ActivityLogs() {
   const [allLogs, setAllLogs] = useState([]);
@@ -19,9 +22,15 @@ export default function ActivityLogs() {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
-  // console.log("Current Web user",currentWebUser.position);
 
   const [cardActive, setCardActive] = useState(null);
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  // ✅ pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 10; // adjust per page size
 
   const toggleCard = (index) => {
     setCardActive((prev) => (prev === index ? null : index));
@@ -41,16 +50,32 @@ export default function ActivityLogs() {
     "November",
     "December",
   ];
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+
+  const [totalLogs, setTotalLogs] = useState(0);
 
   useEffect(() => {
     if (!currentWebUser) return;
+
     const fetchLogs = async () => {
       try {
-        const response = await axios.get(`${API_URL}/getLogs`);
-        let logs = response.data;
+        // Format dates to ISO strings if selected
+        const start = startDate ? startDate.toISOString() : "";
+        const end = endDate ? endDate.toISOString() : "";
 
+        const response = await axios.get(`${API_URL}/getLogs`, {
+          params: {
+            page: currentPage,
+            limit: usersPerPage,
+            action: selectedAction !== "All" ? selectedAction : "",
+            month: selectedMonth !== "All" ? selectedMonth : "",
+            startDate: start,
+            endDate: end,
+          },
+        });
+
+        let { logs, total } = response.data;
+
+        // Filter out super admin if needed
         if (currentWebUser.position?.toLowerCase().trim() !== "super admin") {
           logs = logs.filter(
             (log) => log.position?.toLowerCase().trim() !== "super admin"
@@ -59,50 +84,76 @@ export default function ActivityLogs() {
 
         setAllLogs(logs);
         setFilteredLogs(logs);
+        setTotalLogs(total);
       } catch (error) {
         console.error(error);
       }
     };
-    fetchLogs();
-  }, [currentWebUser]);
 
-  const actions = Array.from(new Set(allLogs.map((log) => log.action)));
+    fetchLogs();
+  }, [
+    currentWebUser,
+    currentPage,
+    selectedAction,
+    selectedMonth,
+    startDate,
+    endDate,
+  ]);
+
+  const [allActions, setAllActions] = useState([]);
+  useEffect(() => {
+    const fetchActions = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/allActions`);
+        console.log("actions", response.data.actions);
+        setAllActions(response.data.actions);
+      } catch (error) {
+        console.error("Error fetching actions:", error);
+      }
+    };
+
+    fetchActions();
+  }, []);
+
   const actionOptions = [
     { label: "All", value: "All" },
-    ...actions.map((a) => ({ label: a, value: a })),
-  ];
-  const monthOptions = [
-    { label: "All", value: "All" },
-    ...months.map((m) => ({ label: m, value: m })),
+    ...allActions.map((a) => ({ label: a, value: a })),
   ];
 
   useEffect(() => {
-    let logs = allLogs;
+  let logs = allLogs;
 
-    if (selectedMonth && selectedMonth !== "All") {
-      logs = logs.filter((log) => {
-        const logMonth = new Date(log.createdAt).toLocaleString("en-US", {
-          month: "long",
-        });
-        return logMonth === selectedMonth;
+  if (selectedMonth && selectedMonth !== "All") {
+    logs = logs.filter((log) => {
+      const logMonth = new Date(log.createdAt).toLocaleString("en-US", {
+        month: "long",
       });
-    }
+      return logMonth === selectedMonth;
+    });
+  }
 
-    if (selectedAction && selectedAction !== "All") {
-      logs = logs.filter((log) => log.action === selectedAction);
-    }
+  if (selectedAction && selectedAction !== "All") {
+    logs = logs.filter((log) => log.action === selectedAction);
+  }
 
-    if (startDate && endDate) {
-      logs = logs.filter((log) => {
-        const logDate = new Date(log.createdAt);
-        const inclusiveEndDate = new Date(endDate);
-        inclusiveEndDate.setHours(23, 59, 59, 999);
-        return logDate >= startDate && logDate <= inclusiveEndDate;
-      });
-    }
+  if (startDate && endDate) {
+    logs = logs.filter((log) => {
+      const logDate = new Date(log.createdAt);
+      const inclusiveEndDate = new Date(endDate);
+      inclusiveEndDate.setHours(23, 59, 59, 999);
+      return logDate >= startDate && logDate <= inclusiveEndDate;
+    });
+  }
 
-    setFilteredLogs(logs);
-  }, [selectedMonth, selectedAction, startDate, endDate, allLogs]);
+  setFilteredLogs(logs);
+
+}, [selectedMonth, selectedAction, startDate, endDate]); 
+
+
+
+  const currentLogs = filteredLogs;
+  
+
 
   //EXPORT TO CSV
   const exportActLogsToCSV = (data, filename) => {
@@ -190,7 +241,7 @@ export default function ActivityLogs() {
     });
 
     autoTable(doc, {
-      head: [["Date", "Activity", "User", "Details", "Timestamp"]],
+      head: [["Date", "Activity", "User", "Details"]],
       body: rows,
       startY: 30,
     });
@@ -204,15 +255,26 @@ export default function ActivityLogs() {
 
   return (
     <div className="logs-main-container">
-      <div className="logs-header">
-        <h1 className="logs-title">Activity Logs</h1>
+      <div className="w-full h-auto bg-white rounded-xl">
+        <Header
+          id={"logs"}
+          title="Activity Logs"
+          exportToCSV={() => exportActLogsToCSV(filteredLogs, "Activity_Logs")}
+          exportToPDF={() => exportActLogsToPDF(filteredLogs, "Activity_Logs")}
+        />
+      </div>
 
-        <div className="flex flex-wrap items-center justify-between w-full mb-7 mt-5 px-4">
+      <div className="w-full h-[calc(100svh-145px)] rounded-xl mt-5 bg-white/50">
+       
+        <div className="w-full h-[80px] flex items-center pl-10">
           <div className="flex gap-6">
             <SelectFilter
               ariaLabel={"Select Action"}
               value={selectedAction}
-              onChange={(e) => setSelectedAction(e.target.value)}
+              onChange={(e) => {
+                setSelectedAction(e.target.value);
+                setCurrentPage(1); 
+              }}
               fixOption=""
               disabledOption="Select Action"
               mainOptions={actionOptions}
@@ -243,20 +305,10 @@ export default function ActivityLogs() {
               />
             </div>
           </div>
-
-          <div className="mt-1">
-            <ExportDropdown
-              onExport={(format) => {
-                if (format === "csv")
-                  exportActLogsToCSV(filteredLogs, "Activity_Logs");
-                else if (format === "pdf")
-                  exportActLogsToPDF(filteredLogs, "Activity_Logs");
-              }}
-            />
-          </div>
         </div>
 
-        <div className="logs-main-container h-screen overflow-y-auto">
+        {/* Logs Table */}
+        <div className="logs-main-container h-[calc(100svh-305px)] overflow-y-auto">
           <div className="users-main-container px-10">
             <div className="user-table font-bold text-[20px] flex justify-between items-center pb-2 mb-2">
               <div className="w-3/11">Name</div>
@@ -264,11 +316,10 @@ export default function ActivityLogs() {
               <div className="w-[22%]">Action</div>
               <div className="w-3/9">Description</div>
               <div className="w-3/11">Timestamp</div>
-              <div className="w-[50px]"></div>
             </div>
 
-            {filteredLogs.map((log, index) => (
-              <div key={index} className="user-card">
+            {currentLogs.map((log, index) => (
+              <div key={index} className="user-card bg-white hover:bg-[#35408E]">
                 <div className="user-table flex justify-between items-center">
                   <div className="user-name-cell w-3/12 flex items-center">
                     <img
@@ -311,7 +362,7 @@ export default function ActivityLogs() {
                   </div>
 
                   <div className="w-[40px] flex justify-end mr-5">
-                    {log.description && log.description.length > 60 && (
+                    {log.description && log.description.length > 40 && (
                       <button
                         type="button"
                         className={`acc-chevron transition-transform duration-300 ${
@@ -333,8 +384,14 @@ export default function ActivityLogs() {
             ))}
           </div>
         </div>
+
+        <PaginationControl 
+          currentPage={currentPage}
+          totalItems={totalLogs}
+          goToPrevPage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          goToNextPage={() => setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(totalLogs / 10)))}
+        />
       </div>
     </div>
   );
 }
-  

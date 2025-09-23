@@ -7,29 +7,6 @@
 }
 
 
-html, body {
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-
-.campus-main-container {
-  @apply font-[Poppins] p-3 flex flex-col w-full bg-white;
-  min-height: 100%;
-  height: auto;
-  padding-bottom: 1rem;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.campus-header{
-  @apply w-full h-auto p-1
-}
-
-.campus-form-container {
-  @apply border border-gray-500 p-6 rounded-md w-full mt-6;
-}
 
 .form-title {
   @apply text-sm font-bold mb-2;
@@ -67,13 +44,7 @@ html, body {
   
 }
 
-.campus-scroll-container {
-  @apply overflow-x-auto overflow-y-auto;
-  max-height: 400px;
-  max-height: calc(400px - 10px);
-  padding-bottom: 80px;
-  box-sizing: border-box;
-}
+
 
 
 
@@ -86,10 +57,26 @@ html, body {
 }
 
 
+
 .campus-scroll-container {
+  @apply w-full flex flex-col px-5 pb-10 mt-3 overflow-y-auto;
   scrollbar-width: thin;
   scrollbar-color: black transparent;
 }
+
+.campus-scroll-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.campus-scroll-container::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+.campus-scroll-container::-webkit-scrollbar-thumb {
+  background-color: black;
+  border-radius: 10px; 
+}
+
 
 
 @media (max-width: 768px) {

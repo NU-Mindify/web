@@ -7,11 +7,7 @@
 }
 
 .logs-main-container {
-  @apply font-[Poppins] p-3 flex flex-col w-full bg-white;
-  
-  min-height: 100vh;        
-  overflow-y: auto; 
-  overflow-x: auto;     
+  @apply font-[Poppins] flex flex-col w-full;       
   scrollbar-width: thin;
   scrollbar-color: black transparent;
 }
