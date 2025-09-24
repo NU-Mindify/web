@@ -3,7 +3,7 @@ import { CheckCircle2Icon, XCircle } from "lucide-react";
 import Papa from "papaparse";
 import { useContext, useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { API_URL} from "../../Constants";
+import { API_URL } from "../../Constants";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import closebtn from "../../assets/glossary/close-btn.svg";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
@@ -162,11 +162,14 @@ function AddQuestion() {
     // Check for exact duplicates in the current list to prevent adding locally
     const isDuplicateInList = allQuestions.some(
       (q) =>
-        q.question.trim().toLowerCase() === question.question.trim().toLowerCase()
+        q.question.trim().toLowerCase() ===
+        question.question.trim().toLowerCase()
     );
 
     if (isDuplicateInList) {
-      setValidationMessage("This exact question is already in the list to be added.");
+      setValidationMessage(
+        "This exact question is already in the list to be added."
+      );
       setShowValidationModal(true);
       return;
     }
@@ -183,15 +186,20 @@ function AddQuestion() {
       if (error.response && error.response.status === 409) {
         // 409 Conflict indicates a semantic duplicate was found
         // console.warn("AI check found a semantic duplicate:", error.response.data);
-        const { message, similarQuestion, similarityScore } = error.response.data;
+        const { message, similarQuestion, similarityScore } =
+          error.response.data;
         const similarityPercent = (similarityScore * 100).toFixed(1);
-        setValidationMessage(
+        // setValidationMessage(
+        //   `${message} It is ${similarityPercent}% similar to: "${similarQuestion}"`
+        // );
+        // setShowValidationModal(true);
+        setOkCancelModalMessage(
           `${message} It is ${similarityPercent}% similar to: "${similarQuestion}"`
         );
-        setShowValidationModal(true);
+        setShowOkCancelModal(true);
         return;
       } else {
-        console.error("AI similarity check failed with an unexpected error.");
+        console.error("AI similarity check failed with an unexpeNcted error.");
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
@@ -205,7 +213,9 @@ function AddQuestion() {
           // Something happened in setting up the request that triggered an Error
           // console.error("Error Message:", error.message);
         }
-        const errorMessage = error.response?.data?.error || "An unexpected error occurred during the AI similarity check.";
+        const errorMessage =
+          error.response?.data?.error ||
+          "An unexpected error occurred during the AI similarity check.";
         setValidationMessage(`AI Check Failed: ${errorMessage}`);
         setShowValidationModal(true);
         return;
@@ -290,10 +300,10 @@ function AddQuestion() {
       console.error("=== FULL ERROR RESPONSE ===", error.response?.data);
 
       if (error.response?.status === 409) {
-        setValidationMessage(
-          `Duplicate Error: ${error.response.data.error}`
-        );
-      } else if (error.response?.data?.message?.includes("duplicate key error")) {
+        setValidationMessage(`Duplicate Error: ${error.response.data.error}`);
+      } else if (
+        error.response?.data?.message?.includes("duplicate key error")
+      ) {
         setValidationMessage(
           "This exact question already exists in the database."
         );
