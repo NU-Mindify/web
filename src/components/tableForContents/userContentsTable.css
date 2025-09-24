@@ -41,7 +41,7 @@
   @apply w-full;
 }
 .contentsTable-thead tr {
-  @apply sticky top-0 z-10 bg-white;
+  @apply sticky top-0 z-10 bg-transparent;
 }
 
 
@@ -87,7 +87,7 @@
 
 /* User Card Container */
 .user-card {
-  @apply w-full my-2 py-2 rounded-xl px-2 transition-transform duration-500 ease-in-out transform scale-100;
+  @apply w-full my-2 py-2 rounded-xl px-2 transition-transform duration-500 ease-in-out transform scale-100 bg-white hover:bg-[#35408E];
   border: 1px solid black;
 }
 

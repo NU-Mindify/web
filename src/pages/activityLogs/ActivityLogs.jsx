@@ -15,7 +15,6 @@ import "../../css/activityLog/activityLog.css";
 import Header from "../../components/header/Header";
 import PaginationControl from "../../components/paginationControls/PaginationControl";
 
-
 export default function ActivityLogs() {
   const [allLogs, setAllLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
@@ -28,9 +27,8 @@ export default function ActivityLogs() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  // ✅ pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 10; // adjust per page size
+  const usersPerPage = 10;
 
   const toggleCard = (index) => {
     setCardActive((prev) => (prev === index ? null : index));
@@ -58,7 +56,6 @@ export default function ActivityLogs() {
 
     const fetchLogs = async () => {
       try {
-        // Format dates to ISO strings if selected
         const start = startDate ? startDate.toISOString() : "";
         const end = endDate ? endDate.toISOString() : "";
 
@@ -75,7 +72,6 @@ export default function ActivityLogs() {
 
         let { logs, total } = response.data;
 
-        // Filter out super admin if needed
         if (currentWebUser.position?.toLowerCase().trim() !== "super admin") {
           logs = logs.filter(
             (log) => log.position?.toLowerCase().trim() !== "super admin"
@@ -85,6 +81,7 @@ export default function ActivityLogs() {
         setAllLogs(logs);
         setFilteredLogs(logs);
         setTotalLogs(total);
+        console.log("total", total);
       } catch (error) {
         console.error(error);
       }
@@ -121,39 +118,34 @@ export default function ActivityLogs() {
   ];
 
   useEffect(() => {
-  let logs = allLogs;
+    let logs = allLogs;
 
-  if (selectedMonth && selectedMonth !== "All") {
-    logs = logs.filter((log) => {
-      const logMonth = new Date(log.createdAt).toLocaleString("en-US", {
-        month: "long",
+    if (selectedMonth && selectedMonth !== "All") {
+      logs = logs.filter((log) => {
+        const logMonth = new Date(log.createdAt).toLocaleString("en-US", {
+          month: "long",
+        });
+        return logMonth === selectedMonth;
       });
-      return logMonth === selectedMonth;
-    });
-  }
+    }
 
-  if (selectedAction && selectedAction !== "All") {
-    logs = logs.filter((log) => log.action === selectedAction);
-  }
+    if (selectedAction && selectedAction !== "All") {
+      logs = logs.filter((log) => log.action === selectedAction);
+    }
 
-  if (startDate && endDate) {
-    logs = logs.filter((log) => {
-      const logDate = new Date(log.createdAt);
-      const inclusiveEndDate = new Date(endDate);
-      inclusiveEndDate.setHours(23, 59, 59, 999);
-      return logDate >= startDate && logDate <= inclusiveEndDate;
-    });
-  }
+    if (startDate && endDate) {
+      logs = logs.filter((log) => {
+        const logDate = new Date(log.createdAt);
+        const inclusiveEndDate = new Date(endDate);
+        inclusiveEndDate.setHours(23, 59, 59, 999);
+        return logDate >= startDate && logDate <= inclusiveEndDate;
+      });
+    }
 
-  setFilteredLogs(logs);
-
-}, [selectedMonth, selectedAction, startDate, endDate]); 
-
-
+    setFilteredLogs(logs);
+  }, [selectedMonth, selectedAction, startDate, endDate]);
 
   const currentLogs = filteredLogs;
-  
-
 
   //EXPORT TO CSV
   const exportActLogsToCSV = (data, filename) => {
@@ -265,7 +257,6 @@ export default function ActivityLogs() {
       </div>
 
       <div className="w-full h-[calc(100svh-145px)] rounded-xl mt-5 bg-white/50">
-       
         <div className="w-full h-[80px] flex items-center pl-10">
           <div className="flex gap-6">
             <SelectFilter
@@ -273,7 +264,7 @@ export default function ActivityLogs() {
               value={selectedAction}
               onChange={(e) => {
                 setSelectedAction(e.target.value);
-                setCurrentPage(1); 
+                setCurrentPage(1);
               }}
               fixOption=""
               disabledOption="Select Action"
@@ -282,7 +273,7 @@ export default function ActivityLogs() {
               getOptionLabel={(opt) => opt.label}
             />
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4 ml-20">
               <DatePicker
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
@@ -290,9 +281,9 @@ export default function ActivityLogs() {
                 startDate={startDate}
                 endDate={endDate}
                 placeholderText="Start Date"
-                className="border px-3 py-2 rounded"
+                className="border px-3 py-2 rounded w-[200px] bg-white"
               />
-              <span>to</span>
+              <span>-</span>
               <DatePicker
                 selected={endDate}
                 onChange={(date) => setEndDate(date)}
@@ -301,25 +292,28 @@ export default function ActivityLogs() {
                 endDate={endDate}
                 minDate={startDate}
                 placeholderText="End Date"
-                className="border px-3 py-2 rounded"
+                className="border px-3 py-2 rounded w-[200px] bg-white"
               />
             </div>
           </div>
         </div>
 
-        {/* Logs Table */}
         <div className="logs-main-container h-[calc(100svh-305px)] overflow-y-auto">
-          <div className="users-main-container px-10">
-            <div className="user-table font-bold text-[20px] flex justify-between items-center pb-2 mb-2">
+          <div className="w-full bg-white flex items-center justify-center">
+            <div className="w-[90svw] font-bold text-[20px] flex justify-between items-center pb-2">
               <div className="w-3/11">Name</div>
               <div className="w-[22%]">Campus</div>
               <div className="w-[22%]">Action</div>
               <div className="w-3/9">Description</div>
               <div className="w-3/11">Timestamp</div>
             </div>
-
+          </div>
+          <div className="users-main-container px-10">
             {currentLogs.map((log, index) => (
-              <div key={index} className="user-card bg-white hover:bg-[#35408E]">
+              <div
+                key={index}
+                className="user-card bg-white hover:bg-[#35408E]"
+              >
                 <div className="user-table flex justify-between items-center">
                   <div className="user-name-cell w-3/12 flex items-center">
                     <img
@@ -385,11 +379,15 @@ export default function ActivityLogs() {
           </div>
         </div>
 
-        <PaginationControl 
+        <PaginationControl
           currentPage={currentPage}
           totalItems={totalLogs}
           goToPrevPage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          goToNextPage={() => setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(totalLogs / 10)))}
+          goToNextPage={() =>
+            setCurrentPage((prev) =>
+              Math.min(prev + 1, Math.ceil(totalLogs / 10))
+            )
+          }
         />
       </div>
     </div>

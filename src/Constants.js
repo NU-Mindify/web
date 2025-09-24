@@ -4,7 +4,7 @@ export const API_URL = import.meta.env.VITE_URL;
 
 export let branches = [];
 
-import defaultUserAvatar from "../src/assets/defaultAvatar/defaultAvatar.svg";
+import defaultUserAvatar from "./assets/defaultAvatar/defaultAvatar.svg";
 
 import b1 from "../src/assets/avatar/b1.svg";
 import b2 from "../src/assets/avatar/b2.svg";

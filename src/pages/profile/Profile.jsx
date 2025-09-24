@@ -14,7 +14,9 @@ import "../../css/profile/profile.css";
 import { firebaseAuth } from "../../Firebase";
 
 
+
 import { UserLoggedInContext } from "../../contexts/Contexts";
+import Header from "../../components/header/Header";
 
 export default function Profile() {
   const {
@@ -158,8 +160,11 @@ export default function Profile() {
   return (
     <>
       <div className="main-cont-prof-settings">
-        <div className="header-container-prof-settings">
-          <h1 className="header-text-prof-settings">Profile Settings</h1>
+        <div className=" w-full h-auto bg-white rounded-xl mb-5">
+          <Header
+            id={"profile"}
+            title="Profile Settings"
+          />
         </div>
 
         <div className="content-container-prof-settings">
@@ -258,13 +263,13 @@ export default function Profile() {
 
           <div className="edit-btn-prof-settings w-full">
             <button
-              className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
+              className="w-[350px] py-2 px-10 rounded-2xl text-xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
               onClick={handleEditProfile}
             >
               EDIT PROFILE
             </button>
             <button
-              className="w-[330px] py-5 px-10 rounded-2xl text-2xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
+              className="w-[350px] py-2 px-10 rounded-2xl text-xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
               onClick={handlePasswordChange}
             >
               CHANGE PASSWORD

@@ -91,7 +91,7 @@ export default function ManageStudents() {
   );
 
   const titles = [
-    { key: "name", label: "Name", className: "flex flex-row items-center" },
+    { key: "name", label: "Name", className: "flex items-center flex-grow" },
     { key: "stud_id", label: "Student ID", className: "w-1/4" },
     { key: "branch", label: "Campus", className: "w-1/4" },
     { key: "action", label: "Action", className: "w-1/5" },

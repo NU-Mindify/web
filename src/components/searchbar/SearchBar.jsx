@@ -12,7 +12,7 @@ export default function SearchBar({
   addedClassName
 }){
   return (
-    <div className={`search-bar-holder ${addedClassName}`}>
+    <div className={`search-bar-holder ${addedClassName} bg-white`}>
       {icon && (
         <img
           src={icon}

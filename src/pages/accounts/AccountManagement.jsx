@@ -13,6 +13,9 @@ import SelectFilter from "../../components/selectFilter/SelectFilter";
 import UserContentsTable from "../../components/tableForContents/UserContentsTable";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/account/account.css";
+import Header from "../../components/header/Header";
+import PaginationControl from "../../components/paginationControls/PaginationControl";
+import ToggleButton from "../../components/toggleButton/ToggleButton";
 
 export default function AccountManagement() {
   const [webUsers, setWebUsers] = useState([]);
@@ -28,62 +31,61 @@ export default function AccountManagement() {
   const [showArchived, setShowArchived] = useState(false);
 
   const navigate = useNavigate();
-  const usersPerPage = 15;
+  const usersPerPage = 10;
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
 
   const [confirmUserDelete, setConfirmUserDelete] = useState(null);
   const [confirmUnarchive, setConfirmUnarchive] = useState(null);
 
-const handleConfirmDelete = async () => {
-  if (!confirmUserDelete) return;
-  try {
-    await axios.put(`${API_URL}/deleteWebUser/${confirmUserDelete._id}`, {
-      user_id: confirmUserDelete._id,
-      is_deleted: true,
-    });
-    await fetchUsers();
-    setCardActive(null);
+  const handleConfirmDelete = async () => {
+    if (!confirmUserDelete) return;
+    try {
+      await axios.put(`${API_URL}/deleteWebUser/${confirmUserDelete._id}`, {
+        user_id: confirmUserDelete._id,
+        is_deleted: true,
+      });
+      await fetchUsers();
+      setCardActive(null);
 
-    await axios.post(`${API_URL}/addLogs`, {
-      name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-      branch: currentWebUser.branch,
-      action: "Archived a User",
-      description: `${currentWebUser.firstName} archived ${confirmUserDelete.firstName} ${confirmUserDelete.lastName}'s account.`,
-      position: currentWebUser.position,
-      useravatar: currentWebUser.useravatar,
-    });
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setConfirmUserDelete(null);
-  }
-};
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Archived a User",
+        description: `${currentWebUser.firstName} archived ${confirmUserDelete.firstName} ${confirmUserDelete.lastName}'s account.`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setConfirmUserDelete(null);
+    }
+  };
 
-const handleUnarchiveUser = async () => {
-  if (!confirmUnarchive) return;
-  try {
-    await axios.put(`${API_URL}/deleteWebUser/${confirmUnarchive._id}`, {
-      user_id: confirmUnarchive._id,
-      is_deleted: false,
-    });
-    await fetchUsers();
-    setCardActive(null);
+  const handleUnarchiveUser = async () => {
+    if (!confirmUnarchive) return;
+    try {
+      await axios.put(`${API_URL}/deleteWebUser/${confirmUnarchive._id}`, {
+        user_id: confirmUnarchive._id,
+        is_deleted: false,
+      });
+      await fetchUsers();
+      setCardActive(null);
 
-    await axios.post(`${API_URL}/addLogs`, {
-      name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-      branch: currentWebUser.branch,
-      action: "Unarchived a User",
-      description: `${currentWebUser.firstName} unarchived ${confirmUnarchive.firstName} ${confirmUnarchive.lastName}'s account.`,
-      position: currentWebUser.position,
-      useravatar: currentWebUser.useravatar,
-    });
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setConfirmUnarchive(null);
-  }
-};
-
+      await axios.post(`${API_URL}/addLogs`, {
+        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
+        branch: currentWebUser.branch,
+        action: "Unarchived a User",
+        description: `${currentWebUser.firstName} unarchived ${confirmUnarchive.firstName} ${confirmUnarchive.lastName}'s account.`,
+        position: currentWebUser.position,
+        useravatar: currentWebUser.useravatar,
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setConfirmUnarchive(null);
+    }
+  };
 
   useEffect(() => {
     const loadBranches = async () => {
@@ -97,22 +99,46 @@ const handleUnarchiveUser = async () => {
     loadBranches();
   }, []);
 
+
+  const [totalItems, setTotalItems] = useState(0);
+
   const fetchUsers = async () => {
-    if (!currentUserBranch) return;
-    setIsLoading(true);
-    try {
-      const res = await axios.get(`${API_URL}/getWebUsers/${currentUserBranch}`);
-      setWebUsers(res.data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  if (!currentUserBranch) return;
+  setIsLoading(true);
+
+  try {
+    const res = await axios.get(`${API_URL}/getWebUsers`, {
+      params: {
+        page: currentPage,
+        limit: usersPerPage,
+        branch: selectedBranch || currentUserBranch, 
+        position: selectedPosition || "all",         
+        search: searchQuery || "",                  
+      },
+    });
+
+
+    setWebUsers(res.data.data);
+    setTotalItems(res.data.total)
+
+    console.log("total pages:", res.data.totalPages);
+    console.log("fetched users:", res.data.data);
+    console.log("total items:", res.data.total);
+    
+    
+    
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchUsers();
-  }, [currentUserBranch]);
+  }, [currentPage, selectedBranch, selectedPosition, searchQuery, currentUserBranch, totalItems]);
+
 
   useEffect(() => {
     setCurrentPage(1);
@@ -143,43 +169,57 @@ const handleUnarchiveUser = async () => {
       const query = searchQuery.toLowerCase().replace(",", "").trim();
       const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
       const reversedName = `${user.lastName} ${user.firstName}`.toLowerCase();
-      const matchesSearch = fullName.includes(query) || reversedName.includes(query);
+      const matchesSearch =
+        fullName.includes(query) || reversedName.includes(query);
 
       const matchesBranch =
-        selectedBranch === "" || selectedBranch === "all" || user.branch === selectedBranch;
+        selectedBranch === "" ||
+        selectedBranch === "all" ||
+        user.branch === selectedBranch;
 
       const matchesPosition =
-        selectedPosition === "" || selectedPosition === "all" || user.position === selectedPosition;
+        selectedPosition === "" ||
+        selectedPosition === "all" ||
+        user.position === selectedPosition;
 
       const matchesArchived = showArchived ? user.is_deleted : !user.is_deleted;
-      return matchesSearch && matchesBranch && matchesPosition && matchesArchived;
+      return (
+        matchesSearch && matchesBranch && matchesPosition && matchesArchived
+      );
     })
     .sort((a, b) => {
       const comparison = a.lastName.localeCompare(b.lastName);
       return sortOrderAsc ? comparison : -comparison;
     });
 
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-  const currentUsers = filteredUsers.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage);
+ 
+  const currentUsers = filteredUsers;
+
+
 
   const toggleCard = (id) => {
     setCardActive((prev) => (prev === id ? null : id));
   };
 
-  const getBranchName = (branchId) => branches.find((b) => b.id === branchId)?.name || "Unknown Branch";
+  const getBranchName = (branchId) =>
+    branches.find((b) => b.id === branchId)?.name || "Unknown Branch";
 
   const searchSuggestions = searchQuery
     ? filteredUsers
         .filter((user) => {
           const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-          const reversedName = `${user.lastName} ${user.firstName}`.toLowerCase();
-          return fullName.includes(searchQuery.toLowerCase()) || reversedName.includes(searchQuery.toLowerCase());
+          const reversedName =
+            `${user.lastName} ${user.firstName}`.toLowerCase();
+          return (
+            fullName.includes(searchQuery.toLowerCase()) ||
+            reversedName.includes(searchQuery.toLowerCase())
+          );
         })
         .slice(0, 5)
     : [];
 
   const titles = [
-    { key: "name", label: "Name", className: "flex flex-row items-center" },
+    { key: "name", label: "Name", className: "flex flex-row items-center flex-grow" },
     { key: "position", label: "Position", className: "w-1/4" },
     { key: "branch", label: "Campus", className: "w-1/4" },
     { key: "action", label: "Action", className: "w-1/5" },
@@ -194,7 +234,8 @@ const handleUnarchiveUser = async () => {
       const lastName = user.lastName || "";
       const fullName = `${lastName.toUpperCase()} ${firstName}`.trim();
       const position = user.position || "N/A";
-      const campus = branches.find((branch) => branch.id === user.branch)?.name || "N/A";
+      const campus =
+        branches.find((branch) => branch.id === user.branch)?.name || "N/A";
       return [fullName, position, campus];
     });
 
@@ -239,7 +280,11 @@ const handleUnarchiveUser = async () => {
     const doc = new jsPDF();
 
     doc.text(`${title}`, 14, 10);
-    doc.text(`Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`, 14, 18);
+    doc.text(
+      `Exported by: ${currentWebUser.firstName} ${currentWebUser.lastName}`,
+      14,
+      18
+    );
     doc.text(`Exported on: ${now}`, 14, 26);
 
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -249,15 +294,26 @@ const handleUnarchiveUser = async () => {
     doc.addImage(logoBase64, "PNG", xPos, 10, logoWidth, logoHeight);
 
     const rows = data.map((user) => {
-      const fullName = `${(user.lastName || "").toUpperCase()} ${user.firstName || ""}`.trim();
+      const fullName = `${(user.lastName || "").toUpperCase()} ${
+        user.firstName || ""
+      }`.trim();
       const position = user.position || "";
-      const campus = branches.find((branch) => branch.id === user.branch)?.name || "N/A";
+      const campus =
+        branches.find((branch) => branch.id === user.branch)?.name || "N/A";
       return [fullName, position, campus];
     });
 
-    autoTable(doc, { head: [["Name", "Position", "Campus"]], body: rows, startY: 30 });
+    autoTable(doc, {
+      head: [["Name", "Position", "Campus"]],
+      body: rows,
+      startY: 30,
+    });
 
-    doc.save(`${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${currentWebUser.lastName}.pdf`);
+    doc.save(
+      `${title.replace(" ", "_")}_by_${currentWebUser.firstName}_${
+        currentWebUser.lastName
+      }.pdf`
+    );
   };
 
   // 🔁 Archive / Unarchive handler for the icon
@@ -289,10 +345,21 @@ const handleUnarchiveUser = async () => {
 
   return (
     <div className="account-main-container overflow-hidden">
-      <div className="account-header">
-        <h1 className="account-title">Account Management</h1>
+      <div className="w-full h-[100px] bg-white rounded-xl">
+        <Header
+          id={"account"}
+          title={"Account Management"}
+          exportToCSV={() =>
+            exportAccountsToCSV(filteredUsers, "Accounts_List")
+          }
+          exportToPDF={() =>
+            exportAccountsToPDF(filteredUsers, "Accounts_List")
+          }
+        />
+      </div>
 
-        <div className="acc-sub-header-container">
+      <div className="w-full h-[calc(100svh-140px)] bg-white/50 mt-5 rounded-xl flex flex-col">
+        <div className="w-full h-[100px] flex justify-between pl-15 pr-30 items-center">
           <SearchBar
             value={searchQuery}
             handleChange={(e) => {
@@ -304,86 +371,73 @@ const handleUnarchiveUser = async () => {
             suggestions={searchSuggestions}
             showSuggestions={showSuggestions}
             onSuggestionSelect={(user) => {
-              setSearchQuery(`${user.lastName.toUpperCase()}, ${user.firstName}`);
+              setSearchQuery(
+                `${user.lastName.toUpperCase()}, ${user.firstName}`
+              );
               setShowSuggestions(false);
             }}
-            addedClassName="w-[70%] h-[50px] mt-2 ml-1"
+            addedClassName="w-[70%] h-[50px]"
           />
 
           <Buttons
             text="Pending Account"
             onClick={() => navigate("/account/approval")}
-            addedClassName="btn btn-warning !w-[250px] ml-28 mt-2"
+            addedClassName="btn btn-warning !w-[250px]"
           />
+        </div>
 
-          <div className="ml-40 mr-1 mt-2">
-            <ExportDropdown
-              onExport={(format) => {
-                if (format === "csv") {
-                  exportAccountsToCSV(filteredUsers, "Accounts_List");
-                } else if (format === "pdf") {
-                  exportAccountsToPDF(filteredUsers, "Accounts_List");
-                }
-              }}
+        <div className="w-full h-[80px]">
+          <div className="w-1/2 h-full flex justify-between  items-center">
+            <ToggleButton
+              showLeftChoice={() => setShowArchived(false)}
+              showRightChoice={() => setShowArchived(true)}
+              useStateToShow={showArchived}
+              textLeftChoice={"All Admins"}
+              textRightChoice={"Archive"}
             />
+
+            <SelectFilter
+              ariaLabel={"Select Position"}
+              value={selectedPosition}
+              onChange={(e) => setSelectedPosition(e.target.value)}
+              disabledOption="Select Position"
+              fixOption="All Positions"
+              mainOptions={uniquePositions}
+            />
+
+            {currentWebUser?.position?.toLowerCase() === "super admin" && (
+              <SelectFilter
+                ariaLabel={"Select Campus"}
+                value={selectedBranch}
+                onChange={(e) => setSelectedBranch(e.target.value)}
+                disabledOption="Select Campus"
+                fixOption="All Campuses"
+                mainOptions={branches}
+                getOptionValue={(branch) => branch.id}
+                getOptionLabel={(branch) => branch.name}
+                addedClassName="ml-3"
+              />
+            )}
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-6 w-full mb-7 mt-5 ml-3">
-          <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
-            <button
-              onClick={() => setShowArchived(false)}
-              className={`all-archive-btn ${showArchived || "active"} w-1/2`}
-            >
-              All Admins
-            </button>
-
-            <button
-              onClick={() => setShowArchived(true)}
-              className={`all-archive-btn ${showArchived && "active"} w-1/2`}
-            >
-              Archive
-            </button>
-          </div>
-
-          <SelectFilter
-            ariaLabel={"Select Position"}
-            value={selectedPosition}
-            onChange={(e) => setSelectedPosition(e.target.value)}
-            disabledOption="Select Position"
-            fixOption="All Positions"
-            mainOptions={uniquePositions}
-          />
-
-          {currentWebUser?.position?.toLowerCase() === "super admin" && (
-            <SelectFilter
-              ariaLabel={"Select Campus"}
-              value={selectedBranch}
-              onChange={(e) => setSelectedBranch(e.target.value)}
-              disabledOption="Select Campus"
-              fixOption="All Campuses"
-              mainOptions={branches}
-              getOptionValue={(branch) => branch.id}
-              getOptionLabel={(branch) => branch.name}
-              addedClassName="ml-3"
+        <UserContentsTable
+          columns={4}
+          titles={titles}
+          data={currentUsers}
+          isLoading={isLoading}
+          cardActive={cardActive}
+          toggleCard={toggleCard}
+          sortOrderAsc={sortOrderAsc}
+          setSortOrderAsc={setSortOrderAsc}
+          getBranchName={getBranchName}
+          cardActiveContent={(user) => (
+            <CardActiveContent
+              user={user}
+              fetchUsers={fetchUsers}
+              setCardActive={setCardActive}
             />
           )}
-        </div>
-      </div>
-
-      <UserContentsTable
-        columns={4}
-        titles={titles}
-        data={currentUsers}
-        isLoading={isLoading}
-        cardActive={cardActive}
-        toggleCard={toggleCard}
-        sortOrderAsc={sortOrderAsc}
-        setSortOrderAsc={setSortOrderAsc}
-        getBranchName={getBranchName}
-        cardActiveContent={(user) => (
-        <CardActiveContent user={user} fetchUsers={fetchUsers} setCardActive={setCardActive} />
-        )}
           onArchiveClick={(user, action) => {
             if (action === "archive") {
               setConfirmUserDelete(user);
@@ -391,7 +445,16 @@ const handleUnarchiveUser = async () => {
               setConfirmUnarchive(user);
             }
           }}
-      />
+        />
+
+        <PaginationControl
+          currentPage={currentPage}
+          totalItems={filteredUsers.length}
+          goToPrevPage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          goToNextPage={() => setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(totalItems / 5)))}
+        />
+
+      </div>
 
       {confirmUnarchive && (
         <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
@@ -405,8 +468,16 @@ const handleUnarchiveUser = async () => {
               "?
             </p>
             <div className="popup-buttons">
-              <Buttons text="Yes, Unarchive" addedClassName="btn btn-delete" onClick={handleUnarchiveUser} />
-              <Buttons text="Cancel" addedClassName="btn btn-cancel" onClick={() => setConfirmUnarchive(null)} />
+              <Buttons
+                text="Yes, Unarchive"
+                addedClassName="btn btn-delete"
+                onClick={handleUnarchiveUser}
+              />
+              <Buttons
+                text="Cancel"
+                addedClassName="btn btn-cancel"
+                onClick={() => setConfirmUnarchive(null)}
+              />
             </div>
           </div>
         </div>
@@ -424,100 +495,28 @@ const handleUnarchiveUser = async () => {
               "?
             </p>
             <div className="popup-buttons">
-              <Buttons text="Yes, Archive" addedClassName="btn btn-delete" onClick={handleConfirmDelete} />
-              <Buttons text="Cancel" addedClassName="btn btn-cancel" onClick={() => setConfirmUserDelete(null)} />
+              <Buttons
+                text="Yes, Archive"
+                addedClassName="btn btn-delete"
+                onClick={handleConfirmDelete}
+              />
+              <Buttons
+                text="Cancel"
+                addedClassName="btn btn-cancel"
+                onClick={() => setConfirmUserDelete(null)}
+              />
             </div>
           </div>
         </div>
       )}
-
-
-
-      <div className="acc-footer">
-        <div className="pagination-container">
-          <h1 className="text-black">
-            Showing {filteredUsers.length === 0 ? 0 : (currentPage - 1) * usersPerPage + 1} to{" "}
-            {Math.min(currentPage * usersPerPage, filteredUsers.length)} of {filteredUsers.length}
-          </h1>
-          <div className="join">
-            <button
-              className="join-item btn bg-white text-black"
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage <= 1}
-            >
-              «
-            </button>
-            <button className="join-item btn bg-white text-black" disabled>
-              Page {currentPage}
-            </button>
-            <button
-              className="join-item btn bg-white text-black"
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={currentPage >= totalPages}
-            >
-              »
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
 
-function CardActiveContent({ user, fetchUsers, setCardActive }) {
-  const [confirmUserDelete, setConfirmUserDelete] = useState(false);
-  const [confirmUnarchive, setConfirmUnarchive] = useState(false);
-  const { currentWebUser } = useContext(UserLoggedInContext);
+function CardActiveContent({ user }) {
 
-  const handleConfirmDelete = async () => {
-    try {
-      await axios.put(`${API_URL}/deleteWebUser/${user._id}`, {
-        user_id: user._id,
-        is_deleted: true,
-      });
 
-      await fetchUsers();
-      setCardActive(null);
 
-      await axios.post(`${API_URL}/addLogs`, {
-        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-        branch: currentWebUser.branch,
-        action: "Archived a User",
-        description: `${currentWebUser.firstName} deleted ${user.firstName} ${user.lastName}'s account.`,
-        position: currentWebUser.position,
-        useravatar: currentWebUser.useravatar,
-      });
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    } finally {
-      setConfirmUserDelete(false);
-    }
-  };
-
-  const handleUnarchiveUser = async () => {
-    try {
-      await axios.put(`${API_URL}/deleteWebUser/${user._id}`, {
-        user_id: user._id,
-        is_deleted: false,
-      });
-
-      await fetchUsers();
-      setCardActive(null);
-
-      await axios.post(`${API_URL}/addLogs`, {
-        name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
-        branch: currentWebUser.branch,
-        action: "Unarchive a User",
-        description: `${currentWebUser.firstName} unarchived ${user.firstName} ${user.lastName}'s account.`,
-        position: currentWebUser.position,
-        useravatar: currentWebUser.useravatar,
-      });
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    } finally {
-      setConfirmUserDelete(false);
-    }
-  };
 
   return (
     <>
@@ -538,11 +537,7 @@ function CardActiveContent({ user, fetchUsers, setCardActive }) {
                 day: "numeric",
               })}
         </p>
-
-        
       </div>
-
-      
     </>
   );
 }

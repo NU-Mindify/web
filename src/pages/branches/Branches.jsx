@@ -14,6 +14,8 @@ import "../../css/signUp/signUp.css";
 import { Archive, ArchiveRestore } from "lucide-react";
 import Buttons from "../../components/buttons/Buttons";
 import Header from "../../components/header/Header";
+import ToggleButton from "../../components/toggleButton/ToggleButton";
+
 
 export default function Branches() {
   const [newBranch, setNewBranch] = useState({
@@ -364,30 +366,16 @@ export default function Branches() {
           </div>
         ) : (
           <>
-            <div className="w-full h-[100px] flex  justify-between items-center px-10">
-              <div className="flex justify-between bg-gray-100 rounded-xl w-[400px]">
-                <button
-                  onClick={() => setShowDeletedBranches(false)}
-                  className={`w-1/2 py-3 rounded-xl font-medium transition cursor-pointer ${
-                    !showDeletedBranches
-                      ? "bg-white !text-[#273574] shadow"
-                      : "!text-gray-400 hover:bg-gray-300"
-                  }`}
-                >
-                  Active Campuses
-                </button>
 
-                <button
-                  onClick={() => setShowDeletedBranches(true)}
-                  className={`w-1/2 py-3 rounded-xl font-medium transition cursor-pointer  ${
-                    showDeletedBranches
-                      ? "bg-white !text-[#273574] shadow "
-                      : "!text-gray-400 hover:bg-gray-300"
-                  }`}
-                >
-                  Deleted Campuses
-                </button>
-              </div>
+            
+            <div className="w-full h-[100px] flex  justify-between items-center px-10">
+              <ToggleButton 
+                showLeftChoice={() => setShowDeletedBranches(false)}
+                showRightChoice={() => setShowDeletedBranches(true)}
+                textLeftChoice={"Active Campuses"}
+                textRightChoice={"Deleted Campuses"}
+                useStateToShow={showDeletedBranches}
+              />
 
               <button
                 className="w-50 h-10 bg-white rounded-xl font-medium text-xl text-black hover:bg-gray-600 hover:!text-white cursor-pointer"
@@ -399,31 +387,15 @@ export default function Branches() {
           </>
         )}
 
-        {/* {showAddCampus && (
-          <div className="flex justify-between bg-gray-100 rounded-xl w-[400px] mt-3">
-            <button
-              onClick={() => setShowDeletedBranches(false)}
-              className={`w-1/2 py-3 rounded-xl font-medium transition cursor-pointer ${
-                !showDeletedBranches
-                  ? "bg-white !text-[#273574] shadow"
-                  : "!text-gray-400 hover:bg-gray-300"
-              }`}
-            >
-              Active Campuses
-            </button>
-
-            <button
-              onClick={() => setShowDeletedBranches(true)}
-              className={`w-1/2 py-3 rounded-xl font-medium transition cursor-pointer ${
-                showDeletedBranches
-                  ? "bg-white !text-[#273574] shadow"
-                  : "!text-gray-400 hover:bg-gray-300"
-              }`}
-            >
-              Deleted Campuses
-            </button>
-          </div>
-        )} */}
+        {showAddCampus && (
+          <ToggleButton 
+            showLeftChoice={() => setShowDeletedBranches(false)}
+            showRightChoice={() => setShowDeletedBranches(true)}
+            textLeftChoice={"Active Campuses"}
+            textRightChoice={"Deleted Campuses"}
+            useStateToShow={showDeletedBranches}
+          />
+        )}
 
         
         
