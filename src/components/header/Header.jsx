@@ -13,7 +13,7 @@ export default function Header({ id, title, exportToCSV, exportToPDF }) {
         {title}
       </h1>
 
-      {(id === "campus" || id === "logs" || id === "account") && 
+      
         <ExportDropdown
           onExport={(format) => {
             if (format === "csv") {
@@ -23,7 +23,7 @@ export default function Header({ id, title, exportToCSV, exportToPDF }) {
             }
           }}
         />
-      }
+      
       
     </div>
   );

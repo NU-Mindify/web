@@ -21,7 +21,7 @@ export default function PaginationControl({currentPage, totalItems, goToPrevPage
             >
               «
             </button>
-            <button className="join-item btn bg-white text-black" disabled>
+            <button className="join-item btn !bg-white text-black" disabled>
               Page {currentPage} of {Math.ceil(totalItems / 10) || 1}
             </button>
             <button

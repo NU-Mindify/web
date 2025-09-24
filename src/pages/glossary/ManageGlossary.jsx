@@ -14,6 +14,9 @@ import SearchBar from "../../components/searchbar/SearchBar";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/glossary/glossary.css";
 import EditGlossary from "./EditGlossary";
+import Header from "../../components/header/Header";
+import PaginationControl from "../../components/paginationControls/PaginationControl";
+import ToggleButton from "../../components/toggleButton/ToggleButton";
 
 export default function ManageGlossary() {
   const letters = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -27,10 +30,7 @@ export default function ManageGlossary() {
   const [allTerms, setAllTerms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
-  
   const [activeTermWord, setActiveTermWord] = useState(null);
-
-  const termsPerPage = 30;
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState(null);
@@ -65,9 +65,10 @@ export default function ManageGlossary() {
     if (currentWebUser?.token) {
       getAllTerms();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWebUser, showArchived]);
 
+  // --- FILTER TERMS ---
   const filteredTerms = !searchTerm
     ? allTerms
     : allTerms.filter((term) => {
@@ -84,22 +85,28 @@ export default function ManageGlossary() {
         return term.word.toLowerCase().includes(searchTerm.toLowerCase());
       });
 
+  // --- PAGINATION (ALWAYS 10 per page) ---
+  const termsPerPage = 10;
   const totalPages = Math.ceil(filteredTerms.length / termsPerPage) || 1;
+
   const indexOfLastTerm = currentPage * termsPerPage;
   const indexOfFirstTerm = indexOfLastTerm - termsPerPage;
-  const currentTerms = filteredTerms.slice(indexOfFirstTerm, indexOfLastTerm);
 
+  // Flatten first (with letter info)
+  const flatTerms = filteredTerms.map((term) => {
+    const firstChar = term.word ? term.word[0].toUpperCase() : "";
+    let letter = /^[0-9]/.test(firstChar) ? "#" : firstChar;
+    if (!/[A-Z]/.test(letter) && letter !== "#") letter = "#";
+    return { ...term, letter };
+  });
+
+  // Slice exactly 10 per page
+  const currentTerms = flatTerms.slice(indexOfFirstTerm, indexOfLastTerm);
+
+  // Re-group the 10 terms for display
   const groupedTerms = letters.map((letter) => ({
     letter,
-    terms: currentTerms.filter((term) => {
-      if (!term.word) return false;
-
-      if (letter === "#") {
-        return /^[0-9]/.test(term.word);
-      }
-
-      return term.word[0].toUpperCase() === letter;
-    }),
+    terms: currentTerms.filter((term) => term.letter === letter),
   }));
 
   const goToPage = (page) => {
@@ -206,202 +213,169 @@ export default function ManageGlossary() {
   return (
     <>
       <div className="header">
-        <div className="glossary-title-container">
-          <h1>Manage Glossary</h1>
+        <div className="w-full h-[100px] bg-white rounded-xl">
+          <Header
+            id={"account"}
+            title={"Account Management"}
+            exportToCSV={() => exportGlossaryToCSV(allTerms, "Glossary_Terms")}
+            exportToPDF={() => exportGlossaryToPDF(allTerms, "Glossary_Terms")}
+          />
         </div>
 
-        <div className="glossary-sub-header-container">
-          <SearchBar
-            value={searchTerm}
-            handleChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1); // reset to first page
-            }}
-            placeholder="Search for a term"
-            icon={searchIcon}
-            addedClassName="w-[70%] h-[50px]"
-          />
+        <div className="w-full h-[calc(100svh-140px)] bg-white/50 flex flex-col mt-5 rounded-xl">
+          <div className="w-full h-[100px] flex justify-between items-center px-5">
+            <SearchBar
+              value={searchTerm}
+              handleChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              placeholder="Search for a term"
+              icon={searchIcon}
+              addedClassName="w-[70%] h-[50px]"
+            />
 
-          <div className="flex flex-wrap justify-center sm:justify-between items-center w-full mt-3 gap-2 lg:w-auto lg:mt-0">
+            <ToggleButton
+              id={"glossary"}
+              showLeftChoice={() => setShowArchived(false)}
+              showRightChoice={() => setShowArchived(true)}
+              useStateToShow={showArchived}
+              textLeftChoice={"All Terms"}
+              textRightChoice={"Archive"}
+            />
+
             <Buttons
               text="Add Term"
               onClick={() => navigate("/addterm")}
-              addedClassName="btn btn-warning bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]
+              addedClassName="btn btn-warning bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins] !w-[200px]
 "
             />
-
-            <ExportDropdown
-              onExport={(format) => {
-                if (format === "csv") {
-                  exportGlossaryToCSV(allTerms, "Glossary_Terms");
-                } else if (format === "pdf") {
-                  exportGlossaryToPDF(allTerms, "Glossary Terms");
-                }
-              }}
-            />
           </div>
-        </div>
 
-        {/* Letter filter buttons */}
-        <div className="glossary-letters-btn-container">
-          {letters.map((letter) => (
-            <button
-              key={letter}
-              onClick={() => {
-                setSearchTerm(letter);
-                setCurrentPage(1);
-              }}
-              className="navigator-buttons"
-            >
-              {letter}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="glossary-body">
-        <div className="header-details-container">
-          <div className="w-full mb-3">
-            <div className="flex bg-gray-100 p-1 rounded-xl w-full max-w-[300px] mt-5 sticky top-0 self-start ml-5">
+          <div className="w-full h-[80px] flex justify-evenly">
+            {letters.map((letter) => (
               <button
+                key={letter}
                 onClick={() => {
-                  setShowArchived(false);
-                  setCurrentPage(1); // reset page when switching to All Terms
+                  setSearchTerm(letter);
+                  setCurrentPage(1);
                 }}
-                className={`all-archive-btn ${
-                  !showArchived ? "active" : ""
-                } w-1/2`}
+                className="navigator-buttons"
               >
-                All Terms
+                {letter}
               </button>
+            ))}
+          </div>
 
-              <button
-                onClick={() => {
-                  setShowArchived(true);
-                  setCurrentPage(1); // reset page when switching to Archive
-                }}
-                className={`all-archive-btn ${
-                  showArchived ? "active" : ""
-                } w-1/2`}
-              >
-                Archive
-              </button>
+          <div className="w-full h-[calc(100svh-400px)] overflow-y-auto">
+            <div className="header-details-container">
+            
+              <div className="w-full bg-white flex justify-center border-b-2 border-black sticky top-0 z-50">
+                <div className="header-details">
+                  <div className="header-title">Terminology</div>
+                  <div className="header-title">Definition</div>
+                  <div className="header-title">Action</div>
+                </div>
+              </div>
+
+              <div className="w-full md:w-11/12 flex-grow overflow-y-auto overflow-x-auto justify-center">
+                {loadingTerms ? (
+                  <p>Loading terms...</p>
+                ) : groupedTerms.some((g) => g.terms.length > 0) ? (
+                  groupedTerms.map(({ letter, terms }) =>
+                    terms.length > 0 ? (
+                      <div
+                        key={letter}
+                        className="flex flex-col justify-center items-center"
+                      >
+                        <h3 className="letter-heading w-11/12 text-6xl my-2">
+                          {letter}
+                        </h3>
+                        {terms.map((term) => (
+                          <div
+                            key={term._id}
+                            className={
+                              activeTermWord === term.word
+                                ? "active-per-word-container"
+                                : "per-word-container bg-white"
+                            }
+                          >
+                            <div className="word-container">{term.word}</div>
+                            <div
+                              className={
+                                activeTermWord === term.word
+                                  ? "active-meaning-container"
+                                  : "meaning-container"
+                              }
+                            >
+                              {term.meaning}
+                            </div>
+
+                            <div className="action-container">
+                              <button
+                                type="button"
+                                className="editIcon"
+                                onClick={() =>
+                                  handlesEdit(
+                                    term._id,
+                                    term.word,
+                                    term.meaning,
+                                    term.tags
+                                  )
+                                }
+                              >
+                                <img src={edit} alt="edit icon" />
+                              </button>
+
+                              <button
+                                type="button"
+                                className={
+                                  activeTermWord === term.word
+                                    ? "active-dropdown"
+                                    : "dropdown"
+                                }
+                                onClick={() => onToggleDropdown(term.word)}
+                              >
+                                <img src={dropdown} alt="dropdown icon" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null
+                  )
+                ) : (
+                  <p>No terms found.</p>
+                )}
+
+                {showEditModal && selectedTerm && (
+                  <EditGlossary
+                    term={selectedTerm}
+                    onClose={() => setShowEditModal(false)}
+                    onTermUpdated={() => {
+                      getAllTerms().then(allTerms);
+                    }}
+                    showArchive={showArchived}
+                  />
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Table headers */}
-          <div className="header-details">
-            <div className="header-title">Terminology</div>
-            <div className="header-title">Definition</div>
-            <div className="header-title">Action</div>
-          </div>
-
-          {/* Terms list */}
-          {/* <div className="w-11/12 flex-grow overflow-auto"> */}
-          <div className="w-full md:w-11/12 flex-grow overflow-y-auto overflow-x-auto justify-center">
-            {loadingTerms ? (
-              <p>Loading terms...</p>
-            ) : groupedTerms.some((g) => g.terms.length > 0) ? (
-              groupedTerms.map(({ letter, terms }) =>
-                terms.length > 0 ? (
-                  <div
-                    key={letter}
-                    className="flex flex-col justify-center items-center"
-                  >
-                    <h3 className="letter-heading w-11/12 text-6xl my-2">
-                      {letter}
-                    </h3>
-                    {terms.map((term) => (
-                      <div
-                        key={term._id}
-                        className={
-                          activeTermWord === term.word
-                            ? "active-per-word-container"
-                            : "per-word-container"
-                        }
-                      >
-                        <div className="word-container">{term.word}</div>
-                        <div
-                          className={
-                            activeTermWord === term.word
-                              ? "active-meaning-container"
-                              : "meaning-container"
-                          }
-                        >
-                          {term.meaning}
-                        </div>
-
-                        <div className="action-container">
-                          <button
-                            type="button"
-                            className="editIcon"
-                            onClick={() =>
-                              handlesEdit(
-                                term._id,
-                                term.word,
-                                term.meaning,
-                                term.tags
-                              )
-                            }
-                          >
-                            <img src={edit} alt="edit icon" />
-                          </button>
-
-                          <button
-                            type="button"
-                            className={
-                              activeTermWord === term.word
-                                ? "active-dropdown"
-                                : "dropdown"
-                            }
-                            onClick={() => onToggleDropdown(term.word)}
-                          >
-                            <img src={dropdown} alt="dropdown icon" />
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : null
+          <PaginationControl
+            currentPage={currentPage}
+            totalItems={filteredTerms.length}
+            goToPrevPage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            goToNextPage={() =>
+              setCurrentPage((prev) =>
+                Math.min(prev + 1, Math.ceil(filteredTerms.length / 5))
               )
-            ) : (
-              <p>No terms found.</p>
-            )}
-
-            {showEditModal && selectedTerm && (
-              <EditGlossary
-                term={selectedTerm}
-                onClose={() => setShowEditModal(false)}
-                onTermUpdated={() => {
-                  getAllTerms().then(allTerms);
-                }}
-                showArchive={showArchived}
-              />
-            )}
-          </div>
-
-          {/* Pagination controls */}
-          <div className="join mt-5 w-10/12 flex justify-end">
-            <button
-              className="join-item btn bg-white"
-              disabled={currentPage === 1}
-              onClick={() => goToPage(currentPage - 1)}
-            >
-              «
-            </button>
-            <button className="join-item btn bg-white">
-              Page {currentPage} of {totalPages}
-            </button>
-            <button
-              className="join-item btn bg-white"
-              disabled={currentPage === totalPages}
-              onClick={() => goToPage(currentPage + 1)}
-            >
-              »
-            </button>
-          </div>
+            }
+          />
         </div>
       </div>
+
+
     </>
   );
 }

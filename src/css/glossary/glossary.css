@@ -3,7 +3,7 @@
 
 /* ------------------- MAIN HEADER ---------------- */
 .header {
-  @apply w-full bg-white h-auto rounded-xl flex flex-col items-center pt-3 px-3;
+  @apply w-full h-auto rounded-xl flex flex-col items-center;
 }
 
 /* ------------------- HEADER CONTENTS ---------------- */
@@ -64,7 +64,7 @@
 
 .header-details-container {
   /* @apply w-full flex lg:justify-center lg:items-center mt-2 sticky top-0 z-50 font-[Poppins] flex-col bg-white; */
-  @apply w-full flex flex-col justify-center items-start md:items-center sticky top-0 z-50 font-[Poppins] bg-white;
+  @apply w-full flex flex-col justify-center items-start md:items-center font-[Poppins];
 }
 
 .header-details {
@@ -73,7 +73,7 @@
    @apply grid grid-cols-[2fr_3fr_1fr] 
          text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 
          font-medium text-black h-[40px] sm:h-[50px] md:h-[60px] 
-         lg:items-center border-b-2 border-black w-full md:w-11/12 
+         lg:items-center w-full md:w-11/12 
          min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
 }
 
@@ -95,7 +95,7 @@
 .per-word-container {
   /* Added min-w for the grid layout to ensure minimum width before scrolling */
   /* @apply w-11/12 grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-300 border-1 border-black min-w-[700px]; Adjust min-w value to match or be slightly less than header-details */
-  @apply w-full sm:w-11/12 grid grid-cols-[1fr] sm:grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-300 border-1 border-black min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
+  @apply w-full sm:w-11/12 grid grid-cols-[1fr] sm:grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-[#35408E] border-1 border-black min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
   @apply transform scale-100 transition-transform duration-300 ease-in-out;
 }
 

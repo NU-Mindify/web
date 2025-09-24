@@ -15,6 +15,9 @@ import UserContentsTable from "../../components/tableForContents/UserContentsTab
 import { API_URL, branches, categories } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/students/students.css";
+import Header from "../../components/header/Header";
+import PaginationControl from "../../components/paginationControls/PaginationControl";
+import ToggleButton from "../../components/toggleButton/ToggleButton";
 
 export default function ManageStudents() {
   const { currentWebUser } = useContext(UserLoggedInContext);
@@ -195,15 +198,13 @@ export default function ManageStudents() {
     );
   };
 
-
-
   const handleArchiveClick = (student, action) => {
     if (action === "archive") {
       setConfirmUserDelete(student);
     } else {
       setConfirmUnarchive(student);
-     }
-   };
+    }
+  };
 
   const handleConfirmDelete = async () => {
     if (!confirmUserDelete) return;
@@ -220,14 +221,20 @@ export default function ManageStudents() {
         is_deleted: true,
       });
 
-      const firstName = confirmUserDelete.first_name || confirmUserDelete.firstName || "";
-      const lastName = confirmUserDelete.last_name || confirmUserDelete.lastName || "";
+      const firstName =
+        confirmUserDelete.first_name || confirmUserDelete.firstName || "";
+      const lastName =
+        confirmUserDelete.last_name || confirmUserDelete.lastName || "";
 
       await axios.post(`${API_URL}/addLogs`, {
-        name: `${currentWebUser.first_name || currentWebUser.firstName} ${currentWebUser.last_name || currentWebUser.lastName}`,
+        name: `${currentWebUser.first_name || currentWebUser.firstName} ${
+          currentWebUser.last_name || currentWebUser.lastName
+        }`,
         branch: currentWebUser.branch,
         action: "Archived a Student",
-        description: `${currentWebUser.first_name || currentWebUser.firstName} archived ${firstName} ${lastName}'s account.`,
+        description: `${
+          currentWebUser.first_name || currentWebUser.firstName
+        } archived ${firstName} ${lastName}'s account.`,
         position: currentWebUser.position,
         useravatar: currentWebUser.useravatar,
       });
@@ -255,19 +262,25 @@ export default function ManageStudents() {
         is_deleted: false,
       });
 
-      const firstName = confirmUnarchive.first_name || confirmUnarchive.firstName || "";
-      const lastName = confirmUnarchive.last_name || confirmUnarchive.lastName || "";
+      const firstName =
+        confirmUnarchive.first_name || confirmUnarchive.firstName || "";
+      const lastName =
+        confirmUnarchive.last_name || confirmUnarchive.lastName || "";
 
       await axios.post(`${API_URL}/addLogs`, {
-        name: `${currentWebUser.first_name || currentWebUser.firstName} ${currentWebUser.last_name || currentWebUser.lastName}`,
+        name: `${currentWebUser.first_name || currentWebUser.firstName} ${
+          currentWebUser.last_name || currentWebUser.lastName
+        }`,
         branch: currentWebUser.branch,
         action: "Unarchived a Student",
-        description: `${currentWebUser.first_name || currentWebUser.firstName} unarchived ${firstName} ${lastName}'s account.`,
+        description: `${
+          currentWebUser.first_name || currentWebUser.firstName
+        } unarchived ${firstName} ${lastName}'s account.`,
         position: currentWebUser.position,
         useravatar: currentWebUser.useravatar,
       });
 
-      await fetchStudents(); 
+      await fetchStudents();
     } catch (error) {
       console.error("Error unarchiving user:", error);
     } finally {
@@ -275,16 +288,19 @@ export default function ManageStudents() {
     }
   };
 
-  
-
-
   return (
     <div className="students-main-container">
-      <div className="student-header">
-        <h1 className="student-title flex flex-row items-center">
-          View Students
-        </h1>
-        <div className="stud-sub-header-container">
+      <div className="w-full h-[100px] bg-white rounded-xl">
+        <Header
+          id={"students"}
+          title="Manage Students"
+          exportToCSV={() => exportToCSV(filteredStudents, "Students_List")}
+          exportToPDF={() => exportToPDF(filteredStudents, "Students_List")}
+        />
+      </div>
+
+      <div className="w-full h-[calc(100svh-140px)] bg-white/50 mt-5 rounded-xl flex flex-col">
+        <div className="w--full h-[100px] flex justify-between items-center px-5">
           <SearchBar
             value={searchTerm}
             handleChange={(e) => setSearchTerm(e.target.value)}
@@ -307,54 +323,48 @@ export default function ManageStudents() {
                 addedClassName="ml-3"
               />
             )}
-
-            <ExportDropdown
-              onExport={(format) => {
-                if (format === "csv") {
-                  exportToCSV(filteredStudents, "Students_List");
-                } else if (format === "pdf") {
-                  exportToPDF(filteredStudents, "Students_List");
-                }
-              }}
-            />
           </div>
         </div>
-      </div>
-      <div className="flex bg-gray-100 p-1 rounded-xl w-[300px] ml-4 mb-8">
-        <button
-          onClick={() => setShowArchived(false)}
-          className={`all-archive-btn ${showArchived || "active"} w-1/2`}
-        >
-          All Students
-        </button>
 
-        <button
-          onClick={() => setShowArchived(true)}
-          className={`all-archive-btn ${showArchived && "active"} w-1/2`}
-        >
-          Archive
-        </button>
-      </div>
-
-      <UserContentsTable
-        columns={4}
-        data={currentStudents}
-        titles={titles}
-        sortOrderAsc={sortOrder}
-        setSortOrderAsc={setSortOrder}
-        isLoading={loadingStudents}
-        cardActive={cardActive}
-        toggleCard={toggleCard}
-        getBranchName={getBranchName}
-        cardActiveContent={(student) => (
-          <CardActiveContent
-            student={student}
-            fetchUsers={fetchStudents}
-            setCardActive={setCardActive}
+        <div className="w-full h-[80px]">
+          <ToggleButton
+            showLeftChoice={() => setShowArchived(false)}
+            showRightChoice={() => setShowArchived(true)}
+            useStateToShow={showArchived}
+            textLeftChoice={"All Students"}
+            textRightChoice={"Archive"}
           />
-        )}
-        onArchiveClick={handleArchiveClick} 
-      />
+        </div>
+
+        <UserContentsTable
+          columns={4}
+          data={currentStudents}
+          titles={titles}
+          sortOrderAsc={sortOrder}
+          setSortOrderAsc={setSortOrder}
+          isLoading={loadingStudents}
+          cardActive={cardActive}
+          toggleCard={toggleCard}
+          getBranchName={getBranchName}
+          cardActiveContent={(student) => (
+            <CardActiveContent
+              student={student}
+              fetchUsers={fetchStudents}
+              setCardActive={setCardActive}
+            />
+          )}
+          onArchiveClick={handleArchiveClick}
+        />
+
+          <PaginationControl
+            currentPage={currentPage}
+            totalItems={filteredStudents.length}
+            goToPrevPage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            goToNextPage={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+          />
+      </div>
 
       {confirmUnarchive && (
         <div className="modal-overlay confirm-delete-popup !w-[100%] !h-[100%]">
@@ -411,41 +421,6 @@ export default function ManageStudents() {
           </div>
         </div>
       )}
-
-
-      <div className="student-footer">
-        <div className="student-pagination-container">
-          <h1 className="text-black">
-            Showing{" "}
-            {filteredStudents.length === 0 ? 0 : indexOfFirstStudent + 1} to{" "}
-            {Math.min(indexOfLastStudent, filteredStudents.length)} of{" "}
-            {filteredStudents.length}
-          </h1>
-          <div className="join">
-            <button
-              className="join-item btn bg-white text-black"
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1 || filteredStudents.length === 0}
-            >
-              «
-            </button>
-            <button className="join-item btn bg-white text-black" disabled>
-              Page {currentPage}
-            </button>
-            <button
-              className="join-item btn bg-white text-black"
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={
-                currentPage === totalPages || filteredStudents.length === 0
-              }
-            >
-              »
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -463,25 +438,22 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
   const studentId = student._id;
 
   console.log("STUDENT lifespan:", student.lifespan);
-  
-  
+
   useEffect(() => {
-    async function fetchRecentSessions(){
-      try{
-        const {data} = await axios.get(`${API_URL}/getRecentSessions?id=${studentId}`);
+    async function fetchRecentSessions() {
+      try {
+        const { data } = await axios.get(
+          `${API_URL}/getRecentSessions?id=${studentId}`
+        );
         setRecentSessions(data);
         console.log("recent sessions", data);
-      }
-      catch(error){
+      } catch (error) {
         console.error("Error fetching recent sessions:", error.message);
       }
     }
 
-    if(studentId) fetchRecentSessions();
+    if (studentId) fetchRecentSessions();
   }, [studentId]);
-
-  
-  
 
   useEffect(() => {
     const fetchRecentAttempts = async () => {
@@ -492,8 +464,6 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
         );
         setRecentAct(data);
         console.log("recent", data);
-        
-
       } catch (error) {
         console.error("Error fetching student data:", error.message);
       } finally {
@@ -502,7 +472,6 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
     };
     if (studentId) fetchRecentAttempts();
   }, [studentId]);
-
 
   useEffect(() => {
     const fetchAttempts = async () => {
@@ -586,9 +555,6 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
   const highestMasteryScores = getHighestMasteryScores();
 
   const navigate = useNavigate();
-  
-
- 
 
   return (
     <>
@@ -702,7 +668,7 @@ function CardActiveContent({ student, fetchUsers, setCardActive }) {
                             studentAvatar: student.avatar,
                             studentCloth: student.cloth,
                             studentItems: student.items,
-                            studentSessions: recentSessions
+                            studentSessions: recentSessions,
                           },
                         });
                       }}
