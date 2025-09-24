@@ -6,8 +6,22 @@
     --color-secondary: #35408E;
 }
 
-* {
-    box-sizing: border-box;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  color: white; /* sets text color */
+}
+
+html, body {
+  background-color: #202024;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.dark-theme *{
+    color: white;
 }
 
 body{
@@ -36,7 +50,7 @@ body{
 
 .side-menu {
     border-radius: 10px;
-    @apply w-10 h-10 bg-white transition-all duration-300 ease-in-out flex justify-center items-center mb-2
+    @apply w-10 h-10 transition-all duration-300 ease-in-out flex justify-center items-center mb-2
     lg:w-[50px] lg:h-full lg:pt-3 lg:p-0 lg:block;
     scrollbar-width: none; 
     -ms-overflow-style: none;
@@ -44,7 +58,7 @@ body{
 
 
 .active-side-menu{
-    @apply absolute top-0 left-0 z-[500] bg-white pt-5 pb-4 pl-3 pr-3 overflow-visible transition-all duration-500 ease-in-out 
+    @apply absolute top-0 left-0 z-[500] pt-5 pb-4 pl-3 pr-3 overflow-visible transition-all duration-500 ease-in-out 
     w-[calc(100svw-24px)] h-[calc(100svh-24px)] m-3 rounded-xl lg:w-[250px] lg:min-w-[250px] lg:h-full lg:flex lg:flex-col lg:static lg:m-0;
 
     overflow-y: auto;
@@ -191,7 +205,7 @@ body{
 }
 
 .user-name {
-    @apply text-xl font-bold text-[#343537];
+    @apply text-xl font-bold;
 }
 
 /********************************/
@@ -211,7 +225,7 @@ body{
 
 .active-btn-txt{
 
-    @apply text-black ml-1.5 text-[15px];
+    @apply ml-1.5 text-[15px];
 }
 
 /********************************/

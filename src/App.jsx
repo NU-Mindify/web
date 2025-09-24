@@ -41,6 +41,17 @@ function App() {
   const [isActive, setActive] = useState(false);
   const [subSelected, setSubSelected] = useState("");
   const [selected, setSelected] = useState("");
+  const [theme, setTheme] = useState("#202024");
+  const [themeWithOpacity, setThemeWithOpacity] = useState(null);
+
+  useEffect(() => {
+    if (theme === "#202024") {
+      setThemeWithOpacity("rgba(32, 32, 36, 0.7)");
+    }
+    else if(theme === "#ffffff"){
+      setThemeWithOpacity("rgba(255, 255, 255, 0.5)");
+    }
+  }, [theme]); 
 
   const [currentWebUser, setCurrentWebUser] = useState({
     firstName: "",
@@ -163,6 +174,10 @@ function App() {
         setSelected,
         subSelected,
         setSubSelected,
+        theme,
+        setTheme,
+        themeWithOpacity,
+        setThemeWithOpacity,
       }}
     >
       <UserLoggedInContext.Provider
@@ -190,7 +205,7 @@ function App() {
               </Routes>
             ) : !isSplash ? (
               <div className="main-container">
-                <SessionTimeout timeout={15 * 60 * 1000} />  {/* 15 minutes */}
+                <SessionTimeout timeout={15 * 60 * 1000} /> {/* 15 minutes */}
                 {/* <SessionTimeout timeout={10 * 1000} /> 10 seconds for testing */}
                 <Sidebar />
                 <div

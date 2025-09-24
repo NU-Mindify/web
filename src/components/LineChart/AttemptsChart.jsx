@@ -43,17 +43,24 @@ export default function AttemptsChart({ attempts, viewMode, setViewMode }) {
 
   return (
     <div className="w-full">
-
       <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={groupAttempts} className="text-black">
+        <LineChart data={groupAttempts}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="date"
             tickFormatter={formatDate}
-            className="text-black"
+            tick={{ fill: "black" }}
           />
-          <YAxis allowDecimals={false} />
-          <Tooltip labelFormatter={formatDate} />
+          <YAxis
+            allowDecimals={false}
+            tick={{ fill: "black" }}
+          />
+          <Tooltip
+            labelFormatter={formatDate}
+            contentStyle={{ color: "black" }}
+            itemStyle={{ color: "black" }}
+            labelStyle={{ color: "black" }}
+          />
           <Line
             type="monotone"
             dataKey="attempts"

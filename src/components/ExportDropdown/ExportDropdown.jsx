@@ -1,10 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import "../ExportDropdown/ExportDropdown.css";
 import { Download } from "lucide-react";
+import { ActiveContext } from "../../contexts/Contexts";
+
+
 
 const ExportDropdown = ({ onExport }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const {theme} = useContext(ActiveContext)
+  
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
@@ -31,7 +37,8 @@ const ExportDropdown = ({ onExport }) => {
   return (
     <div className="export-dropdown-container" ref={dropdownRef}>
       <button
-        className="export-btn mt-2"
+        className={`export-btn mt-2
+        ${theme === "#202024" ? "!invert !brightness-0" : ''}`}
         onClick={handleToggle}
         style={{ cursor: "pointer" }}
         aria-label="Export Options"

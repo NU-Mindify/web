@@ -1,7 +1,13 @@
 import { Link } from 'react-router-dom'
 import '../../index.css'
+import { ActiveContext } from '../../contexts/Contexts'
+import { useContext } from 'react'
+
+
+
 
 export default function MenuBtn({ icons, active, text, isSelected, onPress, goTo }) {
+    const { theme } = useContext(ActiveContext);
     return (
         <Link to={goTo} onClick={onPress}>
             <div
@@ -9,8 +15,15 @@ export default function MenuBtn({ icons, active, text, isSelected, onPress, goTo
                 data-tip={!active ? text : undefined} 
             >
                 <button className={`${active ? 'active-btn-icon' : 'btn-icon'}`}>
-                    <img src={icons} className={active ? 'active-mainIcon' : 'mainIcon'} alt={text} />
-                    {active && <h1 className='active-btn-txt'>{text}</h1>}
+                    <img
+                        src={icons}
+                        className={`${active ? "active-mainIcon" : "mainIcon"} ${
+                            theme === "#202024" ? "invert brightness-0" : ""
+                        }`}
+                        alt={text}
+                    />
+
+                    {active && <h1 className={`active-btn-txt ${theme === "#202024" ? "!text-white" : "text-black"}`}>{text}</h1>}
                 </button>
             </div>
         </Link>

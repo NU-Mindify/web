@@ -11,11 +11,12 @@ import Buttons from "../../components/buttons/Buttons";
 import SearchBar from "../../components/searchbar/SearchBar";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
 import UserContentsTable from "../../components/tableForContents/UserContentsTable";
-import { UserLoggedInContext } from "../../contexts/Contexts";
+import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/account/account.css";
 import Header from "../../components/header/Header";
 import PaginationControl from "../../components/paginationControls/PaginationControl";
 import ToggleButton from "../../components/toggleButton/ToggleButton";
+
 
 export default function AccountManagement() {
   const [webUsers, setWebUsers] = useState([]);
@@ -33,6 +34,7 @@ export default function AccountManagement() {
   const navigate = useNavigate();
   const usersPerPage = 10;
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
+  const { theme , themeWithOpacity } = useContext(ActiveContext)
 
   const [confirmUserDelete, setConfirmUserDelete] = useState(null);
   const [confirmUnarchive, setConfirmUnarchive] = useState(null);
@@ -345,7 +347,7 @@ export default function AccountManagement() {
 
   return (
     <div className="account-main-container overflow-hidden">
-      <div className="w-full h-[100px] bg-white rounded-xl">
+      <div className="w-full h-[100px] rounded-xl">
         <Header
           id={"account"}
           title={"Account Management"}
@@ -358,7 +360,10 @@ export default function AccountManagement() {
         />
       </div>
 
-      <div className="w-full h-[calc(100svh-140px)] bg-white/50 mt-5 rounded-xl flex flex-col">
+      <div 
+        className="w-full h-[calc(100svh-140px)] mt-5 rounded-xl flex flex-col"
+        style={{ backgroundColor: themeWithOpacity }}
+      >
         <div className="w-full h-[100px] flex justify-between pl-15 pr-30 items-center">
           <SearchBar
             value={searchQuery}

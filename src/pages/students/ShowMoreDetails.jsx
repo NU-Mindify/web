@@ -4,6 +4,9 @@ import samplepic from "../../assets/students/sample-minji.svg";
 import { avatarBodies } from "../../AvatarBody";
 import { avatarandclothes, branches, categories } from "../../Constants";
 import "../../css/students/showMoreDetails.css";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import logo from "../../assets/logo/logo.png";
 
 export default function ShowMoreDetails() {
   const location = useLocation();
@@ -22,8 +25,6 @@ export default function ShowMoreDetails() {
   const recentAct = location.state?.recentAct;
   const studentItems = location.state?.studentItems;
   const studentSessions = location.state?.studentSessions;
-
-  
 
   console.log("Recnt acct", recentAct);
 
@@ -141,24 +142,258 @@ export default function ShowMoreDetails() {
   const competitionHighestScores = getCompetitionHighScores();
   const highestMasteryScores = getHighestMasteryScores();
   const reviewHighestScores = getReviewHighScores();
+  console.log("compe highest score", competitionHighestScores);
 
   const competitionAttemptsCount = getTotalAttemptsPerLevel(competitionData);
   const reviewAttemptsCount = getTotalAttemptsPerLevel(reviewData);
 
+  const getBase64FromUrl = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  const transformCompetitionReview = (
+    highestScores,
+    attemptsCount,
+    categories
+  ) => {
+    const rows = [];
+    categories.forEach((cat) => {
+      for (let lvl = 1; lvl <= 10; lvl++) {
+        const key = `${cat.id}-${lvl}`;
+        const attempt = highestScores[key];
+        rows.push({
+          category: cat.name,
+          level: lvl,
+          correct: attempt?.correct || 0,
+          total: attempt?.total_items || 0,
+          attempts: attemptsCount[key] || 0,
+        });
+      }
+    });
+    return rows;
+  };
+
+  const transformMastery = (highestMasteryScores, categories) => {
+    return categories.map((cat) => {
+      const attempt = highestMasteryScores[cat.id];
+      return {
+        category: cat.name,
+        correct: attempt?.correct || 0,
+        total: attempt?.total_items || 0,
+        percentage: attempt?.percentage || 0,
+      };
+    });
+  };
+
+  const exportStudentDetailsToPDF = async (student, data) => {
+    let logoBase64 = "";
+    try {
+      logoBase64 = await getBase64FromUrl(logo);
+    } catch (error) {
+      console.error("Error converting logo:", error);
+    }
+
+    const now = new Date().toLocaleString();
+    const doc = new jsPDF();
+
+    // Header
+    doc.setFontSize(16);
+    doc.text(
+      `${student.lastName}, ${student.firstName} - Overall Data`,
+      14,
+      15
+    );
+
+    doc.setFontSize(10);
+    doc.text(`Student ID: ${student.id}`, 14, 22);
+    doc.text(`Branch: ${student.branch}`, 14, 28);
+    doc.text(`Exported on: ${now}`, 14, 34);
+
+    // Logo
+    const pageWidth = doc.internal.pageSize.getWidth();
+    if (logoBase64) {
+      doc.addImage(logoBase64, "PNG", pageWidth - 40, 10, 30, 15);
+    }
+
+    let yPos = 42;
+
+    // Recent Activity
+    if (data.recentAct?.length) {
+      autoTable(doc, {
+        startY: yPos,
+        head: [["Mode", "Level", "Category", "Score", "Time", "Date"]],
+        body: data.recentAct.map((act) => [
+          act.mode,
+          act.level,
+          act.category,
+          `${act.correct}/${act.total_items}`,
+          act.time_completion,
+          new Date(act.createdAt).toLocaleString(),
+        ]),
+        theme: "grid",
+        headStyles: { fillColor: [41, 128, 185] },
+      });
+      yPos = doc.lastAutoTable.finalY + 10;
+    }
+
+    // Sessions
+    if (data.sessions?.length) {
+      autoTable(doc, {
+        startY: yPos,
+        head: [
+          ["Duration", "Start Date", "Start Time", "End Date", "End Time"],
+        ],
+        body: data.sessions.map((s) => [
+          s.duration,
+          new Date(s.start_time).toLocaleDateString(),
+          new Date(s.start_time).toLocaleTimeString(),
+          new Date(s.end_time).toLocaleDateString(),
+          new Date(s.end_time).toLocaleTimeString(),
+        ]),
+        theme: "grid",
+        headStyles: { fillColor: [41, 128, 185] },
+      });
+      yPos = doc.lastAutoTable.finalY + 10;
+    }
+
+    // Competition Highest Scores
+    if (data.competition?.length) {
+      autoTable(doc, {
+        startY: yPos,
+        head: [["Category", "Level", "Best Score", "Attempts"]],
+        body: data.competition.map((row) => [
+          row.category,
+          row.level,
+          `${row.correct}/${row.total}`,
+          row.attempts,
+        ]),
+        theme: "grid",
+        headStyles: { fillColor: [39, 174, 96] },
+      });
+      yPos = doc.lastAutoTable.finalY + 10;
+    }
+
+    // Review Highest Scores
+    if (data.review?.length) {
+      autoTable(doc, {
+        startY: yPos,
+        head: [["Category", "Level", "Best Score", "Attempts"]],
+        body: data.review.map((row) => [
+          row.category,
+          row.level,
+          `${row.correct}/${row.total}`,
+          row.attempts,
+        ]),
+        theme: "grid",
+        headStyles: { fillColor: [142, 68, 173] },
+      });
+      yPos = doc.lastAutoTable.finalY + 10;
+    }
+
+    // Mastery Highest Scores
+    if (data.mastery?.length) {
+      autoTable(doc, {
+        startY: yPos,
+        head: [["Category", "Correct", "Total Items", "Percentage"]],
+        body: data.mastery.map((row) => [
+          row.category,
+          row.correct,
+          row.total,
+          `${row.percentage}%`,
+        ]),
+        theme: "grid",
+        headStyles: { fillColor: [230, 126, 34] },
+      });
+      yPos = doc.lastAutoTable.finalY + 10;
+    }
+
+    // Badges
+    if (data.badges?.length) {
+      doc.setFontSize(12);
+      doc.text("Badges Acquired:", 14, yPos);
+      yPos += 5;
+
+      let col = 0;
+      let rowY = yPos;
+
+      for (let i = 0; i < data.badges.length; i++) {
+        try {
+          const badgeBase64 = await getBase64FromUrl(
+            data.badges[i].badge_id.filepath
+          );
+          doc.addImage(badgeBase64, "PNG", 14 + col * 35, rowY, 30, 30);
+        } catch (err) {
+          console.error("Badge error:", err);
+        }
+
+        col++;
+        if (col % 5 === 0) {
+          col = 0;
+          rowY += 35;
+        }
+      }
+    }
+
+    // Save
+    doc.save(`Student_${student.lastName}_${student.firstName}_Details.pdf`);
+  };
+
   return (
     <>
       <div className="more-details-container">
-        <div className="add-account-header">
+        <div className="add-account-header justify-between pr-10">
+          <div className="flex ">
+            <button
+              type="button"
+              onClick={() => navigate("/students")}
+              className="view-acc-btn"
+            >
+              <img src={chevronIcon} alt="chevron" />
+            </button>
+            <h1 className="add-account-title">
+              {studentLastName}'s Overall Data
+            </h1>
+          </div>
+
           <button
-            type="button"
-            onClick={() => navigate("/students")}
-            className="view-acc-btn"
+            className="btn btn-warning ml-10 w-50 h-15"
+            onClick={() =>
+              exportStudentDetailsToPDF(
+                {
+                  firstName: studentFirstName,
+                  lastName: studentLastName,
+                  id: studentId,
+                  branch: studentBranch,
+                },
+                {
+                  recentAct,
+                  sessions: studentSessions,
+                  competition: transformCompetitionReview(
+                    competitionHighestScores,
+                    competitionAttemptsCount,
+                    categories
+                  ),
+                  review: transformCompetitionReview(
+                    reviewHighestScores,
+                    reviewAttemptsCount,
+                    categories
+                  ),
+                  mastery: transformMastery(highestMasteryScores, categories),
+                  badges: studentBadges,
+                }
+              )
+            }
           >
-            <img src={chevronIcon} alt="chevron" />
+            Export to PDF
           </button>
-          <h1 className="add-account-title">
-            {studentLastName}'s Overall Data
-          </h1>
         </div>
         <div className="profile-pic-details-container">
           <table className="profile-pic-details-table">

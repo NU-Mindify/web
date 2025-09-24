@@ -13,22 +13,16 @@ import { API_URL } from "../../Constants";
 import "../../css/profile/profile.css";
 import { firebaseAuth } from "../../Firebase";
 
-
-
-import { UserLoggedInContext } from "../../contexts/Contexts";
+import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import Header from "../../components/header/Header";
 
 export default function Profile() {
-  const {
-    currentWebUser,
-    currentWebUserUID,
-    setCurrentWebUserUID,
-  } = useContext(UserLoggedInContext);
+  const { currentWebUser, currentWebUserUID, setCurrentWebUserUID } =
+    useContext(UserLoggedInContext);
+
+  const { themeWithOpacity, theme } = useContext(ActiveContext);
 
   const navigate = useNavigate();
-
-
-
 
   const [webUser, setWebUser] = useState({});
 
@@ -42,21 +36,19 @@ export default function Profile() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-
   const [showDiscardModal, setShowDiscardModal] = useState(false);
-  const [discardTarget, setDiscardTarget] = useState(null); 
+  const [discardTarget, setDiscardTarget] = useState(null);
 
   const user = firebaseAuth.currentUser;
 
   useEffect(() => {
     let uid = currentWebUserUID;
 
-
     if (!uid) {
       const storedUID = localStorage.getItem("userUID");
       if (storedUID) {
         uid = storedUID;
-        setCurrentWebUserUID(storedUID); 
+        setCurrentWebUserUID(storedUID);
       }
     }
 
@@ -161,104 +153,98 @@ export default function Profile() {
     <>
       <div className="main-cont-prof-settings">
         <div className=" w-full h-auto bg-white rounded-xl mb-5">
-          <Header
-            id={"profile"}
-            title="Profile Settings"
-          />
+          <Header id={"profile"} title="Profile Settings" />
         </div>
 
-        <div className="content-container-prof-settings">
-          <div className="avatar-edit-container-prof-settings">
+        <div
+          className="content-container-prof-settings"
+          style={{ backgroundColor: themeWithOpacity }}
+        >
+          <div className="avatar-edit-container-prof-settings ">
             <div className="avatar-container-prof-settings">
               <img
-                className="avatar-dimensions shadow-[-2px_-2px_0px_0px_rgba(0,0,0)]"
+                className={`avatar-dimensions shadow-[-2px_-2px_0px_0px_rgba(0,0,0)]
+                ${theme === "#202024" ? "!border-black" : '!border-white'}`}
                 src={webUser.useravatar}
                 alt=""
               />
 
-              <h1 className="username-properties">
+              <h1
+                className={`username-properties
+                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+              >
                 {webUser.firstName} {webUser.lastName}
               </h1>
             </div>
           </div>
 
           <div className="forms-container">
-            <div className="forms-properties">
-              <h2 className="forms-label-properties">First Name</h2>
-              <input
-                type="text"
-                placeholder="First Name"
-                className="input input-properties-disabled"
-                value={webUser.firstName || ""}
-                disabled
-              />
-            </div>
+            {[
+              {
+                label: "First Name",
+                value: webUser.firstName || "",
+                type: "text",
+              },
+              {
+                label: "Last Name",
+                value: webUser.lastName || "",
+                type: "text",
+              },
+              {
+                label: "NU Campus",
+                value: webUser.branch || "",
+                type: "select",
+              },
+              { label: "Email", value: webUser.email || "", type: "email" },
+              {
+                label: "Employee No.",
+                value: webUser.employeenum || "",
+                type: "text",
+              },
+              {
+                label: "Position",
+                value: webUser.position || "",
+                type: "text",
+              },
+            ].map(({ label, value, type }, idx) => (
+              <div key={idx} className="forms-properties">
+                <h2
+                  className={`forms-label-properties ${
+                    theme === "#202024" ? "!text-white" : "!text-black"
+                  }`}
+                >
+                  {label}
+                </h2>
 
-            <div className="forms-properties">
-              <h2 className="forms-label-properties">Last Name</h2>
-              <input
-                type="text"
-                placeholder="Last Name"
-                className="input input-properties-disabled"
-                value={webUser.lastName || ""}
-                disabled
-              />
-            </div>
-
-            <div className="forms-properties">
-              <h2 className="forms-label-properties">NU Campus</h2>
-              <select
-                className="input input-bordered input-disabled input-properties-disabled"
-                value={webUser.branch || ""}
-                disabled
-                aria-label="NU Branch"
-              >
-                <option value="manila">NU Manila</option>
-                <option value="moa">NU MOA</option>
-                <option value="laguna">NU Laguna</option>
-                <option value="fairview">NU Fairview</option>
-                <option value="baliwag">NU Baliwag</option>
-                <option value="dasma">NU Dasmarinas</option>
-                <option value="lipa">NU Lipa</option>
-                <option value="clark">NU Clark</option>
-                <option value="bacolod">NU Bacolod</option>
-                <option value="eastortigas">NU East Ortigas</option>
-              </select>
-            </div>
-
-            <div className="forms-properties">
-              <h2 className="forms-label-properties">Email</h2>
-              <input
-                type="email"
-                placeholder="Email"
-                className="input input-properties-disabled"
-                value={webUser.email || ""}
-                disabled
-              />
-            </div>
-
-            <div className="forms-properties">
-              <h2 className="forms-label-properties">Employee No.</h2>
-              <input
-                type="text"
-                placeholder="Employee No."
-                className="input input-properties-disabled"
-                value={webUser.employeenum || ""}
-                disabled
-              />
-            </div>
-
-            <div className="forms-properties">
-              <h2 className="forms-label-properties">Position</h2>
-
-              <input
-                type="text"
-                placeholder="Position"
-                className="input input-properties-disabled"
-                value={webUser.position || ""}
-                disabled
-              />
-            </div>
+                {type === "select" ? (
+                  <select
+                    className="input input-bordered input-disabled input-properties-disabled"
+                    value={value}
+                    disabled
+                    aria-label={label}
+                  >
+                    <option value="manila">NU Manila</option>
+                    <option value="moa">NU MOA</option>
+                    <option value="laguna">NU Laguna</option>
+                    <option value="fairview">NU Fairview</option>
+                    <option value="baliwag">NU Baliwag</option>
+                    <option value="dasma">NU Dasmarinas</option>
+                    <option value="lipa">NU Lipa</option>
+                    <option value="clark">NU Clark</option>
+                    <option value="bacolod">NU Bacolod</option>
+                    <option value="eastortigas">NU East Ortigas</option>
+                  </select>
+                ) : (
+                  <input
+                    type={type}
+                    placeholder={label}
+                    className="input input-properties-disabled"
+                    value={value}
+                    disabled
+                  />
+                )}
+              </div>
+            ))}
           </div>
 
           <div className="edit-btn-prof-settings w-full">
@@ -317,49 +303,46 @@ export default function Profile() {
           />
         )}
 
-
-       {showDiscardModal && (
-        <div className="modal-overlay confirm-delete-popup">
-          <div className="confirm-dialog">
-            <div className="flex justify-center">
-              <h2>Unsaved Changes</h2>
-            </div>
-            <p>
-              {discardTarget === "old"
-                ? "You have unsaved input in your old password field. Are you sure you want to discard it?"
-                : "You have unsaved input in your new password fields. Are you sure you want to discard them?"}
-            </p>
-            <div className="popup-buttons">
-              <button
-                className="btn-delete"
-                onClick={() => {
-                  if (discardTarget === "old") {
-                    setOldPassword("");
-                    setShowOldPasswordModal(false);
-                  }
-                  if (discardTarget === "new") {
-                    setNewPassword("");
-                    setConfirmPassword("");
-                    setShowNewPasswordModal(false);
-                  }
-                  setShowDiscardModal(false);
-                  setDiscardTarget(null);
-                }}
-              >
-                Yes, Discard
-              </button>
-              <button
-                className="btn-cancel"
-                onClick={() => setShowDiscardModal(false)}
-              >
-                Cancel
-              </button>
+        {showDiscardModal && (
+          <div className="modal-overlay confirm-delete-popup">
+            <div className="confirm-dialog">
+              <div className="flex justify-center">
+                <h2>Unsaved Changes</h2>
+              </div>
+              <p>
+                {discardTarget === "old"
+                  ? "You have unsaved input in your old password field. Are you sure you want to discard it?"
+                  : "You have unsaved input in your new password fields. Are you sure you want to discard them?"}
+              </p>
+              <div className="popup-buttons">
+                <button
+                  className="btn-delete"
+                  onClick={() => {
+                    if (discardTarget === "old") {
+                      setOldPassword("");
+                      setShowOldPasswordModal(false);
+                    }
+                    if (discardTarget === "new") {
+                      setNewPassword("");
+                      setConfirmPassword("");
+                      setShowNewPasswordModal(false);
+                    }
+                    setShowDiscardModal(false);
+                    setDiscardTarget(null);
+                  }}
+                >
+                  Yes, Discard
+                </button>
+                <button
+                  className="btn-cancel"
+                  onClick={() => setShowDiscardModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-
-
+        )}
       </div>
     </>
   );

@@ -136,6 +136,12 @@ export default function Login() {
           position: verifyData.position,
           useravatar: verifyData.useravatar
         });
+
+        axios.put(`${API_URL}/tryUpdateTTL`, {
+          user_id: verifyData._id
+        });
+        
+        
         
       }
     } catch (error) {

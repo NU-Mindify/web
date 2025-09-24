@@ -11,12 +11,13 @@ import searchIcon from "../../assets/students/search-01.svg";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import Buttons from "../../components/buttons/Buttons";
 import SearchBar from "../../components/searchbar/SearchBar";
-import { UserLoggedInContext } from "../../contexts/Contexts";
+import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/glossary/glossary.css";
 import EditGlossary from "./EditGlossary";
 import Header from "../../components/header/Header";
 import PaginationControl from "../../components/paginationControls/PaginationControl";
 import ToggleButton from "../../components/toggleButton/ToggleButton";
+
 
 export default function ManageGlossary() {
   const letters = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -24,6 +25,8 @@ export default function ManageGlossary() {
 
   const { currentWebUser = { firstName: "Admin", lastName: "", token: "" } } =
     useContext(UserLoggedInContext) || {};
+
+  const { theme, themeWithOpacity } = useContext(ActiveContext)
 
   const [searchTerm, setSearchTerm] = useState("");
   const [loadingTerms, setLoadingTerms] = useState(false);
@@ -50,6 +53,8 @@ export default function ManageGlossary() {
 
       if (response.data) {
         setAllTerms(response.data);
+        console.log(response.data);
+        
       } else {
         setAllTerms([]);
       }
@@ -65,7 +70,6 @@ export default function ManageGlossary() {
     if (currentWebUser?.token) {
       getAllTerms();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWebUser, showArchived]);
 
   // --- FILTER TERMS ---
@@ -85,14 +89,14 @@ export default function ManageGlossary() {
         return term.word.toLowerCase().includes(searchTerm.toLowerCase());
       });
 
-  // --- PAGINATION (ALWAYS 10 per page) ---
+
   const termsPerPage = 10;
-  const totalPages = Math.ceil(filteredTerms.length / termsPerPage) || 1;
+
 
   const indexOfLastTerm = currentPage * termsPerPage;
   const indexOfFirstTerm = indexOfLastTerm - termsPerPage;
 
-  // Flatten first (with letter info)
+
   const flatTerms = filteredTerms.map((term) => {
     const firstChar = term.word ? term.word[0].toUpperCase() : "";
     let letter = /^[0-9]/.test(firstChar) ? "#" : firstChar;
@@ -100,20 +104,16 @@ export default function ManageGlossary() {
     return { ...term, letter };
   });
 
-  // Slice exactly 10 per page
+
   const currentTerms = flatTerms.slice(indexOfFirstTerm, indexOfLastTerm);
 
-  // Re-group the 10 terms for display
+
   const groupedTerms = letters.map((letter) => ({
     letter,
     terms: currentTerms.filter((term) => term.letter === letter),
   }));
 
-  const goToPage = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
+
 
   const handlesEdit = (_id, word, meaning, tags) => {
     setSelectedTerm({ _id, word, meaning, tags });
@@ -216,13 +216,16 @@ export default function ManageGlossary() {
         <div className="w-full h-[100px] bg-white rounded-xl">
           <Header
             id={"account"}
-            title={"Account Management"}
+            title={"Manage Glossary"}
             exportToCSV={() => exportGlossaryToCSV(allTerms, "Glossary_Terms")}
             exportToPDF={() => exportGlossaryToPDF(allTerms, "Glossary_Terms")}
           />
         </div>
 
-        <div className="w-full h-[calc(100svh-140px)] bg-white/50 flex flex-col mt-5 rounded-xl">
+        <div 
+          className="w-full h-[calc(100svh-140px)] flex flex-col mt-5 rounded-xl"
+          style={{ backgroundColor: themeWithOpacity }}
+        >
           <div className="w-full h-[100px] flex justify-between items-center px-5">
             <SearchBar
               value={searchTerm}

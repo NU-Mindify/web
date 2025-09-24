@@ -7,7 +7,7 @@ import logo from "../../assets/logo/logo.png";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import ValidationModal from "../../components/ValidationModal/ValidationModal";
 import { API_URL, fetchBranches, fetchDeletedBranches } from "../../Constants";
-import { UserLoggedInContext } from "../../contexts/Contexts";
+import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/branches/branches.css";
 import "../../css/signUp/signUp.css";
 
@@ -15,6 +15,7 @@ import { Archive, ArchiveRestore } from "lucide-react";
 import Buttons from "../../components/buttons/Buttons";
 import Header from "../../components/header/Header";
 import ToggleButton from "../../components/toggleButton/ToggleButton";
+
 
 
 export default function Branches() {
@@ -48,6 +49,7 @@ export default function Branches() {
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
   const { currentWebUser } = useContext(UserLoggedInContext);
+  const { theme, themeWithOpacity } = useContext(ActiveContext)
 
   const handleReset = () => {
     setNewBranch({
@@ -267,7 +269,10 @@ export default function Branches() {
         />
       </div>
 
-      <div className="w-full h-[calc(100svh-140px)] bg-white/50 rounded-xl ">
+      <div 
+        className="w-full h-[calc(100svh-140px)] rounded-xl"
+        style={{ backgroundColor: themeWithOpacity }}
+      >
         {showAddCampus ? (
           <div className="px-5 w-full h-[270px] flex justify-center items-center">
             <div className="border border-black p-6 rounded-xl w-full">

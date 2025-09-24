@@ -1,7 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import "../CountUp/CountUp.css"
+import { ActiveContext } from "../../contexts/Contexts";
+
+
 
 export default function CountUp({ end, duration = 700 }) {
+  const {theme} = useContext(ActiveContext)
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -26,7 +30,7 @@ export default function CountUp({ end, duration = 700 }) {
   }, [end, duration]);
 
   return (
-    <span className="fade-in">
+    <span className={`fade-in ${theme === "#202024" ? "!text-white" : "!text-black"}`}>
       {count?.toLocaleString()}
     </span>
   );

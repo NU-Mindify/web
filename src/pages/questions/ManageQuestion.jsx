@@ -22,6 +22,7 @@ import Buttons from "../../components/buttons/Buttons";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 
+
 const categoriesObj = [
   {
     id: "abnormal",
@@ -57,7 +58,7 @@ export default function ManageQuestion() {
   const [restore, setRestore] = useState(false);
   
 
-  const { subSelected, setSubSelected, } = useContext(ActiveContext);
+  const { subSelected, setSubSelected, theme } = useContext(ActiveContext);
   
 
   const [totalQuestion, setTotalQuestion] = useState([]);
@@ -577,7 +578,10 @@ export default function ManageQuestion() {
   };
 
   return (
-    <div className="question-main-container">
+    <div 
+      className="question-main-container"
+      style={{ backgroundColor: theme }}
+    >
       <div className="question-header">
         <div className="title-header">
           {gotSelected ? (
@@ -605,7 +609,12 @@ export default function ManageQuestion() {
               </div>
             </div>
           ) : (
-            <h1 className="question-title">Select Category</h1>
+            <h1 
+              className={`question-title 
+                ${theme === "#202024" ? "!text-white" : '!text-black'}`}
+            >
+              Select Category
+            </h1>
           )}
         </div>
 

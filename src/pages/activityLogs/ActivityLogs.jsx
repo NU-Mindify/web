@@ -10,10 +10,11 @@ import samplepic from "../../assets/students/sample-minji.svg";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
 import { API_URL, branches } from "../../Constants";
-import { UserLoggedInContext } from "../../contexts/Contexts";
+import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/activityLog/activityLog.css";
 import Header from "../../components/header/Header";
 import PaginationControl from "../../components/paginationControls/PaginationControl";
+
 
 export default function ActivityLogs() {
   const [allLogs, setAllLogs] = useState([]);
@@ -21,6 +22,7 @@ export default function ActivityLogs() {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
+  const { theme, themeWithOpacity } = useContext(ActiveContext)
 
   const [cardActive, setCardActive] = useState(null);
 
@@ -256,7 +258,10 @@ export default function ActivityLogs() {
         />
       </div>
 
-      <div className="w-full h-[calc(100svh-145px)] rounded-xl mt-5 bg-white/50">
+      <div 
+        className="w-full h-[calc(100svh-145px)] rounded-xl mt-5"
+        style={{ backgroundColor: themeWithOpacity }}
+      >
         <div className="w-full h-[80px] flex items-center pl-10">
           <div className="flex gap-6">
             <SelectFilter

@@ -56,9 +56,6 @@
   @apply w-full mt-4 h-[140px] sm:h-[160px] md:h-[180px] bg-white rounded-xl p-3 sm:p-4 shadow-[0_3px_10px_rgb(0,0,0,0.2)];
 }
 
-.dashboard-title {
-  @apply text-black;
-}
 
 .dashboard-sub-title {
   @apply text-black text-[14px];

@@ -4,16 +4,18 @@ import search from "../../assets/search/search.svg";
 import { API_URL, branches, categories } from "../../Constants";
 import "../../css/leaderboard/leaderboards.css";
 
+
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 
 import logo from "../../assets/logo/logo.png";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
-import { UserLoggedInContext } from "../../contexts/Contexts";
+import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function Leaderboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);
+  const { theme } = useContext(ActiveContext)
 
   const [leaderboardClassic, setClassicLeaderboards] = useState([]);
   const [leaderboardsMastery, setLeaderboardsMastery] = useState([]);
@@ -444,13 +446,25 @@ export default function Leaderboard() {
       >
         {/* Render Classic Leaderboard */}
         {(showClassic || !isMobile) && (
-          <div className={"classic-cont"}>
-            <div className="leaderboard-titles-cont">
-              <h1 className="leaderboard-title classic-title">Classic</h1>
+          <div 
+            className={"classic-cont"}
+            style={{ backgroundColor: theme }}
+          >
+            <div 
+              className="leaderboard-titles-cont"
+            >
+              <h1 
+                className={`leaderboard-title classic-title
+                ${theme === "#202024" ? "!text-white" : '!text-black'}`}
+              >
+                Classic
+              </h1>
             </div>
 
-            <h2 className="leaderboard-subtitle">
-              <i>Top 30 performing students in Classic Mode</i>
+            <h2 
+              className={`leaderboard-subtitle`}
+            >
+              <i className={`${theme === "#202024" ? "!text-white" : '!text-black'}`}>Top 30 performing students in Classic Mode</i>
             </h2>
 
             <div className="search-bar-cont-leaderboards">
@@ -620,13 +634,19 @@ export default function Leaderboard() {
 
         {/* Render Mastery Leaderboard */}
         {(!showClassic || !isMobile) && (
-          <div className="mastery-cont">
+          <div 
+            className="mastery-cont"
+            style={{ backgroundColor: theme }}
+          >
             <div className="leaderboard-titles-cont">
-              <h1 className="leaderboard-title mastery-title">Mastery</h1>
+              <h1 
+                className={`leaderboard-title mastery-title
+                ${theme === "#202024" ? "!text-white" : '!text-black'}`}
+              >Mastery</h1>
             </div>
 
             <h2 className="leaderboard-subtitle">
-              <i>Top 30 performing students in Mastery Mode</i>
+              <i className={`${theme === "#202024" ? "!text-white" : '!text-black'}`}>Top 30 performing students in Mastery Mode</i>
             </h2>
 
             <div className="search-bar-cont-leaderboards">

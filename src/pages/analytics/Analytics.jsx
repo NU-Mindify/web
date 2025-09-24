@@ -7,13 +7,18 @@ import PieChartAttempts from "../../components/PieChart/PieChartAttempts";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown.jsx";
 import { API_URL, branches, categories, levels, modes } from "../../Constants";
-import { UserLoggedInContext } from "../../contexts/Contexts.jsx";
+import {
+  ActiveContext,
+  UserLoggedInContext,
+} from "../../contexts/Contexts.jsx";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import "../../css/analytics/analytics.css";
+import Header from "../../components/header/Header.jsx";
 
 export default function Analytics() {
   const { currentWebUser } = useContext(UserLoggedInContext);
+  const { theme, themeWithOpacity } = useContext(ActiveContext);
 
   const [attempts, setAttempts] = useState([]);
   const [masteryAttempts, setMasteryAttempts] = useState([]);
@@ -558,119 +563,83 @@ export default function Analytics() {
   return (
     <>
       <div className="main-container-analytics" id="main-cont-analytics">
-        <div className="header-container-analytics">
-          <h1 className="h-full w-full !text-[40px]">
-            Analytics for{" "}
-            {branches.find((branch) => branch.id === selectedBranch)?.name ||
-              "All Branches"}
-          </h1>
-
-          <div className="flex flex-row justify-between w-full lg:w-[50%] mt-3 lg:mt-1.5">
-            <div className="analytics-filter-container mr-5">
-              <SelectFilter
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                disabledOption="Select Category"
-                fixOption="All Categories"
-                mainOptions={categories}
-                getOptionValue={(category) => category.id}
-                getOptionLabel={(category) => category.name}
-                addedClassName="ml-3 !w-[150px] xl:!w-[250px] "
-              />
-              {currentWebUser?.position?.toLowerCase() === "super admin" && (
-                <SelectFilter
-                  value={selectedBranch}
-                  onChange={(e) => setSelectedBranch(e.target.value)}
-                  disabledOption="Select Branch"
-                  fixOption="All Branches"
-                  mainOptions={branches}
-                  getOptionValue={(branch) => branch.id}
-                  getOptionLabel={(branch) => branch.name}
-                  addedClassName="ml-3 !w-[150px]  xl:!w-[250px]"
-                />
-              )}
-              <ExportDropdown onExport={handleExport} />
-            </div>
-          </div>
+        <div className="w-full h-[100px] rounded-xl">
+          <Header
+            id={"analytics"}
+            title={`Analytics for ${
+              branches.find((branch) => branch.id === selectedBranch)?.name ||
+              "All Branches"
+            }`}
+            exportToCSV={() =>
+              exportAttemptsAccountsCSV(
+                filteredAttempts.concat(filteredMasteryAttempts),
+                filteredStudents,
+                attemptsViewMode,
+                accountsViewMode
+              )
+            }
+            exportToPDF={() =>
+              exportAttemptsAccountsPDF(
+                filteredAttempts.concat(filteredMasteryAttempts),
+                filteredStudents
+              )
+            }
+            firstSelectValue={selectedCategory}
+            firstSelectOnChange={(e) => setSelectedCategory(e.target.value)}
+            firstSelectDisabledOption="Select Category"
+            firstSelectFixOption="All Categories"
+            firstSelectMainOptions={categories}
+            firstSelectGetOptionValue={(category) => category.id}
+            firstSelectGetOptionLabel={(category) => category.name}
+            firstSelectAddedClassName="!w-[150px] xl:!w-[250px] "
+            secondSelectValue={selectedBranch}
+            secondSelectOnChange={(e) => setSelectedBranch(e.target.value)}
+            secondSelectDisabledOption="Select Branch"
+            secondSelectFixOption="All Branches"
+            secondSelectMainOptions={branches}
+            secondSelectGetOptionValue={(branch) => branch.id}
+            secondSelectGetOptionLabel={(branch) => branch.name}
+            secondSelectAddedClassName="!w-[150px]  xl:!w-[250px] mr-5"
+          />
         </div>
-        <div className="content-container-analytics">
-          <div className="w-full flex flex-col md:flex-row px-1 py-3 gap-6">
-            <div className="analytics-container-properties">
-              <div className="w-[95%]">
-                <div className="w-full">
-                  <div className="flex items-center justify-between mb-2">
-                    <h1 className="text-lg md:text-2xl font-[Poppins] font-bold text-black">
-                      Attempts per{" "}
-                      {attemptsViewMode === "daily" ? "Day" : "Month"}
-                    </h1>
 
-                    <div className="flex bg-gray-100 p-[2px] rounded-lg w-[180px] ">
-                      <button
-                        onClick={() => setAttemptsViewMode("daily")}
-                        className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
+        <div className="w-full h-[calc(100svh-140px)] mt-5 rounded-xl flex justify-between overflow-hidden">
+          <div
+            className="w-[49%] h-full flex flex-col items-center overflow-y-auto py-5 rounded-xl"
+            style={{ backgroundColor: themeWithOpacity }}
+          >
+            <div className="w-[95%]">
+              <div className="w-full">
+                <div className="flex items-center justify-between mb-2">
+                  <h1
+                    className={`text-lg md:text-2xl font-[Poppins] font-bold
+                  ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                  >
+                    Attempts per{" "}
+                    {attemptsViewMode === "daily" ? "Day" : "Month"}
+                  </h1>
+
+                  <div className="flex bg-gray-100 p-[2px] rounded-lg w-[180px] ">
+                    <button
+                      onClick={() => setAttemptsViewMode("daily")}
+                      className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
                         ${
                           attemptsViewMode === "daily"
                             ? "bg-white !text-blue-900 shadow-sm"
                             : "bg-transparent !text-gray-400"
                         }`}
-                      >
-                        Daily
-                      </button>
-
-                      <button
-                        onClick={() => setAttemptsViewMode("monthly")}
-                        className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
-                        ${
-                          attemptsViewMode === "monthly"
-                            ? "bg-white !text-blue-900  shadow-sm"
-                            : "bg-transparent !text-gray-400"
-                        }`}
-                      >
-                        Monthly
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="line-graph-container">
-                    <AttemptsChart
-                      attempts={filteredAttempts.concat(
-                        filteredMasteryAttempts
-                      )}
-                      viewMode={attemptsViewMode}
-                      setViewMode={setAttemptsViewMode}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-[95%] mt-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h1 className="text-lg md:text-2xl font-[Poppins] font-bold text-black">
-                    Accounts Created per{" "}
-                    {accountsViewMode === "daily" ? "Day" : "Month"}
-                  </h1>
-
-                  <div className="flex bg-[#F5F6F8] p-[2px] rounded-lg w-[180px]">
-                    <button
-                      onClick={() => setAccountsViewMode("daily")}
-                      className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
-                      ${
-                        accountsViewMode === "daily"
-                          ? "bg-white !text-blue-900  shadow-sm"
-                          : "bg-transparent !text-gray-400"
-                      }`}
                     >
                       Daily
                     </button>
 
                     <button
-                      onClick={() => setAccountsViewMode("monthly")}
+                      onClick={() => setAttemptsViewMode("monthly")}
                       className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
-                      ${
-                        accountsViewMode === "monthly"
-                          ? "bg-white !text-blue-900 shadow-sm"
-                          : "bg-transparent !text-gray-400"
-                      }`}
+                        ${
+                          attemptsViewMode === "monthly"
+                            ? "bg-white !text-blue-900  shadow-sm"
+                            : "bg-transparent !text-gray-400"
+                        }`}
                     >
                       Monthly
                     </button>
@@ -678,20 +647,73 @@ export default function Analytics() {
                 </div>
 
                 <div className="line-graph-container">
-                  <AccountsCreatedChart
-                    accounts={allStudents}
-                    viewMode={accountsViewMode}
-                    setViewMode={setAccountsViewMode}
+                  <AttemptsChart
+                    attempts={filteredAttempts.concat(filteredMasteryAttempts)}
+                    viewMode={attemptsViewMode}
+                    setViewMode={setAttemptsViewMode}
                   />
                 </div>
               </div>
             </div>
 
-            {/* RIGHT CONT */}
+            <div className="w-[95%] mt-6">
+              <div className="flex items-center justify-between mb-2">
+                <h1
+                  className={`text-lg md:text-2xl font-[Poppins] font-bold text-black
+                  ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                >
+                  Accounts Created per{" "}
+                  {accountsViewMode === "daily" ? "Day" : "Month"}
+                </h1>
 
-            <div className="w-full md:w-[50%] bg-white rounded-xl flex flex-col items-center p-5">
+                <div className="flex bg-[#F5F6F8] p-[2px] rounded-lg w-[180px]">
+                  <button
+                    onClick={() => setAccountsViewMode("daily")}
+                    className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
+                      ${
+                        accountsViewMode === "daily"
+                          ? "bg-white !text-blue-900  shadow-sm"
+                          : "bg-transparent !text-gray-400"
+                      }`}
+                  >
+                    Daily
+                  </button>
+
+                  <button
+                    onClick={() => setAccountsViewMode("monthly")}
+                    className={`w-1/2 py-1 text-sm rounded-lg font-bold transition-all duration-200
+                      ${
+                        accountsViewMode === "monthly"
+                          ? "bg-white !text-blue-900 shadow-sm"
+                          : "bg-transparent !text-gray-400"
+                      }`}
+                  >
+                    Monthly
+                  </button>
+                </div>
+              </div>
+
+              <div className="line-graph-container">
+                <AccountsCreatedChart
+                  accounts={allStudents}
+                  viewMode={accountsViewMode}
+                  setViewMode={setAccountsViewMode}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="w-[49%] h-full flex flex-col rounded-xl overflow-y-auto"
+            style={{ backgroundColor: themeWithOpacity }}
+          >
+            <div className="w-full h-full flex flex-col items-center p-5 ">
               <div className="analytics-content-properties !h-auto">
-                <h1 className="analytics-title-text-properties">
+                <h1
+                  className={`analytics-title-text-properties ${
+                    theme === "#202024" ? "!text-white" : "!text-black"
+                  }`}
+                >
                   Analytics for{" "}
                   {categories.find(
                     (category) => category.id === selectedCategory
@@ -699,73 +721,73 @@ export default function Analytics() {
                 </h1>
 
                 <div className="progress-bar-container">
-                  <div className="total-attempts-container">
-                    <h1 className="total-attempts-label">
-                      Competition Attempts
-                    </h1>
-                    <p className="total-attempts-num">
-                      <CountUp end={competitionAttempts.length} />
-                    </p>
-                  </div>
-
-                  <div className="total-attempts-container">
-                    <h1 className="total-attempts-label">Review Attempts</h1>
-                    <p className="total-attempts-num">
-                      <CountUp end={reviewAttempts.length} />
-                    </p>
-                  </div>
-
-                  <div className="total-attempts-container">
-                    <h1 className="total-attempts-label">Mastery Attempts</h1>
-                    <p className="total-attempts-num">
-                      <CountUp end={filteredMasteryAttempts.length} />
-                    </p>
-                  </div>
-
-                  <div className="total-attempts-container">
-                    <h1 className="total-attempts-label">
-                      Competition Average Score
-                    </h1>
-                    <p className="total-attempts-num">
-                      <CountUp end={competitionAvgPercent.toFixed(0)} />%
-                    </p>
-                  </div>
-
-                  <div className="total-attempts-container">
-                    <h1 className="total-attempts-label">
-                      Review Average Score
-                    </h1>
-                    <p className="total-attempts-num">
-                      <CountUp end={reviewAvgPercent.toFixed(0)} />%
-                    </p>
-                  </div>
-
-                  <div className="total-attempts-container">
-                    <h1 className="total-attempts-label">
-                      Mastery Average Score
-                    </h1>
-                    <p className="total-attempts-num">
-                      <CountUp end={filteredMasteryAvgPercent.toFixed(0)} />%
-                    </p>
-                  </div>
-
-                  <div className="total-attempts-container">
-                    <h1 className="total-attempts-label">Total Attempts</h1>
-                    <p className="total-attempts-num">
-                      <CountUp end={totalFilteredAttemptsCount} />
-                    </p>
-                  </div>
+                  {[
+                    {
+                      label: "Competition Attempts",
+                      value: competitionAttempts.length,
+                    },
+                    { label: "Review Attempts", value: reviewAttempts.length },
+                    {
+                      label: "Mastery Attempts",
+                      value: filteredMasteryAttempts.length,
+                    },
+                    {
+                      label: "Competition Average Score",
+                      value: competitionAvgPercent.toFixed(0),
+                      isPercent: true,
+                    },
+                    {
+                      label: "Review Average Score",
+                      value: reviewAvgPercent.toFixed(0),
+                      isPercent: true,
+                    },
+                    {
+                      label: "Mastery Average Score",
+                      value: filteredMasteryAvgPercent.toFixed(0),
+                      isPercent: true,
+                    },
+                    {
+                      label: "Total Attempts",
+                      value: totalFilteredAttemptsCount,
+                    },
+                  ].map(({ label, value, isPercent }, idx) => (
+                    <div
+                      key={idx}
+                      className="total-attempts-container"
+                      style={{ backgroundColor: theme }}
+                    >
+                      <h1
+                        className={`total-attempts-label ${
+                          theme === "#202024" ? "!text-white" : "!text-black"
+                        }`}
+                      >
+                        {label}
+                      </h1>
+                      <p className={`total-attempts-num
+                        ${theme === "#202024" ? "!text-white" : '!text-black'}`}
+                      >
+                        <CountUp end={value} />
+                        {isPercent ? "%" : ""}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
 
               <div className="analytics-content-properties">
-                <h1 className="analytics-title-text-properties">
+                <h1 
+                  className={`analytics-title-text-properties
+                  ${theme === "#202024" ? "!text-white" : '!text-black'}`}
+                >
                   {" "}
                   {categories.find(
                     (category) => category.id === selectedCategory
                   )?.name || "All Categories"}
                 </h1>
-                <p className="text-black font-[Poppins]">
+                <p 
+                  className={`font-[Poppins]
+                  ${theme === "#202024" ? "!text-white" : '!text-black'}`}
+                >
                   Takers vs Non-Takers
                 </p>
                 <div className="w-[100%] flex items-center justify-center">

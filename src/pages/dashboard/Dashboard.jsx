@@ -12,10 +12,7 @@ import { ActiveContext } from "../../contexts/Contexts";
 export default function Dashboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);
 
-
-  const {
-    setSelected,
-  } = useContext(ActiveContext);
+  const { setSelected, theme } = useContext(ActiveContext);
 
   const navigate = useNavigate();
 
@@ -38,22 +35,17 @@ export default function Dashboard() {
   const [loadingBadges, setLoadingBadges] = useState(false);
 
   const [mostChallengingWorld, setMostChallengingWorld] = useState(null);
-  const [mostChallengingWorldScore, setMostChallengingWorldScore] = useState(null);
+  const [mostChallengingWorldScore, setMostChallengingWorldScore] =
+    useState(null);
 
   const [classicLeaderboards, setClassicLeaderboards] = useState([]);
   const [leaderboardsMastery, setLeaderboardsMastery] = useState([]);
   const [loadingDataClassic, setLoadingDataClassic] = useState(false);
   const [loadingDataMastery, setLoadingDataMastery] = useState(false);
   const [leaderboardMode, setLeaderboardMode] = useState("classic");
-  
-  const [averageSession, setAverageSession] = useState(0)
-  const [loadingSession, setLoadingSession] = useState(false)
 
-  
-  
-  axios.put(`${API_URL}/tryUpdateTTL`, {
-    user_id: currentWebUser._id
-  });
+  const [averageSession, setAverageSession] = useState(0);
+  const [loadingSession, setLoadingSession] = useState(false);
 
   useEffect(() => {
     if (!currentWebUser?.token) return;
@@ -62,27 +54,21 @@ export default function Dashboard() {
     fetchTopClassicLeaderboard();
     fetchTopMasteryLeaderboard();
     fetchPendingUsers();
-    fetchAverageSession()
+    fetchAverageSession();
   }, [currentWebUser]);
 
+  async function fetchAverageSession() {
+    setLoadingSession(true);
+    try {
+      const { data } = await axios.get(`${API_URL}/getAverageSession`);
 
-  async function fetchAverageSession(){
-    setLoadingSession(true)
-    try{
-      const {data} = await axios.get(`${API_URL}/getAverageSession`)
-     
       setAverageSession(Number(data.averageSessionTime.toFixed(2)));
-      
-    }
-    catch(error){
+    } catch (error) {
       console.error("Error fetching top leaderboards:", error.message);
-    }
-    finally{
-      setLoadingSession(false)
+    } finally {
+      setLoadingSession(false);
     }
   }
-
-  
 
   const fetchTopClassicLeaderboard = async () => {
     setLoadingDataClassic(true);
@@ -176,6 +162,7 @@ export default function Dashboard() {
       setPendingUsers(pendingUsers);
       // console.log("Pending Users: " + pendingUsers);
       setWebUsers(res.data);
+      console.log("web users", res.data);
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
@@ -300,11 +287,13 @@ export default function Dashboard() {
     }
   };
 
-return (
+  return (
     <div className="main-container-dashboard">
       <div className="dashboard-header">
         <div className="dashboard-header-content">
-          <h1 className="header-text-dashboard text-2xl sm:text-3xl md:text-4xl lg:text-[40px]">Dashboard</h1>
+          <h1 className="header-text-dashboard text-2xl sm:text-3xl md:text-4xl lg:text-[40px]">
+            Dashboard
+          </h1>
           <h2 className="header-greeting-dashboard">
             {`Hi, ${currentWebUser.firstName} 
             ${
@@ -322,15 +311,27 @@ return (
       </div>
 
       <div className="analytics-container-dashboard">
-        <div className="analytics-properties-dashboard">
+        <div
+          className="analytics-properties-dashboard"
+          style={{ backgroundColor: theme }}
+        >
           {isLoading ? (
             <div className="loading-overlay-dashboard">
               <div className="spinner"></div>
-              <p>Fetching data...</p>
+              <p
+                className={`${
+                  theme === "#202024" ? "!text-white" : "!text-black"
+                }`}
+              >
+                Fetching data...
+              </p>
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold">
+              <h1
+                className={`dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold 
+                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+              >
                 Total Students
               </h1>
               <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
@@ -340,15 +341,27 @@ return (
           )}
         </div>
 
-        <div className="analytics-properties-dashboard">
+        <div
+          className="analytics-properties-dashboard"
+          style={{ backgroundColor: theme }}
+        >
           {isLoading ? (
             <div className="loading-overlay-dashboard">
               <div className="spinner"></div>
-              <p>Fetching data...</p>
+              <p
+                className={`${
+                  theme === "#202024" ? "!text-white" : "!text-black"
+                }`}
+              >
+                Fetching data...
+              </p>
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold">
+              <h1
+                className={`dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold
+                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+              >
                 Total Web Users
               </h1>
               <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
@@ -358,19 +371,34 @@ return (
           )}
         </div>
 
-        <div className="analytics-properties-dashboard">
+        <div
+          className="analytics-properties-dashboard"
+          style={{ backgroundColor: theme }}
+        >
           {isLoadingAttempts ? (
             <div className="loading-overlay-dashboard">
               <div className="spinner"></div>
-              <p>Fetching data...</p>
+              <p
+                className={`${
+                  theme === "#202024" ? "!text-white" : "!text-black"
+                }`}
+              >
+                Fetching data...
+              </p>
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-2 -mt-5 font-[Poppins] text-[18px] font-bold text-center">
+              <h1
+                className={`dashboard-title mb-2 -mt-5 font-[Poppins] text-[18px] font-bold text-center
+                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+              >
                 Overall Average Score
               </h1>
 
-              <h2 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
+              <h2
+                className={`dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3
+                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+              >
                 {avgScoresByWorld.overall === "N/A" ? (
                   "No Data"
                 ) : (
@@ -382,29 +410,55 @@ return (
           )}
         </div>
 
-        <div className="analytics-properties-dashboard">
+        <div
+          className="analytics-properties-dashboard"
+          style={{ backgroundColor: theme }}
+        >
           {isLoadingAttempts ? (
             <div className="loading-overlay-dashboard">
               <div className="spinner"></div>
-              <p>Fetching data...</p>
+              <p
+                className={`${
+                  theme === "#202024" ? "!text-white" : "!text-black"
+                }`}
+              >
+                Fetching data...
+              </p>
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-3 mt-3 font-[Poppins] text-[18px] font-bold text-center">
+              <h1
+                className={`dashboard-title mb-3 mt-3 font-[Poppins] text-[18px] font-bold text-center
+                  ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+              >
                 Most Challenging World
               </h1>
               {mostChallengingWorld === "N/A" ? (
-                <h2 className="text-3xl font-bold">No Data</h2>
+                <h2
+                  className={`text-3xl font-bold
+                    ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                >
+                  No Data
+                </h2>
               ) : (
                 <>
-                  <h2 className="text-xl capitalize -mt-3 mb-1 text-black shadow-black font-[Poppins] font-semibold text-[15px] text-center">
+                  <h2
+                    className={`text-xl capitalize -mt-3 mb-1 text-black shadow-black font-[Poppins] font-semibold text-[15px] text-center
+                    ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                  >
                     {mostChallengingWorld + " Psychology"}
                   </h2>
-                  <h2 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
+                  <h2
+                    className={`dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3
+                    ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                  >
                     <CountUp end={mostChallengingWorldScore} decimals={2} />%
                   </h2>
 
-                  <h2 className="text-[16px] italic -mt-1 mb-1 text-black font-[Poppins] capitalize">
+                  <h2
+                    className={`text-[16px] italic -mt-1 mb-1 text-black font-[Poppins] capitalize
+                    ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                  >
                     Average Score
                   </h2>
                 </>
@@ -413,52 +467,85 @@ return (
           )}
         </div>
 
-        <div className="analytics-properties-dashboard">
+        <div
+          className="analytics-properties-dashboard"
+          style={{ backgroundColor: theme }}
+        >
           {loadingSession ? (
             <div className="loading-overlay-dashboard">
               <div className="spinner"></div>
-              <p>Fetching data...</p>
+              <p
+                className={`${
+                  theme === "#202024" ? "!text-white" : "!text-black"
+                }`}
+              >
+                Fetching data...
+              </p>
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center flex-col">
-              <h1 className="dashboard-title mb-3 mt-3 font-[Poppins] text-[18px] font-bold text-center">
+              <h1
+                className={`dashboard-title mb-3 mt-3 font-[Poppins] text-[18px] font-bold text-center
+                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+              >
                 Students Average Session
               </h1>
 
-                <>
-                  <h2 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3 text-center">
-                    <CountUp end={averageSession} decimals={2} />s
-                  </h2>
-
-                </>
-              
+              <>
+                <h2
+                  className={`dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3 text-center
+                    ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                >
+                  <CountUp end={averageSession} decimals={2} />s
+                </h2>
+              </>
             </div>
           )}
         </div>
 
-        {["super admin", "sub admin"].includes(currentWebUser.position?.toLowerCase()) && (
-          <div className="analytics-properties-dashboard">
+        {["super admin", "sub admin"].includes(
+          currentWebUser.position?.toLowerCase()
+        ) && (
+          <div
+            className="analytics-properties-dashboard"
+            style={{ backgroundColor: theme }}
+          >
             {isLoadingAttempts ? (
               <div className="loading-overlay-dashboard">
                 <div className="spinner"></div>
-                <p>Fetching data...</p>
+                <p
+                  className={`${
+                    theme === "#202024" ? "!text-white" : "!text-black"
+                  }`}
+                >
+                  Fetching data...
+                </p>
               </div>
             ) : (
-              <div
+              <button
                 className="w-full h-full flex items-center justify-center flex-col cursor-pointer"
                 onClick={() => {
-                  navigate("/account/approval")
-                  setSelected("account")
+                  navigate("/account/approval");
+                  setSelected("account");
                 }}
               >
                 {isLoading ? (
                   <div className="loading-overlay-dashboard">
                     <div className="spinner"></div>
-                    <p>Fetching data...</p>
+                    <p
+                      className={`${
+                        theme === "#202024" ? "!text-white" : "!text-black"
+                      }`}
+                    >
+                      Fetching data...
+                    </p>
                   </div>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center flex-col">
-                    <h1 className="dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold">
+                    <h1
+                      className={`dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold
+                      ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                    >
                       Pending Accounts
                     </h1>
                     <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
@@ -481,36 +568,52 @@ return (
                   </h2>
                 </>
               )} */}
-              </div>
+              </button>
             )}
           </div>
         )}
       </div>
-
 
       {/* Unified Grid for Titles + Content */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 mt-4">
         {/* Reports (title + content) */}
         <div className="col-span-1 md:col-span-2">
           {/* Reports Title */}
-          <h1 className="reports-title-properties-dashboard mb-2 text-lg sm:text-xl md:text-2xl lg:text-[26px]">Reports</h1>
+          <h1 className="reports-title-properties-dashboard mb-2 text-lg sm:text-xl md:text-2xl lg:text-[26px]">
+            Reports
+          </h1>
 
           {/* Reports Content Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Total Students */}
-            <div className="total-students-container-dashboard">
+            <div
+              className="total-students-container-dashboard"
+              style={{ backgroundColor: theme }}
+            >
               {isLoadingAttempts ? (
                 <div className="loading-overlay-dashboard">
                   <div className="spinner"></div>
-                  <p>Fetching data...</p>
+                  <p
+                    className={`${
+                      theme === "#202024" ? "!text-white" : "!text-black"
+                    }`}
+                  >
+                    Fetching data...
+                  </p>
                 </div>
               ) : (
                 <div className="w-full h-10/12 flex flex-col justify-center items-center p-4">
                   <div className="w-full flex flex-col -mt-10 mb-4">
-                    <h1 className="text-black font-bold font-[poppins] text-lg sm:text-xl md:text-2xl lg:text-[26px]">
+                    <h1
+                      className={`font-bold font-[poppins] text-lg sm:text-xl md:text-2xl lg:text-[26px]
+                      ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                    >
                       Total Students
                     </h1>
-                    <p className="text-black font-[poppins] text-[18px] -mt-2">
+                    <p
+                      className={`font-[poppins] text-[18px] -mt-2
+                      ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                    >
                       per campus
                     </p>
                   </div>
@@ -520,64 +623,101 @@ return (
             </div>
 
             {/* Top Badges */}
-            <div className="badges-container-dashboard">
+            <div
+              className="badges-container-dashboard"
+              style={{ backgroundColor: theme }}
+            >
               <div className="w-full h-10/12 flex flex-col p-4">
-                <h1 className="text-black font-bold font-[poppins] text-lg sm:text-xl md:text-2xl lg:text-[26px]">
+                <h1
+                  className={`font-bold font-[poppins] text-lg sm:text-xl md:text-2xl lg:text-[26px]
+                  ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                >
                   Top Badges
                 </h1>
 
                 {loadingBadges ? (
                   <div className="loading-overlay-dashboard">
                     <div className="spinner"></div>
-                    <p>Loading badges...</p>
+                    <p
+                      className={`${
+                        theme === "#202024" ? "!text-white" : "!text-black"
+                      }`}
+                    >
+                      Loading Badges...
+                    </p>
                   </div>
                 ) : (
                   <ul className="badge-list-dashboard">
                     {topBadges.length === 0 ? (
-                      <li>No badges earned yet.</li>
+                      <li
+                        className={`${
+                          theme === "#202024" ? "!text-white" : "!text-black"
+                        }`}
+                      >
+                        No badges earned yet.
+                      </li>
                     ) : (
                       topBadges.map((badge, idx) => (
-                      <li
-                        key={badge.id || idx}
-                        className="flex items-center gap-2 sm:gap-3 p-1 sm:p-2
+                        <li
+                          key={badge.id || idx}
+                          className="flex items-center gap-2 sm:gap-3 p-1 sm:p-2
                                   border-b border-gray-200 last:border-none 
-                                  hover:bg-gray-50 rounded-lg transition"
-                      >
-                      {/* Rank Number */}
-                      <span className="w-5 text-xs sm:text-sm font-bold text-gray-600">
-                        {idx + 1}.
-                      </span>
+                                  rounded-lg transition"
+                        >
+                          {/* Rank Number */}
+                          <span
+                            className={`w-5 text-xs sm:text-sm font-bold text-gray-600
+                        ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                          >
+                            {idx + 1}.
+                          </span>
 
-                      {/* Badge Icon */}
-                      <img
-                        src={badge.iconUrl}
-                        alt={badge.name}
-                        className="w-8 h-8 sm:w-10 sm:h-10 object-contain rounded-md shadow-sm"
-                      />
+                          {/* Badge Icon */}
+                          <img
+                            src={badge.iconUrl}
+                            alt={badge.name}
+                            className="w-8 h-8 sm:w-10 sm:h-10 object-contain rounded-md shadow-sm"
+                          />
 
-                      {/* Badge Info */}
-                      <div className="flex-1">
-                        <div className="font-semibold text-gray-800 text-xs sm:text-sm">
-                          {badge.name}
-                        </div>
-                        <div className="text-gray-500 text-[10px] sm:text-xs">
-                          Level {badge.level || 1}
-                        </div>
+                          {/* Badge Info */}
+                          <div className="flex-1">
+                            <div
+                              className={`font-semibold text-gray-800 text-xs sm:text-sm
+                          ${
+                            theme === "#202024" ? "!text-white" : "!text-black"
+                          }`}
+                            >
+                              {badge.name}
+                            </div>
+                            <div
+                              className={`text-gray-500 text-[10px] sm:text-xs
+                          ${
+                            theme === "#202024" ? "!text-white" : "!text-black"
+                          }`}
+                            >
+                              Level {badge.level || 1}
+                            </div>
 
-                        {/* Progress Bar */}
-                        <div className="w-full h-1.5 sm:h-2 bg-gray-200 rounded-full mt-1">
+                            {/* Progress Bar */}
+                            <div className="w-full h-1.5 sm:h-2 bg-gray-200 rounded-full mt-1">
+                              <div
+                                className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full"
+                                style={{ width: `${badge.percentage || 0}%` }}
+                              ></div>
+                            </div>
+                          </div>
+
+                          {/* Percentage */}
                           <div
-                            className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full"
-                            style={{ width: `${badge.percentage || 0}%` }}
-                          ></div>
-                        </div>
-                      </div>
-
-                      {/* Percentage */}
-                      <div className="text-[10px] sm:text-sm font-semibold text-gray-700 ml-2">
-                        {badge.percentage ? badge.percentage.toFixed(2) : "0.00"}%
-                      </div>
-                    </li>
+                            className={`text-[10px] sm:text-sm font-semibold text-gray-700 ml-2
+                        ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                          >
+                            {badge.percentage
+                              ? badge.percentage.toFixed(2)
+                              : "0.00"}
+                            %
+                          </div>
+                        </li>
                       ))
                     )}
                   </ul>
@@ -593,18 +733,14 @@ return (
             Leaderboard
           </h1>
 
-          <button
-            className="leaderboards-container-dashboard cursor-pointer"
+          <div
+            className="leaderboards-container-dashboard cursor-pointe"
             style={{
               padding: "1rem",
-              backgroundColor: "#fff",
+              backgroundColor: theme,
               borderRadius: "8px",
             }}
-            onClick={() => {
-                  navigate("/leaderboard")
-                  setSelected("leaderboard")
-                }}
-            >
+          >
             {/* Toggle Buttons */}
             <div className="flex bg-[#F5F6F8] p-2 rounded-xl w-full sm:w-[280px] mb-4 sticky top-0 z-10">
               <button
@@ -632,7 +768,11 @@ return (
             </div>
 
             {/* Leaderboard Table */}
-            {(leaderboardMode === "classic" ? loadingDataClassic : loadingDataMastery) ? (
+            {(
+              leaderboardMode === "classic"
+                ? loadingDataClassic
+                : loadingDataMastery
+            ) ? (
               <div
                 className="loading-overlay-dashboard flex flex-col items-center justify-center"
                 style={{ height: "150px" }}
@@ -641,73 +781,111 @@ return (
                 <p>Loading {leaderboardMode} leaderboard...</p>
               </div>
             ) : (
-            <div className="overflow-hidden">
-              <table className="w-full border-collapse text-[11px] sm:text-xs md:text-sm">
-                <thead className="sticky top-0 bg-white z-10">
-                  <tr className="text-black border-b border-gray-200 text-center">
-                    <th className="px-1 py-2 whitespace-nowrap">User</th>
-                    <th className="px-1 py-2 whitespace-nowrap">Branch</th>
-                    <th className="px-1 py-2 whitespace-nowrap">World</th>
-                    <th className="px-1 py-2 whitespace-nowrap">Score</th>
-                    <th className="px-1 py-2 whitespace-nowrap">Time</th>
-                  </tr>
-                </thead>
-              </table>
+              <div className="overflow-hidden">
+                <table
+                  className={`w-full border-collapse text-[11px] sm:text-xs md:text-sm`}
+                >
+                  <thead className={`sticky top-0 z-10`}>
+                    <tr className="border-b border-gray-200 text-center">
+                      {["User", "Branch", "World", "Score", "Time"].map(
+                        (header) => (
+                          <th
+                            key={header}
+                            className={`px-1 py-2 whitespace-nowrap ${
+                              theme === "#202024" ? "!text-white" : "text-black"
+                            }`}
+                          >
+                            {header}
+                          </th>
+                        )
+                      )}
+                    </tr>
+                  </thead>
+                </table>
 
-              {/* Scrollable Data */}
-            <div className="max-h-60 sm:max-h-70 md:max-h-80 lg:max-h-96 overflow-y-auto">
-              <table className="w-full border-collapse text-[11px] sm:text-xs md:text-sm">
-                <tbody>
-                  {(leaderboardMode === "classic"
-                    ? classicLeaderboards
-                    : leaderboardsMastery
-                  )
-                    .map((item) => ({
-                      ...item,
-                      calculatedScore: item.total_items
-                        ? (item.correct / item.total_items) * 100
-                        : 0,
-                    }))
-                    .sort((a, b) => b.calculatedScore - a.calculatedScore)
-                    .slice(0, 10)
-                    .map((item, index) => {
-                      const user = item.user_id || {};
-                      const scorePercent = item.total_items
-                        ? item.calculatedScore.toFixed(0) + "%"
-                        : "N/A";
+                {/* Scrollable Data */}
+                <div className="max-h-60 sm:max-h-70 md:max-h-80 lg:max-h-96 overflow-y-auto">
+                  <table className="w-full border-collapse text-[11px] sm:text-xs md:text-sm">
+                    <tbody>
+                      {(leaderboardMode === "classic"
+                        ? classicLeaderboards
+                        : leaderboardsMastery
+                      )
+                        .map((item) => ({
+                          ...item,
+                          calculatedScore: item.total_items
+                            ? (item.correct / item.total_items) * 100
+                            : 0,
+                        }))
+                        .sort((a, b) => b.calculatedScore - a.calculatedScore)
+                        .slice(0, 10)
+                        .map((item, index) => {
+                          const user = item.user_id || {};
+                          const scorePercent = item.total_items
+                            ? item.calculatedScore.toFixed(0) + "%"
+                            : "N/A";
 
-                      return (
-                        <tr
-                          key={item._id}
-                          className="border-b border-gray-100 text-center"
-                        >
-                          <td className="text-black px-1 py-1">
-                            {index + 1}. {user.username || "Unknown"}
-                          </td>
-                          <td className="text-black px-1 py-1 uppercase">
-                            {user.branch || item.branch || "N/A"}
-                          </td>
-                          <td className="text-black px-1 py-1 capitalize">
-                            {item.category || "N/A"}
-                          </td>
-                          <td className="text-black px-1 py-1">{scorePercent}</td>
-                          <td className="text-black px-1 py-1 text-[11px] sm:text-xs">
-                            {formatTime(item.time_completion)}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-            </div>
-            </div>
-
+                          return (
+                            <tr
+                              key={item._id}
+                              className="border-b border-gray-100 text-center"
+                            >
+                              <td
+                                className={`px-1 py-1 ${
+                                  theme === "#202024"
+                                    ? "!text-white"
+                                    : "!text-black"
+                                }`}
+                              >
+                                {index + 1}. {user.username || "Unknown"}
+                              </td>
+                              <td
+                                className={`px-1 py-1 uppercase ${
+                                  theme === "#202024"
+                                    ? "!text-white"
+                                    : "!text-black"
+                                }`}
+                              >
+                                {user.branch || item.branch || "N/A"}
+                              </td>
+                              <td
+                                className={`px-1 py-1 capitalize ${
+                                  theme === "#202024"
+                                    ? "!text-white"
+                                    : "!text-black"
+                                }`}
+                              >
+                                {item.category || "N/A"}
+                              </td>
+                              <td
+                                className={`px-1 py-1 ${
+                                  theme === "#202024"
+                                    ? "!text-white"
+                                    : "text-black"
+                                }`}
+                              >
+                                {scorePercent}
+                              </td>
+                              <td
+                                className={`px-1 py-1 text-[11px] sm:text-xs ${
+                                  theme === "#202024"
+                                    ? "!text-white"
+                                    : "!text-black"
+                                }`}
+                              >
+                                {formatTime(item.time_completion)}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             )}
-          </button>
+          </div>
         </div>
-
       </div>
     </div>
   );
 }
-

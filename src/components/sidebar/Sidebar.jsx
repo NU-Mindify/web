@@ -32,6 +32,8 @@ export default function Sidebar() {
     setSelected,
     subSelected,
     setSubSelected,
+    theme,
+    setTheme
   } = useContext(ActiveContext);
 
   const {
@@ -213,13 +215,19 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className={isActive ? "active-side-menu" : "side-menu"}>
+    <div
+      className={`${isActive ? "active-side-menu" : "side-menu"}`}
+      style={{ backgroundColor: theme }}
+    >
+
+
       <button className="btn-icon" onClick={handleSideMenu}>
         <img
           src={isActive ? close : hamburger}
-          className="mainIcon"
+          className={`mainIcon ${theme === "#202024" ? "invert brightness-0" : ""}`}
           alt="menu"
         />
+
       </button>
 
       {isActive && currentWebUser && (
@@ -236,7 +244,7 @@ export default function Sidebar() {
             </div>
           </div>
           <div className="name-container">
-            <h1 className="user-name">{currentWebUser.firstName || "User"}</h1>
+            <h1 className={`user-name ${theme === "#202024" ? "!text-white" : "!text-[#343537]" }`}>{currentWebUser.firstName || "User"}</h1>
           </div>
         </>
       )}

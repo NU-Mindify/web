@@ -13,14 +13,16 @@ import SearchBar from "../../components/searchbar/SearchBar";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
 import UserContentsTable from "../../components/tableForContents/UserContentsTable";
 import { API_URL, branches, categories } from "../../Constants";
-import { UserLoggedInContext } from "../../contexts/Contexts";
+import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/students/students.css";
 import Header from "../../components/header/Header";
 import PaginationControl from "../../components/paginationControls/PaginationControl";
 import ToggleButton from "../../components/toggleButton/ToggleButton";
 
+
 export default function ManageStudents() {
   const { currentWebUser } = useContext(UserLoggedInContext);
+  const { themeWithOpacity } = useContext(ActiveContext)
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loadingStudents, setLoadingStudents] = useState(false);
@@ -299,7 +301,10 @@ export default function ManageStudents() {
         />
       </div>
 
-      <div className="w-full h-[calc(100svh-140px)] bg-white/50 mt-5 rounded-xl flex flex-col">
+      <div 
+        className="w-full h-[calc(100svh-140px)]  mt-5 rounded-xl flex flex-col"
+        style={{ backgroundColor: themeWithOpacity }}
+      >
         <div className="w--full h-[100px] flex justify-between items-center px-5">
           <SearchBar
             value={searchTerm}
