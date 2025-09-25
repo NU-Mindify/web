@@ -15,12 +15,13 @@ import { firebaseAuth } from "../../Firebase";
 
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import Header from "../../components/header/Header";
+import { color } from "d3";
 
 export default function Profile() {
   const { currentWebUser, currentWebUserUID, setCurrentWebUserUID } =
     useContext(UserLoggedInContext);
 
-  const { themeWithOpacity, theme } = useContext(ActiveContext);
+  const { themeWithOpacity, theme, setTheme } = useContext(ActiveContext);
 
   const navigate = useNavigate();
 
@@ -149,6 +150,9 @@ export default function Profile() {
     }
   };
 
+  const [activeTheme, setActiveTheme] = useState(false)
+  const colors = ["#202024", "#ffffff"]
+
   return (
     <>
       <div className="main-cont-prof-settings">
@@ -249,17 +253,45 @@ export default function Profile() {
 
           <div className="edit-btn-prof-settings w-full">
             <button
-              className="w-[350px] py-2 px-10 rounded-2xl text-xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
+              className="w-[350px] py-2 px-5 rounded-2xl text-xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
               onClick={handleEditProfile}
             >
               EDIT PROFILE
             </button>
             <button
-              className="w-[350px] py-2 px-10 rounded-2xl text-xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
+              className="w-[350px] py-2 px-5 rounded-2xl text-xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
               onClick={handlePasswordChange}
             >
               CHANGE PASSWORD
             </button>
+
+
+            <div className="p-4 flex flex-col items-center justify-center">
+              
+            <button 
+              onClick={() => setActiveTheme(!activeTheme)}
+              className="w-[350px] py-2 px-5 rounded-2xl text-xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
+            >
+              Change Theme
+            </button>
+
+            {activeTheme &&
+            <>
+              <div className="flex gap-5">
+                {colors.map((color) => (
+                  <button
+                    key={color}
+                    style={{ backgroundColor: color }}
+                    className={`w-15 h-15 rounded-md mt-4 text-xs ${color === "#202024" ? "!text-white" : color === "#ffffff" ? "!text-black" : ""}`}
+                    onClick={() => setTheme(color)}
+                  >
+                    {color === "#202024" ? "Dark Theme" : color === "#ffffff" ? "Light Theme" : ""}
+                  </button>
+                ))}
+              </div>
+            </>
+            }
+            </div>
           </div>
         </div>
         {showValidationModal && (
