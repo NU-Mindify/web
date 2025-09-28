@@ -15,7 +15,9 @@ import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 
 export default function Leaderboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);
-  const { theme } = useContext(ActiveContext)
+  const { theme, themeWithOpacity, divColor, hoverColor } = useContext(ActiveContext)
+  console.log("div color",divColor);
+  
 
   const [leaderboardClassic, setClassicLeaderboards] = useState([]);
   const [leaderboardsMastery, setLeaderboardsMastery] = useState([]);
@@ -407,6 +409,8 @@ export default function Leaderboard() {
     );
   };
 
+  const [isHover, setIsHover] = useState("");
+
   return (
     <>
       {isMobile && (
@@ -448,7 +452,7 @@ export default function Leaderboard() {
         {(showClassic || !isMobile) && (
           <div 
             className={"classic-cont"}
-            style={{ backgroundColor: theme }}
+            style={{ backgroundColor: themeWithOpacity }}
           >
             <div 
               className="leaderboard-titles-cont"
@@ -569,7 +573,14 @@ export default function Leaderboard() {
                     .map((leader) => (
                       <div
                         key={leader._id}
-                        className="leaders-container bg-gray-100 rounded-xl mt-2"
+                        className={`leaders-container rounded-xl mt-2 hover:bg-[${divColor}]`}
+                        style={
+                          { 
+                            backgroundColor: isHover === leader._id ? hoverColor : divColor
+                          }
+                        }
+                        onMouseEnter={() => setIsHover(leader._id)}
+                        onMouseLeave={() => setIsHover("")}
                       >
                         <div className="leader-info text-black leaders-content-font">
                           {leader.rank === 1
@@ -636,7 +647,7 @@ export default function Leaderboard() {
         {(!showClassic || !isMobile) && (
           <div 
             className="mastery-cont"
-            style={{ backgroundColor: theme }}
+            style={{ backgroundColor: themeWithOpacity }}
           >
             <div className="leaderboard-titles-cont">
               <h1 
@@ -754,7 +765,8 @@ export default function Leaderboard() {
                     .map((leader) => (
                       <div
                         key={leader._id}
-                        className="leaders-container bg-gray-100 rounded-xl mt-2"
+                        className={`leaders-container rounded-xl mt-2`}
+                        style={{backgroundColor: theme}}
                       >
                         <div className="leader-info text-black leaders-content-font">
                           {leader.rank === 1

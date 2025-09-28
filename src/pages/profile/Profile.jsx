@@ -9,19 +9,22 @@ import { useNavigate } from "react-router-dom";
 import NewPasswordModal from "../../components/NewPassModal/NewPasswordModal";
 import OldPasswordModal from "../../components/OldPassModal/OldPasswordModal";
 import ValidationModal from "../../components/ValidationModal/ValidationModal";
-import { API_URL } from "../../Constants";
+import { API_URL, branches } from "../../Constants";
 import "../../css/profile/profile.css";
 import { firebaseAuth } from "../../Firebase";
 
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import Header from "../../components/header/Header";
 import { color } from "d3";
+import Buttons from "../../components/buttons/Buttons";
+
+
 
 export default function Profile() {
   const { currentWebUser, currentWebUserUID, setCurrentWebUserUID } =
     useContext(UserLoggedInContext);
 
-  const { themeWithOpacity, theme, setTheme } = useContext(ActiveContext);
+  const { themeWithOpacity, theme, setTheme, divColor, textColor } = useContext(ActiveContext);
 
   const navigate = useNavigate();
 
@@ -151,12 +154,32 @@ export default function Profile() {
   };
 
   const [activeTheme, setActiveTheme] = useState(false)
-  const colors = ["#202024", "#ffffff"]
+  const colors = [{
+      color: "#202024",
+      className: "border-white border-2",
+      name: "Dark Theme"
+    },
+    {
+      color: "#ffffff",
+      className: "border-black border-2",
+      name: "Light Theme"
+    },
+    {
+      color: "#1D1F79",
+      className: "border-white border-2",
+      name: "Blue Theme"
+    },
+    {
+      color: "#FFD418",
+      className: "border-black border-2",
+      name: "Gold Theme"
+    }
+  ];
 
   return (
     <>
       <div className="main-cont-prof-settings">
-        <div className=" w-full h-auto bg-white rounded-xl mb-5">
+        <div className=" w-full h-auto rounded-xl mb-5">
           <Header id={"profile"} title="Profile Settings" />
         </div>
 
@@ -164,21 +187,52 @@ export default function Profile() {
           className="content-container-prof-settings"
           style={{ backgroundColor: themeWithOpacity }}
         >
-          <div className="avatar-edit-container-prof-settings ">
+          <div className="avatar-edit-container-prof-settings justify-between">
             <div className="avatar-container-prof-settings">
               <img
-                className={`avatar-dimensions shadow-[-2px_-2px_0px_0px_rgba(0,0,0)]
-                ${theme === "#202024" ? "!border-black" : '!border-white'}`}
+                className={`avatar-dimensions shadow-[-2px_-2px_0px_0px_rgba(0,0,0)]`}
+                style={{
+                  border: "12px solid",
+                  borderColor: theme, 
+                  boxShadow: `0 0 0 4px ${textColor}`
+                }}
                 src={webUser.useravatar}
                 alt=""
               />
 
               <h1
-                className={`username-properties
-                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                className={`username-properties`}
+                style={{color: textColor}}
               >
                 {webUser.firstName} {webUser.lastName}
               </h1>
+            </div>
+
+            <div className="p-4 flex flex-col items-center justify-center pr-10">
+            
+
+            <Buttons 
+              text="Change Theme"
+              addedClassName="btn !w-[250px]"
+              onClick={() => setActiveTheme(!activeTheme)}
+            />
+
+            {activeTheme &&
+            <>
+              <div className="flex gap-5">
+                {colors.map((color) => (
+                  <button
+                    key={color}
+                    style={{ backgroundColor: color.color }}
+                    className={`w-15 h-15 rounded-md mt-4 text-xs ${color.color === "#202024" || color.color === "#1D1F79" ? "!text-white" : "!text-black"} ${color.className}`}
+                    onClick={() => setTheme(color.color)}
+                  >
+                    {color.name}
+                  </button>
+                ))}
+              </div>
+            </>
+            }
             </div>
           </div>
 
@@ -196,8 +250,8 @@ export default function Profile() {
               },
               {
                 label: "NU Campus",
-                value: webUser.branch || "",
-                type: "select",
+                value: branches.find((campus) => campus.id === currentWebUser.branch)?.name || "", 
+                type: "text",
               },
               { label: "Email", value: webUser.email || "", type: "email" },
               {
@@ -213,85 +267,43 @@ export default function Profile() {
             ].map(({ label, value, type }, idx) => (
               <div key={idx} className="forms-properties">
                 <h2
-                  className={`forms-label-properties ${
-                    theme === "#202024" ? "!text-white" : "!text-black"
-                  }`}
+                  className={`forms-label-properties`}
+                  style={{color: textColor}}
                 >
                   {label}
                 </h2>
 
-                {type === "select" ? (
-                  <select
-                    className="input input-bordered input-disabled input-properties-disabled"
-                    value={value}
-                    disabled
-                    aria-label={label}
-                  >
-                    <option value="manila">NU Manila</option>
-                    <option value="moa">NU MOA</option>
-                    <option value="laguna">NU Laguna</option>
-                    <option value="fairview">NU Fairview</option>
-                    <option value="baliwag">NU Baliwag</option>
-                    <option value="dasma">NU Dasmarinas</option>
-                    <option value="lipa">NU Lipa</option>
-                    <option value="clark">NU Clark</option>
-                    <option value="bacolod">NU Bacolod</option>
-                    <option value="eastortigas">NU East Ortigas</option>
-                  </select>
-                ) : (
+
                   <input
                     type={type}
                     placeholder={label}
                     className="input input-properties-disabled"
                     value={value}
+                    style={{backgroundColor: divColor, color: textColor}}
                     disabled
                   />
-                )}
+                
               </div>
             ))}
           </div>
 
-          <div className="edit-btn-prof-settings w-full">
-            <button
-              className="w-[350px] py-2 px-5 rounded-2xl text-xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
+          <div className="edit-btn-prof-settings w-full !gap-30">
+
+            <Buttons 
+              text="Edit Profile"
+              addedClassName="btn !w-[250px]"
               onClick={handleEditProfile}
-            >
-              EDIT PROFILE
-            </button>
-            <button
-              className="w-[350px] py-2 px-5 rounded-2xl text-xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
+            />
+
+            <Buttons 
+              text="Change Password"
+              addedClassName="btn !w-[250px]"
               onClick={handlePasswordChange}
-            >
-              CHANGE PASSWORD
-            </button>
+            />
+            
 
 
-            <div className="p-4 flex flex-col items-center justify-center">
-              
-            <button 
-              onClick={() => setActiveTheme(!activeTheme)}
-              className="w-[350px] py-2 px-5 rounded-2xl text-xl font-extrabold transition bg-[#FFBF1A] hover:brightness-105 text-black cursor-pointer"
-            >
-              Change Theme
-            </button>
-
-            {activeTheme &&
-            <>
-              <div className="flex gap-5">
-                {colors.map((color) => (
-                  <button
-                    key={color}
-                    style={{ backgroundColor: color }}
-                    className={`w-15 h-15 rounded-md mt-4 text-xs ${color === "#202024" ? "!text-white" : color === "#ffffff" ? "!text-black" : ""}`}
-                    onClick={() => setTheme(color)}
-                  >
-                    {color === "#202024" ? "Dark Theme" : color === "#ffffff" ? "Light Theme" : ""}
-                  </button>
-                ))}
-              </div>
-            </>
-            }
-            </div>
+            
           </div>
         </div>
         {showValidationModal && (

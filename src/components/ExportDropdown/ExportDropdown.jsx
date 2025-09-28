@@ -9,7 +9,7 @@ const ExportDropdown = ({ onExport }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const {theme} = useContext(ActiveContext)
+  const {theme, textColor} = useContext(ActiveContext)
   
 
   const handleToggle = () => {
@@ -38,12 +38,12 @@ const ExportDropdown = ({ onExport }) => {
     <div className="export-dropdown-container" ref={dropdownRef}>
       <button
         className={`export-btn mt-2
-        ${theme === "#202024" ? "!invert !brightness-0" : ''}`}
+        ${theme === "#202024" || theme === "#1D1F79" ? "!invert !brightness-0" : ''}`}
         onClick={handleToggle}
         style={{ cursor: "pointer" }}
         aria-label="Export Options"
       >
-        <Download size={22} color="black" />
+        <Download size={22} />
       </button>
       {isOpen && (
         <div className="export-dropdown-menu">

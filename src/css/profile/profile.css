@@ -41,8 +41,6 @@ body,
 }
 
 .avatar-dimensions {
-  border: 12px solid white;
-  box-shadow: 0 0 0 2px #facc15;
   @apply w-[200px] h-[200px] lg:w-[250px] lg:h-[250px] object-cover rounded-full;
 }
 
@@ -97,7 +95,6 @@ body,
 } */
 
 .input-properties-disabled {
-  background-color: white !important;
   border: 2px solid black !important;
   box-shadow: -2px -2px 0px 0px rgba(0, 0, 0, 1);
   @apply w-full h-[60px] pl-4 text-gray-800 text-[16px] font-[Poppins] rounded-xl cursor-not-allowed;

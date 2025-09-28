@@ -320,7 +320,7 @@ export default function Dashboard() {
               <div className="spinner"></div>
               <p
                 className={`${
-                  theme === "#202024" ? "!text-white" : "!text-black"
+                  theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                 }`}
               >
                 Fetching data...
@@ -330,7 +330,8 @@ export default function Dashboard() {
             <div className="w-full h-full flex items-center justify-center flex-col">
               <h1
                 className={`dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold 
-                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
+                
               >
                 Total Students
               </h1>
@@ -350,7 +351,7 @@ export default function Dashboard() {
               <div className="spinner"></div>
               <p
                 className={`${
-                  theme === "#202024" ? "!text-white" : "!text-black"
+                  theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                 }`}
               >
                 Fetching data...
@@ -360,7 +361,7 @@ export default function Dashboard() {
             <div className="w-full h-full flex items-center justify-center flex-col">
               <h1
                 className={`dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold
-                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
               >
                 Total Web Users
               </h1>
@@ -380,7 +381,7 @@ export default function Dashboard() {
               <div className="spinner"></div>
               <p
                 className={`${
-                  theme === "#202024" ? "!text-white" : "!text-black"
+                  theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                 }`}
               >
                 Fetching data...
@@ -390,14 +391,14 @@ export default function Dashboard() {
             <div className="w-full h-full flex items-center justify-center flex-col">
               <h1
                 className={`dashboard-title mb-2 -mt-5 font-[Poppins] text-[18px] font-bold text-center
-                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
               >
                 Overall Average Score
               </h1>
 
               <h2
                 className={`dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3
-                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
               >
                 {avgScoresByWorld.overall === "N/A" ? (
                   "No Data"
@@ -419,7 +420,7 @@ export default function Dashboard() {
               <div className="spinner"></div>
               <p
                 className={`${
-                  theme === "#202024" ? "!text-white" : "!text-black"
+                  theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                 }`}
               >
                 Fetching data...
@@ -429,14 +430,14 @@ export default function Dashboard() {
             <div className="w-full h-full flex items-center justify-center flex-col">
               <h1
                 className={`dashboard-title mb-3 mt-3 font-[Poppins] text-[18px] font-bold text-center
-                  ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                  ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
               >
                 Most Challenging World
               </h1>
               {mostChallengingWorld === "N/A" ? (
                 <h2
                   className={`text-3xl font-bold
-                    ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                    ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                 >
                   No Data
                 </h2>
@@ -444,20 +445,20 @@ export default function Dashboard() {
                 <>
                   <h2
                     className={`text-xl capitalize -mt-3 mb-1 text-black shadow-black font-[Poppins] font-semibold text-[15px] text-center
-                    ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                    ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                   >
                     {mostChallengingWorld + " Psychology"}
                   </h2>
                   <h2
                     className={`dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3
-                    ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                    ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                   >
                     <CountUp end={mostChallengingWorldScore} decimals={2} />%
                   </h2>
 
                   <h2
                     className={`text-[16px] italic -mt-1 mb-1 text-black font-[Poppins] capitalize
-                    ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                    ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                   >
                     Average Score
                   </h2>
@@ -476,7 +477,7 @@ export default function Dashboard() {
               <div className="spinner"></div>
               <p
                 className={`${
-                  theme === "#202024" ? "!text-white" : "!text-black"
+                  theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                 }`}
               >
                 Fetching data...
@@ -486,7 +487,7 @@ export default function Dashboard() {
             <div className="w-full h-full flex items-center justify-center flex-col">
               <h1
                 className={`dashboard-title mb-3 mt-3 font-[Poppins] text-[18px] font-bold text-center
-                ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
               >
                 Students Average Session
               </h1>
@@ -494,7 +495,7 @@ export default function Dashboard() {
               <>
                 <h2
                   className={`dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3 text-center
-                    ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                    ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                 >
                   <CountUp end={averageSession} decimals={2} />s
                 </h2>
@@ -515,7 +516,7 @@ export default function Dashboard() {
                 <div className="spinner"></div>
                 <p
                   className={`${
-                    theme === "#202024" ? "!text-white" : "!text-black"
+                    theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                   }`}
                 >
                   Fetching data...
@@ -534,7 +535,7 @@ export default function Dashboard() {
                     <div className="spinner"></div>
                     <p
                       className={`${
-                        theme === "#202024" ? "!text-white" : "!text-black"
+                        theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                       }`}
                     >
                       Fetching data...
@@ -544,7 +545,7 @@ export default function Dashboard() {
                   <div className="w-full h-full flex items-center justify-center flex-col">
                     <h1
                       className={`dashboard-title mb-2 -mt-1 font-[Poppins] text-[18px] font-bold
-                      ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                      ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                     >
                       Pending Accounts
                     </h1>
@@ -595,7 +596,7 @@ export default function Dashboard() {
                   <div className="spinner"></div>
                   <p
                     className={`${
-                      theme === "#202024" ? "!text-white" : "!text-black"
+                      theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                     }`}
                   >
                     Fetching data...
@@ -606,13 +607,13 @@ export default function Dashboard() {
                   <div className="w-full flex flex-col -mt-10 mb-4">
                     <h1
                       className={`font-bold font-[poppins] text-lg sm:text-xl md:text-2xl lg:text-[26px]
-                      ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                      ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                     >
                       Total Students
                     </h1>
                     <p
                       className={`font-[poppins] text-[18px] -mt-2
-                      ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                      ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                     >
                       per campus
                     </p>
@@ -630,7 +631,7 @@ export default function Dashboard() {
               <div className="w-full h-10/12 flex flex-col p-4">
                 <h1
                   className={`font-bold font-[poppins] text-lg sm:text-xl md:text-2xl lg:text-[26px]
-                  ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                  ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                 >
                   Top Badges
                 </h1>
@@ -640,7 +641,7 @@ export default function Dashboard() {
                     <div className="spinner"></div>
                     <p
                       className={`${
-                        theme === "#202024" ? "!text-white" : "!text-black"
+                        theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                       }`}
                     >
                       Loading Badges...
@@ -651,7 +652,7 @@ export default function Dashboard() {
                     {topBadges.length === 0 ? (
                       <li
                         className={`${
-                          theme === "#202024" ? "!text-white" : "!text-black"
+                          theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                         }`}
                       >
                         No badges earned yet.
@@ -667,7 +668,7 @@ export default function Dashboard() {
                           {/* Rank Number */}
                           <span
                             className={`w-5 text-xs sm:text-sm font-bold text-gray-600
-                        ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                        ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                           >
                             {idx + 1}.
                           </span>
@@ -684,7 +685,7 @@ export default function Dashboard() {
                             <div
                               className={`font-semibold text-gray-800 text-xs sm:text-sm
                           ${
-                            theme === "#202024" ? "!text-white" : "!text-black"
+                            theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                           }`}
                             >
                               {badge.name}
@@ -692,7 +693,7 @@ export default function Dashboard() {
                             <div
                               className={`text-gray-500 text-[10px] sm:text-xs
                           ${
-                            theme === "#202024" ? "!text-white" : "!text-black"
+                            theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"
                           }`}
                             >
                               Level {badge.level || 1}
@@ -710,7 +711,7 @@ export default function Dashboard() {
                           {/* Percentage */}
                           <div
                             className={`text-[10px] sm:text-sm font-semibold text-gray-700 ml-2
-                        ${theme === "#202024" ? "!text-white" : "!text-black"}`}
+                        ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                           >
                             {badge.percentage
                               ? badge.percentage.toFixed(2)

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import ExportDropdown from "../ExportDropdown/ExportDropdown";
 import SelectFilter from "../selectFilter/SelectFilter";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
@@ -28,7 +28,10 @@ export default function Header({
   secondSelectAddedClassName,
 }) {
 
-  const {theme} = useContext(ActiveContext)
+  const {theme, setTheme, textColor} = useContext(ActiveContext)
+  const {activeTheme, setActiveTheme} = useState(false)
+
+
   return (
     <div 
       className="w-full h-[100px] flex justify-between pl-5 pr-10 items-center rounded-xl"
@@ -36,8 +39,8 @@ export default function Header({
     >
       
       <h1
-        className="text-4xl font-bold !text-[#FFC916] h-[50px] mt-3"
-        style={{ fontFamily: "'Poppins', sans-serif" }}
+        className="text-4xl font-bold h-[50px] mt-3"
+        style={{ fontFamily: "'Poppins', sans-serif", color: textColor}}
       >
         {title}
       </h1>
@@ -77,6 +80,7 @@ export default function Header({
         </div>
       )}
 
+
       {id !== "analytics" && (
         <ExportDropdown
           onExport={(format) => {
@@ -88,6 +92,7 @@ export default function Header({
           }}
         />
       )}
+
     </div>
   );
 }

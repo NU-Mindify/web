@@ -5,7 +5,9 @@ import { avatars } from "../../Constants";
 import { Archive, ArchiveRestore } from "lucide-react";
 import "./userContentsTable.css";
 import defaultAvatar from "../../assets/defaultAvatar/defaultAvatar.svg";
-
+import { useContext, useState } from "react";
+import { ActiveContext } from "../../contexts/Contexts";
+import { text } from "d3";
 export default function UserContentsTable({
   columns,
   titles,
@@ -20,9 +22,14 @@ export default function UserContentsTable({
   isForApprove,
   onArchiveClick,
 }) {
+  const { theme, divColor, textColor, hoverColor } = useContext(ActiveContext);
+  const [isHover, setIsHover] = useState("")
   return (
     <div className="users-main-container">
-      <div className="w-full bg-white flex justify-center items-center sticky top-0 z-10">
+      <div
+        className="w-full bg-white flex justify-center items-center sticky top-0 z-10"
+        style={{ backgroundColor: divColor }}
+      >
         <div className="w-11/12 h-[50px] flex">
           {titles.map(({ key, label, className }) => (
             <div
@@ -30,6 +37,7 @@ export default function UserContentsTable({
               className={`${
                 className || ""
               } text-xl text-black font-bold flex items-center`}
+              style={{ color: textColor }}
             >
               {label}
               {key === "name" && (
@@ -55,11 +63,13 @@ export default function UserContentsTable({
         {isLoading ? (
           <div className="loading-overlay-accounts">
             <div className="spinner"></div>
-            <p>Fetching data...</p>
+            <p style={{ color: textColor }}>Fetching data...</p>
           </div>
         ) : data.length === 0 ? (
           <div className="w-full flex flex-grow justify-center items-center">
-            <p className="text-black mt-10 text-3xl">No user found.</p>
+            <p className="mt-10 text-3xl" style={{ color: textColor }}>
+              No user found.
+            </p>
           </div>
         ) : (
           data.map((user) => {
@@ -71,6 +81,9 @@ export default function UserContentsTable({
                 className={
                   cardActive === userId ? "active-user-card" : "user-card"
                 }
+                style={{ backgroundColor: isHover === user._id ? hoverColor : divColor }}
+                onMouseEnter={() => setIsHover(user._id)}
+                onMouseLeave={() => setIsHover("")}
               >
                 <div className="w-full min-w-[900px] flex justify-between text-xl">
                   {titles.map(({ key }) => {
@@ -80,6 +93,7 @@ export default function UserContentsTable({
                           <div
                             key={key}
                             className="flex-grow flex items-center"
+                            style={{ color: textColor }}
                           >
                             <img
                               src={
@@ -96,18 +110,30 @@ export default function UserContentsTable({
                         );
                       case "position":
                         return (
-                          <div key={key} className="user-pos-cell">
+                          <div
+                            key={key}
+                            className="user-pos-cell"
+                            style={{ color: textColor }}
+                          >
                             {user.position}
                           </div>
                         );
                       case "branch":
                         return (
-                          <div key={key} className="user-branch-cell">
+                          <div
+                            key={key}
+                            className="user-branch-cell"
+                            style={{ color: textColor }}
+                          >
                             {getBranchName(user.branch)}
                           </div>
                         );
                       case "email":
-                        return <div key={key}>{user.email}</div>;
+                        return (
+                          <div key={key} style={{ color: textColor }}>
+                            {user.email}
+                          </div>
+                        );
                       case "action":
                         return (
                           <div key={key} className="user-action-cell">
@@ -141,12 +167,12 @@ export default function UserContentsTable({
                                   {user.is_deleted ? (
                                     <ArchiveRestore
                                       size={20}
-                                      className="text-green-600"
+                                      style={{ color: textColor }}
                                     />
                                   ) : (
                                     <Archive
                                       size={20}
-                                      className="text-red-500"
+                                      style={{ color: textColor }}
                                     />
                                   )}
                                 </button>
@@ -173,20 +199,18 @@ export default function UserContentsTable({
                         );
                       case "stud_id":
                         return (
-                          <div key={key} className="user-pos-cell">
+                          <div key={key} className="user-pos-cell" style={{ color: textColor }}>
                             {user.student_id}
                           </div>
                         );
                       default:
-                        return <div key={key}>N/A</div>;
+                        return <div key={key} style={{ color: textColor }}>N/A</div>;
                     }
                   })}
-
-                  
                 </div>
                 <div className="w-full">
-                    {cardActive === userId && cardActiveContent(user)}
-                  </div>
+                  {cardActive === userId && cardActiveContent(user)}
+                </div>
               </div>
             );
           })

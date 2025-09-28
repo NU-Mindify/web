@@ -15,6 +15,7 @@ import { Archive, ArchiveRestore } from "lucide-react";
 import Buttons from "../../components/buttons/Buttons";
 import Header from "../../components/header/Header";
 import ToggleButton from "../../components/toggleButton/ToggleButton";
+import { text } from "d3";
 
 
 
@@ -49,7 +50,7 @@ export default function Branches() {
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
   const { currentWebUser } = useContext(UserLoggedInContext);
-  const { theme, themeWithOpacity } = useContext(ActiveContext)
+  const { theme, themeWithOpacity, hoverColor, textColor, iconColor, divColor } = useContext(ActiveContext)
 
   const handleReset = () => {
     setNewBranch({
@@ -257,10 +258,11 @@ export default function Branches() {
   }
 
   const [showAddCampus, setShowAddCampus] = useState(false);
+  const [isHover, setIsHover] = useState("")
 
   return (
     <div className="font-[Poppins] flex flex-col w-full min-h-screen">
-      <div className="w-full h-auto bg-white rounded-xl mb-5">
+      <div className="w-full h-auto rounded-xl mb-5">
         <Header
           id={"campus"}
           title="Manage Campus"
@@ -275,13 +277,13 @@ export default function Branches() {
       >
         {showAddCampus ? (
           <div className="px-5 w-full h-[270px] flex justify-center items-center">
-            <div className="border border-black p-6 rounded-xl w-full">
-              <h2 className="form-title">ADD CAMPUS</h2>
+            <div className="border p-6 rounded-xl w-full" style={{borderColor: textColor}}>
+              <h2 className="form-title" style={{color: textColor}}>ADD CAMPUS</h2>
               <hr className="border-b border-gray-300 mb-4" />
 
               <div className="form-row">
                 <div className="input-group">
-                  <h2 className="required-label"> Campus ID </h2>
+                  <h2 className="required-label" style={{color: textColor}}> Campus ID </h2>
                   <input
                     type="text"
                     placeholder="Enter Campus ID"
@@ -292,11 +294,12 @@ export default function Branches() {
                         id: e.target.value,
                       });
                     }}
+                    style={{color: textColor}}
                   />
                 </div>
 
                 <div className="input-group">
-                  <h2 className="required-label">Campus Name</h2>
+                  <h2 className="required-label" style={{color: textColor}}>Campus Name</h2>
                   <input
                     className=""
                     type="text"
@@ -308,11 +311,12 @@ export default function Branches() {
                         name: e.target.value,
                       });
                     }}
+                    style={{color: textColor}}
                   />
                 </div>
 
                 <div className="input-group">
-                  <h2 className="required-label">Professor Email Extension</h2>
+                  <h2 className="required-label" style={{color: textColor}}>Professor Email Extension</h2>
                   <input
                     className=""
                     type="text"
@@ -324,11 +328,12 @@ export default function Branches() {
                         extension: e.target.value,
                       });
                     }}
+                    style={{color: textColor}}
                   />
                 </div>
 
                 <div className="input-group">
-                  <h2 className="required-label">Student Email Extension</h2>
+                  <h2 className="required-label" style={{color: textColor}}>Student Email Extension</h2>
                   <input
                     className=""
                     type="text"
@@ -340,6 +345,7 @@ export default function Branches() {
                         stud_extension: e.target.value,
                       });
                     }}
+                    style={{color: textColor}}
                   />
                 </div>
               </div>
@@ -381,13 +387,13 @@ export default function Branches() {
                 textRightChoice={"Deleted Campuses"}
                 useStateToShow={showDeletedBranches}
               />
+              
 
-              <button
-                className="w-50 h-10 bg-white rounded-xl font-medium text-xl text-black hover:bg-gray-600 hover:!text-white cursor-pointer"
+              <Buttons 
+                text="Add Campus"
                 onClick={() => setShowAddCampus(true)}
-              >
-                Add Campus
-              </button>
+                addedClassName="btn !w-[200px]"
+              />
             </div>
           </>
         )}
@@ -414,29 +420,36 @@ export default function Branches() {
           >
 
             <div className="w-full h-[40px] p-1 px-2 font-bold text-[20px] flex justify-between items-center">
-              <div className="w-[25%]">Campus ID</div>
-              <div className="w-[30%]">Name</div>
-              <div className="w-[35%]">Professor Email Extension</div>
-              <div className="w-[30%]">Student Email Extension</div>
-              <div className="w-[10%]">Action</div>
+              <div className="w-[25%]" style={{color: textColor}}>Campus ID</div>
+              <div className="w-[30%]" style={{color: textColor}}>Name</div>
+              <div className="w-[35%]" style={{color: textColor}}>Professor Email Extension</div>
+              <div className="w-[30%]" style={{color: textColor}}>Student Email Extension</div>
+              <div className="w-[10%]" style={{color: textColor}}>Action</div>
             </div>
 
             <div className="w-full h-[calc(100svh-300px)] overflow-y-auto campus-scroll-container">
                 {branchList.map((branch, index) => (
                   <div
                     key={index}
-                    className="campus-card flex flex-wrap md:flex-nowrap justify-between items-center px-3 md:px-5 py-4 mb-3 border border-gray-600 rounded-lg bg-white text-black hover:bg-[#35408E]"
+                    className="campus-card flex flex-wrap md:flex-nowrap justify-between items-center px-3 md:px-5 py-4 mb-3 border border-gray-600 rounded-lg"
+                    style={{
+                      backgroundColor: isHover === branch._id ? hoverColor :divColor,
+                      color: textColor,
+                    }}
+                    onMouseEnter={() => setIsHover(branch._id)}
+                    onMouseLeave={() => setIsHover("")}
                   >
-                    <div className="w-full md:w-[21%] text-sm md:text-[17px] font-medium">
+                    <div className="w-full md:w-[21%] text-sm md:text-[17px] font-medium"
+                    style={{color: textColor}}>
                       {branch.id}
                     </div>
-                    <div className="w-full md:w-[30%] text-sm md:text-[17px]">
+                    <div className="w-full md:w-[30%] text-sm md:text-[17px]" style={{color: textColor}}>
                       {branch.name}
                     </div>
-                    <div className="w-full md:w-[30%] text-sm md:text-[17px]">
+                    <div className="w-full md:w-[30%] text-sm md:text-[17px]" style={{color: textColor}}>
                       {branch.extension}
                     </div>
-                    <div className="w-full md:w-[30%] text-sm md:text-[17px]">
+                    <div className="w-full md:w-[30%] text-sm md:text-[17px]" style={{color: textColor}}>
                       {branch.stud_extension}
                     </div>
                     <div className="w-full md:w-[5%] mt-2 md:mt-0">
@@ -447,10 +460,9 @@ export default function Branches() {
                             setSelectedBranch(branch.name);
                             setBranchToActivate(branch._id);
 
-                            // className="btn btn-success px-5 py-2 text-white"
                           }}
                         >
-                          <ArchiveRestore size={20} />
+                          <ArchiveRestore size={20} style={{color: textColor}} />
                         </button>
                       ) : (
                         <button
@@ -460,10 +472,10 @@ export default function Branches() {
                             setSelectedBranch(branch.name);
                             setShowDeleteModal(true);
 
-                            // className="btn btn-error px-5 py-2 m"
                           }}
+                          style={{ filter:iconColor}} 
                         >
-                          <Archive size={20} />
+                          <Archive size={20} style={{color: textColor}} />
                         </button>
                       )}
                     </div>

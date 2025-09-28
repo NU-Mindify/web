@@ -33,7 +33,7 @@ export default function Sidebar() {
     subSelected,
     setSubSelected,
     theme,
-    setTheme
+    textColor
   } = useContext(ActiveContext);
 
   const {
@@ -224,7 +224,7 @@ export default function Sidebar() {
       <button className="btn-icon" onClick={handleSideMenu}>
         <img
           src={isActive ? close : hamburger}
-          className={`mainIcon ${theme === "#202024" ? "invert brightness-0" : ""}`}
+          className={`mainIcon ${theme === "#202024" || theme === "#1D1F79" ? "invert brightness-0" : ""}`}
           alt="menu"
         />
 
@@ -244,7 +244,7 @@ export default function Sidebar() {
             </div>
           </div>
           <div className="name-container">
-            <h1 className={`user-name ${theme === "#202024" ? "!text-white" : "!text-[#343537]" }`}>{currentWebUser.firstName || "User"}</h1>
+            <h1 className={`user-name mt-2`} style={{color: textColor}}>{currentWebUser.firstName || "User"}</h1>
           </div>
         </>
       )}
@@ -319,6 +319,7 @@ export default function Sidebar() {
                         >
                           <button
                             className="active-btn-icon"
+                            
                             onClick={() => {
                               navigate("/question", {
                                 state: {
@@ -331,7 +332,7 @@ export default function Sidebar() {
                               setSubSelected(id);
                             }}
                           >
-                            <h1 className="active-btn-txt">{label}</h1>
+                            <h1 className="active-btn-txt" style={{color: textColor}}>{label}</h1>
                           </button>
                         </div>
                       </li>

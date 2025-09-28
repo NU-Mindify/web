@@ -14,7 +14,8 @@ import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/activityLog/activityLog.css";
 import Header from "../../components/header/Header";
 import PaginationControl from "../../components/paginationControls/PaginationControl";
-
+import { Colors } from "chart.js";
+import { text } from "d3";
 
 export default function ActivityLogs() {
   const [allLogs, setAllLogs] = useState([]);
@@ -22,7 +23,8 @@ export default function ActivityLogs() {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
-  const { theme, themeWithOpacity } = useContext(ActiveContext)
+  const { theme, themeWithOpacity, textColor, divColor, hoverColor } =
+    useContext(ActiveContext);
 
   const [cardActive, setCardActive] = useState(null);
 
@@ -249,7 +251,7 @@ export default function ActivityLogs() {
 
   return (
     <div className="logs-main-container">
-      <div className="w-full h-auto bg-white rounded-xl">
+      <div className="w-full h-auto rounded-xl">
         <Header
           id={"logs"}
           title="Activity Logs"
@@ -258,7 +260,7 @@ export default function ActivityLogs() {
         />
       </div>
 
-      <div 
+      <div
         className="w-full h-[calc(100svh-145px)] rounded-xl mt-5"
         style={{ backgroundColor: themeWithOpacity }}
       >
@@ -279,45 +281,62 @@ export default function ActivityLogs() {
             />
 
             <div className="flex items-center gap-4 ml-20">
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                selectsStart
-                startDate={startDate}
-                endDate={endDate}
-                placeholderText="Start Date"
-                className="border px-3 py-2 rounded w-[200px] bg-white"
-              />
-              <span>-</span>
-              <DatePicker
-                selected={endDate}
-                onChange={(date) => setEndDate(date)}
-                selectsEnd
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate}
-                placeholderText="End Date"
-                className="border px-3 py-2 rounded w-[200px] bg-white"
-              />
+              <div style={{ backgroundColor: divColor }}>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                  placeholderText="Start Date"
+                  className={`border px-3 py-2 rounded w-[200px] 
+                  ${
+                    theme === "#202024" || theme === "#1D1F79"
+                      ? "!text-white"
+                      : "!text-black"
+                  }`}
+                />
+              </div>
+
+              <span style={{ color: textColor }}>-</span>
+              <div style={{ backgroundColor: divColor }}>
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={startDate}
+                  placeholderText="End Date"
+                  className={`border px-3 py-2 rounded w-[200px] 
+                    ${
+                      theme === "#202024" || theme === "#1D1F79"
+                        ? "!text-white"
+                        : "!text-black"
+                    }`}
+                />
+              </div>
             </div>
           </div>
         </div>
 
         <div className="logs-main-container h-[calc(100svh-305px)] overflow-y-auto">
-          <div className="w-full bg-white flex items-center justify-center">
+          <div className="w-full flex items-center justify-center"
+          style={{backgroundColor: divColor}}>
             <div className="w-[90svw] font-bold text-[20px] flex justify-between items-center pb-2">
-              <div className="w-3/11">Name</div>
-              <div className="w-[22%]">Campus</div>
-              <div className="w-[22%]">Action</div>
-              <div className="w-3/9">Description</div>
-              <div className="w-3/11">Timestamp</div>
+              <div className="w-3/11" style={{color: textColor}}>Name</div>
+              <div className="w-[22%]" style={{color: textColor}}>Campus</div>
+              <div className="w-[22%]" style={{color: textColor}}>Action</div>
+              <div className="w-3/9" style={{color: textColor}}>Description</div>
+              <div className="w-3/11" style={{color: textColor}}>Timestamp</div>
             </div>
           </div>
           <div className="users-main-container px-10">
             {currentLogs.map((log, index) => (
               <div
                 key={index}
-                className="user-card bg-white hover:bg-[#35408E]"
+                className="user-card"
+                style={{backgroundColor: divColor}}
               >
                 <div className="user-table flex justify-between items-center">
                   <div className="user-name-cell w-3/12 flex items-center">
@@ -326,17 +345,17 @@ export default function ActivityLogs() {
                       alt={log.name || "User"}
                       className="mini-avatar"
                     />
-                    <span className="text-[18px] font-medium ml-2">
+                    <span className="text-[18px] font-medium ml-2" style={{color: textColor}}>
                       {log.name || "--"}
                     </span>
                   </div>
 
-                  <div className="w-[20%] text-[18px]">
+                  <div className="w-[20%] text-[18px]" style={{color: textColor}}>
                     {branches.find((b) => b.id === log.branch)?.name ||
                       "Unknown Branch"}
                   </div>
 
-                  <div className="w-[20%] text-[18px]">{log.action}</div>
+                  <div className="w-[20%] text-[18px]" style={{color: textColor}}>{log.action}</div>
 
                   <div
                     className={`w-3/10 text-[18px] mr-5 text-center ${
@@ -344,12 +363,13 @@ export default function ActivityLogs() {
                         ? "whitespace-normal break-words"
                         : "overflow-hidden whitespace-nowrap text-ellipsis"
                     }`}
+                    style={{color: textColor}}
                     title={cardActive === index ? "" : log.description}
                   >
                     {log.description || "-"}
                   </div>
 
-                  <div className="w-3/13 text-[18px]">
+                  <div className="w-3/13 text-[18px]" style={{color: textColor}}>
                     {new Date(log.createdAt).toLocaleString("en-US", {
                       year: "numeric",
                       month: "long",

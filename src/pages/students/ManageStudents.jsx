@@ -292,7 +292,7 @@ export default function ManageStudents() {
 
   return (
     <div className="students-main-container">
-      <div className="w-full h-[100px] bg-white rounded-xl">
+      <div className="w-full h-[100px] rounded-xl">
         <Header
           id={"students"}
           title="Manage Students"

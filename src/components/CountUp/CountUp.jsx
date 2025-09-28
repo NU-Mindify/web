@@ -30,7 +30,7 @@ export default function CountUp({ end, duration = 700 }) {
   }, [end, duration]);
 
   return (
-    <span className={`fade-in ${theme === "#202024" ? "!text-white" : "!text-black"}`}>
+    <span className={`fade-in ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}>
       {count?.toLocaleString()}
     </span>
   );

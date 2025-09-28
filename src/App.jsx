@@ -34,6 +34,9 @@ import ApproveAccount from "./pages/accounts/ApproveAccount";
 import Branches from "./pages/branches/Branches";
 import Landing from "./pages/landingpage/landing";
 import ShowUnapprove from "./pages/questions/ShowUnapprove";
+import blue from "./assets/background/blue.png"
+import yellow from "./assets/background/yellow.png"
+import black from "./assets/background/dark bg.png"
 
 const queryClient = new QueryClient();
 
@@ -42,14 +45,45 @@ function App() {
   const [subSelected, setSubSelected] = useState("");
   const [selected, setSelected] = useState("");
   const [theme, setTheme] = useState("#202024");
-  const [themeWithOpacity, setThemeWithOpacity] = useState(null);
+  const [themeWithOpacity, setThemeWithOpacity] = useState("");
+  const [divColor, setDivColor] = useState("")
+  const [hoverColor, setHoverColor] = useState("")
+  const [textColor, setTextColor] = useState("")
+  const [buttonColor, setButtonColor] = useState("")
+  const [iconColor, setIconColor] = useState('')
 
   useEffect(() => {
     if (theme === "#202024") {
-      setThemeWithOpacity("rgba(32, 32, 36, 0.7)");
+      setThemeWithOpacity(theme);
+      setDivColor("#494949")
+      setHoverColor("#2E2E2E")
+      setTextColor("#ffffff")
+      setButtonColor("#ffffff")
+      setIconColor("invert(1) brightness(2)")
     }
     else if(theme === "#ffffff"){
       setThemeWithOpacity("rgba(255, 255, 255, 0.5)");
+      setDivColor("#ffffff")
+      setHoverColor("#A7A7A7")
+      setTextColor("#000000")
+      setButtonColor("#FCB700")
+      setIconColor("")
+    }
+    else if(theme === "#1D1F79"){
+      setThemeWithOpacity(theme)
+      setDivColor("#4F52D5")
+      setHoverColor("#A7A7A7")
+      setTextColor("#ffffff")
+      setButtonColor("#FCB700")
+      setIconColor("invert(1) brightness(2)")
+    }
+    else if(theme === "#FFD418"){
+      setThemeWithOpacity(theme)
+      setDivColor("#FFE575")
+      setHoverColor("#A7A7A7")
+      setTextColor("#000000")
+      setButtonColor("#000000")
+      setIconColor("")
     }
   }, [theme]); 
 
@@ -178,6 +212,16 @@ function App() {
         setTheme,
         themeWithOpacity,
         setThemeWithOpacity,
+        divColor,
+        setDivColor,
+        hoverColor,
+        setHoverColor,
+        textColor,
+        setTextColor,
+        buttonColor,
+        setButtonColor,
+        iconColor,
+        setIconColor
       }}
     >
       <UserLoggedInContext.Provider
@@ -204,7 +248,18 @@ function App() {
                 <Route path="*" element={<Navigate to="/login" />} />
               </Routes>
             ) : !isSplash ? (
-              <div className="main-container">
+              <div 
+                className="main-container"
+                style={
+                  { 
+                        backgroundImage: `url(${theme === "#202024" ? black : theme === "#ffffff" ? blue : theme === "#1D1F79" ? black : black})`,
+                        backgroundSize: "cover",      
+                        backgroundRepeat: "no-repeat",
+                        backgroundAttachment: "fixed", 
+                        backgroundPosition: "center", 
+                  }
+                }
+              >
                 <SessionTimeout timeout={15 * 60 * 1000} /> {/* 15 minutes */}
                 {/* <SessionTimeout timeout={10 * 1000} /> 10 seconds for testing */}
                 <Sidebar />

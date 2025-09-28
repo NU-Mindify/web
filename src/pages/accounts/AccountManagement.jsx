@@ -387,7 +387,7 @@ export default function AccountManagement() {
           <Buttons
             text="Pending Account"
             onClick={() => navigate("/account/approval")}
-            addedClassName="btn btn-warning !w-[250px]"
+            addedClassName="btn !w-[250px]"
           />
         </div>
 
@@ -502,7 +502,7 @@ export default function AccountManagement() {
             <div className="popup-buttons">
               <Buttons
                 text="Yes, Archive"
-                addedClassName="btn btn-delete"
+                addedClassName="btn !btn-delete"
                 onClick={handleConfirmDelete}
               />
               <Buttons
