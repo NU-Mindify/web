@@ -58,7 +58,7 @@ export default function ManageQuestion() {
   const [restore, setRestore] = useState(false);
   
 
-  const { subSelected, setSubSelected, theme } = useContext(ActiveContext);
+  const { subSelected, setSubSelected, theme, textColor, hoverColor, divColor } = useContext(ActiveContext);
   
 
   const [totalQuestion, setTotalQuestion] = useState([]);
@@ -610,8 +610,8 @@ export default function ManageQuestion() {
             </div>
           ) : (
             <h1 
-              className={`question-title 
-                ${theme === "#202024" ? "!text-white" : '!text-black'}`}
+              className={`question-title`}
+              style={{color: textColor}}
             >
               Select Category
             </h1>

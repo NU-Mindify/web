@@ -4,7 +4,7 @@ import { ActiveContext } from "../../contexts/Contexts";
 
 
 
-export default function CountUp({ end, duration = 700 }) {
+export default function CountUp({ end, duration = 700, suffix }) {
   const {theme} = useContext(ActiveContext)
   const [count, setCount] = useState(0);
 
@@ -31,7 +31,7 @@ export default function CountUp({ end, duration = 700 }) {
 
   return (
     <span className={`fade-in ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}>
-      {count?.toLocaleString()}
+      {count?.toLocaleString()} {suffix}
     </span>
   );
 }

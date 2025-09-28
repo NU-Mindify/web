@@ -46,6 +46,7 @@ export default function Dashboard() {
 
   const [averageSession, setAverageSession] = useState(0);
   const [loadingSession, setLoadingSession] = useState(false);
+  const [unit, setUnit] = useState("")
 
   useEffect(() => {
     if (!currentWebUser?.token) return;
@@ -58,17 +59,32 @@ export default function Dashboard() {
   }, [currentWebUser]);
 
   async function fetchAverageSession() {
-    setLoadingSession(true);
-    try {
-      const { data } = await axios.get(`${API_URL}/getAverageSession`);
+  setLoadingSession(true);
+  try {
+    const { data } = await axios.get(`${API_URL}/getAverageSession`);
+    let seconds = data.averageSessionTime; // assuming API returns seconds
 
-      setAverageSession(Number(data.averageSessionTime.toFixed(2)));
-    } catch (error) {
-      console.error("Error fetching top leaderboards:", error.message);
-    } finally {
-      setLoadingSession(false);
+    let value = seconds;
+    let unit = "s";
+
+    if (seconds >= 60) {
+      value = seconds / 60;
+      unit = "min";
     }
+    if (seconds >= 3600) {
+      value = seconds / 3600;
+      unit = "hr";
+    }
+
+    setAverageSession(Number(value.toFixed(2)));
+    setUnit(unit); // you'll need a state for this
+  } catch (error) {
+    console.error("Error fetching top leaderboards:", error.message);
+  } finally {
+    setLoadingSession(false);
   }
+}
+
 
   const fetchTopClassicLeaderboard = async () => {
     setLoadingDataClassic(true);
@@ -497,7 +513,7 @@ export default function Dashboard() {
                   className={`dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3 text-center
                     ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                 >
-                  <CountUp end={averageSession} decimals={2} />s
+                  <CountUp end={averageSession} decimals={2} suffix={unit} />
                 </h2>
               </>
             </div>

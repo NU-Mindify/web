@@ -95,7 +95,7 @@
 .per-word-container {
   /* Added min-w for the grid layout to ensure minimum width before scrolling */
   /* @apply w-11/12 grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-gray-300 border-1 border-black min-w-[700px]; Adjust min-w value to match or be slightly less than header-details */
-  @apply w-full sm:w-11/12 grid grid-cols-[1fr] sm:grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 hover:bg-[#35408E] border-1 border-black min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
+  @apply w-full sm:w-11/12 grid grid-cols-[1fr] sm:grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 border-1 min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
   @apply transform scale-100 transition-transform duration-300 ease-in-out;
 }
 
@@ -103,7 +103,7 @@
   /* Added min-w for the grid layout to ensure minimum width before scrolling */
   /* @apply w-11/12 h-auto grid grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 bg-[#35408E] min-w-[700px]; /* Adjust min-w value to match or be slightly less than header-details */
   /* @apply transition-transform duration-300 ease-in-out transform scale-108; */
-  @apply w-full sm:w-11/12 h-auto grid grid-cols-[1fr] sm:grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 bg-[#35408E] min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
+  @apply w-full sm:w-11/12 h-auto grid grid-cols-[1fr] sm:grid-cols-[1.5fr_3fr_1fr] items-center mb-2 rounded-xl px-1 py-2 min-w-[320px] sm:min-w-[500px] md:min-w-[700px];
   @apply transition-transform duration-300 ease-in-out transform scale-105 sm:scale-108;
 }
 
@@ -116,7 +116,7 @@
 }
 
 .active-per-word-container .word-container {
-  @apply h-auto text-white overflow-visible whitespace-normal;
+  @apply h-auto overflow-visible whitespace-normal;
 }
 
 .meaning-container {
@@ -129,7 +129,7 @@
 .active-meaning-container {
   /* @apply flex-1 max-h-[1000px] text-base overflow-hidden p-2 flex items-center text-white; */
   @apply flex-1 max-h-[1000px] text-sm sm:text-base md:text-lg 
-         overflow-hidden p-2 flex items-center text-white;
+         overflow-hidden p-2 flex items-center;
 }
 
 .action-container {
@@ -152,12 +152,15 @@
 .per-word-container button img {
   /* @apply w-[40px] aspect-square; */
   @apply w-[28px] sm:w-[32px] md:w-[36px] lg:w-[40px] aspect-square;
+  filter: invert(1) brightness(2) contrast(100);
 }
 
 .active-per-word-container button img {
   @apply w-[40px] aspect-square;
   filter: invert(1) brightness(2) contrast(100);
 }
+
+
 
 
 

@@ -26,7 +26,7 @@ export default function ManageGlossary() {
   const { currentWebUser = { firstName: "Admin", lastName: "", token: "" } } =
     useContext(UserLoggedInContext) || {};
 
-  const { theme, themeWithOpacity } = useContext(ActiveContext)
+  const { theme, themeWithOpacity, divColor, textColor, hoverColor } = useContext(ActiveContext)
 
   const [searchTerm, setSearchTerm] = useState("");
   const [loadingTerms, setLoadingTerms] = useState(false);
@@ -213,7 +213,7 @@ export default function ManageGlossary() {
   return (
     <>
       <div className="header">
-        <div className="w-full h-[100px] bg-white rounded-xl">
+        <div className="w-full h-[100px] rounded-xl">
           <Header
             id={"account"}
             title={"Manage Glossary"}
@@ -250,7 +250,7 @@ export default function ManageGlossary() {
             <Buttons
               text="Add Term"
               onClick={() => navigate("/addterm")}
-              addedClassName="btn btn-warning bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins] !w-[200px]
+              addedClassName="btn
 "
             />
           </div>
@@ -273,17 +273,18 @@ export default function ManageGlossary() {
           <div className="w-full h-[calc(100svh-400px)] overflow-y-auto">
             <div className="header-details-container">
             
-              <div className="w-full bg-white flex justify-center border-b-2 border-black sticky top-0 z-50">
+              <div className="w-full flex justify-center border-b-2 border-black sticky top-0 z-50"
+              style={{backgroundColor: divColor}}>
                 <div className="header-details">
-                  <div className="header-title">Terminology</div>
-                  <div className="header-title">Definition</div>
-                  <div className="header-title">Action</div>
+                  <div className="header-title" style={{color: textColor}}>Terminology</div>
+                  <div className="header-title" style={{color: textColor}}>Definition</div>
+                  <div className="header-title" style={{color: textColor}}>Action</div>
                 </div>
               </div>
 
               <div className="w-full md:w-11/12 flex-grow overflow-y-auto overflow-x-auto justify-center">
                 {loadingTerms ? (
-                  <p>Loading terms...</p>
+                  <p style={{color: textColor}}>Loading terms...</p>
                 ) : groupedTerms.some((g) => g.terms.length > 0) ? (
                   groupedTerms.map(({ letter, terms }) =>
                     terms.length > 0 ? (
@@ -291,7 +292,7 @@ export default function ManageGlossary() {
                         key={letter}
                         className="flex flex-col justify-center items-center"
                       >
-                        <h3 className="letter-heading w-11/12 text-6xl my-2">
+                        <h3 className="letter-heading w-11/12 text-6xl my-2" style={{color: textColor}}>
                           {letter}
                         </h3>
                         {terms.map((term) => (
@@ -300,16 +301,21 @@ export default function ManageGlossary() {
                             className={
                               activeTermWord === term.word
                                 ? "active-per-word-container"
-                                : "per-word-container bg-white"
+                                : "per-word-container"
                             }
+                            style={{
+                              backgroundColor: activeTermWord === term.word ? theme : divColor,
+                              border: activeTermWord === term.word ? `1px solid ${textColor}` : ""
+                            }}
                           >
-                            <div className="word-container">{term.word}</div>
+                            <div className="word-container" style={{color: textColor}}>{term.word}</div>
                             <div
                               className={
                                 activeTermWord === term.word
                                   ? "active-meaning-container"
                                   : "meaning-container"
                               }
+                              style={{color: textColor}}
                             >
                               {term.meaning}
                             </div>

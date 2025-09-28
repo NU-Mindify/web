@@ -44,7 +44,7 @@ function App() {
   const [isActive, setActive] = useState(false);
   const [subSelected, setSubSelected] = useState("");
   const [selected, setSelected] = useState("");
-  const [theme, setTheme] = useState("#202024");
+  const [theme, setTheme] = useState("#ffffff");
   const [themeWithOpacity, setThemeWithOpacity] = useState("");
   const [divColor, setDivColor] = useState("")
   const [hoverColor, setHoverColor] = useState("")

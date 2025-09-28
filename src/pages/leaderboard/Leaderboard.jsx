@@ -12,10 +12,11 @@ import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import logo from "../../assets/logo/logo.png";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
+import { text } from "d3";
 
 export default function Leaderboard() {
   const { currentWebUser } = useContext(UserLoggedInContext);
-  const { theme, themeWithOpacity, divColor, hoverColor } = useContext(ActiveContext)
+  const { theme, themeWithOpacity, divColor, hoverColor, textColor } = useContext(ActiveContext)
   console.log("div color",divColor);
   
 
@@ -545,21 +546,21 @@ export default function Leaderboard() {
 
 
             <div className="leaderboard-contents-container mb-25">
-              <div className="content-header">
-                <h1 className="title-header">Rank</h1>
-                <h1 className="title-header">Name</h1>
-                <h1 className="title-header">Campus</h1>
-                <h1 className="title-header">World</h1>
-                <h1 className="title-header">Score</h1>
-                <h1 className="title-header">Time</h1>
+              <div className="content-header" style={{backgroundColor: divColor}}>
+                <h1 className="title-header" style={{color: textColor}}>Rank</h1>
+                <h1 className="title-header" style={{color: textColor}}>Name</h1>
+                <h1 className="title-header" style={{color: textColor}}>Campus</h1>
+                <h1 className="title-header" style={{color: textColor}}>World</h1>
+                <h1 className="title-header" style={{color: textColor}}>Score</h1>
+                <h1 className="title-header" style={{color: textColor}}>Time</h1>
               </div>
               {loadingDataClassic ? (
                 <div className="loading-overlay-leaderboards">
                   <div className="spinner"></div>
-                  <p>Fetching data...</p>
+                  <p style={{color: textColor}}>Fetching data...</p>
                 </div>
               ) : classicSortingLeaders.length === 0 ? (
-                <h1 className="text-black mt-5 w-full text-3xl text-center">
+                <h1 className="mt-5 w-full text-3xl text-center" style={{color: textColor}}>
                   No data Found
                 </h1>
               ) : (
@@ -582,7 +583,7 @@ export default function Leaderboard() {
                         onMouseEnter={() => setIsHover(leader._id)}
                         onMouseLeave={() => setIsHover("")}
                       >
-                        <div className="leader-info text-black leaders-content-font">
+                        <div className="leader-info text-black leaders-content-font" style={{color: textColor}}>
                           {leader.rank === 1
                             ? "🥇"
                             : leader.rank === 2
@@ -593,19 +594,19 @@ export default function Leaderboard() {
                         </div>
                         <div
                           className="leader-info font-bold"
-                          style={{ color: "#0068DD" }}
+                          style={{color: textColor}}
                         >
                           {leader.user_id?.last_name.toUpperCase()},{" "}
                           {leader.user_id?.first_name}
                         </div>
 
-                        <div className="leader-info text-black leaders-content-font">
+                        <div className="leader-info text-black leaders-content-font" style={{color: textColor}}>
                           {branches.find(
                             (branch) => branch.id === leader.user_id?.branch
                           )?.name || "Unknown Branch"}
                         </div>
 
-                        <div className="leader-info text-black leaders-content-font">
+                        <div className="leader-info text-black leaders-content-font" style={{color: textColor}}>
                           {leader.category === "developmental"
                             ? "Developmental Psychology"
                             : leader.category === "abnormal"
@@ -619,7 +620,7 @@ export default function Leaderboard() {
                             : leader.category}
                         </div>
 
-                        <div className="leader-info text-black font-bold leaders-content-font">
+                        <div className="leader-info text-black font-bold leaders-content-font" style={{color: textColor}}>
                           {leader.total_items > 0
                             ? `${(
                                 (leader.correct / leader.total_items) *
@@ -628,7 +629,7 @@ export default function Leaderboard() {
                             : "N/A"}
                         </div>
 
-                        <div className="leader-info text-black leaders-content-font">
+                        <div className="leader-info text-black leaders-content-font" style={{color: textColor}}>
                           {leader.time_completion > 60
                             ? `${Math.floor(
                                 leader.time_completion / 60
@@ -677,11 +678,12 @@ export default function Leaderboard() {
                 <ul className="suggestions-dropdown text-black font-[Poppins]">
                   {masterySuggestions.map((suggestion) => (
                     <li
-                      key={suggestion.id} // Use the unique ID from the suggestion
+                      key={suggestion.id} 
                       onClick={() => {
                         setSearchMastery(suggestion.name);
                         setMasterySuggestions([]);
                       }}
+                      
                     >
                       {suggestion.name}
                     </li>
@@ -736,22 +738,22 @@ export default function Leaderboard() {
 
 
             <div className="leaderboard-contents-container mb-25">
-              <div className="content-header">
-                <h1 className="title-header">Rank</h1>
-                <h1 className="title-header">Name</h1>
-                <h1 className="title-header">Campus</h1>
-                <h1 className="title-header">World</h1>
-                <h1 className="title-header">Score</h1>
-                <h1 className="title-header">Time</h1>
+              <div className="content-header" style={{backgroundColor: divColor}}>
+                <h1 className="title-header" style={{color: textColor}}>Rank</h1>
+                <h1 className="title-header" style={{color: textColor}}>Name</h1>
+                <h1 className="title-header" style={{color: textColor}}>Campus</h1>
+                <h1 className="title-header" style={{color: textColor}}>World</h1>
+                <h1 className="title-header" style={{color: textColor}}>Score</h1>
+                <h1 className="title-header" style={{color: textColor}}>Time</h1>
               </div>
 
               {loadingDataMastery ? (
                 <div className="loading-overlay-leaderboards">
                   <div className="spinner"></div>
-                  <p>Fetching data...</p>
+                  <p style={{color: textColor}}>Fetching data...</p>
                 </div>
               ) : masterySortingLeaders.length === 0 ? (
-                <h1 className="text-black mt-5 w-full text-3xl text-center">
+                <h1 className="mt-5 w-full text-3xl text-center" style={{color: textColor}}>
                   No data Found
                 </h1>
               ) : (
@@ -766,9 +768,15 @@ export default function Leaderboard() {
                       <div
                         key={leader._id}
                         className={`leaders-container rounded-xl mt-2`}
-                        style={{backgroundColor: theme}}
+                        style={
+                          { 
+                            backgroundColor: isHover === leader._id ? hoverColor : divColor
+                          }
+                        }
+                        onMouseEnter={() => setIsHover(leader._id)}
+                        onMouseLeave={() => setIsHover("")}
                       >
-                        <div className="leader-info text-black leaders-content-font">
+                        <div className="leader-info text-black leaders-content-font" style={{color: textColor}}>
                           {leader.rank === 1
                             ? "🥇"
                             : leader.rank === 2
@@ -779,19 +787,19 @@ export default function Leaderboard() {
                         </div>
                         <div
                           className="leader-info font-bold"
-                          style={{ color: "#0068DD" }}
+                          style={{color: textColor}}
                         >
                           {leader.user_id?.last_name.toUpperCase()},{" "}
                           {leader.user_id?.first_name}
                         </div>
 
-                        <div className="leader-info text-black leaders-content-font">
+                        <div className="leader-info text-black leaders-content-font" style={{color: textColor}}>
                           {branches.find(
                             (branch) => branch.id === leader.user_id?.branch
                           )?.name || "Unknown Branch"}
                         </div>
 
-                        <div className="leader-info text-black leaders-content-font">
+                        <div className="leader-info text-black leaders-content-font" style={{color: textColor}}>
                           {leader.category === "developmental"
                             ? "Developmental Psychology"
                             : leader.category === "abnormal"
@@ -804,7 +812,7 @@ export default function Leaderboard() {
                             ? "General Psychology"
                             : leader.category}
                         </div>
-                        <div className="leader-info text-black font-bold leaders-content-font">
+                        <div className="leader-info text-black font-bold leaders-content-font" style={{color: textColor}}>
                           {leader.total_items > 0
                             ? `${(
                                 (leader.correct / leader.total_items) *
@@ -813,7 +821,7 @@ export default function Leaderboard() {
                             : "N/A"}
                         </div>
 
-                        <div className="leader-info text-black leaders-content-font">
+                        <div className="leader-info text-black leaders-content-font" style={{color: textColor}}>
                           {leader.time_completion > 60
                             ? `${Math.floor(
                                 leader.time_completion / 60
