@@ -28,10 +28,12 @@ function AddQuestion() {
   const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
 
   const [onEdit, setOnEdit] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
 
   const [OkCancelModalMessage, setOkCancelModalMessage] = useState("");
   const [showOkCancelModal, setShowOkCancelModal] = useState(false);
   const [questionToRemoveIdx, setQuestionToRemoveIdx] = useState(null);
+
   const [AddSuccessModalMessage, setAddSuccessModalMessage] = useState("");
   const [showAddSuccessModal, setShowAddSuccessModal] = useState(false);
 
@@ -147,6 +149,22 @@ function AddQuestion() {
     timer: 0,
   });
 
+  const addQuestionToList = () => {
+    const questionCopy = JSON.parse(JSON.stringify(question));
+    setAllQuestions((prev) => [...prev, questionCopy]);
+    setQuestion(getInitialQuestionState());
+
+    // reset validation errors
+    setValidationErrors({
+      question: "",
+      choices: ["", "", "", ""],
+      rationale: "",
+      difficulty: "",
+      item_number: "",
+      timer: "",
+    });
+  };
+
   const [question, setQuestion] = useState(getInitialQuestionState);
 
   const handleAddQuestion = async () => {
@@ -188,14 +206,11 @@ function AddQuestion() {
         // console.warn("AI check found a semantic duplicate:", error.response.data);
         const { message, similarQuestion, similarityScore } =
           error.response.data;
-        const similarityPercent = (similarityScore * 100).toFixed(1);
-        // setValidationMessage(
-        //   `${message} It is ${similarityPercent}% similar to: "${similarQuestion}"`
-        // );
-        // setShowValidationModal(true);
+        const similarityPercent = (similarityScore * 100).toFixed(2);
         setOkCancelModalMessage(
-          `${message} It is ${similarityPercent}% similar to: "${similarQuestion}"`
+          `${message} It is ${similarityPercent}% similar to: "${similarQuestion}". Do you still want to add it?`
         );
+        setConfirmAction(() => () => addQuestionToList());
         setShowOkCancelModal(true);
         return;
       } else {
@@ -223,22 +238,7 @@ function AddQuestion() {
     }
     // --- END OF AI CHECK ---
 
-    // If valid, add the question
-    const questionCopy = JSON.parse(JSON.stringify(question));
-    setAllQuestions((prev) => [...prev, questionCopy]);
-    setQuestion(getInitialQuestionState());
-
-    // reset validation errors
-    setValidationErrors({
-      question: "",
-      choices: ["", "", "", ""],
-      rationale: "",
-      difficulty: "",
-      item_number: "",
-      timer: "",
-    });
-
-    console.log("Added:", questionCopy);
+    addQuestionToList();
   };
 
   const addToDB = async () => {
@@ -374,6 +374,11 @@ function AddQuestion() {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
+      transform: (value) => {
+        // This regex removes invisible characters like zero-width spaces
+        // which can sometimes cause issues in parsing.
+        return value.replace(/[\u200B-\u200D\uFEFF]/g, "");
+      },
       transformHeader: (header) => header.trim().replace(/\s+/g, " "),
       complete: (results) => {
         const parsedQuestions = results.data
@@ -1094,13 +1099,17 @@ function AddQuestion() {
         <OkCancelModal
           message={OkCancelModalMessage}
           onConfirm={() => {
-            handleRemoveQuestion(questionToRemoveIdx);
+            if (confirmAction) {
+              confirmAction();
+            } else if (questionToRemoveIdx !== null) {
+              handleRemoveQuestion(questionToRemoveIdx);
+            }
             setShowOkCancelModal(false);
-            setQuestionToRemoveIdx(null);
+            setConfirmAction(null);
           }}
           onCancel={() => {
             setShowOkCancelModal(false);
-            setQuestionToRemoveIdx(null);
+            setConfirmAction(null);
           }}
         />
       )}
