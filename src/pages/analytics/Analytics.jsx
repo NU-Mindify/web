@@ -1,11 +1,9 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo, useCallback } from "react";
 import CountUp from "../../components/CountUp/CountUp";
 import AccountsCreatedChart from "../../components/LineChart/AccountsCreatedChart";
 import AttemptsChart from "../../components/LineChart/AttemptsChart";
 import PieChartAttempts from "../../components/PieChart/PieChartAttempts";
-import SelectFilter from "../../components/selectFilter/SelectFilter";
-import ExportDropdown from "../../components/ExportDropdown/ExportDropdown.jsx";
 import { API_URL, branches, categories, levels, modes } from "../../Constants";
 import {
   ActiveContext,
@@ -15,6 +13,20 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import "../../css/analytics/analytics.css";
 import Header from "../../components/header/Header.jsx";
+
+const averageScorePercentage = (attempts) => {
+  if (!attempts || attempts.length === 0) return 0;
+
+  // Sum of (correct / total_items) for each attempt
+  const totalPercentSum = attempts.reduce((sum, attempt) => {
+    if (!attempt.total_items || attempt.total_items === 0) return sum; // avoid division by zero
+    return sum + attempt.correct / attempt.total_items;
+  }, 0);
+
+  // Average percentage (0 to 1), multiply by 100 to get %
+  return (totalPercentSum / attempts.length) * 100;
+};
+
 
 export default function Analytics() {
   const { currentWebUser } = useContext(UserLoggedInContext);
@@ -35,12 +47,34 @@ export default function Analytics() {
   const [accountsViewMode, setAccountsViewMode] = useState("daily");
 
   useEffect(() => {
-    fetchAttempts();
-    fetchStudents();
-    fetchAttemptsMastery();
+    if (currentWebUser.token) {
+      fetchAttempts();
+      fetchStudents();
+    }
+  }, [currentWebUser.token]);
+
+  const fetchAttemptsMastery = useCallback(async () => {
+    try {
+      const categoryList = categories.map((c) => c.id).join(",");
+      const levelList = levels.join(",");
+      const modeList = modes.map((m) => m.mode).join(",");
+
+      const response = await axios.get(`${API_URL}/getAnalytics`, {
+        params: {
+          categories: categoryList,
+          levels: levelList,
+          mode: modeList,
+        },
+      });
+
+      // console.log("Fetched attempts:", response.data);
+      setMasteryAttempts(response.data);
+    } catch (error) {
+      console.error("Error fetching analytics data:", error.message);
+    }
   }, []);
 
-  const fetchAttempts = async () => {
+  const fetchAttempts = useCallback(async () => {
     try {
       const categoryList = categories.map((c) => c.id).join(",");
       const levelList = levels.join(",");
@@ -56,31 +90,14 @@ export default function Analytics() {
 
       // console.log("Fetched attempts:", response.data);
       setAttempts(response.data);
+      // Fetch mastery attempts right after competition/review attempts
+      fetchAttemptsMastery();
     } catch (error) {
       console.error("Error fetching analytics data:", error.message);
     }
-  };
+  }, [fetchAttemptsMastery]);
 
-  const fetchAttemptsMastery = async () => {
-    try {
-      const categoryList = categories.map((c) => c.id).join(",");
-
-      const response = await axios.get(`${API_URL}/getAnalytics`, {
-        params: {
-          categories: categoryList,
-          levels: "",
-          mode: "mastery",
-        },
-      });
-
-      // console.log("Fetched attempts:", response.data);
-      setMasteryAttempts(response.data);
-    } catch (error) {
-      console.error("Error fetching analytics data:", error.message);
-    }
-  };
-
-  const fetchStudents = async () => {
+  const fetchStudents = useCallback(async () => {
     try {
       const response = await axios.get(`${API_URL}/getUsers`, {
         headers: {
@@ -91,83 +108,65 @@ export default function Analytics() {
     } catch (error) {
       console.error("Error fetching students data:", error.message);
     }
-  };
+  }, [currentWebUser.token]);
 
   // Filter students based on selected branch
-  const filteredStudents =
+  const filteredStudents = useMemo(() =>
     selectedBranch === "all"
       ? allStudents
-      : allStudents.filter((student) => student.branch === selectedBranch);
+      : allStudents.filter((student) => student.branch === selectedBranch)
+  , [allStudents, selectedBranch]);
 
-  const filteredStudentIds = new Set(filteredStudents.map((s) => s._id));
+  const filteredStudentIds = useMemo(() => new Set(filteredStudents.map((s) => s._id)), [filteredStudents]);
 
   // Filtered attempts by student and category
-  const filteredAttemptsByStudent =
-    selectedBranch === "all"
-      ? attempts
-      : attempts.filter((attempt) =>
-          filteredStudentIds.has(attempt.user_id?._id)
-        );
+  const filteredAttempts = useMemo(() => {
+    const byStudent = selectedBranch === "all"
+        ? attempts
+        : attempts.filter((attempt) => filteredStudentIds.has(attempt.user_id?._id));
 
-  const filteredAttempts =
-    selectedCategory === "all"
-      ? filteredAttemptsByStudent
-      : filteredAttemptsByStudent.filter(
-          (attempt) => attempt.category === selectedCategory
-        );
+    return selectedCategory === "all"
+        ? byStudent
+        : byStudent.filter((attempt) => attempt.category === selectedCategory);
+  }, [attempts, selectedBranch, selectedCategory, filteredStudentIds]);
 
-  const competitionAttempts = filteredAttempts.filter(
-    (a) => a.mode === "competition"
-  );
-  const reviewAttempts = filteredAttempts.filter((a) => a.mode === "review");
+  const competitionAttempts = useMemo(() =>
+    filteredAttempts.filter((a) => a.mode === "competition")
+  , [filteredAttempts]);
+
+  const reviewAttempts = useMemo(() =>
+    filteredAttempts.filter((a) => a.mode === "review")
+  , [filteredAttempts]);
 
   // Get IDs of students who attempted after filtering
-  const filteredAttemptedUserIds = new Set(
-    filteredAttempts.map((attempt) => attempt.user_id?._id)
-  );
+  const filteredAttemptedUserIds = useMemo(() =>
+    new Set(filteredAttempts.map((attempt) => attempt.user_id?._id))
+  , [filteredAttempts]);
 
   // Filter students who have attempted
-  const filteredAttemptedStudents = filteredStudents.filter((student) =>
-    filteredAttemptedUserIds.has(student._id)
-  );
+  const filteredAttemptedStudents = useMemo(() =>
+    filteredStudents.filter((student) => filteredAttemptedUserIds.has(student._id))
+  , [filteredStudents, filteredAttemptedUserIds]);
 
   //mastery filters
-  const filteredMasteryAttemptsByStudent =
-    selectedBranch === "all"
-      ? masteryAttempts
-      : masteryAttempts.filter((attempt) =>
-          filteredStudentIds.has(attempt.user_id?._id)
-        );
+  const filteredMasteryAttempts = useMemo(() => {
+    const byStudent = selectedBranch === "all"
+        ? masteryAttempts
+        : masteryAttempts.filter((attempt) => filteredStudentIds.has(attempt.user_id?._id));
 
-  const filteredMasteryAttempts =
-    selectedCategory === "all"
-      ? filteredMasteryAttemptsByStudent
-      : filteredMasteryAttemptsByStudent.filter(
-          (attempt) => attempt.category === selectedCategory
-        );
+    return selectedCategory === "all"
+        ? byStudent
+        : byStudent.filter((attempt) => attempt.category === selectedCategory);
+  }, [masteryAttempts, selectedBranch, selectedCategory, filteredStudentIds]);
 
   //add other mode filters + mastery mode filters
-  const totalFilteredAttemptsCount =
-    filteredAttempts.length + filteredMasteryAttempts.length;
+  const totalFilteredAttemptsCount = useMemo(() =>
+    filteredAttempts.length + filteredMasteryAttempts.length
+  , [filteredAttempts, filteredMasteryAttempts]);
 
-  const averageScorePercentage = (attempts) => {
-    if (attempts.length === 0) return 0;
-
-    // Sum of (correct / total_items) for each attempt
-    const totalPercentSum = attempts.reduce((sum, attempt) => {
-      if (!attempt.total_items || attempt.total_items === 0) return sum; // avoid division by zero
-      return sum + attempt.correct / attempt.total_items;
-    }, 0);
-
-    // Average percentage (0 to 1), multiply by 100 to get %
-    return (totalPercentSum / attempts.length) * 100;
-  };
-
-  const competitionAvgPercent = averageScorePercentage(competitionAttempts);
-  const reviewAvgPercent = averageScorePercentage(reviewAttempts);
-  const filteredMasteryAvgPercent = averageScorePercentage(
-    filteredMasteryAttempts
-  );
+  const competitionAvgPercent = useMemo(() => averageScorePercentage(competitionAttempts), [competitionAttempts]);
+  const reviewAvgPercent = useMemo(() => averageScorePercentage(reviewAttempts), [reviewAttempts]);
+  const filteredMasteryAvgPercent = useMemo(() => averageScorePercentage(filteredMasteryAttempts), [filteredMasteryAttempts]);
 
   const [mode, setMode] = useState("competition");
   const [level, setLevel] = useState(1);
@@ -195,7 +194,7 @@ export default function Analytics() {
     fetchPerformanceOnCampuses();
   }, [mode, level, category]);
 
-  const fetchPerformanceOnCampuses = async () => {
+  const fetchPerformanceOnCampuses = useCallback(async () => {
     let categoryToUse = selectedCategory;
     if (selectedCategory === "all") {
       categoryToUse = "";
@@ -342,14 +341,14 @@ export default function Analytics() {
     } catch (error) {
       console.error("Error fetching analytics data:", error.message);
     }
-  };
+  }, [mode, category, showCompe, level, selectedCategory]);
 
   //csv Export
-  const exportAttemptsAccountsCSV = (
+  const exportAttemptsAccountsCSV = useCallback((
     allAttempts,
     allStudents,
     attemptsViewMode,
-    accountsViewMode
+    accountsViewMode,
   ) => {
     const now = new Date().toLocaleString();
 
@@ -439,10 +438,10 @@ export default function Analytics() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+  }, [competitionAvgPercent, reviewAvgPercent, filteredMasteryAvgPercent]);
 
   //PDF Export
-  const exportAttemptsAccountsPDF = (allAttempts, allStudents) => {
+  const exportAttemptsAccountsPDF = useCallback((allAttempts, allStudents) => {
     const doc = new jsPDF();
     const now = new Date().toLocaleString();
     doc.text(`Analytics Report`, 14, 10);
@@ -543,10 +542,10 @@ export default function Analytics() {
     doc.save(
       `Analytics_Report_${currentWebUser.firstName}_${currentWebUser.lastName}.pdf`
     );
-  };
+  }, [competitionAvgPercent, reviewAvgPercent, filteredMasteryAvgPercent]);
 
   //Export handler
-  const handleExport = (format) => {
+  const handleExport = useCallback((format) => {
     const allAttempts = filteredAttempts.concat(filteredMasteryAttempts);
     if (format === "csv") {
       exportAttemptsAccountsCSV(
@@ -558,7 +557,7 @@ export default function Analytics() {
     } else if (format === "pdf") {
       exportAttemptsAccountsPDF(allAttempts, filteredStudents);
     }
-  };
+  }, [filteredAttempts, filteredMasteryAttempts, exportAttemptsAccountsCSV, exportAttemptsAccountsPDF, filteredStudents, attemptsViewMode, accountsViewMode]);
 
   return (
     <>

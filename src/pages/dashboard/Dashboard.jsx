@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import mindifyLogo from "../../assets/logo/logo.svg";
 import BarGraph from "../../components/barGraph/BarGraph";
@@ -16,27 +16,19 @@ export default function Dashboard() {
 
   const navigate = useNavigate();
 
-  const [studentCount, setStudentCount] = useState(0);
   const [students, setStudents] = useState([]);
 
-  const [webUsersCount, setWebUsersCount] = useState(0);
   const [webUsers, setWebUsers] = useState([]);
 
   const [pendingUsers, setPendingUsers] = useState([]);
-  const [pendingUserCount, setPendingUserCount] = useState(0);
 
   const [attempts, setAttempts] = useState([]);
-  const [avgScoresByWorld, setAvgScoresByWorld] = useState({});
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAttempts, setIsLoadingAttempts] = useState(false);
 
   const [topBadges, setTopBadges] = useState([]);
   const [loadingBadges, setLoadingBadges] = useState(false);
-
-  const [mostChallengingWorld, setMostChallengingWorld] = useState(null);
-  const [mostChallengingWorldScore, setMostChallengingWorldScore] =
-    useState(null);
 
   const [classicLeaderboards, setClassicLeaderboards] = useState([]);
   const [leaderboardsMastery, setLeaderboardsMastery] = useState([]);
@@ -48,17 +40,11 @@ export default function Dashboard() {
   const [loadingSession, setLoadingSession] = useState(false);
   const [unit, setUnit] = useState("")
 
-  useEffect(() => {
-    if (!currentWebUser?.token) return;
-    fetchStudents();
-    fetchAttempts();
-    fetchTopClassicLeaderboard();
-    fetchTopMasteryLeaderboard();
-    fetchPendingUsers();
-    fetchAverageSession();
-  }, [currentWebUser]);
+  const studentCount = useMemo(() => students.length, [students]);
+  const webUsersCount = useMemo(() => webUsers.length, [webUsers]);
+  const pendingUserCount = useMemo(() => pendingUsers.length, [pendingUsers]);
 
-  async function fetchAverageSession() {
+  const fetchAverageSession = useCallback(async () => {
   setLoadingSession(true);
   try {
     const { data } = await axios.get(`${API_URL}/getAverageSession`);
@@ -83,10 +69,10 @@ export default function Dashboard() {
   } finally {
     setLoadingSession(false);
   }
-}
+}, []);
 
 
-  const fetchTopClassicLeaderboard = async () => {
+  const fetchTopClassicLeaderboard = useCallback(async () => {
     setLoadingDataClassic(true);
     try {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
@@ -98,9 +84,9 @@ export default function Dashboard() {
     } finally {
       setLoadingDataClassic(false);
     }
-  };
+  }, []);
 
-  const fetchTopMasteryLeaderboard = async () => {
+  const fetchTopMasteryLeaderboard = useCallback(async () => {
     setLoadingDataMastery(true);
     try {
       const response = await axios.get(`${API_URL}/getTopLeaderboards`, {
@@ -112,11 +98,11 @@ export default function Dashboard() {
     } finally {
       setLoadingDataMastery(false);
     }
-  };
+  }, []);
 
   //fetch badges data
 
-  const fetchTopBadges = async () => {
+  const fetchTopBadges = useCallback(async () => {
     setLoadingBadges(true);
     try {
       const response = await axios.get(`${API_URL}/getTopEarnedBadges`);
@@ -126,24 +112,10 @@ export default function Dashboard() {
     } finally {
       setLoadingBadges(false);
     }
-  };
-
-  useEffect(() => {
-    if (!currentWebUser?.token) return;
-    fetchTopBadges();
-  }, [currentWebUser]);
-
-  //set amount of students
-  useEffect(() => {
-    setStudentCount(students.length);
-  }, [students]);
-
-  useEffect(() => {
-    setWebUsersCount(webUsers.length);
-  }, [webUsers]);
+  }, []);
 
   //fetch students data
-  const fetchStudents = async () => {
+  const fetchStudents = useCallback(async () => {
     setIsLoading(true);
     axios
       .get(`${API_URL}/getUsers`, {
@@ -161,33 +133,31 @@ export default function Dashboard() {
       .finally(() => {
         setIsLoading(false);
       });
-  };
-
-  //set amount of pending users
-  useEffect(() => {
-    setPendingUserCount(pendingUsers.length);
-  }, [pendingUsers]);
+  }, [currentWebUser?.token]);
 
   //fetch pending users data
-  const fetchPendingUsers = async () => {
+  const fetchPendingUsers = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/getWebUsers/`);
-      let pendingUsers = res.data.filter((user) => user.isApproved === false);
+      const { data } = await axios.get(`${API_URL}/getWebUsers/`);
+      // Ensure we have an array to work with, defaulting to an empty one if the response is unexpected.
+      const users = Array.isArray(data) ? data : (data.users || []);
+
+      let pendingUsers = users.filter((user) => user.isApproved === false);
 
       setPendingUsers(pendingUsers);
       // console.log("Pending Users: " + pendingUsers);
-      setWebUsers(res.data);
-      console.log("web users", res.data);
+      setWebUsers(users);
+      console.log("web users", users);
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   //fetch attempts data
-  const fetchAttempts = async () => {
+  const fetchAttempts = useCallback(async () => {
     setIsLoadingAttempts(true);
     try {
       const categoryList = categories.map((c) => c.id).join(",");
@@ -209,31 +179,46 @@ export default function Dashboard() {
     } finally {
       setIsLoadingAttempts(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!currentWebUser?.token) return;
+    fetchTopBadges();
+    fetchStudents();
+    fetchAttempts();
+    fetchTopClassicLeaderboard();
+    fetchTopMasteryLeaderboard();
+    fetchPendingUsers();
+    fetchAverageSession();
+  }, [currentWebUser, fetchAverageSession, fetchAttempts, fetchPendingUsers, fetchStudents, fetchTopBadges, fetchTopClassicLeaderboard, fetchTopMasteryLeaderboard]);
 
   // Calculate the overall average score
-  useEffect(() => {
-    if (attempts.length === 0) return;
+  const avgScoresByWorld = useMemo(() => {
+    if (attempts.length === 0) return { overall: "N/A" };
 
     let totalCorrect = 0;
     let totalItems = 0;
 
     attempts.forEach(({ correct, total_items }) => {
-      if (typeof correct === "number" && typeof total_items === "number") {
+      if (typeof correct === "number" && typeof total_items === "number" && total_items > 0) {
         totalCorrect += correct;
         totalItems += total_items;
       }
     });
 
     const overallAverage =
-      totalItems === 0 ? "N/A" : ((totalCorrect / totalItems) * 100).toFixed(0);
+      totalItems === 0
+        ? "N/A"
+        : ((totalCorrect / totalItems) * 100).toFixed(0);
 
-    setAvgScoresByWorld({ overall: overallAverage });
+    return { overall: overallAverage };
   }, [attempts]);
 
   //calculates for lowest average score per world to get the most challenging world
-  useEffect(() => {
-    if (attempts.length === 0) return;
+  const { mostChallengingWorld, mostChallengingWorldScore } = useMemo(() => {
+    if (attempts.length === 0) {
+      return { mostChallengingWorld: "N/A", mostChallengingWorldScore: null };
+    }
 
     const categoryScores = {};
 
@@ -241,19 +226,19 @@ export default function Dashboard() {
       if (!category) return;
 
       if (!categoryScores[category]) {
-        categoryScores[category] = { correctSum: 0, attempts: 0 };
+        categoryScores[category] = { correctSum: 0, count: 0 };
       }
 
       categoryScores[category].correctSum += correct;
-      categoryScores[category].attempts += 1;
+      categoryScores[category].count += 1;
     });
 
     let lowestAvg = Infinity;
     let bottomCategory = null;
 
     for (const category in categoryScores) {
-      const { correctSum, attempts } = categoryScores[category];
-      const avgScore = correctSum / attempts;
+      const { correctSum, count } = categoryScores[category];
+      const avgScore = correctSum / count;
 
       if (avgScore < lowestAvg) {
         lowestAvg = avgScore;
@@ -262,13 +247,14 @@ export default function Dashboard() {
     }
 
     if (bottomCategory) {
-      setMostChallengingWorld(bottomCategory);
-      setMostChallengingWorldScore(
-        parseFloat(((lowestAvg / 8) * 100).toFixed(2))
-      );
+      return {
+        mostChallengingWorld: bottomCategory,
+        mostChallengingWorldScore: parseFloat(
+          ((lowestAvg / 8) * 100).toFixed(2)
+        ),
+      };
     } else {
-      setMostChallengingWorld("N/A");
-      setMostChallengingWorldScore(null);
+      return { mostChallengingWorld: "N/A", mostChallengingWorldScore: null };
     }
   }, [attempts]);
 
@@ -281,17 +267,14 @@ export default function Dashboard() {
     "Unknown Branch";
 
   //get no. of students per branch
-  const branchData = branches
-    .map((branch) => {
-      const studentCount = students.filter(
-        (s) => s.branch === branch.id
-      ).length;
-      return {
+  const branchData = useMemo(() =>
+    branches
+      .map((branch) => ({
         label: branch.name,
-        count: studentCount,
-      };
-    })
-    .sort((a, b) => b.count - a.count);
+        count: students.filter((s) => s.branch === branch.id).length,
+      }))
+      .sort((a, b) => b.count - a.count)
+  , [students]);
 
   const formatTime = (seconds) => {
     if (seconds < 60) {
@@ -542,6 +525,7 @@ export default function Dashboard() {
               <button
                 className="w-full h-full flex items-center justify-center flex-col cursor-pointer"
                 onClick={() => {
+                  // Navigate to the account approval page and update the active context
                   navigate("/account/approval");
                   setSelected("account");
                 }}
