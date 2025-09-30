@@ -38,39 +38,42 @@ export default function Dashboard() {
 
   const [averageSession, setAverageSession] = useState(0);
   const [loadingSession, setLoadingSession] = useState(false);
-  const [unit, setUnit] = useState("")
+  const [unit, setUnit] = useState("");
+  const [secondaryValue, setSecondaryValue] = useState(null);
+  const [secondaryUnit, setSecondaryUnit] = useState("");
 
   const studentCount = useMemo(() => students.length, [students]);
   const webUsersCount = useMemo(() => webUsers.length, [webUsers]);
   const pendingUserCount = useMemo(() => pendingUsers.length, [pendingUsers]);
 
   const fetchAverageSession = useCallback(async () => {
-  setLoadingSession(true);
-  try {
-    const { data } = await axios.get(`${API_URL}/getAverageSession`);
-    let seconds = data.averageSessionTime; // assuming API returns seconds
+    setLoadingSession(true);
+    try {
+      const { data } = await axios.get(`${API_URL}/getAverageSession`);
+      let totalSeconds = data.averageSessionTime;
 
-    let value = seconds;
-    let unit = "s";
-
-    if (seconds >= 60) {
-      value = seconds / 60;
-      unit = "min";
+      if (totalSeconds >= 3600) {
+        setAverageSession(Number((totalSeconds / 3600).toFixed(2)));
+        setUnit("hr");
+        setSecondaryValue(null);
+        setSecondaryUnit("");
+      } else if (totalSeconds >= 60) {
+        setAverageSession(Math.floor(totalSeconds / 60));
+        setUnit("min");
+        setSecondaryValue(Math.round(totalSeconds % 60));
+        setSecondaryUnit("s");
+      } else {
+        setAverageSession(Math.round(totalSeconds));
+        setUnit("s");
+        setSecondaryValue(null);
+        setSecondaryUnit("");
+      }
+    } catch (error) {
+      console.error("Error fetching average session:", error.message);
+    } finally {
+      setLoadingSession(false);
     }
-    if (seconds >= 3600) {
-      value = seconds / 3600;
-      unit = "hr";
-    }
-
-    setAverageSession(Number(value.toFixed(2)));
-    setUnit(unit); // you'll need a state for this
-  } catch (error) {
-    console.error("Error fetching top leaderboards:", error.message);
-  } finally {
-    setLoadingSession(false);
-  }
-}, []);
-
+  }, []);
 
   const fetchTopClassicLeaderboard = useCallback(async () => {
     setLoadingDataClassic(true);
@@ -135,24 +138,28 @@ export default function Dashboard() {
       });
   }, [currentWebUser?.token]);
 
+  const fetchWebUsers = useCallback(async () => {
+    try {
+      const response = await axios.get(`${API_URL}/getWebUsers/`);
+      const allUsers = response.data.data || [];
+      const approvedUsers = allUsers.filter((user) => user.isApproved);
+      setWebUsers(approvedUsers);
+      console.log("web users (approved only)", approvedUsers);
+    } catch (error) {
+      console.error("Error fetching web users:", error);
+    }
+  }, []);
+
   //fetch pending users data
   const fetchPendingUsers = useCallback(async () => {
-    setIsLoading(true);
     try {
-      const { data } = await axios.get(`${API_URL}/getWebUsers/`);
-      // Ensure we have an array to work with, defaulting to an empty one if the response is unexpected.
-      const users = Array.isArray(data) ? data : (data.users || []);
-
-      let pendingUsers = users.filter((user) => user.isApproved === false);
-
+      const response = await axios.get(`${API_URL}/getWebUsers/`);
+      const users = response.data.data || [];
+      const pendingUsers = users.filter((user) => user.isApproved === false);
       setPendingUsers(pendingUsers);
-      // console.log("Pending Users: " + pendingUsers);
-      setWebUsers(users);
-      console.log("web users", users);
+      console.log("Pending Users:", pendingUsers);
     } catch (error) {
       console.error("Error fetching users:", error);
-    } finally {
-      setIsLoading(false);
     }
   }, []);
 
@@ -183,14 +190,34 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!currentWebUser?.token) return;
-    fetchTopBadges();
-    fetchStudents();
-    fetchAttempts();
-    fetchTopClassicLeaderboard();
-    fetchTopMasteryLeaderboard();
-    fetchPendingUsers();
-    fetchAverageSession();
-  }, [currentWebUser, fetchAverageSession, fetchAttempts, fetchPendingUsers, fetchStudents, fetchTopBadges, fetchTopClassicLeaderboard, fetchTopMasteryLeaderboard]);
+
+    const fetchAllDashboardData = async () => {
+      setIsLoading(true);
+      await Promise.all([
+        fetchTopBadges(),
+        fetchStudents(),
+        fetchAttempts(),
+        fetchTopClassicLeaderboard(),
+        fetchTopMasteryLeaderboard(),
+        fetchPendingUsers(),
+        fetchWebUsers(),
+        fetchAverageSession(),
+      ]);
+      setIsLoading(false);
+    };
+
+    fetchAllDashboardData();
+  }, [
+    currentWebUser,
+    fetchAverageSession,
+    fetchAttempts,
+    fetchPendingUsers,
+    fetchStudents,
+    fetchTopBadges,
+    fetchTopClassicLeaderboard,
+    fetchTopMasteryLeaderboard,
+    fetchWebUsers,
+  ]);
 
   // Calculate the overall average score
   const avgScoresByWorld = useMemo(() => {
@@ -489,10 +516,20 @@ export default function Dashboard() {
 
               <>
                 <h2
-                  className={`dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3 text-center
+                  className={`dashboard-title font-[Poppins] font-bold text-2xl sm:text-3xl md:text-4xl lg:text-[36px] mt-3 text-center
                     ${theme === "#202024" || theme === "#1D1F79" ? "!text-white" : "!text-black"}`}
                 >
-                  <CountUp end={averageSession} decimals={2} suffix={unit} />
+                  <CountUp
+                    end={averageSession}
+                    decimals={unit === "hr" ? 2 : 0}
+                    suffix={unit}
+                  />
+                  {secondaryValue !== null && (
+                    <>
+                      {' '}
+                      <CountUp end={secondaryValue} decimals={0} suffix={secondaryUnit} />
+                    </>
+                  )}
                 </h2>
               </>
             </div>

@@ -65,7 +65,7 @@ body,
   @apply focus:outline-none rounded-lg text-lg px-5 py-2 me-2 mb-2 cursor-pointer;
 }
 .edit-btn-properties-disabled {
-  @apply  focus:outline-none rounded-lg text-lg px-5 py-2 me-2 mb-2 cursor-not-allowed;
+  @apply focus:outline-none rounded-lg text-lg px-5 py-2 me-2 mb-2 cursor-not-allowed;
 }
 
 .username-properties {
@@ -88,18 +88,17 @@ body,
   @apply text-black font-[Poppins] mb-1 text-xs;
 }
 
-
 /* .input-properties {
   border: 1px solid black;
   @apply max-w-xs h-[30px] pl-3 rounded-full text-black text-[16px] bg-white font-[Poppins];
 } */
 
 .input-properties-disabled {
-  border: 2px solid black !important;
-  box-shadow: -2px -2px 0px 0px rgba(0, 0, 0, 1);
-  @apply w-full h-[60px] pl-4 text-gray-800 text-[16px] font-[Poppins] rounded-xl cursor-not-allowed;
+  background-color: #f3f4f6; /* Tailwind gray-100 */
+  border: 1px solid #d1d5db; /* Tailwind gray-300 */
+  color: #4b5563; /* Tailwind gray-600 */
+  @apply w-full h-[60px] pl-4 text-[16px] font-[Poppins] rounded-xl cursor-not-allowed;
 }
-
 
 /* .input-properties-disabled {
   border: 1px solid gray;

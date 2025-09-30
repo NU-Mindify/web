@@ -4,8 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { API_URL } from "../../Constants";
 import { UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/profile/profile.css";
-
-import OkCancelModal from "../../components/OkCancelModal/OkCancelModal.jsx";
 import ValidationModal from "../../components/ValidationModal/ValidationModal.jsx";
 import { supabase } from "../../supabase";
 
@@ -86,8 +84,10 @@ export default function EditProfile() {
   };
 
   const handleCancelEdit = () => {
-    if (hasChanges) {
-      setDiscardModalMessage("You have unsaved changes. Are you sure you want to go back?");
+    if (hasChanges()) {
+      setDiscardModalMessage(
+        "Any changes you've made will be discarded. Are you sure you want to cancel?"
+      );
       setShowDiscardModal(true);
     } else {
       navigate("/profile");
@@ -178,6 +178,11 @@ export default function EditProfile() {
             </div>
           </div>
 
+          <p className="text-center text-gray-600 italic my-4 px-4">
+            Please note: For security purposes, personal details from your
+            original sign-up cannot be edited. You may only update your profile
+            picture.
+          </p>
           <div className="forms-container">
             <div className="forms-properties">
               <h2 className="forms-label-properties">First Name*</h2>
