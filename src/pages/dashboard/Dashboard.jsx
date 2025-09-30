@@ -294,13 +294,9 @@ export default function Dashboard() {
             Dashboard
           </h1>
           <h2 className="header-greeting-dashboard">
-            {`Hi, ${currentWebUser.firstName} 
-            ${
-              currentWebUser?.position?.toLowerCase() === "super admin"
-                ? "My lord"
-                : `from ${branch}`
-            }. 
-            Welcome back to NU Mindify!`}
+            {`Hi, ${currentWebUser.firstName}${
+              currentWebUser?.position?.toLowerCase() === "super admin" ? "" : ` from ${branch}`
+            }. Welcome back to NU Mindify!`}
           </h2>
         </div>
 
