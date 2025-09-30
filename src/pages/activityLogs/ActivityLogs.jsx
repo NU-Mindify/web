@@ -1,25 +1,21 @@
 import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback, useMemo } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import chevronIcon from "../../assets/forAll/chevron.svg";
 import logo from "../../assets/logo/logo.png";
 import samplepic from "../../assets/students/sample-minji.svg";
-import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
 import { API_URL, branches } from "../../Constants";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import "../../css/activityLog/activityLog.css";
 import Header from "../../components/header/Header";
 import PaginationControl from "../../components/paginationControls/PaginationControl";
-import { Colors } from "chart.js";
-import { text } from "d3";
 
 export default function ActivityLogs() {
-  const [allLogs, setAllLogs] = useState([]);
-  const [filteredLogs, setFilteredLogs] = useState([]);
+  const [logs, setLogs] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const { currentUserBranch, currentWebUser } = useContext(UserLoggedInContext);
@@ -38,27 +34,10 @@ export default function ActivityLogs() {
     setCardActive((prev) => (prev === index ? null : index));
   };
 
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
   const [totalLogs, setTotalLogs] = useState(0);
 
-  useEffect(() => {
+  const fetchLogs = useCallback(async () => {
     if (!currentWebUser) return;
-
-    const fetchLogs = async () => {
       try {
         const start = startDate ? startDate.toISOString() : "";
         const end = endDate ? endDate.toISOString() : "";
@@ -76,30 +55,23 @@ export default function ActivityLogs() {
 
         let { logs, total } = response.data;
 
+        // This filtering should ideally be done on the backend based on the requesting user's role.
         if (currentWebUser.position?.toLowerCase().trim() !== "super admin") {
           logs = logs.filter(
             (log) => log.position?.toLowerCase().trim() !== "super admin"
           );
         }
 
-        setAllLogs(logs);
-        setFilteredLogs(logs);
+        setLogs(logs);
         setTotalLogs(total);
-        console.log("total", total);
       } catch (error) {
         console.error(error);
       }
-    };
+  }, [currentWebUser, currentPage, selectedAction, selectedMonth, startDate, endDate]);
 
+  useEffect(() => {
     fetchLogs();
-  }, [
-    currentWebUser,
-    currentPage,
-    selectedAction,
-    selectedMonth,
-    startDate,
-    endDate,
-  ]);
+  }, [fetchLogs]);
 
   const [allActions, setAllActions] = useState([]);
   useEffect(() => {
@@ -116,43 +88,14 @@ export default function ActivityLogs() {
     fetchActions();
   }, []);
 
-  const actionOptions = [
+  const actionOptions = useMemo(() => [
     { label: "All", value: "All" },
     ...allActions.map((a) => ({ label: a, value: a })),
-  ];
-
-  useEffect(() => {
-    let logs = allLogs;
-
-    if (selectedMonth && selectedMonth !== "All") {
-      logs = logs.filter((log) => {
-        const logMonth = new Date(log.createdAt).toLocaleString("en-US", {
-          month: "long",
-        });
-        return logMonth === selectedMonth;
-      });
-    }
-
-    if (selectedAction && selectedAction !== "All") {
-      logs = logs.filter((log) => log.action === selectedAction);
-    }
-
-    if (startDate && endDate) {
-      logs = logs.filter((log) => {
-        const logDate = new Date(log.createdAt);
-        const inclusiveEndDate = new Date(endDate);
-        inclusiveEndDate.setHours(23, 59, 59, 999);
-        return logDate >= startDate && logDate <= inclusiveEndDate;
-      });
-    }
-
-    setFilteredLogs(logs);
-  }, [selectedMonth, selectedAction, startDate, endDate]);
-
-  const currentLogs = filteredLogs;
+  ], [allActions]);
 
   //EXPORT TO CSV
-  const exportActLogsToCSV = (data, filename) => {
+  const exportActLogsToCSV = useCallback(
+    (data, filename) => {
     if (!currentWebUser) {
       alert("User not found. Please log in.");
       return;
@@ -188,10 +131,12 @@ export default function ActivityLogs() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+    },
+    [currentWebUser]
+  );
 
   //convert logo to base64 para lumabas sa pdf
-  const getBase64FromUrl = async (url) => {
+  const getBase64FromUrl = useCallback(async (url) => {
     const response = await fetch(url);
     const blob = await response.blob();
 
@@ -201,10 +146,10 @@ export default function ActivityLogs() {
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
-  };
+  }, []);
 
   //EXPORT TO PDF
-  const exportActLogsToPDF = async (data, title) => {
+  const exportActLogsToPDF = useCallback(async (data, title) => {
     if (!currentWebUser) {
       alert("User not found. Please log in.");
       return;
@@ -247,7 +192,7 @@ export default function ActivityLogs() {
         currentWebUser.lastName
       }.pdf`
     );
-  };
+  }, [currentWebUser, getBase64FromUrl]);
 
   return (
     <div className="logs-main-container">
@@ -255,8 +200,8 @@ export default function ActivityLogs() {
         <Header
           id={"logs"}
           title="Activity Logs"
-          exportToCSV={() => exportActLogsToCSV(filteredLogs, "Activity_Logs")}
-          exportToPDF={() => exportActLogsToPDF(filteredLogs, "Activity_Logs")}
+          exportToCSV={() => exportActLogsToCSV(logs, "Activity_Logs")}
+          exportToPDF={() => exportActLogsToPDF(logs, "Activity_Logs")}
         />
       </div>
 
@@ -332,7 +277,7 @@ export default function ActivityLogs() {
             </div>
           </div>
           <div className="users-main-container px-10">
-            {currentLogs.map((log, index) => (
+            {logs.map((log, index) => (
               <div
                 key={index}
                 className="user-card"

@@ -1,12 +1,11 @@
 import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
 import { API_URL, fetchBranches } from "../../Constants";
 import logo from "../../assets/logo/logo.png";
 import searchIcon from "../../assets/students/search-01.svg";
-import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import Buttons from "../../components/buttons/Buttons";
 import SearchBar from "../../components/searchbar/SearchBar";
 import SelectFilter from "../../components/selectFilter/SelectFilter";
@@ -39,7 +38,33 @@ export default function AccountManagement() {
   const [confirmUserDelete, setConfirmUserDelete] = useState(null);
   const [confirmUnarchive, setConfirmUnarchive] = useState(null);
 
-  const handleConfirmDelete = async () => {
+  const [totalItems, setTotalItems] = useState(0);
+
+  const fetchUsers = useCallback(async () => {
+    if (!currentUserBranch) return;
+    setIsLoading(true);
+
+    try {
+      const res = await axios.get(`${API_URL}/getWebUsers`, {
+        params: {
+          page: currentPage,
+          limit: usersPerPage,
+          branch: selectedBranch || currentUserBranch,
+          position: selectedPosition || "all",
+          search: searchQuery || "",
+        },
+      });
+
+      setWebUsers(res.data.data);
+      setTotalItems(res.data.total);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, usersPerPage, selectedBranch, currentUserBranch, selectedPosition, searchQuery]);
+
+  const handleConfirmDelete = useCallback(async () => {
     if (!confirmUserDelete) return;
     try {
       await axios.put(`${API_URL}/deleteWebUser/${confirmUserDelete._id}`, {
@@ -62,9 +87,9 @@ export default function AccountManagement() {
     } finally {
       setConfirmUserDelete(null);
     }
-  };
+  }, [confirmUserDelete, currentWebUser, fetchUsers]);
 
-  const handleUnarchiveUser = async () => {
+  const handleUnarchiveUser = useCallback(async () => {
     if (!confirmUnarchive) return;
     try {
       await axios.put(`${API_URL}/deleteWebUser/${confirmUnarchive._id}`, {
@@ -87,7 +112,7 @@ export default function AccountManagement() {
     } finally {
       setConfirmUnarchive(null);
     }
-  };
+  }, [confirmUnarchive, currentWebUser, fetchUsers]);
 
   useEffect(() => {
     const loadBranches = async () => {
@@ -101,66 +126,31 @@ export default function AccountManagement() {
     loadBranches();
   }, []);
 
-
-  const [totalItems, setTotalItems] = useState(0);
-
-  const fetchUsers = async () => {
-  if (!currentUserBranch) return;
-  setIsLoading(true);
-
-  try {
-    const res = await axios.get(`${API_URL}/getWebUsers`, {
-      params: {
-        page: currentPage,
-        limit: usersPerPage,
-        branch: selectedBranch || currentUserBranch, 
-        position: selectedPosition || "all",         
-        search: searchQuery || "",                  
-      },
-    });
-
-
-    setWebUsers(res.data.data);
-    setTotalItems(res.data.total)
-
-    console.log("total pages:", res.data.totalPages);
-    console.log("fetched users:", res.data.data);
-    console.log("total items:", res.data.total);
-    
-    
-    
-  } catch (error) {
-    console.error("Error fetching users:", error);
-  } finally {
-    setIsLoading(false);
-  }
-};
-
-
   useEffect(() => {
     fetchUsers();
-  }, [currentPage, selectedBranch, selectedPosition, searchQuery, currentUserBranch, totalItems]);
-
+  }, [fetchUsers]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, selectedBranch, selectedPosition]);
 
-  const uniquePositions = Array.from(
-    new Set(
-      webUsers
-        .map((user) => user.position)
-        .filter((pos) => {
-          if (currentWebUser?.position?.toLowerCase() !== "super admin") {
-            return pos?.toLowerCase() !== "super admin";
-          }
-          return true;
-        })
-    )
-  );
+  const uniquePositions = useMemo(() =>
+    Array.from(
+      new Set(
+        webUsers
+          .map((user) => user.position)
+          .filter((pos) => {
+            if (currentWebUser?.position?.toLowerCase() !== "super admin") {
+              return pos?.toLowerCase() !== "super admin";
+            }
+            return true;
+          })
+      )
+    ), [webUsers, currentWebUser?.position]);
 
-  const filteredUsers = webUsers
-    .filter((user) => {
+  const filteredUsers = useMemo(() =>
+    webUsers
+      .filter((user) => {
       if (currentWebUser?.position?.toLowerCase() !== "super admin") {
         return user.position?.toLowerCase() !== "super admin";
       }
@@ -192,19 +182,19 @@ export default function AccountManagement() {
     .sort((a, b) => {
       const comparison = a.lastName.localeCompare(b.lastName);
       return sortOrderAsc ? comparison : -comparison;
-    });
+    }), [webUsers, currentWebUser?.position, searchQuery, selectedBranch, selectedPosition, showArchived, sortOrderAsc]);
 
- 
-  const currentUsers = filteredUsers;
-
-
+  const currentUsers = filteredUsers; // This is now memoized because filteredUsers is.
 
   const toggleCard = (id) => {
     setCardActive((prev) => (prev === id ? null : id));
   };
 
-  const getBranchName = (branchId) =>
-    branches.find((b) => b.id === branchId)?.name || "Unknown Branch";
+  const getBranchName = useCallback(
+    (branchId) =>
+      branches.find((b) => b.id === branchId)?.name || "Unknown Branch",
+    [branches]
+  );
 
   const searchSuggestions = searchQuery
     ? filteredUsers
@@ -228,7 +218,7 @@ export default function AccountManagement() {
   ];
 
   // EXPORT TO CSV for Accounts
-  const exportAccountsToCSV = (data, filename) => {
+  const exportAccountsToCSV = useCallback((data, filename) => {
     const now = new Date().toLocaleString();
     const headers = ["Name", "Position", "Campus"];
     const rows = data.map((user) => {
@@ -261,10 +251,10 @@ export default function AccountManagement() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+  }, [currentWebUser, branches]);
 
   // convert logo to base64 para lumabas sa pdf
-  const getBase64FromUrl = async (url) => {
+  const getBase64FromUrl = useCallback(async (url) => {
     const response = await fetch(url);
     const blob = await response.blob();
     return new Promise((resolve, reject) => {
@@ -273,10 +263,10 @@ export default function AccountManagement() {
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
-  };
+  }, []);
 
   // EXPORT TO PDF for Accounts
-  const exportAccountsToPDF = async (data, title) => {
+  const exportAccountsToPDF = useCallback(async (data, title) => {
     const logoBase64 = await getBase64FromUrl(logo);
     const now = new Date().toLocaleString();
     const doc = new jsPDF();
@@ -316,10 +306,10 @@ export default function AccountManagement() {
         currentWebUser.lastName
       }.pdf`
     );
-  };
+  }, [currentWebUser, branches, getBase64FromUrl]);
 
   // 🔁 Archive / Unarchive handler for the icon
-  const handleArchiveToggle = async (user) => {
+  const handleArchiveToggle = useCallback(async (user) => {
     try {
       const newStatus = !user.is_deleted; // toggle
       await axios.put(`${API_URL}/deleteWebUser/${user._id}`, {
@@ -343,7 +333,7 @@ export default function AccountManagement() {
     } catch (error) {
       console.error("Error updating user status:", error);
     }
-  };
+  }, [currentWebUser, fetchUsers]);
 
   return (
     <div className="account-main-container overflow-hidden">

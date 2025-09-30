@@ -52,50 +52,30 @@ export default function Analytics() {
       fetchStudents();
     }
   }, [currentWebUser.token]);
-
-  const fetchAttemptsMastery = useCallback(async () => {
+  const fetchAttempts = useCallback(async (mode = "competition,review") => {
     try {
       const categoryList = categories.map((c) => c.id).join(",");
       const levelList = levels.join(",");
-      const modeList = modes.map((m) => m.mode).join(",");
 
       const response = await axios.get(`${API_URL}/getAnalytics`, {
         params: {
           categories: categoryList,
           levels: levelList,
-          mode: modeList,
+          mode: mode,
         },
       });
 
-      // console.log("Fetched attempts:", response.data);
-      setMasteryAttempts(response.data);
+      if (mode === "mastery") {
+        setMasteryAttempts(response.data);
+      } else {
+        setAttempts(response.data);
+        // Fetch mastery attempts right after competition/review attempts
+        fetchAttempts("mastery");
+      }
     } catch (error) {
       console.error("Error fetching analytics data:", error.message);
     }
   }, []);
-
-  const fetchAttempts = useCallback(async () => {
-    try {
-      const categoryList = categories.map((c) => c.id).join(",");
-      const levelList = levels.join(",");
-      const modeList = modes.map((m) => m.mode).join(",");
-
-      const response = await axios.get(`${API_URL}/getAnalytics`, {
-        params: {
-          categories: categoryList,
-          levels: levelList,
-          mode: modeList,
-        },
-      });
-
-      // console.log("Fetched attempts:", response.data);
-      setAttempts(response.data);
-      // Fetch mastery attempts right after competition/review attempts
-      fetchAttemptsMastery();
-    } catch (error) {
-      console.error("Error fetching analytics data:", error.message);
-    }
-  }, [fetchAttemptsMastery]);
 
   const fetchStudents = useCallback(async () => {
     try {
@@ -189,10 +169,6 @@ export default function Analytics() {
     { branch: "iloilo", totalStudents: 0, averageScore: 0 },
     { branch: "moa", totalStudents: 0, averageScore: 0 },
   ]);
-
-  useEffect(() => {
-    fetchPerformanceOnCampuses();
-  }, [mode, level, category]);
 
   const fetchPerformanceOnCampuses = useCallback(async () => {
     let categoryToUse = selectedCategory;
@@ -342,6 +318,10 @@ export default function Analytics() {
       console.error("Error fetching analytics data:", error.message);
     }
   }, [mode, category, showCompe, level, selectedCategory]);
+
+  useEffect(() => {
+    fetchPerformanceOnCampuses();
+  }, [fetchPerformanceOnCampuses]);
 
   //csv Export
   const exportAttemptsAccountsCSV = useCallback((

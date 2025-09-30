@@ -4,7 +4,7 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import NewPasswordModal from "../../components/NewPassModal/NewPasswordModal";
 import OldPasswordModal from "../../components/OldPassModal/OldPasswordModal";
@@ -15,7 +15,6 @@ import { firebaseAuth } from "../../Firebase";
 
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import Header from "../../components/header/Header";
-import { color } from "d3";
 import Buttons from "../../components/buttons/Buttons";
 
 
@@ -28,7 +27,7 @@ export default function Profile() {
 
   const navigate = useNavigate();
 
-  const [webUser, setWebUser] = useState({});
+  const [webUser, setWebUser] = useState(currentWebUser || {});
 
   const [validationMessage, setValidationMessage] = useState("");
   const [showValidationModal, setShowValidationModal] = useState(false);
@@ -68,16 +67,16 @@ export default function Profile() {
     }
   }, [currentWebUserUID]);
 
-  const handleEditProfile = () => {
+  const handleEditProfile = useCallback(() => {
     navigate(`/profile/edit/${webUser._id}`, { state: { webUser } });
-  };
+  }, [navigate, webUser]);
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = useCallback(() => {
     setOldPassword("");
     setShowOldPasswordModal(true);
-  };
+  }, []);
 
-  const handleOldPasswordSubmit = async () => {
+  const handleOldPasswordSubmit = useCallback(async () => {
     if (!oldPassword) {
       setValidationMessage("Please enter your current password.");
       setShowValidationModal(true);
@@ -105,9 +104,9 @@ export default function Profile() {
       setValidationMessage("Incorrect old password.");
       setShowValidationModal(true);
     }
-  };
+  }, [oldPassword, webUser.email, user]);
 
-  const handleNewPasswordSubmit = async () => {
+  const handleNewPasswordSubmit = useCallback(async () => {
     if (!newPassword || !confirmPassword) {
       setValidationMessage("Please fill out both fields.");
       setShowValidationModal(true);
@@ -151,7 +150,7 @@ export default function Profile() {
       setConfirmPassword("");
       setShowValidationModal(true);
     }
-  };
+  }, [newPassword, confirmPassword, oldPassword, user]);
 
   const [activeTheme, setActiveTheme] = useState(false)
   const colors = [{
@@ -175,6 +174,40 @@ export default function Profile() {
       name: "Gold Theme"
     }
   ];
+
+  const profileFields = useMemo(() => [
+    {
+      label: "First Name",
+      value: webUser.firstName || "",
+      type: "text",
+    },
+    {
+      label: "Last Name",
+      value: webUser.lastName || "",
+      type: "text",
+    },
+    {
+      label: "NU Campus",
+      value: branches.find((campus) => campus.id === webUser.branch)?.name || "",
+      type: "text",
+    },
+    { 
+      label: "Email", 
+      value: webUser.email || "", 
+      type: "email" 
+    },
+    {
+      label: "Employee No.",
+      value: webUser.employeenum || "",
+      type: "text",
+    },
+    {
+      label: "Position",
+      value: webUser.position || "",
+      type: "text",
+    },
+  ], [webUser, branches]);
+
 
   return (
     <>
@@ -237,34 +270,7 @@ export default function Profile() {
           </div>
 
           <div className="forms-container">
-            {[
-              {
-                label: "First Name",
-                value: webUser.firstName || "",
-                type: "text",
-              },
-              {
-                label: "Last Name",
-                value: webUser.lastName || "",
-                type: "text",
-              },
-              {
-                label: "NU Campus",
-                value: branches.find((campus) => campus.id === currentWebUser.branch)?.name || "", 
-                type: "text",
-              },
-              { label: "Email", value: webUser.email || "", type: "email" },
-              {
-                label: "Employee No.",
-                value: webUser.employeenum || "",
-                type: "text",
-              },
-              {
-                label: "Position",
-                value: webUser.position || "",
-                type: "text",
-              },
-            ].map(({ label, value, type }, idx) => (
+            {profileFields.map(({ label, value, type }, idx) => (
               <div key={idx} className="forms-properties">
                 <h2
                   className={`forms-label-properties`}
