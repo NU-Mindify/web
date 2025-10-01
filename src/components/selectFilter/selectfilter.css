@@ -5,5 +5,5 @@
 
 .select-properties{
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    @apply text-black font-[Poppins] h-[50px] w-[200px] text-sm bg-white border-none rounded-md;
+    @apply appearance-none text-black font-[Poppins] h-[50px] w-[200px] text-sm bg-white border-none rounded-md;
 }
