@@ -375,17 +375,27 @@ function AddQuestion() {
       header: true,
       skipEmptyLines: true,
       transform: (value) => {
-        // This regex removes invisible characters like zero-width spaces
-        // which can sometimes cause issues in parsing.
-        return value.replace(/[\u200B-\u200D\uFEFF]/g, "");
+        // Remove invisible characters like zero-width spaces & BOM
+        return value?.replace(/[\u200B-\u200D\uFEFF]/g, "") || "";
       },
       transformHeader: (header) => header.trim().replace(/\s+/g, " "),
       complete: (results) => {
+        const normalizeField = (value) =>
+          value
+            ?.replace(/[\u200B-\u200D\uFEFF\u00A0\r\n\t]+/g, " ") // clean invisible chars, newlines, NBSP
+            .replace(/\s+/g, " ") // collapse multiple spaces
+            .trim() || "N/A";
+
+        const seenQuestions = new Set();
+        const duplicates = [];
+
         const parsedQuestions = results.data
-          .filter(
-            (row) =>
+          .filter((row) => {
+            const question = row["Question"]?.trim()?.toLowerCase();
+            return (
               row["Item_Number"]?.trim() &&
-              row["Question"]?.trim() &&
+              question &&
+              !["question", "difficulty", "item_number"].includes(question) &&
               row["A"]?.trim() &&
               row["B"]?.trim() &&
               row["C"]?.trim() &&
@@ -393,7 +403,8 @@ function AddQuestion() {
               row["CORRECT ANSWERS"]?.trim() &&
               row["RATIONALE"]?.trim() &&
               row["TIMER"]?.trim()
-          )
+            );
+          })
           .map((row) => {
             const correctAnswer = row["CORRECT ANSWERS"].trim().toLowerCase();
             const timer = parseInt(row["TIMER"]);
@@ -404,13 +415,20 @@ function AddQuestion() {
               D: "difficult",
             };
             const difficulty =
-              difficultyMap[row["Difficulty"]?.trim().toUpperCase()] || "N/A";
+              difficultyMap[row["Difficulty"]?.trim()?.toUpperCase()] || "N/A";
 
-            const normalizeField = (value) => value?.trim() || "N/A";
+            const questionText = normalizeField(row["Question"]);
+
+            // Detect duplicates within the same CSV
+            if (seenQuestions.has(questionText.toLowerCase())) {
+              duplicates.push(questionText);
+              return null;
+            }
+            seenQuestions.add(questionText.toLowerCase());
 
             return {
               item_number: row["Item_Number"].trim(),
-              question: normalizeField(row["Question"]),
+              question: questionText,
               difficulty,
               rationale: normalizeField(row["RATIONALE"]),
               answer: correctAnswer,
@@ -443,7 +461,8 @@ function AddQuestion() {
                 },
               ],
             };
-          });
+          })
+          .filter(Boolean); // remove nulls (duplicates skipped)
 
         if (parsedQuestions.length === 0) {
           setValidationMessage("No valid questions found in the CSV.");
@@ -452,7 +471,17 @@ function AddQuestion() {
         }
 
         setAllQuestions((prev) => [...prev, ...parsedQuestions]);
-        setValidationMessage("Import Success!");
+
+        if (duplicates.length > 0) {
+          setValidationMessage(
+            `Import Success! (${parsedQuestions.length} unique questions added, ${duplicates.length} duplicates skipped.)`
+          );
+        } else {
+          setValidationMessage(
+            `Import Success! (${parsedQuestions.length} questions added successfully.)`
+          );
+        }
+
         setShowValidationModal(true);
       },
     });
