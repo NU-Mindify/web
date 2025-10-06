@@ -24,21 +24,24 @@ const proOptions = { hideAttribution: true };
 export default function Mindmap() {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
+  const [data, setData] = useState(null)
   const [isLoading, setIsLoading] = useState(false);
   const urlParams = new URLSearchParams(window.location.search);
   const [prompt, setPrompt] = useState(urlParams.get("myParam") || "")
-
+  const [user_id] = useState(urlParams.get("user") || null)
   const onGenerate = async () => {
     setNodes([])
     setEdges([])
     setIsLoading(true)
     try {
-      const { data } = await axios.post(API_URL + "/generateMindmap", { prompt });
-      setNodes(data.nodes)
-      setEdges(data.edges)
+      console.log(prompt === data?.prompt);
+      const { data:mindmap } = await axios.post(API_URL + "/generateMindmap", { prompt, user_id, force: prompt === data?.prompt });
+      setData(mindmap);
+      setNodes(mindmap.content.nodes);
+      setEdges(mindmap.content.edges);
     } catch (error) {
       console.error(error);
-      alert("Error Loading the mindmap")
+      alert("Failed to load the mindmap, Try again later.")
     }
     setIsLoading(false)
   };
@@ -75,7 +78,7 @@ export default function Mindmap() {
               onClick={onGenerate}
               disabled={prompt.trim() === "" || isLoading}
             >
-              Generate
+              {prompt === data?.prompt ? "Regenerate" : "Generate"}
             </button>
           </div>
         </div>
