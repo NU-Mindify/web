@@ -13,6 +13,7 @@ import { useCallback, useState } from "react";
 import loading from '../../assets/animation/loading.json';
 import { API_URL } from "../../Constants";
 import CustomNode from "./CustomNode";
+import { ArrowRightCircle, RotateCcw } from "lucide-react";
 
 
 const nodeTypes = {
@@ -78,7 +79,17 @@ export default function Mindmap() {
               onClick={onGenerate}
               disabled={prompt.trim() === "" || isLoading}
             >
-              {prompt === data?.prompt ? "Regenerate" : "Generate"}
+              {prompt.toLowerCase().trim() === data?.prompt ? (
+                <div className="!text-white flex gap-2 items-center">
+                  Regenerate
+                  <RotateCcw color="white" /> 
+                </div>
+              ) : (
+                <div className="!text-white flex gap-2 items-center">
+                  Generate
+                  <ArrowRightCircle color="white" /> 
+                </div>
+              )}
             </button>
           </div>
         </div>
@@ -95,7 +106,11 @@ export default function Mindmap() {
         fitView
       >
         {isLoading && (
-          <Lottie animationData={loading} loop={true} style={{ height: 300, marginTop: 50 }} />
+          <Lottie
+            animationData={loading}
+            loop={true}
+            style={{ height: 300, marginTop: 50 }}
+          />
         )}
         <Background />
         <Controls />
