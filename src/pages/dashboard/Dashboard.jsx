@@ -18,7 +18,6 @@ export default function Dashboard() {
 
   const [students, setStudents] = useState([]);
 
-  const [webUsers, setWebUsers] = useState([]);
 
   const [pendingUsers, setPendingUsers] = useState([]);
 
@@ -43,7 +42,7 @@ export default function Dashboard() {
   const [secondaryUnit, setSecondaryUnit] = useState("");
 
   const studentCount = useMemo(() => students.length, [students]);
-  const webUsersCount = useMemo(() => webUsers.length, [webUsers]);
+  const [totalWebUsers, setTotalWebUsers]= useState(null)
   const pendingUserCount = useMemo(() => pendingUsers.length, [pendingUsers]);
 
   const fetchAverageSession = useCallback(async () => {
@@ -109,7 +108,7 @@ export default function Dashboard() {
     setLoadingBadges(true);
     try {
       const response = await axios.get(`${API_URL}/getTopEarnedBadges`);
-      setTopBadges(response.data); // Adjust according to your API response structure
+      setTopBadges(response.data); 
     } catch (error) {
       console.error("Error fetching top badges:", error.message);
     } finally {
@@ -117,7 +116,7 @@ export default function Dashboard() {
     }
   }, []);
 
-  //fetch students data
+
   const fetchStudents = useCallback(async () => {
     setIsLoading(true);
     axios
@@ -138,17 +137,11 @@ export default function Dashboard() {
       });
   }, [currentWebUser?.token]);
 
-  const fetchWebUsers = useCallback(async () => {
-    try {
-      const response = await axios.get(`${API_URL}/getWebUsers/`);
-      const allUsers = response.data.data || [];
-      const approvedUsers = allUsers.filter((user) => user.isApproved);
-      setWebUsers(approvedUsers);
-      console.log("web users (approved only)", approvedUsers);
-    } catch (error) {
-      console.error("Error fetching web users:", error);
-    }
-  }, []);
+
+  async function fetchTotalWebUsers(){
+    const {data} = await axios.get(`${API_URL}/totalWebUsers/`)
+    setTotalWebUsers(data.totalWebUsers)
+  }
 
   //fetch pending users data
   const fetchPendingUsers = useCallback(async () => {
@@ -200,8 +193,8 @@ export default function Dashboard() {
         fetchTopClassicLeaderboard(),
         fetchTopMasteryLeaderboard(),
         fetchPendingUsers(),
-        fetchWebUsers(),
         fetchAverageSession(),
+        fetchTotalWebUsers()
       ]);
       setIsLoading(false);
     };
@@ -216,7 +209,6 @@ export default function Dashboard() {
     fetchTopBadges,
     fetchTopClassicLeaderboard,
     fetchTopMasteryLeaderboard,
-    fetchWebUsers,
   ]);
 
   // Calculate the overall average score
@@ -388,7 +380,7 @@ export default function Dashboard() {
                 Total Web Users
               </h1>
               <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
-                <CountUp end={webUsersCount} />
+                <CountUp end={totalWebUsers} />
               </h1>
             </div>
           )}
