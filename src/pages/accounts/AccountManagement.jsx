@@ -340,7 +340,7 @@ export default function AccountManagement() {
       <div className="w-full h-[100px] rounded-xl">
         <Header
           id={"account"}
-          title={"Account Management"}
+          title={"Manage Accounts"}
           exportToCSV={() =>
             exportAccountsToCSV(filteredUsers, "Accounts_List")
           }
