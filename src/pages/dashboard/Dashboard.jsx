@@ -41,9 +41,9 @@ export default function Dashboard() {
   const [secondaryValue, setSecondaryValue] = useState(null);
   const [secondaryUnit, setSecondaryUnit] = useState("");
 
-  const studentCount = useMemo(() => students.length, [students]);
   const [totalWebUsers, setTotalWebUsers]= useState(null)
-  const pendingUserCount = useMemo(() => pendingUsers.length, [pendingUsers]);
+  const [totalStudents, setTotalStudents] = useState(null)
+  const [totalPending, setTotalPending] = useState(null)
 
   const fetchAverageSession = useCallback(async () => {
     setLoadingSession(true);
@@ -116,45 +116,46 @@ export default function Dashboard() {
     }
   }, []);
 
-
-  const fetchStudents = useCallback(async () => {
-    setIsLoading(true);
-    axios
-      .get(`${API_URL}/getUsers`, {
-        headers: {
-          Authorization: `Bearer ${currentWebUser.token}`,
-        },
-      })
-      .then((response) => {
-        // console.log(response.data);
-        setStudents(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [currentWebUser?.token]);
+  async function fetchTotalStudents(){
+    try{
+      const { data } = await axios.get(`${API_URL}/countStudents`);
+      console.log("total students", data);
+      setTotalStudents(data.totalStudents);
+    }
+    catch(err){
+      console.log("Error:",err);
+      
+    }
+  }
 
 
   async function fetchTotalWebUsers(){
-    const {data} = await axios.get(`${API_URL}/totalWebUsers/`)
-    setTotalWebUsers(data.totalWebUsers)
+    try{
+      const { data } = await axios.get(`${API_URL}/totalWebUsers`);
+      setTotalWebUsers(data.totalUsers);
+      console.log("total web users", data.totalUsers);
+      
+
+    }
+    catch(err){
+      console.log("Error:", err);
+      
+    }
+    
   }
 
-  //fetch pending users data
-  const fetchPendingUsers = useCallback(async () => {
-    try {
-      const response = await axios.get(`${API_URL}/getWebUsers/`);
-      const users = response.data.data || [];
-      const pendingUsers = users.filter((user) => user.isApproved === false);
-      setPendingUsers(pendingUsers);
-      console.log("Pending Users:", pendingUsers);
-    } catch (error) {
-      console.error("Error fetching users:", error);
+  async function fetchTotalPending(){
+    try{
+      const {data} = await axios.get(`${API_URL}/countPendingAccounts`)
+      setTotalPending(data)
+      console.log("Pending users",data);
     }
-  }, []);
+    catch(err){
+      console.log("Error:", err);
+    }
+    
+  }
+
 
   //fetch attempts data
   const fetchAttempts = useCallback(async () => {
@@ -188,13 +189,13 @@ export default function Dashboard() {
       setIsLoading(true);
       await Promise.all([
         fetchTopBadges(),
-        fetchStudents(),
         fetchAttempts(),
         fetchTopClassicLeaderboard(),
         fetchTopMasteryLeaderboard(),
-        fetchPendingUsers(),
         fetchAverageSession(),
-        fetchTotalWebUsers()
+        fetchTotalStudents(),
+        fetchTotalWebUsers(),
+        fetchTotalPending()
       ]);
       setIsLoading(false);
     };
@@ -204,8 +205,6 @@ export default function Dashboard() {
     currentWebUser,
     fetchAverageSession,
     fetchAttempts,
-    fetchPendingUsers,
-    fetchStudents,
     fetchTopBadges,
     fetchTopClassicLeaderboard,
     fetchTopMasteryLeaderboard,
@@ -350,7 +349,7 @@ export default function Dashboard() {
                 Total Students
               </h1>
               <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
-                <CountUp end={studentCount} />
+                <CountUp end={totalStudents} />
               </h1>
             </div>
           )}
@@ -575,7 +574,7 @@ export default function Dashboard() {
                       Pending Accounts
                     </h1>
                     <h1 className="dashboard-title font-[Poppins] font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[50px] mt-3">
-                      <CountUp end={pendingUserCount} />
+                      <CountUp end={totalPending} />
                     </h1>
                   </div>
                 )}

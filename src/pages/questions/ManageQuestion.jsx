@@ -22,7 +22,6 @@ import Buttons from "../../components/buttons/Buttons";
 import ExportDropdown from "../../components/ExportDropdown/ExportDropdown";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 
-
 const categoriesObj = [
   {
     id: "abnormal",
@@ -52,14 +51,18 @@ const categoriesObj = [
 ];
 
 export default function ManageQuestion() {
-
   const { currentWebUser } = useContext(UserLoggedInContext);
   const [showArchived, setShowArchived] = useState(false);
   const [restore, setRestore] = useState(false);
-  
 
-  const { subSelected, setSubSelected, theme, textColor, hoverColor, divColor } = useContext(ActiveContext);
-  
+  const {
+    subSelected,
+    setSubSelected,
+    theme,
+    textColor,
+    hoverColor,
+    divColor,
+  } = useContext(ActiveContext);
 
   const [totalQuestion, setTotalQuestion] = useState([]);
   const [totalDeletedQuestion, setTotalDeletedQuestion] = useState([]);
@@ -73,11 +76,8 @@ export default function ManageQuestion() {
   const queryClient = useQueryClient();
   const [showEditModal, setShowEditModal] = useState(false);
 
-
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [originalQuestion, setOriginalQuestion] = useState(null);
-
-
 
   useEffect(() => {
     getTotalQuestion();
@@ -125,8 +125,6 @@ export default function ManageQuestion() {
   const navigate = useNavigate();
 
   const [searchQuestion, setSearchQuestion] = useState("");
-
-  
 
   const getData = async () => {
     try {
@@ -199,11 +197,11 @@ export default function ManageQuestion() {
       axios.post(`${API_URL}/addLogs`, {
         name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
         branch: currentWebUser.branch,
-        action: "Delete Question",  
+        action: "Delete Question",
         description: `${currentWebUser.firstName} deleted the question ${questionToDeleteId.question}.`,
         position: currentWebUser.position,
         useravatar: currentWebUser.useravatar,
-      })
+      });
       queryClient.invalidateQueries(["questionsList", category]);
     } catch (error) {
       console.error("Error deleting question:", error);
@@ -211,9 +209,8 @@ export default function ManageQuestion() {
   };
 
   const confirmRestoreQuestion = async () => {
+    console.log("to be restore", questionToRestoreId);
 
-    console.log("to be restore",questionToRestoreId);
-    
     try {
       await axios.put(
         `${API_URL}/deleteQuestion/${questionToRestoreId._id}`,
@@ -228,14 +225,14 @@ export default function ManageQuestion() {
         }
       );
       setShowRestoreConfirmModal(false);
-        axios.post(`${API_URL}/addLogs`, {
+      axios.post(`${API_URL}/addLogs`, {
         name: `${currentWebUser.firstName} ${currentWebUser.lastName}`,
         branch: currentWebUser.branch,
-        action: "Unarchive Question",  
+        action: "Unarchive Question",
         description: `${currentWebUser.firstName} unarchived the question ${questionToRestoreId.question}.`,
         position: currentWebUser.position,
         useravatar: currentWebUser.useravatar,
-      })
+      });
       setQuestionToRestoreId({});
       queryClient.invalidateQueries(["questionsList", category]);
     } catch (error) {
@@ -254,8 +251,6 @@ export default function ManageQuestion() {
   }
 
   const handlesUnapprove = () => {
-
-
     navigate("/unapproved", {
       state: {
         category: category,
@@ -284,7 +279,6 @@ export default function ManageQuestion() {
       console.error("Error converting logo:", error);
     }
 
-    // Difficulty mapping
     const difficultyMap = {
       easy: "Easy",
       average: "Average",
@@ -293,7 +287,9 @@ export default function ManageQuestion() {
 
     const now = new Date().toLocaleString();
     const doc = new jsPDF("p", "mm", "a4");
+    const pageWidth = doc.internal.pageSize.getWidth();
 
+    // --- Header ---
     doc.setFontSize(14);
     doc.text(`${title}`, 14, 10);
     doc.setFontSize(10);
@@ -304,16 +300,15 @@ export default function ManageQuestion() {
     );
     doc.text(`Exported on: ${now}`, 14, 24);
 
-    // Logo in top-right
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const logoWidth = 30;
-    const logoHeight = 15;
+    // --- Logo ---
+    const logoWidth = 25;
+    const logoHeight = 12;
     const xPos = pageWidth - logoWidth - 10;
     if (logoBase64) {
       doc.addImage(logoBase64, "PNG", xPos, 8, logoWidth, logoHeight);
     }
 
-    // Convert questions → table
+    // --- Data formatting ---
     const rows = questions.map((q) => {
       const choicesText = q.choices
         .map(
@@ -325,16 +320,17 @@ export default function ManageQuestion() {
         .join("\n");
 
       return [
-        q.item_number || "", // Item #
-        q.question,
+        q.item_number || "",
+        q.question || "",
         categories.find((cat) => cat.id === q.category)?.name || "",
         choicesText,
-        difficultyMap[q.difficulty?.toLowerCase()] || "", // Map difficulty
+        difficultyMap[q.difficulty?.toLowerCase()] || "",
         q.timer || "",
         q.rationale || "",
       ];
     });
 
+    // --- Table ---
     autoTable(doc, {
       head: [
         [
@@ -349,14 +345,42 @@ export default function ManageQuestion() {
       ],
       body: rows,
       startY: 30,
-      styles: { fontSize: 5, cellWidth: "wrap" },
+      theme: "grid",
+      styles: {
+        fontSize: 7,
+        cellPadding: 2,
+        overflow: "linebreak", // wraps long text
+        valign: "top",
+      },
+      headStyles: {
+        fillColor: [240, 240, 240],
+        textColor: 0,
+        fontStyle: "bold",
+      },
+      // Fit to A4 page width automatically
+      tableWidth: "auto",
+      // Ensure last column doesn't overflow
       columnStyles: {
-        0: { cellWidth: 10 }, 
-        1: { cellWidth: 40 }, 
-        3: { cellWidth: 70 },
+        0: { cellWidth: 10 }, // Item #
+        1: { cellWidth: 30 }, // Question
+        2: { cellWidth: 20 }, // Category
+        3: { cellWidth: 55 }, // Choices
+        4: { cellWidth: 20 }, // Difficulty
+        5: { cellWidth: 15 }, // Timer
+        6: { cellWidth: 35 }, // Overall Rationale (adjusted smaller)
+      },
+      didDrawPage: (data) => {
+        const pageHeight = doc.internal.pageSize.height;
+        doc.setFontSize(8);
+        doc.text(
+          `Page ${data.pageNumber}`,
+          pageWidth - 30,
+          pageHeight - 10
+        );
       },
     });
 
+    // --- Save PDF ---
     doc.save(
       `${title.replace(/\s+/g, "_")}_by_${currentWebUser.firstName}_${
         currentWebUser.lastName
@@ -525,7 +549,7 @@ export default function ManageQuestion() {
           </div>
           {showArchived ? (
             <div className="question-actions">
-              <button 
+              <button
                 className="btn w-[100px] rounded-xl bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]"
                 onClick={() => {
                   setEditingQuestion(data);
@@ -537,8 +561,8 @@ export default function ManageQuestion() {
               </button>
               <button
                 onClick={() => {
-                  setShowRestoreConfirmModal(true)
-                  setQuestionToRestoreId(data)
+                  setShowRestoreConfirmModal(true);
+                  setQuestionToRestoreId(data);
                 }}
                 className="btn-action bg-[#FFBF1A] hover:brightness-105 !text-black font-[Poppins]
 "
@@ -578,10 +602,7 @@ export default function ManageQuestion() {
   };
 
   return (
-    <div 
-      className="question-main-container"
-      style={{ backgroundColor: theme }}
-    >
+    <div className="question-main-container" style={{ backgroundColor: theme }}>
       <div className="question-header">
         <div className="title-header">
           {gotSelected ? (
@@ -609,10 +630,7 @@ export default function ManageQuestion() {
               </div>
             </div>
           ) : (
-            <h1 
-              className={`question-title`}
-              style={{color: textColor}}
-            >
+            <h1 className={`question-title`} style={{ color: textColor }}>
               Select Category
             </h1>
           )}
@@ -636,7 +654,6 @@ export default function ManageQuestion() {
               </div>
 
               <div className="flex items-center gap-3 flex-shrink-0">
-                
                 <Buttons
                   text={
                     <span className="flex flex-wrap justify-center sm:justify-between items-center w-full mt-3 gap-2 lg:w-auto lg:mt-0">
@@ -661,72 +678,72 @@ export default function ManageQuestion() {
               </div>
             </div>
 
-           <div className="flex flex-wrap items-center gap-4 w-full">
-            {/* Left side group */}
-            <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
-              <button
-                onClick={() => setShowArchived(false)}
-                className={`all-archive-btn ${showArchived || "active"} w-1/2`}
-              >
-                All Questions
-              </button>
+            <div className="flex flex-wrap items-center gap-4 w-full">
+              {/* Left side group */}
+              <div className="flex bg-gray-100 p-1 rounded-xl w-[300px]">
+                <button
+                  onClick={() => setShowArchived(false)}
+                  className={`all-archive-btn ${
+                    showArchived || "active"
+                  } w-1/2`}
+                >
+                  All Questions
+                </button>
 
-              <button
-                onClick={() => setShowArchived(true)}
-                className={`all-archive-btn ${showArchived && "active"} w-1/2`}
-              >
-                Archive
-              </button>
-            </div>
+                <button
+                  onClick={() => setShowArchived(true)}
+                  className={`all-archive-btn ${
+                    showArchived && "active"
+                  } w-1/2`}
+                >
+                  Archive
+                </button>
+              </div>
 
-            <div className="sort-container relative">
-              <select
-                id="sort"
-                className="sort-select pl-8"
-                onChange={handleSortingByDate}
-              >
-                <option value="" disabled selected hidden>
-                  Sort by:
-                </option>
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-              </select>
-            </div>
+              <div className="sort-container relative">
+                <select
+                  id="sort"
+                  className="sort-select pl-8"
+                  onChange={handleSortingByDate}
+                >
+                  <option value="" disabled selected hidden>
+                    Sort by:
+                  </option>
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                </select>
+              </div>
 
-            <div className="sort-container relative">
-              <select
-                id="filter"
-                className="sort-select pl-8"
-                onChange={handleSortingByDifficulty}
-              >
-                <option value="" disabled selected hidden>
-                  Filter By Difficulty:
-                </option>
-                <option value="easy">Easy</option>
-                <option value="average">Average</option>
-                <option value="difficult">Difficult</option>
-              </select>
-            </div>
+              <div className="sort-container relative">
+                <select
+                  id="filter"
+                  className="sort-select pl-8"
+                  onChange={handleSortingByDifficulty}
+                >
+                  <option value="" disabled selected hidden>
+                    Filter By Difficulty:
+                  </option>
+                  <option value="easy">Easy</option>
+                  <option value="average">Average</option>
+                  <option value="difficult">Difficult</option>
+                </select>
+              </div>
 
-            {/* Right side button */}
-            <div className="ml-auto">
-
-            {currentWebUser.position.toLowerCase() === "professor" ?
-              <>
-              </>
-             :
-              <button 
-                onClick={handlesUnapprove} 
-                className="px-4 h-10 bg-[#FFBF1A] font-bold text-black rounded-xl 
+              {/* Right side button */}
+              <div className="ml-auto">
+                {currentWebUser.position.toLowerCase() === "professor" ? (
+                  <></>
+                ) : (
+                  <button
+                    onClick={handlesUnapprove}
+                    className="px-4 h-10 bg-[#FFBF1A] font-bold text-black rounded-xl 
                           hover:brightness-105 transition cursor-pointer"
-              >
-                Show Unapproved Questions
-              </button>
-             }
-              
+                  >
+                    Show Unapproved Questions
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-
           </div>
         )}
       </div>
