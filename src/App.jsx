@@ -34,6 +34,7 @@ import ApproveAccount from "./pages/accounts/ApproveAccount";
 import Branches from "./pages/branches/Branches";
 import Landing from "./pages/landingpage/landing";
 import ShowUnapprove from "./pages/questions/ShowUnapprove";
+import ValidationModal from "./components/ValidationModal/ValidationModal";
 import blue from "./assets/background/blue.png"
 import yellow from "./assets/background/yellow.png"
 import black from "./assets/background/dark bg.png"
@@ -51,6 +52,9 @@ function App() {
   const [textColor, setTextColor] = useState("")
   const [buttonColor, setButtonColor] = useState("")
   const [iconColor, setIconColor] = useState('')
+
+  const [validationMessage, setValidationMessage] = useState("");
+  const [showValidationModal, setShowValidationModal] = useState(false);
 
   useEffect(() => {
     if (theme === "#202024") {
@@ -124,9 +128,10 @@ function App() {
             await sendEmailVerification(user);
           }
 
-          alert(
-            "Your Account email is awaiting verification, Please check your email for the verification link."
+          setValidationMessage(
+            "Your e-mail is awaiting verification, Please check your e-mail for the verification link."
           );
+          setShowValidationModal(true);
           await signOut(firebaseAuth);
           return;
         }
@@ -309,6 +314,13 @@ function App() {
               </Routes>
             )}
           </BrowserRouter>
+
+          {showValidationModal && (
+            <ValidationModal
+              message={validationMessage}
+              onClose={() => setShowValidationModal(false)}
+            />
+          )}
         </QueryClientProvider>
       </UserLoggedInContext.Provider>
     </ActiveContext.Provider>

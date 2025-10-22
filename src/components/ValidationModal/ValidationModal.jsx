@@ -8,7 +8,7 @@ export default function ValidationModal({ message, onClose }) {
       className="fixed inset-0 bg-transparent bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-[999]"
     >
       <div className="bg-white p-6 rounded-lg shadow-lg w-90 h-50 flex items-center justify-center flex-col animate-popup">
-        <Info className="text-black mb-4" size={30} />
+        <Info className="text-black mb-4" size={50} />
         <p className="text-black text-center font-[Poppins] mb-4">{message}</p>
         <button
           onClick={onClose}
