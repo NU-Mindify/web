@@ -278,7 +278,16 @@ export default function Branches() {
         {showAddCampus ? (
           <div className="px-5 w-full h-[270px] flex justify-center items-center">
             <div className="border p-6 rounded-xl w-full" style={{borderColor: textColor}}>
-              <h2 className="form-title" style={{color: textColor}}>ADD CAMPUS</h2>
+              <div className="w-full flex justify-between items-center mb-2">
+                <h2 className="font-bold text-xs" style={{color: textColor}}>ADD CAMPUS</h2>
+                <button 
+                  className="btn btn-error rounded-md"
+                  onClick={() => setShowAddCampus(false)}
+                >
+                  X
+
+                </button>
+              </div>
               <hr className="border-b border-gray-300 mb-4" />
 
               <div className="form-row">

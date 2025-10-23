@@ -16,6 +16,7 @@ import { firebaseAuth } from "../../Firebase";
 import { ActiveContext, UserLoggedInContext } from "../../contexts/Contexts";
 import Header from "../../components/header/Header";
 import Buttons from "../../components/buttons/Buttons";
+import { supabase } from "../../supabase";
 
 
 
@@ -41,6 +42,7 @@ export default function Profile() {
 
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [discardTarget, setDiscardTarget] = useState(null);
+  
 
   const user = firebaseAuth.currentUser;
 
@@ -208,6 +210,50 @@ export default function Profile() {
     },
   ], [webUser, branches]);
 
+  const [isUploading, setIsUploading] = useState(false);
+
+   const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !webUser?.uid) return;
+
+    setIsUploading(true);
+
+    const fileExt = file.name.split(".").pop().toLowerCase();
+    const fileName = `${webUser.uid}.${fileExt}`;
+    const filePath = `pics/${fileName}`;
+
+    const { error } = await supabase.storage
+      .from("profile")
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+    if (error) {
+      console.error("Upload error:", error.message, error);
+      setValidationMessage("Image upload failed");
+      setShowValidationModal(true);
+      setIsUploading(false);
+      return;
+    }
+
+    const { data } = supabase.storage.from("profile").getPublicUrl(filePath);
+    const timestamp = new Date().getTime();
+    console.log("data", data);
+    
+
+    setWebUser({
+      ...webUser,
+      useravatar: `${data.publicUrl}?t=${timestamp}`,
+    });
+
+    setValidationMessage("Image uploaded successfully");
+    setShowValidationModal(true);
+
+    setIsUploading(false);
+  };
+
+
 
   return (
     <>
@@ -222,7 +268,14 @@ export default function Profile() {
         >
           <div className="avatar-edit-container-prof-settings justify-between">
             <div className="avatar-container-prof-settings">
-              <img
+              
+
+              {isUploading ? (
+                <div className="avatar-dimensions bg-white flex align-center justify-center p-23">
+                  <div className="spinner" />
+                </div>
+              ) : (
+                <img
                 className={`avatar-dimensions shadow-[-2px_-2px_0px_0px_rgba(0,0,0)]`}
                 style={{
                   border: "12px solid",
@@ -232,6 +285,7 @@ export default function Profile() {
                 src={webUser.useravatar}
                 alt=""
               />
+              )}
 
               <h1
                 className={`username-properties`}
@@ -239,6 +293,21 @@ export default function Profile() {
               >
                 {webUser.firstName} {webUser.lastName}
               </h1>
+            </div>
+            <div className="flex-1 flex items-center px-10">
+              <input
+                id="upload-btn"
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              <label
+                htmlFor="upload-btn"
+                className="btn btn-warning w-[200px] rounded-xl !text-white text-xl bg-[#FFC916] border-[#FFC916] font-[Poppins] h-[50px] px-4 flex items-center justify-center text-center cursor-pointer"
+              >
+                UPLOAD IMAGE
+              </label>
             </div>
 
             <div className="p-4 flex flex-col items-center justify-center pr-10">
@@ -295,11 +364,11 @@ export default function Profile() {
 
           <div className="edit-btn-prof-settings w-full !gap-30">
 
-            <Buttons 
+            {/* <Buttons 
               text="Edit Profile"
               addedClassName="btn !w-[250px]"
               onClick={handleEditProfile}
-            />
+            /> */}
 
             <Buttons 
               text="Change Password"
