@@ -35,72 +35,91 @@ import Branches from "./pages/branches/Branches";
 import Landing from "./pages/landingpage/landing";
 import ShowUnapprove from "./pages/questions/ShowUnapprove";
 import ValidationModal from "./components/ValidationModal/ValidationModal";
-import blue from "./assets/background/blue.png"
-import yellow from "./assets/background/yellow.png"
-import black from "./assets/background/dark bg.png"
+import blue from "./assets/background/blue.png";
+import yellow from "./assets/background/yellow.png";
+import black from "./assets/background/dark bg.png";
 
 const queryClient = new QueryClient();
 
 function App() {
-  const [isActive, setActive] = useState(false);
-  const [subSelected, setSubSelected] = useState("");
-  const [selected, setSelected] = useState("");
-  const [theme, setTheme] = useState("#ffffff");
-  const [themeWithOpacity, setThemeWithOpacity] = useState("");
-  const [divColor, setDivColor] = useState("")
-  const [hoverColor, setHoverColor] = useState("")
-  const [textColor, setTextColor] = useState("")
-  const [buttonColor, setButtonColor] = useState("")
-  const [iconColor, setIconColor] = useState('')
-
-  const [validationMessage, setValidationMessage] = useState("");
-  const [showValidationModal, setShowValidationModal] = useState(false);
-
-  useEffect(() => {
-    if (theme === "#202024") {
-      setThemeWithOpacity(theme);
-      setDivColor("#494949")
-      setHoverColor("#2E2E2E")
-      setTextColor("#ffffff")
-      setButtonColor("#ffffff")
-      setIconColor("invert(1) brightness(2)")
-    }
-    else if(theme === "#ffffff"){
-      setThemeWithOpacity("rgba(255, 255, 255, 0.5)");
-      setDivColor("#ffffff")
-      setHoverColor("#A7A7A7")
-      setTextColor("#000000")
-      setButtonColor("#FCB700")
-      setIconColor("")
-    }
-    else if(theme === "#1D1F79"){
-      setThemeWithOpacity(theme)
-      setDivColor("#4F52D5")
-      setHoverColor("#A7A7A7")
-      setTextColor("#ffffff")
-      setButtonColor("#FCB700")
-      setIconColor("invert(1) brightness(2)")
-    }
-    else if(theme === "#FFD418"){
-      setThemeWithOpacity(theme)
-      setDivColor("#FFE575")
-      setHoverColor("#A7A7A7")
-      setTextColor("#000000")
-      setButtonColor("#000000")
-      setIconColor("")
-    }
-  }, [theme]); 
-
   const [currentWebUser, setCurrentWebUser] = useState({
+    uid: "",
     firstName: "",
     lastName: "",
     branch: "",
     email: "",
     employeenum: "",
     position: "",
-    uid: "",
     useravatar: "",
+    theme: "",
   });
+  const [isActive, setActive] = useState(false);
+  const [subSelected, setSubSelected] = useState("");
+  const [selected, setSelected] = useState("");
+  const [theme, setTheme] = useState(currentWebUser.theme || "#ffffff");
+  const [themeWithOpacity, setThemeWithOpacity] = useState("");
+  const [divColor, setDivColor] = useState("");
+  const [hoverColor, setHoverColor] = useState("");
+  const [textColor, setTextColor] = useState("");
+  const [buttonColor, setButtonColor] = useState("");
+  const [iconColor, setIconColor] = useState("");
+
+  const [validationMessage, setValidationMessage] = useState("");
+  const [showValidationModal, setShowValidationModal] = useState(false);
+  
+
+    useEffect(() => {
+    
+    
+    if (theme === "#202024") {
+      console.log("black");
+      
+      setThemeWithOpacity(theme);
+      setDivColor("#494949");
+      setHoverColor("#2E2E2E");
+      setTextColor("#ffffff");
+      setButtonColor("#ffffff");
+      setIconColor("invert(1) brightness(2)");
+    } 
+    if (theme === "#ffffff") {
+      console.log("white");
+      
+      setThemeWithOpacity("rgba(255, 255, 255, 0.5)");
+      setDivColor("#ffffff");
+      setHoverColor("#A7A7A7");
+      setTextColor("#000000");
+      setButtonColor("#FCB700");
+      setIconColor("");
+    } 
+    if (theme === "#1D1F79") {
+      console.log("blue");
+      
+      setThemeWithOpacity(theme);
+      setDivColor("#4F52D5");
+      setHoverColor("#A7A7A7");
+      setTextColor("#ffffff");
+      setButtonColor("#FCB700");
+      setIconColor("invert(1) brightness(2)");
+    } 
+    if (theme === "#FFD418") {
+      setThemeWithOpacity(theme);
+      setDivColor("#FFE575");
+      setHoverColor("#A7A7A7");
+      setTextColor("#000000");
+      setButtonColor("#000000");
+      setIconColor("");
+    }
+
+  }, [theme]);
+
+  useEffect(() => {
+    if (currentWebUser.theme) {
+      setTheme(currentWebUser.theme);
+    }
+  }, [currentWebUser.theme, theme]);
+
+
+
   const [currentWebUserUID, setCurrentWebUserUID] = useState("");
   const [currentUserBranch, setCurrentUserBranch] = useState(null);
 
@@ -114,7 +133,7 @@ function App() {
 
       if (user) {
         if (!user.emailVerified && !hasShownVerify.current) {
-          hasShownVerify.current = true; // prevent double alert
+          hasShownVerify.current = true;
 
           // Check if user metadata shows they just signed up
           const creationTime = new Date(user.metadata.creationTime).getTime();
@@ -226,7 +245,7 @@ function App() {
         buttonColor,
         setButtonColor,
         iconColor,
-        setIconColor
+        setIconColor,
       }}
     >
       <UserLoggedInContext.Provider
@@ -253,17 +272,23 @@ function App() {
                 <Route path="*" element={<Navigate to="/login" />} />
               </Routes>
             ) : !isSplash ? (
-              <div 
+              <div
                 className="main-container"
-                style={
-                  { 
-                        backgroundImage: `url(${theme === "#202024" ? black : theme === "#ffffff" ? blue : theme === "#1D1F79" ? black : black})`,
-                        backgroundSize: "cover",      
-                        backgroundRepeat: "no-repeat",
-                        backgroundAttachment: "fixed", 
-                        backgroundPosition: "center", 
-                  }
-                }
+                style={{
+                  backgroundImage: `url(${
+                    theme === "#202024"
+                      ? black
+                      : theme === "#ffffff"
+                      ? blue
+                      : theme === "#1D1F79"
+                      ? black
+                      : black
+                  })`,
+                  backgroundSize: "cover",
+                  backgroundRepeat: "no-repeat",
+                  backgroundAttachment: "fixed",
+                  backgroundPosition: "center",
+                }}
               >
                 <SessionTimeout timeout={15 * 60 * 1000} /> {/* 15 minutes */}
                 {/* <SessionTimeout timeout={10 * 1000} /> 10 seconds for testing */}
