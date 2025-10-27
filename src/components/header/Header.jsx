@@ -81,7 +81,7 @@ export default function Header({
       )}
 
 
-      {id !== "analytics" && (
+      {id !== "analytics" && id !== "profile" && (
         <ExportDropdown
           onExport={(format) => {
             if (format === "csv") {

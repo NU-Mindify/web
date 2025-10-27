@@ -4,7 +4,7 @@ import autoTable from "jspdf-autotable";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "../../Constants";
-import dropdown from "../../assets/glossary/dropdown.svg";
+import dropdown from "../../assets/forAll/chevron.svg";
 import edit from "../../assets/glossary/edit.svg";
 import logo from "../../assets/logo/logo.png";
 import searchIcon from "../../assets/students/search-01.svg";
@@ -304,7 +304,7 @@ export default function ManageGlossary() {
                                 : "per-word-container"
                             }
                             style={{
-                              backgroundColor: activeTermWord === term.word ? theme : divColor,
+                              backgroundColor: activeTermWord === term.word ? "red" : theme,
                               border: activeTermWord === term.word ? `1px solid ${textColor}` : ""
                             }}
                           >
@@ -345,7 +345,12 @@ export default function ManageGlossary() {
                                 }
                                 onClick={() => onToggleDropdown(term.word)}
                               >
-                                <img src={dropdown} alt="dropdown icon" />
+                               <img
+  src={dropdown}
+  alt="dropdown icon"
+  className="w-8 filter brightness-0 contrast-200"
+/>
+
                               </button>
                             </div>
                           </div>
